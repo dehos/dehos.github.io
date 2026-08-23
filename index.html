@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Stock Barang</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.bundle.js"></script>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-content">
+
+        <img
+            src="logo.png"
+            alt="Logo Perusahaan"
+            class="company-logo"
+        >
+        <div>
+            <h1>📦 Stock Barang</h1>
+            <p>&nbsp;Rekap Stok & Transaksi</p>
+        </div> 
+    </div>
+</header>
+<main class="container">
+
+<section class="card">
+  <div id="databaseStatus"
+            class="status"
+        >
+            ⏳ Menghubungkan ke database...
+  </div>
+        <div
+            id="stockListContent"
+        >
+
+            <div class="stock-list-inner">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>No</th>
+
+                                <th
+    id="namaHeader"
+    onclick="sortNama()"
+    style="cursor:pointer;"
+>
+    Nama Barang
+</th>
+
+                                <th
+    id="stokHeader"
+    onclick="sortStock()"
+    style="cursor: pointer;"
+>
+    Stok ↓
+                                </th>
+
+                                <th>Aksi</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="stockTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="loading"
+                                >
+                                    ⏳ Memuat data...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+      <div class="cari">
+    <input type="text"
+          id="search"
+          placeholder="Filter Produk...">
+    <input
+        type="date"
+        id="tanggal"
+    ></div>
+</section>
+  <section class="card">
+        <h2>
+            📜 Riwayat Transaksi
+          <button
+    type="button"
+    class="main-btn"
+    onclick="exportExcel()"
+>
+    📊 Export Excel
+</button>
+        </h2>
+            <div class="table-wrapper history-wrapper">
+    <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Waktu</th>
+
+                        <th>Barang</th>
+
+                        <th>Transaksi</th>
+
+                        <th>Qty</th>
+
+                        <th>Stok</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="historyTable">
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="empty"
+                        >
+                            Belum ada transaksi
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+    </table>
+
+        </div>
+
+  </section>
+    <section class="card">
+
+        <h2>
+            Form Barang Baru (Belum terdata)🆕
+        </h2>
+
+        <div class="cari">
+
+            <div>
+                <label for="namaBarang">
+                    Nama Barang
+                </label>
+                <input
+                    type="text"
+                    id="namaBarang"
+                    placeholder="Product..."
+                >
+
+            </div>
+            <div>
+
+                <label for="stokAwal">
+                    Jumlah
+                </label>
+
+                <input
+                    type="number"
+                    id="stokAwal"
+                    min="0"
+                    value="0"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="button-row">
+
+            <button
+                type="button"
+                class="main-btn"
+                onclick="tambahBarang()"
+            >
+                + Tambah Barang
+            </button>
+        </div>
+
+    </section> 
+  
+
+
+    
+    
+
+
+    <!-- =====================================================
+         STATISTIK
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>Statistik 📊</h2>
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <small>
+                    Total Barang
+                </small>
+
+                <strong id="totalBarang">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <small>
+                    Total Stok
+                </small>
+
+                <strong id="totalStok">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <small>
+                    Transaksi Hari Ini
+                </small>
+
+                <strong id="transaksiHariIni">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+    
+</main>
+
+<div
+    class="modal"
+    id="transactionModal"
+>
+
+    <div class="modal-content">
+
+
+        <div
+            class="modal-title"
+            id="modalTitle"
+        >
+        </div>
+
+
+        <div
+            class="modal-product"
+            id="modalProduct"
+        >
+        </div>
+
+
+        <label for="transactionQty">
+            Jumlah
+        </label>
+
+
+        <input
+            type="number"
+            id="transactionQty"
+            min="1"
+            value="1"
+        >
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn-cancel"
+                onclick="closeModal()"
+            >
+                Batal
+            </button>
+
+
+            <button
+                type="button"
+                class="btn-confirm"
+                onclick="confirmTransaction()"
+            >
+                Simpan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+<div align="center"><sd>Aplikasinya bagus, omsetnya jelek, wkwkwk</sd></div>
+<footer>
+
+    <small>
+        © 2026 Tony. All rights reserved.
+    </small>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
