@@ -857,3 +857,82 @@ footer small {
     color: #a00;
     
 }
+/* =====================================================
+   TOAST NOTIFICATION
+===================================================== */
+
+.toast {
+    position: fixed;
+
+    top: 20px;
+    left: 50%;
+
+    transform: translateX(-50%) translateY(-20px);
+
+    background: #111827;
+    color: white;
+
+    padding: 13px 18px;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, .18);
+
+    font-size: 14px;
+    font-weight: bold;
+
+    z-index: 9999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+    opacity .6s ease,
+    transform .6s ease,
+    visibility .6s ease;
+
+    pointer-events: none;
+
+    max-width: calc(100% - 30px);
+    text-align: center;
+}
+
+/* Toast tampil */
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+/* Toast berhasil */
+.toast.success {
+    background: #15803d;
+}
+
+/* Toast gagal */
+.toast.error {
+    background: #dc2626;
+}
+
+
+/* =====================================================
+   TOAST MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .toast {
+        top: 15px;
+
+        width: calc(100% - 30px);
+
+        font-size: 13px;
+
+        padding: 12px 15px;
+    }
+
+}

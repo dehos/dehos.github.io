@@ -30,7 +30,52 @@ let selectedProduct = null;
 
 let selectedTransactionType = "";
 
+/* =====================================================
+   TOAST NOTIFICATION
+===================================================== */
 
+let toastTimer = null;
+
+function showToast(message, type = "success") {
+
+    const toast =
+        document.getElementById("toast");
+
+    const toastMessage =
+        document.getElementById("toastMessage");
+
+    if (!toast || !toastMessage) {
+        return;
+    }
+
+    /* Hentikan timer sebelumnya */
+    if (toastTimer) {
+        clearTimeout(toastTimer);
+    }
+
+    /* Isi pesan */
+    toastMessage.textContent = message;
+
+    /* Reset class */
+    toast.className = "toast";
+
+    /* Tambahkan tipe */
+    if (type) {
+        toast.classList.add(type);
+    }
+
+    /* Tampilkan */
+    requestAnimationFrame(function() {
+        toast.classList.add("show");
+    });
+
+    /* Hilangkan otomatis */
+    toastTimer = setTimeout(function() {
+
+        toast.classList.remove("show");
+
+    }, 2500);
+}
 /* =====================================================
    SORTING
 ===================================================== */
@@ -1087,26 +1132,40 @@ async function confirmTransaction() {
 
     if (error) {
 
-        console.error(
-            error
-        );
+    console.error(
+        error
+    );
 
+    alert(
+        "Gagal menyimpan transaksi:\n" +
+        error.message
+    );
 
-        alert(
-            "Gagal menyimpan transaksi:\n" +
-            error.message
-        );
+    return;
+}
 
+closeModal();
 
-        return;
+await loadTransactions();
 
-    }
+/* =================================================
+   NOTIFIKASI BERHASIL
+================================================= */
 
+const namaTransaksi =
+    selectedTransactionType === "masuk"
+        ? "Barang masuk"
+        : "Barang laku";
 
-    closeModal();
+const simbol =
+    selectedTransactionType === "masuk"
+        ? ""
+        : "";
 
-
-    await loadTransactions();
+showToast(
+    `✅ ${namaTransaksi} ${simbol}${formatNumber(qty)}`,
+    "success"
+);
 
 }
 
