@@ -696,30 +696,27 @@ function updateTable() {
                 </td>
 
                 <td>
+<button
+    type="button"
+    class="action-btn btn btn-success"
+    onclick="openTransaction(
+        ${Number(barang.id)},
+        'masuk'
+    )"
+>
+    ↓ Masuk
+</button>
 
-                    <button
-                        type="button"
-                        class="action-btn btn-masuk"
-                        onclick="openTransaction(
-                            ${Number(barang.id)},
-                            'masuk'
-                        )"
-                    >
-                        ➕ Masuk
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="action-btn btn-laku"
-                        onclick="openTransaction(
-                            ${Number(barang.id)},
-                            'laku'
-                        )"
-                    >
-                        🛒 Laku
-                    </button>
-
+<button
+    type="button"
+    class="action-btn btn btn-danger"
+    onclick="openTransaction(
+        ${Number(barang.id)},
+        'laku'
+    )"
+>
+    ↑ Laku
+</button>
                 </td>
                 `;
 
@@ -769,8 +766,8 @@ function sortStock() {
 
         header.textContent =
             stockSortAsc
-                ? "Stok ↑"
-                : "Stok ↓";
+                ? "↓"
+                : "↑";
 
     }
 
@@ -808,46 +805,20 @@ function updateStats() {
        TRANSAKSI HARI INI
     ================================================ */
 
-    const sekarang =
-        new Date();
+    const hariIni =
+    getTodayDate();
 
+const transaksiHariIni =
+    transactions.filter(
+        function(transaction) {
 
-    const transaksiHariIni =
-        transactions.filter(
-            function(transaction) {
+            return (
+                transaction.tanggal ===
+                hariIni
+            );
 
-                if (
-                    !transaction.created_at
-                ) {
-
-                    return false;
-
-                }
-
-
-                const waktu =
-                    new Date(
-                        transaction.created_at
-                    );
-
-
-                return (
-                    waktu.getFullYear() ===
-                    sekarang.getFullYear()
-
-                    &&
-
-                    waktu.getMonth() ===
-                    sekarang.getMonth()
-
-                    &&
-
-                    waktu.getDate() ===
-                    sekarang.getDate()
-                );
-
-            }
-        ).length;
+        }
+    ).length;
 
 
     /* ================================================
@@ -1343,6 +1314,16 @@ function renderHistory() {
                         stokAkhir
                     )}
                 </td>
+                <td>
+    <button
+        type="button"
+        class="delete-history-btn"
+        onclick="hapusTransaksi(${transaction.id})"
+        title="Hapus transaksi"
+    >
+        ❌
+    </button>
+</td>
                 `;
 
 
@@ -1354,7 +1335,58 @@ function renderHistory() {
     );
 
 }
+/* =====================================================
+   HAPUS TRANSAKSI
+===================================================== */
 
+async function hapusTransaksi(id) {
+
+    const transaction =
+        transactions.find(
+            function(item) {
+                return Number(item.id) === Number(id);
+            }
+        );
+
+    if (!transaction) {
+        return;
+    }
+
+    const konfirmasi =
+        confirm(
+            "Hapus transaksi ini?\n\n" +
+            "Data transaksi akan dihapus permanen."
+        );
+
+    if (!konfirmasi) {
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("transaksi")
+            .delete()
+            .eq("id", id);
+
+    if (error) {
+
+        console.error(error);
+
+        showToast(
+            "❌ Gagal menghapus transaksi",
+            "error"
+        );
+
+        return;
+    }
+
+    await loadTransactions();
+
+    showToast(
+        "✅ Transaksi berhasil dihapus",
+        "success"
+    );
+}
 
 /* =====================================================
    STOK SETELAH TRANSAKSI
