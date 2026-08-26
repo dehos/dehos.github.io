@@ -1192,17 +1192,6 @@ function renderHistory() {
                         stokAkhir
                     )}
                 </td>
-
-                <td>
-                    <button
-                        type="button"
-                        class="delete-history-btn"
-                        onclick="hapusTransaksi(${transaction.id})"
-                        title="Hapus transaksi"
-                    >
-                        ❌
-                    </button>
-                </td>
                 `;
 
             tbody.appendChild(

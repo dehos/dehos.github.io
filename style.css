@@ -898,11 +898,13 @@ footer small {
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
 }
 
+/* Font catatan penjualan disamakan dengan riwayat transaksi */
 .penjualan-wrapper table {
+    font-size: 11px;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
     width: max-content;
     min-width: 100%;
 }
