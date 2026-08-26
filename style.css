@@ -874,7 +874,7 @@ footer small {
 
     /* Hanya tabel catatan penjualan */
     #penjualanTable {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     /* Wrapper tabel tetap di dalam layar */
@@ -886,7 +886,7 @@ footer small {
     #penjualanTable td,
     #penjualanTable th {
         white-space: nowrap;
-        padding: 6px 5px;
+        padding: 2px 5px;
     }
 
 }
@@ -898,13 +898,11 @@ footer small {
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
-}
-
-/* Font catatan penjualan disamakan dengan riwayat transaksi */
-.penjualan-wrapper table {
-    font-size: 11px;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.penjualan-wrapper table {
     width: max-content;
     min-width: 100%;
 }
@@ -916,7 +914,143 @@ footer small {
     }
 
     .penjualan-wrapper table {
-        min-width: 700px;
+        min-width: auto;
     }
 
+}
+
+#penjualanTable th:nth-child(2),
+#penjualanTable td:nth-child(2) {
+    width: 150px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* CSS — style.css */
+/* CSS — style.css */
+/* Tempel di bawah CSS penjualan sebelumnya */
+
+#penjualanTable {
+    table-layout: auto;
+}
+
+#penjualanTable th:nth-child(1),
+#penjualanTable td:nth-child(1),
+#penjualanTable th:nth-child(n+3),
+#penjualanTable td:nth-child(n+3) {
+    white-space: nowrap;
+    width: max-content;
+}
+
+.penjualan-wrapper th {
+    font-size: 11px;
+}
+/* CSS — style.css */
+
+.penjualan-wrapper thead th {
+    font-size: 11px;
+}
+/* =====================================================
+   HARGA PENJUALAN
+===================================================== */
+
+.harga-input-wrapper {
+    position: relative;
+}
+
+.harga-prefix {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    font-size: 11px;
+    font-weight: 600;
+    color: #1f2937;
+
+    pointer-events: none;
+    z-index: 2;
+}
+
+#penjualanHarga {
+    padding-left: 34px;
+}
+/* =====================================================
+   DROPDOWN BRAND - CATAT PENJUALAN
+===================================================== */
+
+#brandDropdown {
+    position: relative;
+    width: 100%;
+}
+
+#brandDropdownButton {
+    width: 100%;
+    height: 31px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+    font-size: 12px;
+    color: #212529;
+    text-align: left;
+}
+
+#brandDropdownButton:focus {
+    outline: none;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .15rem rgba(13,110,253,.15);
+}
+
+.custom-select-menu {
+    display: none;
+
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 0;
+    width: 100%;
+
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+
+    z-index: 1050;
+
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.custom-select-menu.show {
+    display: block;
+}
+
+.custom-select-menu button {
+    display: block;
+    width: 100%;
+
+    padding: 7px 10px;
+
+    border: 0;
+    background: #fff;
+
+    font-size: 12px;
+    text-align: left;
+    color: #212529;
+}
+
+.custom-select-menu button:hover {
+    background: #f2f2f2;
+}
+
+.custom-select-arrow {
+    font-size: 12px;
+    margin-left: 8px;
 }

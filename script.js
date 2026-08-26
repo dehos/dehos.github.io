@@ -1,4 +1,4 @@
-/* =====================================================
+/*/*==================================
    KONFIGURASI SUPABASE
 ===================================================== */
 
@@ -15,7 +15,7 @@ const supabaseClient =
     );
 
 
-/* =====================================================
+/*/*==================================
    DATA
 ===================================================== */
 
@@ -28,7 +28,7 @@ let selectedProduct = null;
 let selectedTransactionType = "";
 
 
-/* =====================================================
+/*/*==================================
    TOAST NOTIFICATION
 ===================================================== */
 
@@ -68,7 +68,7 @@ function showToast(message, type = "success") {
 }
 
 
-/* =====================================================
+/*/*==================================
    SORTING
 ===================================================== */
 
@@ -76,7 +76,7 @@ let sortMode = "nama";
 let stockSortAsc = false;
 
 
-/* =====================================================
+/*/*==================================
    FORMAT ANGKA
 ===================================================== */
 
@@ -92,9 +92,55 @@ function formatNumber(number) {
         "id-ID"
     ).format(value);
 }
+/*/*==================================
+   FORMAT INPUT HARGA
+===================================================== */
+
+function formatHargaInput() {
+
+    const input =
+        document.getElementById(
+            "penjualanHarga"
+        );
+
+    if (!input) {
+        return;
+    }
+
+    const angka =
+        input.value.replace(
+            /\D/g,
+            ""
+        );
+
+    if (!angka) {
+        input.value = "";
+        return;
+    }
+
+    input.value =
+        new Intl.NumberFormat(
+            "id-ID"
+        ).format(
+            Number(angka)
+        );
+}
 
 
-/* =====================================================
+const inputHarga =
+    document.getElementById(
+        "penjualanHarga"
+    );
+
+if (inputHarga) {
+
+    inputHarga.addEventListener(
+        "input",
+        formatHargaInput
+    );
+}
+
+/*/*==================================
    STATUS DATABASE
 ===================================================== */
 
@@ -119,7 +165,7 @@ function setDatabaseStatus(
 }
 
 
-/* =====================================================
+/*/*==================================
    TANGGAL HARI INI
 ===================================================== */
 
@@ -150,7 +196,7 @@ function getTodayDate() {
 }
 
 
-/* =====================================================
+/*/*==================================
    LOAD BARANG
 ===================================================== */
 
@@ -200,7 +246,7 @@ async function loadBarang() {
 }
 
 
-/* =====================================================
+/*/*==================================
    LOAD TRANSAKSI
 ===================================================== */
 
@@ -239,7 +285,7 @@ async function loadTransactions() {
 }
 
 
-/* =====================================================
+/*/*==================================
    TAMBAH BARANG
 ===================================================== */
 
@@ -352,7 +398,7 @@ async function tambahBarang() {
 }
 
 
-/* =====================================================
+/*/*==================================
    HITUNG STOK
 ===================================================== */
 
@@ -419,7 +465,7 @@ function getCurrentStock(barang) {
 }
 
 
-/* =====================================================
+/*/*==================================
    UPDATE TABEL STOK
 ===================================================== */
 
@@ -479,9 +525,9 @@ function updateTable() {
         );
 
 
-    /* =================================================
+    /*/*==============================
        SORTING
-    ================================================= */
+   /*============================== */
 
     if (
         sortMode === "nama"
@@ -532,9 +578,9 @@ function updateTable() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        HASIL KOSONG
-    ================================================= */
+   /*============================== */
 
     if (
         filtered.length === 0
@@ -558,16 +604,16 @@ function updateTable() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        BERSIHKAN TABEL
-    ================================================= */
+   /*============================== */
 
     tbody.innerHTML = "";
 
 
-    /* =================================================
+    /*/*==============================
        TAMPILKAN DATA
-    ================================================= */
+   /*============================== */
 
     filtered.forEach(
         function(barang, index) {
@@ -641,7 +687,7 @@ function updateTable() {
 }
 
 
-/* =====================================================
+/*/*==================================
    SORTIR STOK
 ===================================================== */
 
@@ -677,7 +723,7 @@ function sortNama() {
 }
 
 
-/* =====================================================
+/*/*==================================
    STATISTIK
 ===================================================== */
 
@@ -696,9 +742,9 @@ function updateStats() {
     );
 
 
-    /* =================================================
+    /*/*==============================
        TRANSAKSI HARI INI
-    ================================================= */
+   /*============================== */
 
     const hariIni =
         getTodayDate();
@@ -715,9 +761,9 @@ function updateStats() {
         ).length;
 
 
-    /* =================================================
+    /*/*==============================
        ELEMENT
-    ================================================= */
+   /*============================== */
 
     const totalBarangElement =
         document.getElementById(
@@ -735,9 +781,9 @@ function updateStats() {
         );
 
 
-    /* =================================================
+    /*/*==============================
        TAMPILKAN
-    ================================================= */
+   /*============================== */
 
     if (
         totalBarangElement
@@ -773,7 +819,7 @@ function updateStats() {
 }
 
 
-/* =====================================================
+/*/*==================================
    BUKA MODAL TRANSAKSI
 ===================================================== */
 
@@ -849,7 +895,7 @@ function openTransaction(
 }
 
 
-/* =====================================================
+/*/*==================================
    TUTUP MODAL
 ===================================================== */
 
@@ -867,7 +913,7 @@ function closeModal() {
 }
 
 
-/* =====================================================
+/*/*==================================
    SIMPAN TRANSAKSI
 ===================================================== */
 
@@ -901,9 +947,9 @@ async function confirmTransaction() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        CEK STOK UNTUK BARANG LAKU
-    ================================================= */
+   /*============================== */
 
     if (
         selectedTransactionType === "laku"
@@ -925,18 +971,18 @@ async function confirmTransaction() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        TANGGAL TRANSAKSI
-    ================================================= */
+   /*============================== */
 
     const tanggal =
         tanggalDipilih ||
         getTodayDate();
 
 
-    /* =================================================
+    /*/*==============================
        SIMPAN TRANSAKSI
-    ================================================= */
+   /*============================== */
 
     const {
         error
@@ -973,9 +1019,9 @@ async function confirmTransaction() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        REFRESH
-    ================================================= */
+   /*============================== */
 
     closeModal();
 
@@ -984,9 +1030,9 @@ async function confirmTransaction() {
     updateTable();
 
 
-    /* =================================================
+    /*/*==============================
        NOTIFIKASI
-    ================================================= */
+   /*============================== */
 
     const namaTransaksi =
         selectedTransactionType === "masuk"
@@ -999,7 +1045,7 @@ async function confirmTransaction() {
     );
 }
 
-/* =====================================================
+/*/*==================================
    RIWAYAT TRANSAKSI
 ===================================================== */
 
@@ -1034,11 +1080,11 @@ function renderHistory() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        URUTKAN
        Tanggal terbaru -> terlama
        Jika tanggal sama, ID terbaru -> terlama
-    ================================================= */
+   /*============================== */
 
     const history =
         [...transactions].sort(
@@ -1075,9 +1121,9 @@ function renderHistory() {
     tbody.innerHTML = "";
 
 
-    /* =================================================
+    /*/*==============================
        TAMPILKAN
-    ================================================= */
+   /*============================== */
 
     history.forEach(
         function(transaction) {
@@ -1192,6 +1238,8 @@ function renderHistory() {
                         stokAkhir
                     )}
                 </td>
+
+                
                 `;
 
             tbody.appendChild(
@@ -1202,7 +1250,7 @@ function renderHistory() {
 }
 
 
-/* =====================================================
+/*/*==================================
    HAPUS TRANSAKSI
 ===================================================== */
 
@@ -1265,7 +1313,7 @@ async function hapusTransaksi(id) {
 }
 
 
-/* =====================================================
+/*/*==================================
    STOK SETELAH TRANSAKSI
 ===================================================== */
 
@@ -1367,7 +1415,7 @@ function getStockAfterTransaction(
 }
 
 
-/* =====================================================
+/*/*==================================
    ESCAPE HTML
 ===================================================== */
 
@@ -1402,7 +1450,7 @@ function escapeHTML(text) {
 }
 
 
-/* =====================================================
+/*/*==================================
    SEARCH
 ===================================================== */
 
@@ -1420,7 +1468,7 @@ if (searchElement) {
 }
 
 
-/* =====================================================
+/*/*==================================
    TOGGLE DAFTAR STOK
 ===================================================== */
 
@@ -1456,7 +1504,7 @@ function toggleStockList() {
 }
 
 
-/* =====================================================
+/*/*==================================
    KLIK LUAR MODAL
 ===================================================== */
 
@@ -1479,7 +1527,7 @@ window.addEventListener(
 );
 
 
-/* =====================================================
+/*/*==================================
    ENTER TAMBAH BARANG
 ===================================================== */
 
@@ -1505,7 +1553,7 @@ if (stokAwalElement) {
 }
 
 
-/* =====================================================
+/*/*==================================
    ESC UNTUK TUTUP MODAL
 ===================================================== */
 
@@ -1523,7 +1571,7 @@ document.addEventListener(
 );
 
 
-/* =====================================================
+/*/*==================================
    PILIH TANGGAL
 ===================================================== */
 
@@ -1547,7 +1595,7 @@ if (tanggalElement) {
 }
 
 
-/* =====================================================
+/*/*==================================
    INPUT PENJUALAN
 ===================================================== */
 
@@ -1638,8 +1686,68 @@ if (
     );
 }
 
-
 /* =====================================================
+   DROPDOWN BRAND CATAT PENJUALAN
+===================================================== */
+
+const brandDropdown =
+    document.getElementById("brandDropdown");
+
+const brandDropdownButton =
+    document.getElementById("brandDropdownButton");
+
+const brandDropdownMenu =
+    document.getElementById("brandDropdownMenu");
+
+const brandDropdownText =
+    document.getElementById("brandDropdownText");
+
+
+if (
+    brandDropdown &&
+    brandDropdownButton &&
+    brandDropdownMenu &&
+    brandDropdownText
+) {
+
+    brandDropdownButton.addEventListener(
+        "click",
+        function() {
+
+            brandDropdownMenu.classList.toggle(
+                "show"
+            );
+        }
+    );
+
+
+    brandDropdownMenu
+        .querySelectorAll("button")
+        .forEach(
+            function(button) {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const value =
+                            this.dataset.value;
+
+                        brandDropdownText.textContent =
+                            value || "Pilih Brand";
+
+                        brandDropdown.dataset.value =
+                            value;
+
+                        brandDropdownMenu.classList.remove(
+                            "show"
+                        );
+                    }
+                );
+            }
+        );
+}
+/*/*==================================
    SIMPAN PENJUALAN
 ===================================================== */
 
@@ -1648,10 +1756,13 @@ async function simpanPenjualan() {
     const barangId =
         inputPenjualanBarang.dataset.id;
 
-    const brand =
-        document.getElementById(
-            "penjualanBrand"
-        ).value;
+    const brandDropdown =
+    document.getElementById(
+        "brandDropdown"
+    );
+
+const brand =
+    brandDropdown?.dataset.value || "";
 
     const qty =
         Number(
@@ -1666,9 +1777,12 @@ async function simpanPenjualan() {
         );
 
     const harga =
-        Number(
-            hargaInput.value
-        );
+    Number(
+        hargaInput.value.replace(
+            /\./g,
+            ""
+        )
+    );
 
     const tanggal =
         document.getElementById(
@@ -1676,9 +1790,9 @@ async function simpanPenjualan() {
         ).value;
 
 
-    /* =================================================
+    /*/*==============================
        VALIDASI
-    ================================================= */
+   /*============================== */
 
     if (!barangId) {
 
@@ -1719,9 +1833,9 @@ async function simpanPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        CEK BARANG
-    ================================================= */
+   /*============================== */
 
     const barang =
         dataBarang.find(
@@ -1742,9 +1856,9 @@ async function simpanPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        CEK STOK TERSEDIA
-    ================================================= */
+   /*============================== */
 
     const tanggalSebelumnya =
         tanggalDipilih;
@@ -1781,9 +1895,9 @@ async function simpanPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        SIMPAN PENJUALAN
-    ================================================= */
+   /*============================== */
 
     const {
         data: penjualanBaru,
@@ -1826,9 +1940,9 @@ async function simpanPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        BUAT TRANSAKSI BARANG LAKU
-    ================================================= */
+   /*============================== */
 
     const {
         error: errorTransaksi
@@ -1854,9 +1968,9 @@ async function simpanPenjualan() {
             });
 
 
-    /* =================================================
+    /*/*==============================
        JIKA TRANSAKSI GAGAL
-    ================================================= */
+   /*============================== */
 
     if (errorTransaksi) {
 
@@ -1879,7 +1993,7 @@ async function simpanPenjualan() {
         );
     }
 
-/* =================================================
+/*/*==============================
    REFRESH DATA
 ================================================= */
 
@@ -1888,22 +2002,43 @@ await loadTransactions();
 updateTable();
 
 await initFilterPenjualan();
-    /* =================================================
+    /*/*==============================
        BERSIHKAN FORM
-    ================================================= */
+   /*============================== */
 
     inputPenjualanBarang.value = "";
 
     inputPenjualanBarang.dataset.id = "";
 
     document.getElementById(
-        "penjualanBrand"
-    ).value = "";
+    "penjualanBrand"
+).value = "";
+
+if (brandDropdown) {
+
+    delete brandDropdown.dataset.value;
+}
+
+if (brandDropdownText) {
 
     document.getElementById(
-        "penjualanQty"
-    ).value = 1;
+    "penjualanBrand"
+).value = "";
 
+if (brandDropdown) {
+
+    delete brandDropdown.dataset.value;
+}
+
+if (brandDropdownText) {
+
+    brandDropdownText.textContent =
+        "Pilih Brand";
+}
+
+document.getElementById(
+    "penjualanQty"
+).value = 1;
     document.getElementById(
         "penjualanHarga"
     ).value = "";
@@ -1911,11 +2046,11 @@ await initFilterPenjualan();
     document.getElementById(
         "saranBarang"
     ).innerHTML = "";
+}
 
-
-    /* =================================================
+    /*/*==============================
        NOTIFIKASI
-    ================================================= */
+   /*============================== */
 
     showToast(
         "✅ Penjualan berhasil dicatat dan stok berkurang " +
@@ -1925,7 +2060,7 @@ await initFilterPenjualan();
 }
 
 
-/* =====================================================
+/*/*==================================
    LOAD PENJUALAN
 ===================================================== */
 
@@ -1941,7 +2076,7 @@ async function loadPenjualan() {
             `
             <tr>
                 <td
-                    colspan="8"
+                    colspan="7"
                     class="text-center"
                 >
                     Memuat data penjualan...
@@ -2014,9 +2149,9 @@ async function loadPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        FILTER
-    ================================================= */
+   /*============================== */
 
     const bulan =
         document.getElementById(
@@ -2069,9 +2204,9 @@ async function loadPenjualan() {
         );
 
 
-    /* =================================================
+    /*/*==============================
        TABEL
-    ================================================= */
+   /*============================== */
 
     tbody.innerHTML = "";
 
@@ -2136,60 +2271,55 @@ async function loadPenjualan() {
 
             tbody.innerHTML +=
                 `
-                <tr>
 
-                    <td class="text-center">
-                        ${index + 1}
-                    </td>
+<tr>
+    <td class="text-center">
+        ${tanggal}
+    </td>
 
-                    <td>
-                        ${escapeHTML(
-                            namaBarang
-                        )}
-                    </td>
+    <td>
+        ${escapeHTML(
+            namaBarang
+        )}
+    </td>
 
-                    <td>
-                        ${escapeHTML(
-                            item.brand || "-"
-                        )}
-                    </td>
+    <td class="text-center">
+        ${formatNumber(qty)}
+    </td>
 
-                    <td class="text-center">
-                        ${formatNumber(qty)}
-                    </td>
+    <td class="text-end">
+        Rp${formatNumber(harga)}
+    </td>
 
-                    <td class="text-end">
-                        Rp${formatNumber(harga)}
-                    </td>
+    <td class="text-end">
+        Rp${formatNumber(total)}
+    </td>
 
-                    <td class="text-end">
-                        Rp${formatNumber(total)}
-                    </td>
+    <td>
+        ${escapeHTML(
+            item.brand || "-"
+        )}
+    </td>
 
-                    <td class="text-center">
-                        ${tanggal}
-                    </td>
-
-                    <td class="text-center">
-                        <button
-                            type="button"
-                            class="delete-history-btn"
-                            onclick="hapusPenjualan(${item.id})"
-                            title="Hapus penjualan"
-                        >
-                            ❌
-                        </button>
-                    </td>
-
-                </tr>
+    <td class="text-center">
+        <button
+            type="button"
+            class="delete-history-btn"
+            onclick="hapusPenjualan(${item.id})"
+            title="Hapus penjualan"
+        >
+            ❌
+        </button>
+    </td>
+</tr>
                 `;
         }
     );
 
 
-    /* =================================================
+    /*/*==============================
        KOSONG
-    ================================================= */
+   /*============================== */
 
     if (
         hasil.length === 0
@@ -2199,7 +2329,7 @@ async function loadPenjualan() {
             `
             <tr>
                 <td
-                    colspan="8"
+                    colspan="7"
                     class="text-center"
                 >
                     Tidak ada penjualan pada filter ini.
@@ -2209,9 +2339,9 @@ async function loadPenjualan() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        TOTAL
-    ================================================= */
+   /*============================== */
 
     if (totalQtyEl) {
 
@@ -2231,15 +2361,13 @@ async function loadPenjualan() {
     }
 }
 
-/* =====================================================
+/*/*==================================
    HAPUS PENJUALAN
 ===================================================== */
 
 async function hapusPenjualan(id) {
 
-    if (
-        window.sedangMenghapusPenjualan
-    ) {
+    if (window.sedangMenghapusPenjualan) {
         return;
     }
 
@@ -2257,213 +2385,61 @@ async function hapusPenjualan(id) {
         }
 
 
-        /* =================================================
-           1. AMBIL TRANSAKSI STOK TERKAIT
-        ================================================= */
+        // =========================================
+        // HAPUS SECARA ATOMIC MELALUI SUPABASE RPC
+        // =========================================
 
-        const {
-            data: transaksiTerkait,
-            error: errorCariTransaksi
-        } = await supabaseClient
-            .from("transaksi")
-            .select("*")
-            .eq("penjualan_id", id);
-
-
-        if (errorCariTransaksi) {
-
-            console.error(
-                "ERROR CEK TRANSAKSI:",
-                errorCariTransaksi
+        const { data, error } =
+            await supabaseClient.rpc(
+                "hapus_penjualan_atomic",
+                {
+                    p_penjualan_id: Number(id)
+                }
             );
 
-            alert(
-                "Gagal mengecek transaksi stok:\n\n" +
-                errorCariTransaksi.message
-            );
 
-            return;
-        }
+        // =========================================
+        // JIKA GAGAL
+        // =========================================
 
-
-        if (
-            !transaksiTerkait ||
-            transaksiTerkait.length === 0
-        ) {
-
-            alert(
-                "Transaksi stok terkait tidak ditemukan.\n\n" +
-                "Penjualan tidak jadi dihapus agar stok tetap aman."
-            );
-
-            return;
-        }
-
-
-        /* =================================================
-           2. HAPUS TRANSAKSI STOK TERKAIT
-        ================================================= */
-
-        const {
-            data: transaksiTerhapus,
-            error: errorTransaksi
-        } = await supabaseClient
-            .from("transaksi")
-            .delete()
-            .eq("penjualan_id", id)
-            .select();
-
-
-        if (errorTransaksi) {
-
-            console.error(
-                "ERROR HAPUS TRANSAKSI:",
-                errorTransaksi
-            );
-
-            alert(
-                "Gagal menghapus transaksi stok:\n\n" +
-                errorTransaksi.message
-            );
-
-            return;
-        }
-
-
-        if (
-            !transaksiTerhapus ||
-            transaksiTerhapus.length === 0
-        ) {
-
-            alert(
-                "Transaksi stok tidak berhasil dihapus.\n\n" +
-                "Penjualan tidak jadi dihapus agar stok tetap aman."
-            );
-
-            return;
-        }
-
-
-        /* =================================================
-           3. HAPUS PENJUALAN
-        ================================================= */
-
-        const {
-            data: penjualanTerhapus,
-            error: errorPenjualan
-        } = await supabaseClient
-            .from("penjualan")
-            .delete()
-            .eq("id", id)
-            .select();
-
-
-        if (errorPenjualan) {
+        if (error) {
 
             console.error(
                 "ERROR HAPUS PENJUALAN:",
-                errorPenjualan
+                error
             );
 
-            /* ---------------------------------------------
-               ROLLBACK TRANSAKSI STOK
-               Jika penjualan gagal dihapus, transaksi yang
-               sudah terhapus dikembalikan.
-            --------------------------------------------- */
-
-            const {
-                error: errorRollback
-            } = await supabaseClient
-                .from("transaksi")
-                .insert(
-                    transaksiTerkait
-                );
-
-
-            if (errorRollback) {
-
-                console.error(
-                    "ERROR ROLLBACK TRANSAKSI:",
-                    errorRollback
-                );
-
-                alert(
-                    "Gagal menghapus penjualan.\n\n" +
-                    errorPenjualan.message +
-                    "\n\nPERINGATAN: transaksi stok juga gagal dipulihkan. Silakan cek database."
-                );
-
-            } else {
-
-                alert(
-                    "Gagal menghapus penjualan.\n\n" +
-                    errorPenjualan.message +
-                    "\n\nTransaksi stok sudah dipulihkan."
-                );
-            }
+            showToast(
+                "❌ Gagal menghapus penjualan: " +
+                error.message,
+                "error"
+            );
 
             return;
         }
 
 
-        /* =================================================
-           4. PASTIKAN PENJUALAN BENAR-BENAR TERHAPUS
-        ================================================= */
+        // =========================================
+        // BERHASIL
+        // =========================================
 
-        if (
-            !penjualanTerhapus ||
-            penjualanTerhapus.length === 0
-        ) {
-
-            const {
-                error: errorRollback
-            } = await supabaseClient
-                .from("transaksi")
-                .insert(
-                    transaksiTerkait
-                );
+        console.log(
+            "PENJUALAN BERHASIL DIHAPUS:",
+            data
+        );
 
 
-            if (errorRollback) {
-
-                console.error(
-                    "ERROR ROLLBACK TRANSAKSI:",
-                    errorRollback
-                );
-
-                alert(
-                    "Penjualan tidak terhapus.\n\n" +
-                    "PERINGATAN: transaksi stok gagal dipulihkan. Silakan cek database."
-                );
-
-            } else {
-
-                alert(
-                    "Penjualan tidak terhapus dari database.\n\n" +
-                    "Transaksi stok sudah dipulihkan."
-                );
-            }
-
-            return;
-        }
-
-
-        /* =================================================
-           5. REFRESH SEMUA DATA
-        ================================================= */
-
+        // Ambil data terbaru dari database
         await loadTransactions();
         await loadBarang();
         await loadPenjualan();
 
+
+        // Update tampilan
         updateTable();
         updateStats();
         renderHistory();
 
-
-        /* =================================================
-           6. NOTIFIKASI
-        ================================================= */
 
         showToast(
             "✅ Penjualan berhasil dihapus dan stok dikembalikan",
@@ -2477,14 +2453,15 @@ async function hapusPenjualan(id) {
             error
         );
 
-        alert(
-            "Terjadi kesalahan saat menghapus penjualan:\n\n" +
-            (error?.message || error)
+        showToast(
+            "❌ Terjadi kesalahan saat menghapus penjualan",
+            "error"
         );
 
     } finally {
 
         window.sedangMenghapusPenjualan = false;
+
     }
 }
 async function initFilterPenjualan() {
@@ -2512,9 +2489,9 @@ const bulanSaatIni =
 const brandSaatIni =
     brand.value;
 
-    /* =================================================
+    /*/*==============================
        AMBIL DATA PENJUALAN
-    ================================================= */
+   /*============================== */
 
     const {
         data,
@@ -2544,9 +2521,9 @@ const brandSaatIni =
     }
 
 
-    /* =================================================
+    /*/*==============================
        FILTER BULAN
-    ================================================= */
+   /*============================== */
 
     const bulanSet =
         new Set();
@@ -2574,9 +2551,9 @@ const brandSaatIni =
     );
 
 
-    /* =================================================
+    /*/*==============================
        BULAN SEKARANG
-    ================================================= */
+   /*============================== */
 
     const sekarang =
         new Date();
@@ -2603,9 +2580,9 @@ const brandSaatIni =
             .reverse();
 
 
-    /* =================================================
+    /*/*==============================
        ISI DROPDOWN BULAN
-    ================================================= */
+   /*============================== */
 
     bulan.innerHTML = "";
 
@@ -2678,9 +2655,9 @@ const daftarBrand = [
     return a.localeCompare(b, "id");
 });
 
-    /* =================================================
+    /*/*==============================
        ISI DROPDOWN BRAND
-    ================================================= */
+   /*============================== */
 
     brand.innerHTML = "";
 
@@ -2721,12 +2698,7 @@ const daftarBrand = [
         }
     );
 
-/* =================================================
-   DEFAULT
-================================================= */
-/* =================================================
-   DEFAULT
-===================================================== */
+
 
 if (bulanSaatIni) {
 
@@ -2751,14 +2723,14 @@ if (brandSaatIni) {
         "";
 }
 
-    /* =================================================
+    /*/*==============================
        TAMPILKAN DATA
-    ================================================= */
+   /*============================== */
 
     await loadPenjualan();
 }
 
-/* =====================================================
+/*/*==================================
    EVENT FILTER PENJUALAN
 ===================================================== */
 
@@ -2793,7 +2765,7 @@ if (filterBrandElement) {
         }
     );
 }
-/* =====================================================
+/*/*==================================
    EXPORT EXCEL
 ===================================================== */
 
@@ -2849,9 +2821,9 @@ async function exportExcel() {
         ).getDate();
 
 
-    /* =================================================
+    /*/*==============================
        HEADER
-    ================================================= */
+   /*============================== */
 
     const header = [];
 
@@ -2876,9 +2848,9 @@ async function exportExcel() {
         [header];
 
 
-    /* =================================================
+    /*/*==============================
        DATA BARANG
-    ================================================= */
+   /*============================== */
 
     dataBarang.forEach(
         function(barang) {
@@ -3025,9 +2997,9 @@ async function exportExcel() {
     );
 
 
-    /* =================================================
+    /*/*==============================
        BUAT EXCEL
-    ================================================= */
+   /*============================== */
 
     const worksheet =
         XLSX.utils.aoa_to_sheet(
@@ -3045,9 +3017,9 @@ async function exportExcel() {
     );
 
 
-    /* =================================================
+    /*/*==============================
        LEBAR KOLOM
-    ================================================= */
+   /*============================== */
 
     const widths = [
         {
@@ -3072,9 +3044,9 @@ async function exportExcel() {
         widths;
 
 
-    /* =================================================
+    /*/*==============================
        STYLE HEADER
-    ================================================= */
+   /*============================== */
 
     for (
         let c = 0;
@@ -3110,9 +3082,9 @@ async function exportExcel() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        STYLE DATA
-    ================================================= */
+   /*============================== */
 
     for (
         let r = 1;
@@ -3216,9 +3188,9 @@ async function exportExcel() {
                 );
 
 
-            /* =================================================
+            /*/*==============================
                LAKU
-            ================================================= */
+           /*============================== */
 
             if (
                 adaLaku
@@ -3247,9 +3219,9 @@ async function exportExcel() {
             }
 
 
-            /* =================================================
+            /*/*==============================
                MASUK
-            ================================================= */
+           /*============================== */
 
             else if (
                 adaMasuk
@@ -3280,9 +3252,9 @@ async function exportExcel() {
     }
 
 
-    /* =================================================
+    /*/*==============================
        EXPORT XLSX
-    ================================================= */
+   /*============================== */
 
     const excelData =
         XLSX.write(
@@ -3342,7 +3314,7 @@ async function exportExcel() {
     );
 }
 
-/* =====================================================
+/*/*==================================
    INIT
 ===================================================== */
 
@@ -3362,27 +3334,57 @@ async function init() {
 
         tanggal.value =
             tanggalDipilih;
+            /* 
+   TANGGAL PENJUALAN = HARI INI
+ */
+
+const tanggalPenjualan =
+    document.getElementById(
+        "penjualanTanggal"
+    );
+
+if (tanggalPenjualan) {
+
+    const hariIni =
+        new Date();
+
+    const tahun =
+        hariIni.getFullYear();
+
+    const bulan =
+        String(
+            hariIni.getMonth() + 1
+        ).padStart(2, "0");
+
+    const hari =
+        String(
+            hariIni.getDate()
+        ).padStart(2, "0");
+
+    tanggalPenjualan.value =
+        `${tahun}-${bulan}-${hari}`;
+}
     }
 
 
-    /* =================================================
+    /*/*==============================
        LOAD DATA UTAMA
-    ================================================= */
+   /*============================== */
 
     await loadBarang();
 
     await loadTransactions();
 
 
-    /* =================================================
+    /*/*==============================
        FILTER PENJUALAN
-    ================================================= */
+   /*============================== */
 
     await initFilterPenjualan();
 }
 
 
-/* =====================================================
+/*/*==================================
    JALANKAN APLIKASI
 ===================================================== */
 

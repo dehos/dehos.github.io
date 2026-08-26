@@ -101,16 +101,85 @@
             <label for="penjualanBrand">
                 Brand
             </label>
-<select id="penjualanBrand" class="form-select form-select-sm">
-                <option value="">Pilih Brand</option>
-                <option>Belleza</option>
-                <option>Solid</option>
-                <option>Dekkson</option>
-                <option>Rona</option>
-                <option>Tsunami</option>
-                <option>Vapely</option>
-                <option>Trisensa</option>
-            </select>
+<div
+    id="brandDropdown"
+    class="custom-select"
+>
+    <button
+        type="button"
+        id="brandDropdownButton"
+        class="custom-select-button"
+    >
+        <span id="brandDropdownText">
+            Pilih Brand
+        </span>
+
+        <span class="custom-select-arrow">
+            ▾
+        </span>
+    </button>
+
+    <div
+        id="brandDropdownMenu"
+        class="custom-select-menu"
+    >
+
+        <button
+            type="button"
+            data-value="Belleza"
+        >
+            Belleza
+        </button>
+
+        <button
+            type="button"
+            data-value="Solid"
+        >
+            Solid
+        </button>
+
+        <button
+            type="button"
+            data-value="Dekkson"
+        >
+            Dekkson
+        </button>
+
+        <button
+            type="button"
+            data-value="Rona"
+        >
+            Rona
+        </button>
+
+        <button
+            type="button"
+            data-value="Tsunami"
+        >
+            Tsunami
+        </button>
+
+        <button
+            type="button"
+            data-value="Vapely"
+        >
+            Vapely
+        </button>
+
+        <button
+            type="button"
+            data-value="Trisensa"
+        >
+            Trisensa
+        </button>
+    </div>
+</div>
+
+<input
+    type="hidden"
+    id="penjualanBrand"
+    value=""
+>
         </div>
 
 
@@ -132,13 +201,18 @@
             <label for="penjualanHarga">
                 Harga/Unit
             </label>
-<input
-    type="number"
-    id="penjualanHarga"
-    class="form-control form-control-sm"
-    min="0"
-    placeholder="Harga..."
->
+<div class="harga-input-wrapper">
+    <span class="harga-prefix">Rp.</span>
+
+    <input
+        type="text"
+        id="penjualanHarga"
+        class="form-control form-control-sm"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="0"
+    >
+</div>
         </div>
 
 
@@ -174,7 +248,7 @@
 ===================================================== -->
 
 <section class="card">
-
+<h3>📁Stok Barang</h3>
     <div
         id="databaseStatus"
         class="status"
@@ -273,7 +347,7 @@
 
 <section class="card">
 
-    <h2>🧾 Catatan Penjualan</h2>
+    <h3>🧾 Catatan Penjualan</h3>
 
     <div class="cari">
 
@@ -304,14 +378,13 @@
     <table class="table table-sm table-bordered align-middle mb-0">
             <thead class="table-light">
 <tr>
-    <th class="text-center">No</th>
-    <th>Nama Barang</th>
-    <th>Brand</th>
-    <th class="text-center">Qty</th>
-    <th class="text-end">Harga/Unit</th>
-    <th class="text-end">Total</th>
-    <th class="text-center">Tanggal</th>
-    <th class="text-center">Aksi</th>
+<th class="text-center">Tanggal</th>
+<th>Nama Barang</th>
+<th class="text-center">Qty</th>
+<th class="text-end">Harga</th>
+<th class="text-end">Total</th>
+<th>Brand</th>
+<th class="text-center">Aksi</th>
 </tr>
 
             </thead>
@@ -319,7 +392,7 @@
             <tbody id="penjualanTable">
 
                 <tr>
-                    <td colspan="8" class="text-center">
+                    <td colspan="7" class="text-center">
                         Belum ada data penjualan.
                     </td>
                 </tr>
@@ -348,9 +421,6 @@
             Rp0
         </th>
 
-        <th></th>
-
-        <th></th>
     </tr>
 
 </tfoot>
@@ -447,9 +517,9 @@
 
 <section class="card">
 
-    <h2 class="form-title">
+    <h3 class="form-title">
         Form Barang Baru (Belum terdata) 🆕
-    </h2>
+    </h3>
 
 
     <div class="cari">
