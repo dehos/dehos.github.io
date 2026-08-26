@@ -851,3 +851,70 @@ footer small {
 
     white-space: nowrap;
 }
+
+#saranBarang {
+    position: relative;
+    z-index: 10;
+}
+.saran-item{
+    padding:6px 9px;
+    font-size:13px;
+    border-bottom:1px solid #eee;
+    cursor:pointer;
+}
+
+.saran-item:hover{
+    background:#f2f2f2;
+}
+/* =====================================================
+   CATATAN PENJUALAN - RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    /* Hanya tabel catatan penjualan */
+    #penjualanTable {
+        font-size: 12px;
+    }
+
+    /* Wrapper tabel tetap di dalam layar */
+    #penjualanTable {
+        min-width: 0;
+    }
+
+    /* Kolom yang tidak terlalu penting diperkecil */
+    #penjualanTable td,
+    #penjualanTable th {
+        white-space: nowrap;
+        padding: 6px 5px;
+    }
+
+}
+/* =====================================================
+   SCROLL TABEL CATATAN PENJUALAN
+===================================================== */
+
+.penjualan-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.penjualan-wrapper table {
+    width: max-content;
+    min-width: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .penjualan-wrapper {
+        overflow-x: auto;
+    }
+
+    .penjualan-wrapper table {
+        min-width: 700px;
+    }
+
+}
