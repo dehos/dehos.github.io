@@ -1,47 +1,32 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Stock Barang</title>
-
     <link rel="stylesheet" href="style.css">
-
     <link
         rel="icon"
         type="image/png"
         href="favicon.png"
     >
-
     <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <!-- XLSX -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style/dist/xlsx.bundle.js"></script>
-
-    <!-- BOOTSTRAP -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-
 </head>
-
-
 <body>
-
-
 <!-- =====================================================
      HEADER
 ===================================================== -->
-
 <header class="header">
 
     <div class="header-content">
@@ -51,20 +36,12 @@
             alt="Logo Perusahaan"
             class="company-logo"
         >
-
         <div>
-
             <h1>📦 Stock Barang</h1>
-
             <p>Rekap Stok & Transaksi</p>
-
         </div>
-
     </div>
-
 </header>
-
-
 
 <main class="container">
 <!-- =====================================================
@@ -72,11 +49,13 @@
 ===================================================== -->
 
 <section class="card">
-
-    <h2>🛒 Catat Penjualan</h2>
-
+<div class="history-header"><h2>🛒Penjualan</h2><div
+        id="databaseStatus"
+        class="status"
+    >
+        ⏳ Menghubungkan ke database...
+    </div></div>
     <div class="cari">
-
  <div class="position-relative">
     <label for="penjualanBarang">
         Nama Barang
@@ -181,8 +160,6 @@
     value=""
 >
         </div>
-
-
         <div>
             <label for="penjualanQty">
                 Quantity
@@ -214,8 +191,6 @@
     >
 </div>
         </div>
-
-
         <div>
             <label for="penjualanTanggal">
                 Tanggal Pembelian
@@ -226,9 +201,6 @@
     class="form-control form-control-sm"
 >
         </div>
-
-    </div>
-
     <div class="penjualan-button">
         <label>&nbsp;</label>
         <p>
@@ -237,26 +209,38 @@
             class="btn btn-primary btn-sm"
             onclick="simpanPenjualan()"
         >
-            ➕ Catat Penjualan
+           Catat Penjualan
         </button>
         </div>
-
+</div>
 </section>
-
-<!-- =====================================================
+<!--====================================================
      DAFTAR STOK
-===================================================== -->
-
+=====================================================-->
 <section class="card">
-<h3>📁Stok Barang</h3>
-    <div
-        id="databaseStatus"
-        class="status"
-    >
-        ⏳ Menghubungkan ke database...
+<!-- HTML — index.html -->
+<div class="history-header">
+    <h3>📁 Stok Barang</h3>
+
+    <div class="d-flex gap-1">
+        <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            onclick="openTambahBarang()"
+        >
+            ➕ Barang Baru
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-success btn-sm"
+            onclick="exportExcel()"
+        >
+            📊 Export Excel
+        </button>
     </div>
-
-
+</div>
+    
     <div id="stockListContent">
 
         <div class="stock-list-inner">
@@ -289,77 +273,69 @@
                             >
                                 Stok
                             </th>
-
-                            <th class="text-center">
-                                Aksi
-                            </th>
-
+<th
+    colspan="2"
+    class="text-center"
+>
+    Aksi
+</th>
                         </tr>
-
                     </thead>
-
-
                     <tbody id="stockTable">
-
                         <tr>
-
                             <td
                                 colspan="4"
                                 class="loading"
                             >
                                 ⏳ Memuat data...
                             </td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
-
     </div>
-
-
     <!-- FILTER -->
 <div class="cari">
-
     <input
         type="text"
         id="search"
         class="form-control form-control-sm"
         placeholder="Filter Produk..."
     >
-
+    <!-- HTML — index.html -->
+<div class="tanggal-stok">
+    <label for="tanggal">
+        📅 Stok per tanggal
+    </label>
     <input
         type="date"
         id="tanggal"
         class="form-control form-control-sm"
     >
-
 </div>
-
 </section>
-
 <!-- CATATAN PENJUALAN -->
-
 <section class="card">
-
+    <div class="history-header">
     <h3>🧾 Catatan Penjualan</h3>
 
+    <button
+        type="button"
+        class="btn btn-success btn-sm"
+        onclick="exportPenjualanExcel()"
+    >
+        📊 Export
+    </button>
+</div>
     <div class="cari">
 
         <div>
-            <label>Penjualan Bulan</label>
             <select id="filterBulan" class="form-select form-select-sm">
                 <option value="">Memuat...</option>
             </select>
         </div>
-
         <div>
-            <label>Brand</label>
             <select id="filterBrand" class="form-select form-select-sm">
                 <option value="">Semua Brand</option>
                 <option>Belleza</option>
@@ -371,7 +347,6 @@
                 <option>Trisensa</option>
             </select>
         </div>
-
     </div>
 <div class="table-wrapper penjualan-wrapper">
 
@@ -386,22 +361,18 @@
 <th>Brand</th>
 <th class="text-center">Aksi</th>
 </tr>
-
             </thead>
-
             <tbody id="penjualanTable">
-
                 <tr>
                     <td colspan="7" class="text-center">
                         Belum ada data penjualan.
                     </td>
                 </tr>
-
             </tbody>
 <tfoot class="table-light">
 
     <tr>
-        <th colspan="3" class="text-end">
+        <th colspan="2" class="text-end">
             TOTAL
         </th>
 
@@ -421,56 +392,36 @@
             Rp0
         </th>
 
+        <th></th>
+
+        <th></th>
     </tr>
 
 </tfoot>
-
         </table>
-
     </div>
-
 </section>
-
 <!-- =====================================================
      RIWAYAT TRANSAKSI
 ===================================================== -->
-
 <section class="card">
-
     <div class="history-header">
-
         <h3>
-            📜 Riwayat Transaksi
+            📜 Riwayat in/out
         </h3>
-
-
-        <button
-            type="button"
-            class="btn btn-success btn-sm"
-            onclick="exportExcel()"
-        >
-            📊 Export Excel
-        </button>
-
     </div>
-
-
     <div class="table-wrapper history-wrapper">
 
         <table class="history-table table table-sm table-bordered table-hover align-middle mb-0">
 
             <thead class="table-light">
-
                 <tr>
-
                     <th>
                         Waktu
                     </th>
-
                     <th>
                         Barang
                     </th>
-
                     <th>
                         Transaksi
                     </th>
@@ -482,100 +433,21 @@
                     <th class="text-center">
                         Stok
                     </th>
-
                 </tr>
-
             </thead>
-
-
             <tbody id="historyTable">
-
                 <tr>
-
                     <td
                         colspan="5"
                         class="empty"
                     >
                         Belum ada transaksi
                     </td>
-
                 </tr>
-
             </tbody>
-
         </table>
-
     </div>
-
 </section>
-
-
-
-<!-- =====================================================
-     FORM BARANG BARU
-===================================================== -->
-
-<section class="card">
-
-    <h3 class="form-title">
-        Form Barang Baru (Belum terdata) 🆕
-    </h3>
-
-
-    <div class="cari">
-
-        <div>
-
-            <label for="namaBarang">
-                Nama Barang
-            </label>
-
-           <input
-    type="text"
-    id="namaBarang"
-    class="form-control form-control-sm"
-    placeholder="Product..."
->
-
-        </div>
-
-
-        <div>
-
-            <label for="stokAwal">
-                Jumlah
-            </label>
-
-           <input
-    type="number"
-    id="stokAwal"
-    class="form-control form-control-sm"
-    min="0"
-    value="0"
->
-
-        </div>
-
-    </div>
-
-
-    <!-- TOMBOL DIPISAH DARI GRID INPUT -->
-
-    <div class="button-row">
-
-        <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            onclick="tambahBarang()"
-        >
-            ➕ Tambah Barang
-        </button>
-
-    </div>
-
-</section>
-
-
 
 <!-- =====================================================
      STATISTIK
@@ -663,7 +535,6 @@
         <label for="transactionQty">
             Jumlah
         </label>
-
 <input
     type="number"
     id="transactionQty"
@@ -671,8 +542,6 @@
     min="1"
     value="1"
 >
-
-
         <div class="modal-actions">
 
             <button
@@ -682,8 +551,6 @@
             >
                 Batal
             </button>
-
-
             <button
                 type="button"
                 class="btn btn-primary"
@@ -691,60 +558,197 @@
             >
                 Simpan
             </button>
+        </div>
+    </div>
+</div>
+<!-- =====================================================
+     MODAL EDIT PENJUALAN
+===================================================== -->
+<div
+    class="modal"
+    id="editPenjualanModal"
+>
+    <div class="modal-content">
+
+        <div class="modal-title">
+            ✏️ Edit Penjualan
+        </div>
+
+        <input
+            type="hidden"
+            id="editPenjualanId"
+        >
+
+        <label for="editPenjualanBarang">
+            Nama Barang
+        </label>
+
+        <input
+            type="text"
+            id="editPenjualanBarang"
+            class="form-control form-control-sm"
+            readonly
+        >
+
+        <label for="editPenjualanQty">
+            Quantity
+        </label>
+
+        <input
+            type="number"
+            id="editPenjualanQty"
+            class="form-control form-control-sm"
+            min="1"
+        >
+
+        <label for="editPenjualanHarga">
+            Harga/Unit
+        </label>
+
+        <input
+            type="text"
+            id="editPenjualanHarga"
+            class="form-control form-control-sm"
+            inputmode="numeric"
+            autocomplete="off"
+        >
+
+        <label for="editPenjualanBrand">
+            Brand
+        </label>
+
+        <select
+            id="editPenjualanBrand"
+            class="form-select form-select-sm"
+        >
+            <option value="">Pilih Brand</option>
+            <option value="Belleza">Belleza</option>
+            <option value="Solid">Solid</option>
+            <option value="Dekkson">Dekkson</option>
+            <option value="Rona">Rona</option>
+            <option value="Tsunami">Tsunami</option>
+            <option value="Vapely">Vapely</option>
+            <option value="Trisensa">Trisensa</option>
+        </select>
+
+        <label for="editPenjualanTanggal">
+            Tanggal Pembelian
+        </label>
+
+        <input
+            type="date"
+            id="editPenjualanTanggal"
+            class="form-control form-control-sm"
+        >
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeEditPenjualan()"
+            >
+                Batal
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="simpanEditPenjualan()"
+            >
+                Simpan
+            </button>
 
         </div>
 
     </div>
-
 </div>
+<!-- =====================================================
+     MODAL TAMBAH BARANG BARU
+===================================================== -->
 
+<div
+    class="modal"
+    id="tambahBarangModal"
+>
+    <div class="modal-content">
 
+        <div class="modal-title">
+            🆕 Tambah Barang Baru
+        </div>
 
+        <label for="namaBarang">
+            Nama Barang
+        </label>
+
+        <input
+            type="text"
+            id="namaBarang"
+            class="form-control form-control-sm"
+            placeholder="Product..."
+            autocomplete="off"
+        >
+
+        <label for="stokAwal">
+            Stok Awal
+        </label>
+
+        <input
+            type="number"
+            id="stokAwal"
+            class="form-control form-control-sm"
+            min="0"
+            value="0"
+        >
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeTambahBarang()"
+            >
+                Batal
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="tambahBarang()"
+            >
+                Tambah
+            </button>
+
+        </div>
+
+    </div>
+</div>
 <!-- =====================================================
      FOOTER
 ===================================================== -->
-
 <div align="center">
-
     <sd>
         Aplikasinya bagus, omsetnya kurang bagus
     </sd>
-
 </div>
-
-
 <footer>
-
     <small>
         © 2026 Tony. All rights reserved.
     </small>
-
 </footer>
-
-
-
 <!-- =====================================================
      TOAST
 ===================================================== -->
-
 <div
     id="toast"
     class="toast"
 >
-
     <div id="toastMessage"></div>
 
 </div>
-
-
-
 <!-- =====================================================
      JAVASCRIPT
 ===================================================== -->
-
 <script src="script.js"></script>
-
-
 </body>
-
 </html>

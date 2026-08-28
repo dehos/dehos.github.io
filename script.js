@@ -236,9 +236,9 @@ async function loadBarang() {
     dataBarang = data || [];
 
     setDatabaseStatus(
-        "✅ Database terhubung. " +
+        "✅ Database terhubung, " +
         dataBarang.length +
-        " barang ditemukan, ↓Scroll kebawah↓",
+        " item barang",
         "success"
     );
 
@@ -395,9 +395,31 @@ async function tambahBarang() {
     );
 
     await loadBarang();
+    
+}
+// JS — script.js
+// Buka modal Tambah Barang
+
+function openTambahBarang() {
+    const modal = document.getElementById("tambahBarangModal");
+
+    if (modal) {
+        modal.style.display = "flex";
+    }
+
+    document.getElementById("namaBarang")?.focus();
 }
 
 
+// Tutup modal Tambah Barang
+
+function closeTambahBarang() {
+    const modal = document.getElementById("tambahBarangModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
 /*/*==================================
    HITUNG STOK
 ===================================================== */
@@ -615,9 +637,10 @@ function updateTable() {
        TAMPILKAN DATA
    /*============================== */
 
-    filtered.forEach(
+    filtered
+    .slice(0, 6)
+    .forEach(
         function(barang, index) {
-
             const stok =
                 getCurrentStock(
                     barang
@@ -672,9 +695,18 @@ function updateTable() {
                         class="action-btn btn btn-success btn-sm"
                         onclick="openTransaction(${Number(barang.id)}, 'masuk')"
                     >
-                        ↓ Masuk
+                        ↓ in
                     </button>
                 </td>
+                <td>
+    <button
+        type="button"
+        class="action-btn btn btn-danger btn-sm"
+        onclick="openTransaction(${Number(barang.id)}, 'laku')"
+    >
+        ↑ out
+    </button>
+</td>
                 `;
 
             tbody.appendChild(
@@ -875,8 +907,8 @@ function openTransaction(
 
     title.textContent =
         type === "masuk"
-            ? "➕ Barang Masuk"
-            : "🛒 Barang Laku";
+            ? "Barang Masuk"
+            : "Barang Keluar";
 
     product.textContent =
         barang.nama;
@@ -1037,7 +1069,7 @@ async function confirmTransaction() {
     const namaTransaksi =
         selectedTransactionType === "masuk"
             ? "Barang masuk"
-            : "Barang laku";
+            : "Barang keluar";
 
     showToast(
         `✅ ${namaTransaksi} ${formatNumber(qty)}`,
@@ -1153,9 +1185,9 @@ function renderHistory() {
                 transaction.type ===
                 "masuk"
 
-                    ? "➕ Barang Masuk"
+                    ? "Masuk"
 
-                    : "🛒 Barang Laku";
+                    : "Keluar";
 
 
             const qtyText =
@@ -2100,7 +2132,6 @@ async function loadPenjualan() {
             );
 
     if (error) {
-
     console.error(
         "ERROR LOAD PENJUALAN:",
         error
@@ -2116,24 +2147,21 @@ async function loadPenjualan() {
             "totalPenjualan"
         );
 
-
     if (totalQtyEl) {
-
-        totalQtyEl.textContent =
-            "0";
+        totalQtyEl.textContent = "0";
     }
-
 
     if (totalPenjualanEl) {
-
-        totalPenjualanEl.textContent =
-            "Rp0";
+        totalPenjualanEl.textContent = "Rp0";
     }
 
+    window.dataPenjualan = [];
 
     return;
 }
 
+window.dataPenjualan = data || [];
+window.dataPenjualan = data || [];
     const totalQtyEl =
         document.getElementById(
             "totalQtyPenjualan"
@@ -2302,15 +2330,24 @@ async function loadPenjualan() {
     </td>
 
     <td class="text-center">
-        <button
-            type="button"
-            class="delete-history-btn"
-            onclick="hapusPenjualan(${item.id})"
-            title="Hapus penjualan"
-        >
-            ❌
-        </button>
-    </td>
+    <button
+        type="button"
+        class="edit-history-btn"
+        onclick="editPenjualan(${item.id})"
+        title="Edit penjualan"
+    >
+        ✏️
+    </button>
+
+    <button
+        type="button"
+        class="delete-history-btn"
+        onclick="hapusPenjualan(${item.id})"
+        title="Hapus penjualan"
+    >
+        ❌
+    </button>
+</td>
 </tr>
                 `;
         }
@@ -2361,6 +2398,250 @@ async function loadPenjualan() {
     }
 }
 
+/*/*==================================
+   EDIT PENJUALAN
+================================== */
+
+function editPenjualan(id) {
+
+    const penjualan =
+        (window.dataPenjualan || []).find(
+            function(item) {
+                return Number(item.id) === Number(id);
+            }
+        );
+
+    if (!penjualan) {
+        alert("Data penjualan tidak ditemukan.");
+        return;
+    }
+
+    const barang =
+        dataBarang.find(
+            function(item) {
+                return String(item.id) ===
+                    String(penjualan.barang_id);
+            }
+        );
+
+    document.getElementById(
+        "editPenjualanId"
+    ).value = penjualan.id;
+
+    document.getElementById(
+        "editPenjualanBarang"
+    ).value =
+        barang
+            ? barang.nama
+            : "Barang tidak ditemukan";
+
+    document.getElementById(
+        "editPenjualanQty"
+    ).value =
+        Number(penjualan.qty) || 0;
+
+    document.getElementById(
+        "editPenjualanHarga"
+    ).value =
+        formatNumber(
+            Number(penjualan.harga) || 0
+        );
+
+    document.getElementById(
+        "editPenjualanBrand"
+    ).value =
+        penjualan.brand || "";
+
+    document.getElementById(
+        "editPenjualanTanggal"
+    ).value =
+        penjualan.tanggal_pembelian || "";
+
+    document.getElementById(
+        "editPenjualanModal"
+    ).style.display = "flex";
+}
+
+function closeEditPenjualan() {
+
+    const modal =
+        document.getElementById(
+            "editPenjualanModal"
+        );
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+async function simpanEditPenjualan() {
+
+    const id =
+        Number(
+            document.getElementById(
+                "editPenjualanId"
+            ).value
+        );
+
+    const qty =
+        Number(
+            document.getElementById(
+                "editPenjualanQty"
+            ).value
+        );
+
+    const hargaInput =
+        document.getElementById(
+            "editPenjualanHarga"
+        ).value;
+
+    const harga =
+        Number(
+            hargaInput
+                .replace(/\./g, "")
+                .replace(/,/g, "")
+        );
+
+    const brand =
+        document.getElementById(
+            "editPenjualanBrand"
+        ).value;
+
+    const tanggal =
+        document.getElementById(
+            "editPenjualanTanggal"
+        ).value;
+
+
+    // ==============================
+    // VALIDASI
+    // ==============================
+
+    if (!id) {
+        showToast(
+            "❌ Data penjualan tidak valid",
+            "error"
+        );
+        return;
+    }
+
+    if (!qty || qty <= 0) {
+        showToast(
+            "❌ Quantity harus lebih dari 0",
+            "error"
+        );
+        return;
+    }
+
+    if (!Number.isFinite(harga) || harga < 0) {
+        showToast(
+            "❌ Harga tidak valid",
+            "error"
+        );
+        return;
+    }
+
+    if (!tanggal) {
+        showToast(
+            "❌ Tanggal harus diisi",
+            "error"
+        );
+        return;
+    }
+
+
+    // ==============================
+    // KONFIRMASI
+    // ==============================
+
+    const konfirmasi =
+        confirm(
+            "Simpan perubahan penjualan ini?"
+        );
+
+    if (!konfirmasi) {
+        return;
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "edit_penjualan_atomic",
+                {
+                    p_penjualan_id: id,
+                    p_qty: qty,
+                    p_harga: harga,
+                    p_brand: brand,
+                    p_tanggal: tanggal
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "ERROR EDIT PENJUALAN:",
+                error
+            );
+
+            showToast(
+                "❌ Gagal mengubah penjualan: " +
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "EDIT PENJUALAN BERHASIL:",
+            data
+        );
+
+
+        // ==============================
+        // AMBIL DATA TERBARU
+        // ==============================
+
+        await loadTransactions();
+        await loadBarang();
+        await loadPenjualan();
+
+        updateTable();
+        updateStats();
+        renderHistory();
+
+
+        // ==============================
+        // TUTUP MODAL
+        // ==============================
+
+        closeEditPenjualan();
+
+
+        showToast(
+            "✅ Penjualan berhasil diperbarui",
+            "success"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "ERROR EDIT PENJUALAN:",
+            error
+        );
+
+        showToast(
+            "❌ Terjadi kesalahan saat mengedit penjualan",
+            "error"
+        );
+    }
+}
 /*/*==================================
    HAPUS PENJUALAN
 ===================================================== */
@@ -3313,7 +3594,349 @@ async function exportExcel() {
         url
     );
 }
+/*/*==================================
+   EXPORT PENJUALAN
+================================== */
 
+async function exportPenjualanExcel() {
+
+    if (typeof XLSX === "undefined") {
+        alert("Library Excel belum dimuat.");
+        return;
+    }
+
+    const bulan =
+        document.getElementById(
+            "filterBulan"
+        )?.value || "";
+
+    const brand =
+        document.getElementById(
+            "filterBrand"
+        )?.value || "";
+
+    const data =
+        (window.dataPenjualan || []).filter(
+            function(item) {
+
+                if (
+                    bulan &&
+                    !String(
+                        item.tanggal_pembelian || ""
+                    ).startsWith(bulan)
+                ) {
+                    return false;
+                }
+
+                if (
+                    brand &&
+                    String(item.brand || "")
+                        .trim()
+                        .toLowerCase() !==
+                    String(brand)
+                        .trim()
+                        .toLowerCase()
+                ) {
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+    if (data.length === 0) {
+        alert(
+            "Tidak ada data penjualan untuk diekspor."
+        );
+        return;
+    }
+
+
+    const excelData = [
+        [
+            "No",
+            "Tanggal",
+            "Nama Barang",
+            "Brand",
+            "Qty",
+            "Harga/Unit",
+            "Total"
+        ]
+    ];
+
+    let totalQty = 0;
+    let totalPenjualan = 0;
+
+
+    data.forEach(
+        function(item, index) {
+
+            const barang =
+                dataBarang.find(
+                    function(b) {
+                        return (
+                            String(b.id) ===
+                            String(item.barang_id)
+                        );
+                    }
+                );
+
+            const namaBarang =
+                barang
+                    ? barang.nama
+                    : "Barang tidak ditemukan";
+
+            const qty =
+                Number(item.qty) || 0;
+
+            const harga =
+                Number(item.harga) || 0;
+
+            const total =
+                qty * harga;
+
+            totalQty += qty;
+            totalPenjualan += total;
+
+
+            const tanggal =
+                item.tanggal_pembelian
+                    ? new Date(
+                        item.tanggal_pembelian +
+                        "T00:00:00"
+                    ).toLocaleDateString(
+                        "id-ID",
+                        {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "2-digit"
+                        }
+                    )
+                    : "-";
+
+
+            excelData.push([
+                index + 1,
+                tanggal,
+                namaBarang,
+                item.brand || "-",
+                qty,
+                harga,
+                total
+            ]);
+        }
+    );
+
+
+    excelData.push([
+        "",
+        "",
+        "",
+        "TOTAL",
+        totalQty,
+        "",
+        totalPenjualan
+    ]);
+
+
+    const worksheet =
+        XLSX.utils.aoa_to_sheet(
+            excelData
+        );
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Penjualan"
+    );
+
+
+    worksheet["!cols"] = [
+        { wch: 6 },
+        { wch: 12 },
+        { wch: 35 },
+        { wch: 15 },
+        { wch: 10 },
+        { wch: 16 },
+        { wch: 18 }
+    ];
+
+
+    /* HEADER */
+    for (
+        let c = 0;
+        c < 7;
+        c++
+    ) {
+
+        const cell =
+            worksheet[
+                XLSX.utils.encode_cell({
+                    r: 0,
+                    c: c
+                })
+            ];
+
+        if (cell) {
+            cell.s = {
+                font: {
+                    bold: true
+                },
+                alignment: {
+                    horizontal: "center",
+                    vertical: "center"
+                }
+            };
+        }
+    }
+
+
+    /* FORMAT HARGA & TOTAL */
+    for (
+        let r = 1;
+        r < excelData.length;
+        r++
+    ) {
+
+        const hargaCell =
+            worksheet[
+                XLSX.utils.encode_cell({
+                    r: r,
+                    c: 5
+                })
+            ];
+
+        const totalCell =
+            worksheet[
+                XLSX.utils.encode_cell({
+                    r: r,
+                    c: 6
+                })
+            ];
+
+        if (hargaCell) {
+            hargaCell.z =
+                '"Rp" #,##0';
+        }
+
+        if (totalCell) {
+            totalCell.z =
+                '"Rp" #,##0';
+        }
+    }
+
+
+    /* FORMAT TOTAL */
+    const totalRow =
+        excelData.length - 1;
+
+    for (
+        let c = 0;
+        c < 7;
+        c++
+    ) {
+
+        const cell =
+            worksheet[
+                XLSX.utils.encode_cell({
+                    r: totalRow,
+                    c: c
+                })
+            ];
+
+        if (cell) {
+            cell.s = {
+                font: {
+                    bold: true
+                }
+            };
+        }
+    }
+
+
+    const excelDataArray =
+        XLSX.write(
+            workbook,
+            {
+                bookType: "xlsx",
+                type: "array"
+            }
+        );
+
+
+    const blob =
+        new Blob(
+            [excelDataArray],
+            {
+                type:
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+
+    let namaFile =
+        "Penjualan";
+
+    if (brand) {
+        namaFile +=
+            "-" + brand;
+    }
+
+    if (bulan) {
+        const tanggal =
+            new Date(
+                bulan + "-01"
+            );
+
+        const namaBulan =
+            tanggal.toLocaleDateString(
+                "id-ID",
+                {
+                    month: "long"
+                }
+            );
+
+        const tahun =
+            tanggal.getFullYear();
+
+        namaFile +=
+            "-" +
+            namaBulan +
+            "-" +
+            tahun;
+    }
+
+
+    link.download =
+        `${namaFile}.xlsx`;
+
+    document.body.appendChild(
+        link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+        link
+    );
+
+    URL.revokeObjectURL(url);
+}
 /*/*==================================
    INIT
 ===================================================== */
