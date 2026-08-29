@@ -1157,16 +1157,3 @@ footer small {
     overflow: visible;
     text-overflow: clip;
 }
-
-/* Total tetap terlihat di bagian bawah */
-
-.penjualan-wrapper tfoot th {
-    position: sticky;
-    bottom: 0;
-
-    z-index: 4;
-    background: #f8f9fa;
-
-    font-size: 11px;
-    font-weight: 700;
-}
