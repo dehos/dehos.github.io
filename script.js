@@ -3578,6 +3578,462 @@ for (
     );
 }
 /* ==================================
+   EXPORT PDF REKAP STOK
+================================== */
+
+function exportPDF() {
+    if (
+        typeof window.jspdf ===
+            "undefined" ||
+        typeof window.jspdf.jsPDF ===
+            "undefined"
+    ) {
+        alert(
+            "Library PDF belum dimuat."
+        );
+        return;
+    }
+
+    const { jsPDF } =
+        window.jspdf;
+
+    const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4"
+    });
+
+    if (
+        typeof pdf.autoTable !==
+        "function"
+    ) {
+        alert(
+            "Library tabel PDF belum dimuat."
+        );
+        return;
+    }
+
+
+    /* TANGGAL SEKARANG */
+
+    const sekarang =
+        new Date();
+
+    const tahun =
+        sekarang.getFullYear();
+
+    const bulan =
+        sekarang.getMonth();
+
+    const hariIni =
+        sekarang.getDate();
+
+    const namaBulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
+    ];
+
+    const jumlahHari =
+        new Date(
+            tahun,
+            bulan + 1,
+            0
+        ).getDate();
+
+
+    /* HEADER PDF */
+
+    const header = [
+        `${namaBulan[bulan]}-${tahun}`
+    ];
+
+    for (
+        let hari = 1;
+        hari <= jumlahHari;
+        hari++
+    ) {
+        header.push(hari);
+    }
+
+
+    /* DATA PDF */
+
+    const dataPDF = [];
+
+    dataBarang.forEach(
+        function(barang) {
+            let stok =
+                Number(
+                    barang.stok_awal
+                ) || 0;
+
+            const row = [
+                barang.nama
+            ];
+
+            for (
+                let hari = 1;
+                hari <= jumlahHari;
+                hari++
+            ) {
+                if (hari > hariIni) {
+                    row.push("");
+                    continue;
+                }
+
+                const tanggal =
+                    `${tahun}-${String(
+                        bulan + 1
+                    ).padStart(
+                        2,
+                        "0"
+                    )}-${String(
+                        hari
+                    ).padStart(
+                        2,
+                        "0"
+                    )}`;
+
+                const transaksiHari =
+                    transactions.filter(
+                        function(transaction) {
+                            return (
+                                Number(
+                                    transaction.barang_id
+                                ) ===
+                                    Number(
+                                        barang.id
+                                    ) &&
+                                transaction.tanggal ===
+                                    tanggal
+                            );
+                        }
+                    );
+
+                let perubahan = 0;
+                let adaTransaksi = false;
+
+                transaksiHari.forEach(
+                    function(transaction) {
+                        const qty =
+                            Number(
+                                transaction.qty
+                            ) || 0;
+
+                        if (
+                            transaction.type ===
+                            "masuk"
+                        ) {
+                            perubahan += qty;
+                            adaTransaksi = true;
+                        }
+
+                        if (
+                            transaction.type ===
+                            "laku"
+                        ) {
+                            perubahan -= qty;
+                            adaTransaksi = true;
+                        }
+                    }
+                );
+
+                if (adaTransaksi) {
+                    if (perubahan > 0) {
+                        row.push(
+                            `+${perubahan}`
+                        );
+                    } else {
+                        row.push(
+                            perubahan
+                        );
+                    }
+
+                    stok += perubahan;
+                } else {
+                    row.push(stok);
+                }
+            }
+
+            dataPDF.push(row);
+        }
+    );
+
+
+    /* UKURAN HALAMAN DAN KOLOM */
+
+    const marginKiri = 5.08;
+    const marginKanan = 5.08;
+    const marginAtas = 12.7;
+    const marginBawah = 3.81;
+
+    const lebarHalaman =
+        pdf.internal.pageSize.getWidth();
+
+    const lebarTabel =
+        lebarHalaman -
+        marginKiri -
+        marginKanan;
+
+    /*
+     * Lebar kolom nama barang.
+     */
+    const lebarKolomBarang = 60;
+
+    /*
+     * Sisa halaman dibagi rata ke
+     * seluruh kolom tanggal.
+     */
+    const lebarKolomTanggal =
+        (
+            lebarTabel -
+            lebarKolomBarang
+        ) / jumlahHari;
+
+    const columnStyles = {
+        0: {
+            cellWidth:
+                lebarKolomBarang,
+
+            halign: "left",
+
+            overflow: "ellipsize"
+        }
+    };
+
+    for (
+        let kolom = 1;
+        kolom <= jumlahHari;
+        kolom++
+    ) {
+        columnStyles[kolom] = {
+            cellWidth:
+                lebarKolomTanggal,
+
+            halign: "center",
+
+            overflow: "hidden"
+        };
+    }
+
+
+    /* BUAT TABEL PDF */
+
+    pdf.autoTable({
+        head: [
+            header
+        ],
+
+        body:
+            dataPDF,
+
+        startY:
+            marginAtas,
+
+        margin: {
+            top:
+                marginAtas,
+
+            right:
+                marginKanan,
+
+            bottom:
+                marginBawah,
+
+            left:
+                marginKiri
+        },
+
+        tableWidth:
+            lebarTabel,
+
+        theme:
+            "grid",
+
+        showHead:
+            "everyPage",
+
+        horizontalPageBreak:
+            false,
+
+        rowPageBreak:
+            "avoid",
+
+        styles: {
+            font:
+                "helvetica",
+
+            fontSize:
+                8,
+
+            fontStyle:
+                "normal",
+
+            textColor:
+                [0, 0, 0],
+
+            fillColor:
+                [255, 255, 255],
+
+            lineColor:
+                [216, 216, 216],
+
+            lineWidth:
+                0.1,
+
+            cellPadding:
+                0.5,
+
+            minCellWidth:
+                0,
+
+            minCellHeight:
+                4,
+
+            halign:
+                "center",
+
+            valign:
+                "middle",
+
+            overflow:
+                "hidden"
+        },
+
+        headStyles: {
+            font:
+                "helvetica",
+
+            fontSize:
+                8,
+
+            fontStyle:
+                "bold",
+
+            textColor:
+                [255, 255, 255],
+
+            fillColor:
+                [0, 0, 0],
+
+            lineColor:
+                [216, 216, 216],
+
+            lineWidth:
+                0.1,
+
+            halign:
+                "center",
+
+            valign:
+                "middle"
+        },
+
+        bodyStyles: {
+            font:
+                "helvetica",
+
+            fontSize:
+                8,
+
+            textColor:
+                [0, 0, 0],
+
+            fillColor:
+                [255, 255, 255]
+        },
+
+        columnStyles:
+            columnStyles,
+
+
+        /*
+         * Transaksi masuk dan laku
+         * diberi background hitam.
+         */
+
+        didParseCell:
+            function(data) {
+                if (
+                    data.section !==
+                        "body" ||
+                    data.column.index === 0
+                ) {
+                    return;
+                }
+
+                const barang =
+                    dataBarang[
+                        data.row.index
+                    ];
+
+                if (!barang) {
+                    return;
+                }
+
+                const hari =
+                    data.column.index;
+
+                const tanggal =
+                    `${tahun}-${String(
+                        bulan + 1
+                    ).padStart(
+                        2,
+                        "0"
+                    )}-${String(
+                        hari
+                    ).padStart(
+                        2,
+                        "0"
+                    )}`;
+
+                const adaTransaksi =
+                    transactions.some(
+                        function(transaction) {
+                            return (
+                                Number(
+                                    transaction.barang_id
+                                ) ===
+                                    Number(
+                                        barang.id
+                                    ) &&
+                                transaction.tanggal ===
+                                    tanggal
+                            );
+                        }
+                    );
+
+                if (adaTransaksi) {
+                    data.cell.styles.fillColor =
+                        [0, 0, 0];
+
+                    data.cell.styles.textColor =
+                        [255, 255, 255];
+
+                    data.cell.styles.fontStyle =
+                        "bold";
+                }
+            }
+    });
+
+
+    /* SIMPAN PDF */
+
+    pdf.save(
+        `Rekap-Stok-${namaBulan[bulan]}-${tahun}.pdf`
+    );
+}
+/* ==================================
    EXPORT EXCEL PENJUALAN
 ================================== */
 
