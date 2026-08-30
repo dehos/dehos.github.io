@@ -2951,7 +2951,7 @@ async function createLandscapeExcelBlob(
                     'orientation="landscape" ' +
                     'pageOrder="downThenOver" ' +
                     'fitToWidth="1" ' +
-                    'fitToHeight="1"/>';
+                    'fitToHeight="0"/>';
 
 
                 /*
@@ -3174,6 +3174,39 @@ workbook.Workbook.Names.push({
     Name: "_xlnm.Print_Titles",
     Sheet: 0,
     Ref: "'Rekap Stok'!$1:$1"
+});
+/* ==================================
+   PRINT AREA REKAP STOK
+================================== */
+
+const kolomTanggalTerakhir =
+    XLSX.utils.encode_col(
+        jumlahHari
+    );
+
+const barisDataTerakhir =
+    dataExcel.length;
+
+/*
+ * Hapus Print Area lama agar
+ * tidak terjadi duplikasi.
+ */
+workbook.Workbook.Names =
+    workbook.Workbook.Names.filter(
+        function(item) {
+            return !(
+                item.Name ===
+                    "_xlnm.Print_Area" &&
+                Number(item.Sheet) === 0
+            );
+        }
+    );
+
+workbook.Workbook.Names.push({
+    Name: "_xlnm.Print_Area",
+    Sheet: 0,
+    Ref:
+        `'Rekap Stok'!$A$1:$${kolomTanggalTerakhir}$${barisDataTerakhir}`
 });
     /* LEBAR KOLOM */
 
