@@ -2828,11 +2828,15 @@ function loadJsZipLibrary() {
     return jsZipLoadPromise;
 }
 
-async function createLandscapeExcelBlob(excelData) {
+async function createLandscapeExcelBlob(
+    excelData
+) {
     await loadJsZipLibrary();
 
     const zip =
-        await JSZip.loadAsync(excelData);
+        await JSZip.loadAsync(
+            excelData
+        );
 
     const worksheetFiles =
         Object.keys(zip.files).filter(
@@ -2842,6 +2846,145 @@ async function createLandscapeExcelBlob(excelData) {
                 );
             }
         );
+
+    await Promise.all(
+        worksheetFiles.map(
+            async function(path) {
+                let xml =
+                    await zip
+                        .file(path)
+                        .async("string");
+
+
+                /*
+                 * HAPUS PENGATURAN HALAMAN LAMA
+                 */
+
+                xml = xml.replace(
+                    /<printOptions\b[^>]*\/>/g,
+                    ""
+                );
+
+                xml = xml.replace(
+                    /<pageMargins\b[^>]*\/>/g,
+                    ""
+                );
+
+                xml = xml.replace(
+                    /<pageSetup\b[^>]*\/>/g,
+                    ""
+                );
+
+                xml = xml.replace(
+                    /<pageSetUpPr\b[^>]*\/>/g,
+                    ""
+                );
+
+
+                /*
+                 * AKTIFKAN FIT TO PAGE
+                 */
+
+                if (
+                    /<sheetPr\b[^>]*\/>/.test(
+                        xml
+                    )
+                ) {
+                    xml = xml.replace(
+                        /<sheetPr\b([^>]*)\/>/,
+                        function(
+                            element,
+                            attributes
+                        ) {
+                            return (
+                                `<sheetPr${attributes}>` +
+                                '<pageSetUpPr fitToPage="1"/>' +
+                                "</sheetPr>"
+                            );
+                        }
+                    );
+                } else if (
+                    /<sheetPr\b[^>]*>/.test(
+                        xml
+                    )
+                ) {
+                    xml = xml.replace(
+                        "</sheetPr>",
+                        '<pageSetUpPr fitToPage="1"/>' +
+                        "</sheetPr>"
+                    );
+                } else {
+                    xml = xml.replace(
+                        /(<worksheet\b[^>]*>)/,
+                        '$1<sheetPr>' +
+                        '<pageSetUpPr fitToPage="1"/>' +
+                        "</sheetPr>"
+                    );
+                }
+
+
+                /*
+                 * PENGATURAN CETAK:
+                 *
+                 * Paper: A4
+                 * Orientation: Landscape
+                 * Fit: 1 halaman lebar dan tinggi
+                 * Page order: Down, then over
+                 * Center horizontal dan vertical
+                 */
+
+                const pageLayoutXml =
+                    '<printOptions ' +
+                    'horizontalCentered="1" ' +
+                    'verticalCentered="1"/>' +
+
+                    '<pageMargins ' +
+                    'left="0.25" ' +
+                    'right="0.25" ' +
+                    'top="0.75" ' +
+                    'bottom="0.4" ' +
+                    'header="0.3" ' +
+                    'footer="0.3"/>' +
+
+                    '<pageSetup ' +
+                    'paperSize="9" ' +
+                    'orientation="landscape" ' +
+                    'pageOrder="downThenOver" ' +
+                    'fitToWidth="1" ' +
+                    'fitToHeight="1"/>';
+
+
+                /*
+                 * Masukkan pengaturan halaman ke XML.
+                 */
+
+                xml = xml.replace(
+                    /(<headerFooter\b|<rowBreaks\b|<colBreaks\b|<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
+                    pageLayoutXml + "$1"
+                );
+
+                zip.file(
+                    path,
+                    xml
+                );
+            }
+        )
+    );
+
+    const landscapeExcelData =
+        await zip.generateAsync({
+            type: "arraybuffer",
+            compression: "DEFLATE"
+        });
+
+    return new Blob(
+        [landscapeExcelData],
+        {
+            type:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    );
+}
 
     await Promise.all(
         worksheetFiles.map(
@@ -2967,9 +3110,7 @@ async function exportExcel() {
         hari <= jumlahHari;
         hari++
     ) {
-        header.push(
-            `${hari}/${bulan + 1}`
-        );
+        header.push(hari);
     }
 
     const dataExcel = [header];
@@ -3080,14 +3221,55 @@ async function exportExcel() {
         worksheet,
         "Rekap Stok"
     );
+/* PRINT TITLE: ULANGI BARIS 1 */
 
+workbook.Workbook =
+    workbook.Workbook || {};
 
+workbook.Workbook.Names =
+    workbook.Workbook.Names || [];
+
+/*
+ * Hapus Print Title lama agar
+ * tidak terjadi duplikasi.
+ */
+workbook.Workbook.Names =
+    workbook.Workbook.Names.filter(
+        function(item) {
+            return !(
+                item.Name ===
+                    "_xlnm.Print_Titles" &&
+                Number(item.Sheet) === 0
+            );
+        }
+    );
+
+workbook.Workbook.Names.push({
+    Name: "_xlnm.Print_Titles",
+    Sheet: 0,
+    Ref: "'Rekap Stok'!$1:$1"
+});
     /* LEBAR KOLOM */
 
-    const widths = [
+const widths = [
     {
         // Kolom A
         wch: 30
+    }
+];
+
+for (
+    let i = 0;
+    i < jumlahHari;
+    i++
+) {
+    widths.push({
+        // Kolom B sampai tanggal terakhir
+        wch: 2.5
+    });
+}
+
+worksheet["!cols"] = widths;
     }
 ];
 
@@ -3104,8 +3286,6 @@ for (
 
 worksheet["!cols"] = widths;
     /* STYLE HEADER */
-
-    /* STYLE HEADER/JUDUL */
 
 for (
     let c = 0;
@@ -3249,9 +3429,11 @@ for (
         }
     }
 
-
-    /* EXPORT XLSX LANDSCAPE */
 /* FONT SEMUA SEL: APTOS UKURAN 8 */
+
+c/* ==================================
+   FONT DAN BORDER SEMUA AREA
+================================== */
 
 const rangeExcel =
     XLSX.utils.decode_range(
@@ -3274,65 +3456,65 @@ for (
                 c: column
             });
 
+        /*
+         * Buat sel kosong agar border
+         * tetap muncul di seluruh area.
+         */
+        if (!worksheet[alamatCell]) {
+            worksheet[alamatCell] = {
+                t: "s",
+                v: ""
+            };
+        }
+
         const cell =
             worksheet[alamatCell];
 
-        if (!cell) {
-            continue;
-        }
+        cell.s =
+            cell.s || {};
 
-        cell.s = cell.s || {};
-
+        /*
+         * Semua font Aptos ukuran 8.
+         */
         cell.s.font = {
             ...(cell.s.font || {}),
             name: "Aptos",
             sz: 8
         };
-    }
-}
-    const excelData =
-        XLSX.write(
-            workbook,
-            {
-                bookType: "xlsx",
-                type: "array"
+
+        /*
+         * Border warna #D8D8D8.
+         */
+        cell.s.border = {
+            top: {
+                style: "thin",
+                color: {
+                    rgb: "D8D8D8"
+                }
+            },
+
+            bottom: {
+                style: "thin",
+                color: {
+                    rgb: "D8D8D8"
+                }
+            },
+
+            left: {
+                style: "thin",
+                color: {
+                    rgb: "D8D8D8"
+                }
+            },
+
+            right: {
+                style: "thin",
+                color: {
+                    rgb: "D8D8D8"
+                }
             }
-        );
-
-    let blob;
-
-    try {
-        blob =
-            await createLandscapeExcelBlob(
-                excelData
-            );
-    } catch (error) {
-        console.error(error);
-
-        alert(
-            "Gagal membuat file Excel Landscape."
-        );
-        return;
+        };
     }
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-        `Rekap-Stok-${namaBulan[bulan]}-${tahun}.xlsx`;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
 }
 
 
