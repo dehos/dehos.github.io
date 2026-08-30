@@ -3046,6 +3046,138 @@ if (filterBrandElement) {
         }
     );
 }
+
+/*/*==================================
+   XLSX LANDSCAPE
+===================================================== */
+
+let jsZipPromise = null;
+
+
+function loadJSZip() {
+
+    if (typeof JSZip !== "undefined") {
+        return Promise.resolve();
+    }
+
+    if (jsZipPromise) {
+        return jsZipPromise;
+    }
+
+    jsZipPromise =
+        new Promise(function(resolve, reject) {
+
+            const script =
+                document.createElement("script");
+
+            script.src =
+                "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+
+            script.onload =
+                function() {
+                    resolve();
+                };
+
+            script.onerror =
+                function() {
+
+                    jsZipPromise = null;
+
+                    reject(
+                        new Error(
+                            "Library JSZip gagal dimuat."
+                        )
+                    );
+                };
+
+            document.head.appendChild(script);
+        });
+
+    return jsZipPromise;
+}
+
+
+async function buatBlobExcelLandscape(
+    excelData
+) {
+
+    await loadJSZip();
+
+    const zip =
+        await JSZip.loadAsync(excelData);
+
+    const daftarSheet =
+        Object.keys(zip.files).filter(
+            function(path) {
+
+                return (
+                    /^xl\/worksheets\/sheet\d+\.xml$/.test(
+                        path
+                    )
+                );
+            }
+        );
+
+    await Promise.all(
+        daftarSheet.map(
+            async function(path) {
+
+                let xml =
+                    await zip
+                        .file(path)
+                        .async("string");
+
+                if (
+                    /<pageSetup\b[^>]*\/>/.test(xml)
+                ) {
+
+                    xml = xml.replace(
+                        /<pageSetup\b([^>]*)\/>/,
+                        function(
+                            pageSetup,
+                            attributes
+                        ) {
+
+                            const cleanAttributes =
+                                attributes.replace(
+                                    /\sorientation="[^"]*"/,
+                                    ""
+                                );
+
+                            return (
+                                `<pageSetup${cleanAttributes} orientation="landscape"/>`
+                            );
+                        }
+                    );
+
+                } else {
+
+                    xml = xml.replace(
+                        /(<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
+                        '<pageSetup orientation="landscape"/>$1'
+                    );
+                }
+
+                zip.file(path, xml);
+            }
+        )
+    );
+
+    const hasilExcel =
+        await zip.generateAsync({
+            type: "arraybuffer",
+            compression: "DEFLATE"
+        });
+
+    return new Blob(
+        [hasilExcel],
+        {
+            type:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    );
+}
+
 /*/*==================================
    EXPORT EXCEL
 ===================================================== */
