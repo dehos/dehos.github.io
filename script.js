@@ -2828,14 +2828,11 @@ function loadJsZipLibrary() {
     return jsZipLoadPromise;
 }
 
-async function createLandscapeExcelBlob(
-    excelData
-) {
+async function createLandscapeExcelBlob(excelData) {
     await loadJsZipLibrary();
 
-    const zip = await JSZip.loadAsync(
-        excelData
-    );
+    const zip =
+        await JSZip.loadAsync(excelData);
 
     const worksheetFiles =
         Object.keys(zip.files).filter(
@@ -2849,38 +2846,57 @@ async function createLandscapeExcelBlob(
     await Promise.all(
         worksheetFiles.map(
             async function(path) {
-                let xml = await zip
-                    .file(path)
-                    .async("string");
+                let xml =
+                    await zip
+                        .file(path)
+                        .async("string");
 
-                if (
-                    /<pageSetup\b[^>]*\/>/.test(
-                        xml
-                    )
-                ) {
-                    xml = xml.replace(
-                        /<pageSetup\b([^>]*)\/>/,
-                        function(
-                            pageSetup,
-                            attributes
-                        ) {
-                            const cleanAttributes =
-                                attributes.replace(
-                                    /\sorientation="[^"]*"/,
-                                    ""
-                                );
+                /*
+                 * Hapus pengaturan halaman lama agar
+                 * tidak terjadi duplikasi XML.
+                 */
+                xml = xml.replace(
+                    /<printOptions\b[^>]*\/>/g,
+                    ""
+                );
 
-                            return (
-                                `<pageSetup${cleanAttributes} orientation="landscape"/>`
-                            );
-                        }
-                    );
-                } else {
-                    xml = xml.replace(
-                        /(<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
-                        '<pageSetup orientation="landscape"/>$1'
-                    );
-                }
+                xml = xml.replace(
+                    /<pageMargins\b[^>]*\/>/g,
+                    ""
+                );
+
+                xml = xml.replace(
+                    /<pageSetup\b[^>]*\/>/g,
+                    ""
+                );
+
+                /*
+                 * Pengaturan halaman:
+                 * - Landscape
+                 * - Margin custom
+                 * - Center horizontal
+                 * - Center vertical
+                 */
+                const pageLayoutXml =
+                    '<printOptions ' +
+                    'horizontalCentered="1" ' +
+                    'verticalCentered="1"/>' +
+
+                    '<pageMargins ' +
+                    'left="0.25" ' +
+                    'right="0.25" ' +
+                    'top="0.75" ' +
+                    'bottom="0.4" ' +
+                    'header="0.3" ' +
+                    'footer="0.3"/>' +
+
+                    '<pageSetup ' +
+                    'orientation="landscape"/>';
+
+                xml = xml.replace(
+                    /(<headerFooter\b|<rowBreaks\b|<colBreaks\b|<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
+                    pageLayoutXml + "$1"
+                );
 
                 zip.file(path, xml);
             }
@@ -3069,56 +3085,68 @@ async function exportExcel() {
     /* LEBAR KOLOM */
 
     const widths = [
-        {
-            wch: 38
-        }
-    ];
-
-    for (
-        let i = 0;
-        i < jumlahHari;
-        i++
-    ) {
-        widths.push({
-            wch: 7
-        });
+    {
+        // Kolom A
+        wch: 30
     }
+];
 
-    worksheet["!cols"] = widths;
+for (
+    let i = 0;
+    i < jumlahHari;
+    i++
+) {
+    widths.push({
+        // Kolom B sampai kolom terakhir
+        wch: 2.9
+    });
+}
 
-
+worksheet["!cols"] = widths;
     /* STYLE HEADER */
 
-    for (
-        let c = 0;
-        c <= jumlahHari;
-        c++
-    ) {
-        const cell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: 0,
-                    c: c
-                })
-            ];
+    /* STYLE HEADER/JUDUL */
 
-        if (!cell) {
-            continue;
-        }
+for (
+    let c = 0;
+    c <= jumlahHari;
+    c++
+) {
+    const cell =
+        worksheet[
+            XLSX.utils.encode_cell({
+                r: 0,
+                c: c
+            })
+        ];
 
-        cell.s = {
-            font: {
-                bold: true
-            },
-
-            alignment: {
-                horizontal: "center",
-                vertical: "center"
-            }
-        };
+    if (!cell) {
+        continue;
     }
 
+    cell.s = {
+        font: {
+            name: "Aptos",
+            sz: 8,
+            bold: true,
+            color: {
+                rgb: "FFFFFF"
+            }
+        },
 
+        fill: {
+            patternType: "solid",
+            fgColor: {
+                rgb: "000000"
+            }
+        },
+
+        alignment: {
+            horizontal: "center",
+            vertical: "center"
+        }
+    };
+}
     /* STYLE DATA */
 
     for (
@@ -3223,7 +3251,45 @@ async function exportExcel() {
 
 
     /* EXPORT XLSX LANDSCAPE */
+/* FONT SEMUA SEL: APTOS UKURAN 8 */
 
+const rangeExcel =
+    XLSX.utils.decode_range(
+        worksheet["!ref"]
+    );
+
+for (
+    let row = rangeExcel.s.r;
+    row <= rangeExcel.e.r;
+    row++
+) {
+    for (
+        let column = rangeExcel.s.c;
+        column <= rangeExcel.e.c;
+        column++
+    ) {
+        const alamatCell =
+            XLSX.utils.encode_cell({
+                r: row,
+                c: column
+            });
+
+        const cell =
+            worksheet[alamatCell];
+
+        if (!cell) {
+            continue;
+        }
+
+        cell.s = cell.s || {};
+
+        cell.s.font = {
+            ...(cell.s.font || {}),
+            name: "Aptos",
+            sz: 8
+        };
+    }
+}
     const excelData =
         XLSX.write(
             workbook,
