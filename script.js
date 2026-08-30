@@ -74,7 +74,9 @@ function showToast(message, type = "success") {
 
 let sortMode = "nama";
 let stockSortAsc = false;
-
+let halamanStok = 1;
+const jumlahPerHalamanStok = 6;
+const jumlahTombolHalaman = 5;
 
 /*/*==================================
    FORMAT ANGKA
@@ -580,7 +582,7 @@ function updateTable() {
             `;
 
         updateStats();
-
+renderPaginationStok(0);
         return;
     }
 
@@ -663,98 +665,349 @@ function updateTable() {
             `;
 
         updateStats();
-
+renderPaginationStok(0);
         return;
     }
 
+tbody.innerHTML = "";
 
-    tbody.innerHTML = "";
+const totalHalaman =
+    Math.max(
+        1,
+        Math.ceil(
+            filtered.length /
+            jumlahPerHalamanStok
+        )
+    );
 
+if (halamanStok > totalHalaman) {
+    halamanStok = totalHalaman;
+}
 
-    filtered
-        .slice(0, 6)
-        .forEach(
-            function(barang, index) {
+if (halamanStok < 1) {
+    halamanStok = 1;
+}
 
-                const stok =
-                    getCurrentStock(
-                        barang
-                    );
+const indeksAwal =
+    (halamanStok - 1) *
+    jumlahPerHalamanStok;
 
-                let statusClass =
-                    "stock-aman";
+const indeksAkhir =
+    indeksAwal +
+    jumlahPerHalamanStok;
 
-                if (
-                    stok <= 0
-                ) {
+const dataHalaman =
+    filtered.slice(
+        indeksAwal,
+        indeksAkhir
+    );
 
-                    statusClass =
-                        "stock-habis";
+dataHalaman.forEach(
+    function(barang, index) {
 
-                } else if (
-                    stok <= 5
-                ) {
+        const stok =
+            getCurrentStock(
+                barang
+            );
 
-                    statusClass =
-                        "stock-menipis";
-                }
+        let statusClass =
+            "stock-aman";
 
-                const tr =
-                    document.createElement(
-                        "tr"
-                    );
+        if (stok <= 0) {
 
-                tr.innerHTML =
-                    `
-                    <td>
-                        ${index + 1}
-                    </td>
+            statusClass =
+                "stock-habis";
 
-                    <td>
-                        ${escapeHTML(
-                            barang.nama
-                        )}
-                    </td>
+        } else if (stok <= 5) {
 
-                    <td
-                        class="${statusClass}"
-                    >
-                        ${formatNumber(
-                            stok
-                        )}
-                    </td>
+            statusClass =
+                "stock-menipis";
+        }
 
-                    <td>
-                        <button
-                            type="button"
-                            class="action-btn btn btn-success btn-sm"
-                            onclick="openTransaction(${Number(barang.id)}, 'masuk')"
-                        >
-                            ↓ in
-                        </button>
-                    </td>
+        const tr =
+            document.createElement(
+                "tr"
+            );
 
-                    <td>
-                        <button
-                            type="button"
-                            class="action-btn btn btn-danger btn-sm"
-                            onclick="openTransaction(${Number(barang.id)}, 'laku')"
-                        >
-                            ↑ out
-                        </button>
-                    </td>
-                    `;
+        tr.innerHTML =
+            `
+            <td>
+                ${indeksAwal + index + 1}
+            </td>
 
-                tbody.appendChild(
-                    tr
+            <td>
+                ${escapeHTML(
+                    barang.nama
+                )}
+            </td>
+
+            <td
+                class="${statusClass}"
+            >
+                ${formatNumber(
+                    stok
+                )}
+            </td>
+
+            <td>
+                <button
+                    type="button"
+                    class="action-btn btn btn-success btn-sm"
+                    onclick="openTransaction(${Number(barang.id)}, 'masuk')"
+                >
+                    ↓ in
+                </button>
+            </td>
+
+            <td>
+                <button
+                    type="button"
+                    class="action-btn btn btn-danger btn-sm"
+                    onclick="openTransaction(${Number(barang.id)}, 'laku')"
+                >
+                    ↑ out
+                </button>
+            </td>
+            `;
+
+        tbody.appendChild(tr);
+    }
+);
+
+renderPaginationStok(
+    filtered.length
+);
+
+updateStats();
+}
+
+function renderPaginationStok(totalData) {
+
+    const pagination =
+        document.getElementById(
+            "stockPagination"
+        );
+
+    const informasi =
+        document.getElementById(
+            "stockPaginationInfo"
+        );
+
+    if (!pagination || !informasi) {
+        return;
+    }
+
+    pagination.innerHTML = "";
+
+    if (totalData === 0) {
+        informasi.textContent = "";
+        return;
+    }
+
+    const totalHalaman =
+        Math.ceil(
+            totalData /
+            jumlahPerHalamanStok
+        );
+
+    const dataPertama =
+        (halamanStok - 1) *
+        jumlahPerHalamanStok + 1;
+
+    const dataTerakhir =
+        Math.min(
+            halamanStok *
+            jumlahPerHalamanStok,
+            totalData
+        );
+
+    informasi.textContent =
+        "Menampilkan " +
+        dataPertama +
+        "–" +
+        dataTerakhir +
+        " dari " +
+        formatNumber(totalData) +
+        " barang";
+
+    const tombolSebelumnya =
+        document.createElement(
+            "button"
+        );
+
+    tombolSebelumnya.type =
+        "button";
+
+    tombolSebelumnya.textContent =
+        "‹";
+
+    tombolSebelumnya.disabled =
+        halamanStok === 1;
+
+    tombolSebelumnya.addEventListener(
+        "click",
+        function() {
+            ubahHalamanStok(
+                halamanStok - 1,
+                totalHalaman
+            );
+        }
+    );
+
+    pagination.appendChild(
+        tombolSebelumnya
+    );
+
+    const awalKelompok =
+        Math.floor(
+            (halamanStok - 1) /
+            jumlahTombolHalaman
+        ) *
+        jumlahTombolHalaman + 1;
+
+    const akhirKelompok =
+        Math.min(
+            awalKelompok +
+            jumlahTombolHalaman - 1,
+            totalHalaman
+        );
+
+    if (awalKelompok > 1) {
+
+        const titikAwal =
+            document.createElement(
+                "span"
+            );
+
+        titikAwal.className =
+            "pagination-dots";
+
+        titikAwal.textContent =
+            "…";
+
+        pagination.appendChild(
+            titikAwal
+        );
+    }
+
+    for (
+        let halaman = awalKelompok;
+        halaman <= akhirKelompok;
+        halaman++
+    ) {
+
+        const tombol =
+            document.createElement(
+                "button"
+            );
+
+        tombol.type =
+            "button";
+
+        tombol.textContent =
+            halaman;
+
+        if (
+            halaman ===
+            halamanStok
+        ) {
+            tombol.classList.add(
+                "active"
+            );
+        }
+
+        tombol.addEventListener(
+            "click",
+            function() {
+                ubahHalamanStok(
+                    halaman,
+                    totalHalaman
                 );
             }
         );
 
-    updateStats();
+        pagination.appendChild(
+            tombol
+        );
+    }
+
+    if (
+        akhirKelompok <
+        totalHalaman
+    ) {
+
+        const titikAkhir =
+            document.createElement(
+                "span"
+            );
+
+        titikAkhir.className =
+            "pagination-dots";
+
+        titikAkhir.textContent =
+            "…";
+
+        pagination.appendChild(
+            titikAkhir
+        );
+    }
+
+    const tombolBerikutnya =
+        document.createElement(
+            "button"
+        );
+
+    tombolBerikutnya.type =
+        "button";
+
+    tombolBerikutnya.textContent =
+        "›";
+
+    tombolBerikutnya.disabled =
+        halamanStok ===
+        totalHalaman;
+
+    tombolBerikutnya.addEventListener(
+        "click",
+        function() {
+            ubahHalamanStok(
+                halamanStok + 1,
+                totalHalaman
+            );
+        }
+    );
+
+    pagination.appendChild(
+        tombolBerikutnya
+    );
 }
 
 
+function ubahHalamanStok(
+    halaman,
+    totalHalaman
+) {
+
+    halamanStok =
+        Math.min(
+            Math.max(
+                halaman,
+                1
+            ),
+            totalHalaman
+        );
+
+    updateTable();
+
+    const tabel =
+        document.querySelector(
+            "#stockListContent .table-wrapper"
+        );
+
+    if (tabel) {
+        tabel.scrollTop = 0;
+    }
+}
 /*/*==================================
    SORTIR STOK
 ===================================================== */
@@ -1500,9 +1753,14 @@ const searchElement =
 if (searchElement) {
 
     searchElement.addEventListener(
-        "input",
-        updateTable
-    );
+    "input",
+    function() {
+
+        halamanStok = 1;
+
+        updateTable();
+    }
+);
 }
 
 
