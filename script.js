@@ -3990,24 +3990,46 @@ async function exportPenjualanExcel() {
     }
 
 
-    const excelDataArray =
-        XLSX.write(
-            workbook,
-            {
-                bookType: "xlsx",
-                type: "array"
-            }
+    let blob;
+
+try {
+
+    blob =
+        await buatBlobExcelLandscape(
+            excelDataArray
         );
 
+} catch (error) {
 
-    const blob =
-        new Blob(
-            [excelDataArray],
-            {
-                type:
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            }
+    console.error(error);
+
+    alert(
+        "Gagal membuat file Excel Landscape."
+    );
+
+    return;
+}
+
+
+   let blob;
+
+try {
+
+    blob =
+        await buatBlobExcelLandscape(
+            excelData
         );
+
+} catch (error) {
+
+    console.error(error);
+
+    alert(
+        "Gagal membuat file Excel Landscape."
+    );
+
+    return;
+}
 
 
     const url =
