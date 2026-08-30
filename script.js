@@ -202,46 +202,82 @@ function getTodayDate() {
 /*/*==================================
    LOAD BARANG
 ===================================================== */
-
 async function loadBarang() {
-
     setDatabaseStatus(
         "⏳ Mengambil data barang..."
     );
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("barang")
-            .select("*")
-            .order(
-                "nama",
-                {
-                    ascending: true
-                }
+    const batasPerHalaman = 1000;
+
+    let posisiAwal = 0;
+    let semuaBarang = [];
+
+    while (true) {
+        const posisiAkhir =
+            posisiAwal +
+            batasPerHalaman -
+            1;
+
+        const { data, error } =
+            await supabaseClient
+                .from("barang")
+                .select("*")
+                .order(
+                    "nama",
+                    {
+                        ascending: true
+                    }
+                )
+                .order(
+                    "id",
+                    {
+                        ascending: true
+                    }
+                )
+                .range(
+                    posisiAwal,
+                    posisiAkhir
+                );
+
+        if (error) {
+            console.error(
+                "ERROR LOAD BARANG:",
+                error
             );
 
-    if (error) {
+            setDatabaseStatus(
+                "❌ Gagal mengambil data barang: " +
+                    error.message,
+                "error"
+            );
+            return;
+        }
 
-        console.error(error);
+        const hasil =
+            data || [];
 
-        setDatabaseStatus(
-            "❌ Gagal mengambil data barang: " +
-            error.message,
-            "error"
+        semuaBarang.push(
+            ...hasil
         );
 
-        return;
+        if (
+            hasil.length <
+            batasPerHalaman
+        ) {
+            break;
+        }
+
+        posisiAwal +=
+            batasPerHalaman;
     }
 
-    dataBarang = data || [];
+    dataBarang =
+        semuaBarang;
 
     setDatabaseStatus(
         "✅ Database terhubung, " +
-        dataBarang.length +
-        " item barang",
+            dataBarang.length +
+            " item barang",
         "success"
     );
 
