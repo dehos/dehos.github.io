@@ -2374,16 +2374,47 @@ function closeEditPenjualan() {
 
 async function simpanEditPenjualan() {
     const id = Number(
-        document.getElementById("editPenjualanId").value
+        document.getElementById(
+            "editPenjualanId"
+        ).value
     );
+
+    /*
+     * Cari data penjualan untuk mendapatkan
+     * barang_id yang dibutuhkan database.
+     */
+    const penjualan =
+        (window.dataPenjualan || []).find(
+            function(item) {
+                return (
+                    Number(item.id) === id
+                );
+            }
+        );
+
+    if (!penjualan) {
+        showToast(
+            "❌ Data penjualan tidak ditemukan",
+            "error"
+        );
+        return;
+    }
+
+    const barangId =
+        Number(
+            penjualan.barang_id
+        );
 
     const qty = Number(
-        document.getElementById("editPenjualanQty").value
+        document.getElementById(
+            "editPenjualanQty"
+        ).value
     );
 
-    const hargaInput = document.getElementById(
-        "editPenjualanHarga"
-    ).value;
+    const hargaInput =
+        document.getElementById(
+            "editPenjualanHarga"
+        ).value;
 
     const harga = Number(
         hargaInput
@@ -2391,13 +2422,151 @@ async function simpanEditPenjualan() {
             .replace(/,/g, "")
     );
 
-    const brand = document.getElementById(
-        "editPenjualanBrand"
-    ).value;
+    const brand =
+        document.getElementById(
+            "editPenjualanBrand"
+        ).value.trim();
 
-    const tanggal = document.getElementById(
-        "editPenjualanTanggal"
-    ).value;
+    const tanggal =
+        document.getElementById(
+            "editPenjualanTanggal"
+        ).value;
+
+    if (!id) {
+        showToast(
+            "❌ Data penjualan tidak valid",
+            "error"
+        );
+        return;
+    }
+
+    if (!barangId) {
+        showToast(
+            "❌ Barang penjualan tidak valid",
+            "error"
+        );
+        return;
+    }
+
+    if (!qty || qty <= 0) {
+        showToast(
+            "❌ Quantity harus lebih dari 0",
+            "error"
+        );
+        return;
+    }
+
+    if (
+        !Number.isFinite(harga) ||
+        harga < 0
+    ) {
+        showToast(
+            "❌ Harga tidak valid",
+            "error"
+        );
+        return;
+    }
+
+    if (!brand) {
+        showToast(
+            "❌ Brand harus dipilih",
+            "error"
+        );
+        return;
+    }
+
+    if (!tanggal) {
+        showToast(
+            "❌ Tanggal harus diisi",
+            "error"
+        );
+        return;
+    }
+
+    const konfirmasi = confirm(
+        "Simpan perubahan penjualan ini?"
+    );
+
+    if (!konfirmasi) {
+        return;
+    }
+
+    try {
+        const { data, error } =
+            await supabaseClient.rpc(
+                "edit_penjualan_atomic",
+                {
+                    p_penjualan_id: id,
+                    p_barang_id: barangId,
+                    p_brand: brand,
+                    p_qty: qty,
+                    p_harga: harga,
+                    p_tanggal_pembelian:
+                        tanggal
+                }
+            );
+
+        if (error) {
+            console.error(
+                "ERROR EDIT PENJUALAN:",
+                error
+            );
+
+            showToast(
+                "❌ Gagal mengubah penjualan: " +
+                    error.message,
+                "error"
+            );
+            return;
+        }
+
+        console.log(
+            "EDIT PENJUALAN BERHASIL:",
+            data
+        );
+
+        await loadTransactions();
+        await loadBarang();
+        await loadPenjualan();
+
+        updateTable();
+        updateStats();
+        renderHistory();
+
+        closeEditPenjualan();
+
+        showToast(
+            "✅ Penjualan berhasil diperbarui",
+            "success"
+        );
+    } catch (error) {
+        console.error(
+            "ERROR EDIT PENJUALAN:",
+            error
+        );
+
+        showToast(
+            "❌ Terjadi kesalahan saat mengedit penjualan",
+            "error"
+        );
+    }
+}
+
+const brand = document.getElementById(
+    "editPenjualanBrand"
+).value.trim();
+
+if (!brand) {
+    showToast(
+        "❌ Brand harus dipilih",
+        "error"
+    );
+    return;
+}
+
+const tanggal = document.getElementById(
+    "editPenjualanTanggal"
+).value;
 
     if (!id) {
         showToast(
