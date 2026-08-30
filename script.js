@@ -800,7 +800,7 @@ function updateStats() {
     let totalStok = 0;
 
     dataBarang.forEach(
-        function(barang) {
+    function(barang) {
 
             totalStok +=
                 getCurrentStock(
@@ -3073,7 +3073,69 @@ async function createLandscapeExcelBlob(
         }
     );
 }
+/* ==================================
+   STOK AKTUAL UNTUK EXPORT
+================================== */
 
+function getStockAktualUntukExport(
+    barang
+) {
+    let stok =
+        Number(
+            barang.stok_awal
+        ) || 0;
+
+    const tanggalHariIni =
+        getTodayDate();
+
+    transactions.forEach(
+        function(transaction) {
+            if (
+                Number(
+                    transaction.barang_id
+                ) !==
+                Number(
+                    barang.id
+                )
+            ) {
+                return;
+            }
+
+            /*
+             * Transaksi masa depan
+             * tidak ikut dihitung.
+             */
+            if (
+                transaction.tanggal &&
+                transaction.tanggal >
+                    tanggalHariIni
+            ) {
+                return;
+            }
+
+            const qty =
+                Number(
+                    transaction.qty
+                ) || 0;
+
+            if (
+                transaction.type ===
+                "masuk"
+            ) {
+                stok += qty;
+            }
+
+            if (
+                transaction.type ===
+                "laku"
+            ) {
+                stok -= qty;
+            }
+        }
+    );
+
+    return stok;
+}
 /* ==================================
    EXPORT EXCEL STOK
 ================================== */
@@ -3129,11 +3191,30 @@ async function exportExcel() {
 
     const dataExcel = [header];
 
+const dataBarangExport =
+    dataBarang.filter(
+        function(barang) {
+            return (
+                getStockAktualUntukExport(
+                    barang
+                ) !== 0
+            );
+        }
+    );
+
+if (
+    dataBarangExport.length === 0
+) {
+    alert(
+        "Tidak ada barang dengan stok tersedia."
+    );
+    return;
+}
 
     /* DATA BARANG */
 
-    dataBarang.forEach(
-        function(barang) {
+    dataBarangExport.forEach(
+    function(barang) {
             let stok =
                 Number(barang.stok_awal) || 0;
 
@@ -3393,7 +3474,7 @@ for (
             };
 
             const barang =
-                dataBarang[r - 1];
+    dataBarangExport[r - 1];
 
             const hari = c;
 
@@ -3706,17 +3787,36 @@ function exportPDF() {
 
     const dataPDF = [];
 
-    dataBarang.forEach(
+const dataBarangPDF =
+    dataBarang.filter(
         function(barang) {
-            let stok =
-                Number(
-                    barang.stok_awal
-                ) || 0;
+            return (
+                getStockAktualUntukExport(
+                    barang
+                ) !== 0
+            );
+        }
+    );
 
-            const row = [
-                barang.nama
-            ];
+if (
+    dataBarangPDF.length === 0
+) {
+    alert(
+        "Tidak ada barang dengan stok tersedia."
+    );
+    return;
+}
 
+dataBarangPDF.forEach(
+    function(barang) {
+        let stok =
+            Number(
+                barang.stok_awal
+            ) || 0;
+
+        const row = [
+            barang.nama
+        ];
             for (
                 let hari = 1;
                 hari <= jumlahHari;
@@ -4009,9 +4109,9 @@ function exportPDF() {
                 }
 
                 const barang =
-                    dataBarang[
-                        data.row.index
-                    ];
+                dataBarangPDF[
+                    data.row.index
+                ];
 
                 if (!barang) {
                     return;
