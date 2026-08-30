@@ -2986,80 +2986,6 @@ async function createLandscapeExcelBlob(
     );
 }
 
-    await Promise.all(
-        worksheetFiles.map(
-            async function(path) {
-                let xml =
-                    await zip
-                        .file(path)
-                        .async("string");
-
-                /*
-                 * Hapus pengaturan halaman lama agar
-                 * tidak terjadi duplikasi XML.
-                 */
-                xml = xml.replace(
-                    /<printOptions\b[^>]*\/>/g,
-                    ""
-                );
-
-                xml = xml.replace(
-                    /<pageMargins\b[^>]*\/>/g,
-                    ""
-                );
-
-                xml = xml.replace(
-                    /<pageSetup\b[^>]*\/>/g,
-                    ""
-                );
-
-                /*
-                 * Pengaturan halaman:
-                 * - Landscape
-                 * - Margin custom
-                 * - Center horizontal
-                 * - Center vertical
-                 */
-                const pageLayoutXml =
-                    '<printOptions ' +
-                    'horizontalCentered="1" ' +
-                    'verticalCentered="1"/>' +
-
-                    '<pageMargins ' +
-                    'left="0.25" ' +
-                    'right="0.25" ' +
-                    'top="0.75" ' +
-                    'bottom="0.4" ' +
-                    'header="0.3" ' +
-                    'footer="0.3"/>' +
-
-                    '<pageSetup ' +
-                    'orientation="landscape"/>';
-
-                xml = xml.replace(
-                    /(<headerFooter\b|<rowBreaks\b|<colBreaks\b|<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
-                    pageLayoutXml + "$1"
-                );
-
-                zip.file(path, xml);
-            }
-        )
-    );
-
-    const landscapeExcelData =
-        await zip.generateAsync({
-            type: "arraybuffer",
-            compression: "DEFLATE"
-        });
-
-    return new Blob(
-        [landscapeExcelData],
-        {
-            type:
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        }
-    );
-}
 /* ==================================
    EXPORT EXCEL STOK
 ================================== */
@@ -3270,21 +3196,7 @@ for (
 }
 
 worksheet["!cols"] = widths;
-    }
-];
-
-for (
-    let i = 0;
-    i < jumlahHari;
-    i++
-) {
-    widths.push({
-        // Kolom B sampai kolom terakhir
-        wch: 2.9
-    });
-}
-
-worksheet["!cols"] = widths;
+   
     /* STYLE HEADER */
 
 for (
@@ -3415,6 +3327,7 @@ for (
                     },
 
                     fill: {
+                        patternType: "solid",
                         fgColor: {
                             rgb: "000000"
                         }
@@ -3431,7 +3344,7 @@ for (
 
 /* FONT SEMUA SEL: APTOS UKURAN 8 */
 
-c/* ==================================
+/* ==================================
    FONT DAN BORDER SEMUA AREA
 ================================== */
 
@@ -3517,7 +3430,68 @@ for (
     }
 }
 
+    /* ==================================
+       EXPORT XLSX REKAP STOK
+    ================================== */
 
+    const excelData =
+        XLSX.write(
+            workbook,
+            {
+                bookType: "xlsx",
+                type: "array"
+            }
+        );
+
+    let blob;
+
+    try {
+        blob =
+            await createLandscapeExcelBlob(
+                excelData
+            );
+    } catch (error) {
+        console.error(
+            "ERROR EXPORT REKAP STOK:",
+            error
+        );
+
+        alert(
+            "Gagal membuat file Excel Landscape."
+        );
+        return;
+    }
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+    link.href =
+        url;
+
+    link.download =
+        `Rekap-Stok-${namaBulan[bulan]}-${tahun}.xlsx`;
+
+    document.body.appendChild(
+        link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+        link
+    );
+
+    URL.revokeObjectURL(
+        url
+    );
+}
 /* ==================================
    EXPORT EXCEL PENJUALAN
 ================================== */
