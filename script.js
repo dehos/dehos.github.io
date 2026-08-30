@@ -2552,122 +2552,6 @@ async function simpanEditPenjualan() {
     }
 }
 
-const brand = document.getElementById(
-    "editPenjualanBrand"
-).value.trim();
-
-if (!brand) {
-    showToast(
-        "❌ Brand harus dipilih",
-        "error"
-    );
-    return;
-}
-
-const tanggal = document.getElementById(
-    "editPenjualanTanggal"
-).value;
-
-    if (!id) {
-        showToast(
-            "❌ Data penjualan tidak valid",
-            "error"
-        );
-        return;
-    }
-
-    if (!qty || qty <= 0) {
-        showToast(
-            "❌ Quantity harus lebih dari 0",
-            "error"
-        );
-        return;
-    }
-
-    if (!Number.isFinite(harga) || harga < 0) {
-        showToast(
-            "❌ Harga tidak valid",
-            "error"
-        );
-        return;
-    }
-
-    if (!tanggal) {
-        showToast(
-            "❌ Tanggal harus diisi",
-            "error"
-        );
-        return;
-    }
-
-    const konfirmasi = confirm(
-        "Simpan perubahan penjualan ini?"
-    );
-
-    if (!konfirmasi) {
-        return;
-    }
-
-    try {
-        const { data, error } =
-            await supabaseClient.rpc(
-                "edit_penjualan_atomic",
-                {
-                    p_penjualan_id: id,
-                    p_qty: qty,
-                    p_harga: harga,
-                    p_brand: brand,
-                    p_tanggal: tanggal
-                }
-            );
-
-        if (error) {
-            console.error(
-                "ERROR EDIT PENJUALAN:",
-                error
-            );
-
-            showToast(
-                "❌ Gagal mengubah penjualan: " +
-                    error.message,
-                "error"
-            );
-            return;
-        }
-
-        console.log(
-            "EDIT PENJUALAN BERHASIL:",
-            data
-        );
-
-        await loadTransactions();
-        await loadBarang();
-        await loadPenjualan();
-
-        updateTable();
-        updateStats();
-        renderHistory();
-
-        closeEditPenjualan();
-
-        showToast(
-            "✅ Penjualan berhasil diperbarui",
-            "success"
-        );
-    } catch (error) {
-        console.error(
-            "ERROR EDIT PENJUALAN:",
-            error
-        );
-
-        showToast(
-            "❌ Terjadi kesalahan saat mengedit penjualan",
-            "error"
-        );
-    }
-}
-
-
 /* ==================================
    HAPUS PENJUALAN
 ================================== */
@@ -3103,25 +2987,24 @@ async function createLandscapeExcelBlob(
                  */
 
                 const pageLayoutXml =
-                    '<printOptions ' +
-                    'horizontalCentered="1" ' +
-                    'verticalCentered="1"/>' +
+    '<printOptions ' +
+    'horizontalCentered="1" ' +
+    'verticalCentered="1"/>' +
 
-                    '<pageMargins ' +
-                    'left="0.2" ' +
-                    'right="0.2" ' +
-                    'top="0.5" ' +
-                    'bottom="0.15" ' +
-                    'header="0.3" ' +
-                    'footer="0.3"/>' +
+    '<pageMargins ' +
+    'left="0.2" ' +
+    'right="0.2" ' +
+    'top="0.5" ' +
+    'bottom="0.15" ' +
+    'header="0.3" ' +
+    'footer="0.1"/>' +
 
-                    '<pageSetup ' +
-                    'paperSize="9" ' +
-                    'orientation="landscape" ' +
-                    'pageOrder="downThenOver" ' +
-                    'fitToWidth="1" ' +
-                    'fitToHeight="0"/>';
-
+    '<pageSetup ' +
+    'paperSize="9" ' +
+    'orientation="landscape" ' +
+    'pageOrder="downThenOver" ' +
+    'fitToWidth="1" ' +
+    'fitToHeight="0"/>';
 
                 /*
                  * Masukkan pengaturan halaman ke XML.
