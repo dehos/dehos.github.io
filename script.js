@@ -92,6 +92,8 @@ function formatNumber(number) {
         "id-ID"
     ).format(value);
 }
+
+
 /*/*==================================
    FORMAT INPUT HARGA
 ===================================================== */
@@ -139,6 +141,7 @@ if (inputHarga) {
         formatHargaInput
     );
 }
+
 
 /*/*==================================
    STATUS DATABASE
@@ -395,31 +398,47 @@ async function tambahBarang() {
     );
 
     await loadBarang();
-    
 }
-// JS — script.js
-// Buka modal Tambah Barang
+
+
+/*/*==================================
+   BUKA MODAL TAMBAH BARANG
+===================================================== */
 
 function openTambahBarang() {
-    const modal = document.getElementById("tambahBarangModal");
+
+    const modal =
+        document.getElementById(
+            "tambahBarangModal"
+        );
 
     if (modal) {
         modal.style.display = "flex";
     }
 
-    document.getElementById("namaBarang")?.focus();
+    document.getElementById(
+        "namaBarang"
+    )?.focus();
 }
 
 
-// Tutup modal Tambah Barang
+/*/*==================================
+   TUTUP MODAL TAMBAH BARANG
+===================================================== */
 
 function closeTambahBarang() {
-    const modal = document.getElementById("tambahBarangModal");
+
+    const modal =
+        document.getElementById(
+            "tambahBarangModal"
+        );
 
     if (modal) {
         modal.style.display = "none";
     }
 }
+
+
 /*/*==================================
    HITUNG STOK
 ===================================================== */
@@ -444,11 +463,6 @@ function getCurrentStock(barang) {
             ) {
                 return;
             }
-
-            /*
-               Hanya hitung transaksi
-               sampai tanggal yang dipilih
-            */
 
             if (
                 tanggalDipilih &&
@@ -547,10 +561,6 @@ function updateTable() {
         );
 
 
-    /*/*==============================
-       SORTING
-   /*============================== */
-
     if (
         sortMode === "nama"
     ) {
@@ -600,10 +610,6 @@ function updateTable() {
     }
 
 
-    /*/*==============================
-       HASIL KOSONG
-   /*============================== */
-
     if (
         filtered.length === 0
     ) {
@@ -626,94 +632,88 @@ function updateTable() {
     }
 
 
-    /*/*==============================
-       BERSIHKAN TABEL
-   /*============================== */
-
     tbody.innerHTML = "";
 
 
-    /*/*==============================
-       TAMPILKAN DATA
-   /*============================== */
-
     filtered
-    .slice(0, 6)
-    .forEach(
-        function(barang, index) {
-            const stok =
-                getCurrentStock(
-                    barang
-                );
+        .slice(0, 6)
+        .forEach(
+            function(barang, index) {
 
-            let statusClass =
-                "stock-aman";
+                const stok =
+                    getCurrentStock(
+                        barang
+                    );
 
-            if (
-                stok <= 0
-            ) {
+                let statusClass =
+                    "stock-aman";
 
-                statusClass =
-                    "stock-habis";
+                if (
+                    stok <= 0
+                ) {
 
-            } else if (
-                stok <= 5
-            ) {
+                    statusClass =
+                        "stock-habis";
 
-                statusClass =
-                    "stock-menipis";
-            }
+                } else if (
+                    stok <= 5
+                ) {
 
-            const tr =
-                document.createElement(
-                    "tr"
-                );
+                    statusClass =
+                        "stock-menipis";
+                }
 
-            tr.innerHTML =
-                `
-                <td>
-                    ${index + 1}
-                </td>
+                const tr =
+                    document.createElement(
+                        "tr"
+                    );
 
-                <td>
-                    ${escapeHTML(
-                        barang.nama
-                    )}
-                </td>
+                tr.innerHTML =
+                    `
+                    <td>
+                        ${index + 1}
+                    </td>
 
-                <td
-                    class="${statusClass}"
-                >
-                    ${formatNumber(
-                        stok
-                    )}
-                </td>
+                    <td>
+                        ${escapeHTML(
+                            barang.nama
+                        )}
+                    </td>
 
-                <td>
-                    <button
-                        type="button"
-                        class="action-btn btn btn-success btn-sm"
-                        onclick="openTransaction(${Number(barang.id)}, 'masuk')"
+                    <td
+                        class="${statusClass}"
                     >
-                        ↓ in
-                    </button>
-                </td>
-                <td>
-    <button
-        type="button"
-        class="action-btn btn btn-danger btn-sm"
-        onclick="openTransaction(${Number(barang.id)}, 'laku')"
-    >
-        ↑ out
-    </button>
-</td>
-                `;
+                        ${formatNumber(
+                            stok
+                        )}
+                    </td>
 
-            tbody.appendChild(
-                tr
-            );
-        }
-    );
+                    <td>
+                        <button
+                            type="button"
+                            class="action-btn btn btn-success btn-sm"
+                            onclick="openTransaction(${Number(barang.id)}, 'masuk')"
+                        >
+                            ↓ in
+                        </button>
+                    </td>
+
+                    <td>
+                        <button
+                            type="button"
+                            class="action-btn btn btn-danger btn-sm"
+                            onclick="openTransaction(${Number(barang.id)}, 'laku')"
+                        >
+                            ↑ out
+                        </button>
+                    </td>
+                    `;
+
+                tbody.appendChild(
+                    tr
+                );
+            }
+        );
 
     updateStats();
 }
@@ -774,10 +774,6 @@ function updateStats() {
     );
 
 
-    /*/*==============================
-       TRANSAKSI HARI INI
-   /*============================== */
-
     const hariIni =
         getTodayDate();
 
@@ -792,10 +788,6 @@ function updateStats() {
             }
         ).length;
 
-
-    /*/*==============================
-       ELEMENT
-   /*============================== */
 
     const totalBarangElement =
         document.getElementById(
@@ -812,10 +804,6 @@ function updateStats() {
             "transaksiHariIni"
         );
 
-
-    /*/*==============================
-       TAMPILKAN
-   /*============================== */
 
     if (
         totalBarangElement
@@ -865,8 +853,12 @@ function openTransaction(
             function(item) {
 
                 return (
-                    Number(item.id) ===
-                    Number(barangId)
+                    Number(
+                        item.id
+                    ) ===
+                    Number(
+                        barangId
+                    )
                 );
             }
         );
@@ -952,45 +944,65 @@ function closeModal() {
 async function confirmTransaction() {
 
     const input =
-        document.getElementById("transactionQty");
+        document.getElementById(
+            "transactionQty"
+        );
 
     const qty =
-        Number(input.value);
+        Number(
+            input.value
+        );
 
     if (
         !Number.isFinite(qty) ||
         qty <= 0
     ) {
-        alert("Jumlah harus lebih dari 0.");
+
+        alert(
+            "Jumlah harus lebih dari 0."
+        );
+
         return;
     }
 
     const barang =
-        dataBarang.find(function(item) {
-            return (
-                Number(item.id) ===
-                Number(selectedProduct)
-            );
-        });
+        dataBarang.find(
+            function(item) {
+
+                return (
+                    Number(
+                        item.id
+                    ) ===
+                    Number(
+                        selectedProduct
+                    )
+                );
+            }
+        );
 
     if (!barang) {
-        alert("Barang tidak ditemukan.");
+
+        alert(
+            "Barang tidak ditemukan."
+        );
+
         return;
     }
 
 
-    /*/*==============================
-       CEK STOK UNTUK BARANG LAKU
-   /*============================== */
-
     if (
-        selectedTransactionType === "laku"
+        selectedTransactionType ===
+        "laku"
     ) {
 
         const stok =
-            getCurrentStock(barang);
+            getCurrentStock(
+                barang
+            );
 
-        if (qty > stok) {
+        if (
+            qty > stok
+        ) {
 
             alert(
                 "Jumlah barang laku melebihi stok.\n\n" +
@@ -1003,18 +1015,10 @@ async function confirmTransaction() {
     }
 
 
-    /*/*==============================
-       TANGGAL TRANSAKSI
-   /*============================== */
-
     const tanggal =
         tanggalDipilih ||
         getTodayDate();
 
-
-    /*/*==============================
-       SIMPAN TRANSAKSI
-   /*============================== */
 
     const {
         error
@@ -1040,7 +1044,9 @@ async function confirmTransaction() {
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
         alert(
             "Gagal menyimpan transaksi:\n" +
@@ -1051,10 +1057,6 @@ async function confirmTransaction() {
     }
 
 
-    /*/*==============================
-       REFRESH
-   /*============================== */
-
     closeModal();
 
     await loadTransactions();
@@ -1062,12 +1064,9 @@ async function confirmTransaction() {
     updateTable();
 
 
-    /*/*==============================
-       NOTIFIKASI
-   /*============================== */
-
     const namaTransaksi =
-        selectedTransactionType === "masuk"
+        selectedTransactionType ===
+        "masuk"
             ? "Barang masuk"
             : "Barang keluar";
 
@@ -1076,7 +1075,6 @@ async function confirmTransaction() {
         "success"
     );
 }
-
 /*/*==================================
    RIWAYAT TRANSAKSI
 ===================================================== */
@@ -1111,12 +1109,6 @@ function renderHistory() {
         return;
     }
 
-
-    /*/*==============================
-       URUTKAN
-       Tanggal terbaru -> terlama
-       Jika tanggal sama, ID terbaru -> terlama
-   /*============================== */
 
     const history =
         [...transactions].sort(
@@ -1153,10 +1145,6 @@ function renderHistory() {
     tbody.innerHTML = "";
 
 
-    /*/*==============================
-       TAMPILKAN
-   /*============================== */
-
     history.forEach(
         function(transaction) {
 
@@ -1184,21 +1172,17 @@ function renderHistory() {
             const typeText =
                 transaction.type ===
                 "masuk"
-
                     ? "Masuk"
-
                     : "Keluar";
 
 
             const qtyText =
                 transaction.type ===
                 "masuk"
-
                     ? "+" +
                       formatNumber(
                           transaction.qty
                       )
-
                     : "-" +
                       formatNumber(
                           transaction.qty
@@ -1220,14 +1204,12 @@ function renderHistory() {
 
             const waktu =
                 transaction.tanggal
-
                     ? new Date(
                         transaction.tanggal +
                         "T00:00:00"
                     ).toLocaleDateString(
                         "id-ID"
                     )
-
                     : "-";
 
 
@@ -1270,8 +1252,6 @@ function renderHistory() {
                         stokAkhir
                     )}
                 </td>
-
-                
                 `;
 
             tbody.appendChild(
@@ -1387,11 +1367,6 @@ function getStockAfterTransaction(
                 );
 
 
-            /*
-               Transaksi setelah tanggal target
-               tidak ikut dihitung
-            */
-
             if (
                 tanggalTransaction >
                 tanggalTarget
@@ -1400,11 +1375,6 @@ function getStockAfterTransaction(
                 return;
             }
 
-
-            /*
-               Jika tanggal sama,
-               gunakan ID sebagai urutan.
-            */
 
             if (
                 tanggalTransaction ===
@@ -1718,21 +1688,30 @@ if (
     );
 }
 
+
 /* =====================================================
    DROPDOWN BRAND CATAT PENJUALAN
 ===================================================== */
 
 const brandDropdown =
-    document.getElementById("brandDropdown");
+    document.getElementById(
+        "brandDropdown"
+    );
 
 const brandDropdownButton =
-    document.getElementById("brandDropdownButton");
+    document.getElementById(
+        "brandDropdownButton"
+    );
 
 const brandDropdownMenu =
-    document.getElementById("brandDropdownMenu");
+    document.getElementById(
+        "brandDropdownMenu"
+    );
 
 const brandDropdownText =
-    document.getElementById("brandDropdownText");
+    document.getElementById(
+        "brandDropdownText"
+    );
 
 
 if (
@@ -1779,6 +1758,8 @@ if (
             }
         );
 }
+
+
 /*/*==================================
    SIMPAN PENJUALAN
 ===================================================== */
@@ -1789,12 +1770,12 @@ async function simpanPenjualan() {
         inputPenjualanBarang.dataset.id;
 
     const brandDropdown =
-    document.getElementById(
-        "brandDropdown"
-    );
+        document.getElementById(
+            "brandDropdown"
+        );
 
-const brand =
-    brandDropdown?.dataset.value || "";
+    const brand =
+        brandDropdown?.dataset.value || "";
 
     const qty =
         Number(
@@ -1809,22 +1790,18 @@ const brand =
         );
 
     const harga =
-    Number(
-        hargaInput.value.replace(
-            /\./g,
-            ""
-        )
-    );
+        Number(
+            hargaInput.value.replace(
+                /\./g,
+                ""
+            )
+        );
 
     const tanggal =
         document.getElementById(
             "penjualanTanggal"
         ).value;
 
-
-    /*/*==============================
-       VALIDASI
-   /*============================== */
 
     if (!barangId) {
 
@@ -1865,10 +1842,6 @@ const brand =
     }
 
 
-    /*/*==============================
-       CEK BARANG
-   /*============================== */
-
     const barang =
         dataBarang.find(
             function(item) {
@@ -1888,17 +1861,8 @@ const brand =
     }
 
 
-    /*/*==============================
-       CEK STOK TERSEDIA
-   /*============================== */
-
     const tanggalSebelumnya =
         tanggalDipilih;
-
-    /*
-       Gunakan stok pada tanggal
-       penjualan yang dipilih.
-    */
 
     tanggalDipilih =
         tanggal;
@@ -1926,10 +1890,6 @@ const brand =
         );
     }
 
-
-    /*/*==============================
-       SIMPAN PENJUALAN
-   /*============================== */
 
     const {
         data: penjualanBaru,
@@ -1972,10 +1932,6 @@ const brand =
     }
 
 
-    /*/*==============================
-       BUAT TRANSAKSI BARANG LAKU
-   /*============================== */
-
     const {
         error: errorTransaksi
     } =
@@ -2000,10 +1956,6 @@ const brand =
             });
 
 
-    /*/*==============================
-       JIKA TRANSAKSI GAGAL
-   /*============================== */
-
     if (errorTransaksi) {
 
         console.error(
@@ -2025,52 +1977,37 @@ const brand =
         );
     }
 
-/*/*==============================
-   REFRESH DATA
-================================================= */
 
-await loadTransactions();
+    await loadTransactions();
 
-updateTable();
+    updateTable();
 
-await initFilterPenjualan();
-    /*/*==============================
-       BERSIHKAN FORM
-   /*============================== */
+    await initFilterPenjualan();
+
 
     inputPenjualanBarang.value = "";
 
     inputPenjualanBarang.dataset.id = "";
 
     document.getElementById(
-    "penjualanBrand"
-).value = "";
+        "penjualanBrand"
+    ).value = "";
 
-if (brandDropdown) {
+    if (brandDropdown) {
 
-    delete brandDropdown.dataset.value;
-}
+        delete brandDropdown.dataset.value;
+    }
 
-if (brandDropdownText) {
+    if (brandDropdownText) {
+
+        brandDropdownText.textContent =
+            "Pilih Brand";
+    }
 
     document.getElementById(
-    "penjualanBrand"
-).value = "";
+        "penjualanQty"
+    ).value = 1;
 
-if (brandDropdown) {
-
-    delete brandDropdown.dataset.value;
-}
-
-if (brandDropdownText) {
-
-    brandDropdownText.textContent =
-        "Pilih Brand";
-}
-
-document.getElementById(
-    "penjualanQty"
-).value = 1;
     document.getElementById(
         "penjualanHarga"
     ).value = "";
@@ -2078,11 +2015,7 @@ document.getElementById(
     document.getElementById(
         "saranBarang"
     ).innerHTML = "";
-}
 
-    /*/*==============================
-       NOTIFIKASI
-   /*============================== */
 
     showToast(
         "✅ Penjualan berhasil dicatat dan stok berkurang " +
@@ -2097,6 +2030,7 @@ document.getElementById(
 ===================================================== */
 
 async function loadPenjualan() {
+
     const tbody =
         document.getElementById(
             "penjualanTable"
@@ -2116,7 +2050,8 @@ async function loadPenjualan() {
             </tr>
             `;
     }
-    
+
+
     const {
         data,
         error
@@ -2131,37 +2066,42 @@ async function loadPenjualan() {
                 }
             );
 
+
     if (error) {
-    console.error(
-        "ERROR LOAD PENJUALAN:",
-        error
-    );
 
-    const totalQtyEl =
-        document.getElementById(
-            "totalQtyPenjualan"
+        console.error(
+            "ERROR LOAD PENJUALAN:",
+            error
         );
 
-    const totalPenjualanEl =
-        document.getElementById(
-            "totalPenjualan"
-        );
+        const totalQtyEl =
+            document.getElementById(
+                "totalQtyPenjualan"
+            );
 
-    if (totalQtyEl) {
-        totalQtyEl.textContent = "0";
+        const totalPenjualanEl =
+            document.getElementById(
+                "totalPenjualan"
+            );
+
+        if (totalQtyEl) {
+            totalQtyEl.textContent = "0";
+        }
+
+        if (totalPenjualanEl) {
+            totalPenjualanEl.textContent = "Rp0";
+        }
+
+        window.dataPenjualan = [];
+
+        return;
     }
 
-    if (totalPenjualanEl) {
-        totalPenjualanEl.textContent = "Rp0";
-    }
 
-    window.dataPenjualan = [];
+    window.dataPenjualan =
+        data || [];
 
-    return;
-}
 
-window.dataPenjualan = data || [];
-window.dataPenjualan = data || [];
     const totalQtyEl =
         document.getElementById(
             "totalQtyPenjualan"
@@ -2176,10 +2116,6 @@ window.dataPenjualan = data || [];
         return;
     }
 
-
-    /*/*==============================
-       FILTER
-   /*============================== */
 
     const bulan =
         document.getElementById(
@@ -2232,10 +2168,6 @@ window.dataPenjualan = data || [];
         );
 
 
-    /*/*==============================
-       TABEL
-   /*============================== */
-
     tbody.innerHTML = "";
 
     let totalQty = 0;
@@ -2244,7 +2176,7 @@ window.dataPenjualan = data || [];
 
 
     hasil.forEach(
-        function(item, index) {
+        function(item) {
 
             const barang =
                 dataBarang.find(
@@ -2281,7 +2213,6 @@ window.dataPenjualan = data || [];
 
             const tanggal =
                 item.tanggal_pembelian
-
                     ? new Date(
                         item.tanggal_pembelian +
                         "T00:00:00"
@@ -2293,70 +2224,64 @@ window.dataPenjualan = data || [];
                             year: "2-digit"
                         }
                     )
-
                     : "-";
 
 
             tbody.innerHTML +=
                 `
+                <tr>
+                    <td class="text-center">
+                        ${tanggal}
+                    </td>
 
-<tr>
-    <td class="text-center">
-        ${tanggal}
-    </td>
+                    <td>
+                        ${escapeHTML(
+                            namaBarang
+                        )}
+                    </td>
 
-    <td>
-        ${escapeHTML(
-            namaBarang
-        )}
-    </td>
+                    <td class="text-center">
+                        ${formatNumber(qty)}
+                    </td>
 
-    <td class="text-center">
-        ${formatNumber(qty)}
-    </td>
+                    <td class="text-end">
+                        Rp${formatNumber(harga)}
+                    </td>
 
-    <td class="text-end">
-        Rp${formatNumber(harga)}
-    </td>
+                    <td class="text-end">
+                        Rp${formatNumber(total)}
+                    </td>
 
-    <td class="text-end">
-        Rp${formatNumber(total)}
-    </td>
+                    <td>
+                        ${escapeHTML(
+                            item.brand || "-"
+                        )}
+                    </td>
 
-    <td>
-        ${escapeHTML(
-            item.brand || "-"
-        )}
-    </td>
+                    <td class="text-center">
+                        <button
+                            type="button"
+                            class="edit-history-btn"
+                            onclick="editPenjualan(${item.id})"
+                            title="Edit penjualan"
+                        >
+                            ✏️
+                        </button>
 
-    <td class="text-center">
-    <button
-        type="button"
-        class="edit-history-btn"
-        onclick="editPenjualan(${item.id})"
-        title="Edit penjualan"
-    >
-        ✏️
-    </button>
-
-    <button
-        type="button"
-        class="delete-history-btn"
-        onclick="hapusPenjualan(${item.id})"
-        title="Hapus penjualan"
-    >
-        ❌
-    </button>
-</td>
-</tr>
+                        <button
+                            type="button"
+                            class="delete-history-btn"
+                            onclick="hapusPenjualan(${item.id})"
+                            title="Hapus penjualan"
+                        >
+                            ❌
+                        </button>
+                    </td>
+                </tr>
                 `;
         }
     );
 
-
-    /*/*==============================
-       KOSONG
-   /*============================== */
 
     if (
         hasil.length === 0
@@ -2376,10 +2301,6 @@ window.dataPenjualan = data || [];
     }
 
 
-    /*/*==============================
-       TOTAL
-   /*============================== */
-
     if (totalQtyEl) {
 
         totalQtyEl.textContent =
@@ -2397,124 +2318,86 @@ window.dataPenjualan = data || [];
             );
     }
 }
-
-/*/*==================================
+/* ==================================
    EDIT PENJUALAN
 ================================== */
 
 function editPenjualan(id) {
-
-    const penjualan =
-        (window.dataPenjualan || []).find(
-            function(item) {
-                return Number(item.id) === Number(id);
-            }
-        );
+    const penjualan = (window.dataPenjualan || []).find(
+        function(item) {
+            return Number(item.id) === Number(id);
+        }
+    );
 
     if (!penjualan) {
         alert("Data penjualan tidak ditemukan.");
         return;
     }
 
-    const barang =
-        dataBarang.find(
-            function(item) {
-                return String(item.id) ===
-                    String(penjualan.barang_id);
-            }
-        );
+    const barang = dataBarang.find(
+        function(item) {
+            return String(item.id) === String(penjualan.barang_id);
+        }
+    );
 
-    document.getElementById(
-        "editPenjualanId"
-    ).value = penjualan.id;
+    document.getElementById("editPenjualanId").value =
+        penjualan.id;
 
-    document.getElementById(
-        "editPenjualanBarang"
-    ).value =
-        barang
-            ? barang.nama
-            : "Barang tidak ditemukan";
+    document.getElementById("editPenjualanBarang").value =
+        barang ? barang.nama : "Barang tidak ditemukan";
 
-    document.getElementById(
-        "editPenjualanQty"
-    ).value =
+    document.getElementById("editPenjualanQty").value =
         Number(penjualan.qty) || 0;
 
-    document.getElementById(
-        "editPenjualanHarga"
-    ).value =
-        formatNumber(
-            Number(penjualan.harga) || 0
-        );
+    document.getElementById("editPenjualanHarga").value =
+        formatNumber(Number(penjualan.harga) || 0);
 
-    document.getElementById(
-        "editPenjualanBrand"
-    ).value =
+    document.getElementById("editPenjualanBrand").value =
         penjualan.brand || "";
 
-    document.getElementById(
-        "editPenjualanTanggal"
-    ).value =
+    document.getElementById("editPenjualanTanggal").value =
         penjualan.tanggal_pembelian || "";
 
-    document.getElementById(
-        "editPenjualanModal"
-    ).style.display = "flex";
+    document.getElementById("editPenjualanModal").style.display =
+        "flex";
 }
 
 function closeEditPenjualan() {
-
-    const modal =
-        document.getElementById(
-            "editPenjualanModal"
-        );
+    const modal = document.getElementById(
+        "editPenjualanModal"
+    );
 
     if (modal) {
         modal.style.display = "none";
     }
 }
+
 async function simpanEditPenjualan() {
+    const id = Number(
+        document.getElementById("editPenjualanId").value
+    );
 
-    const id =
-        Number(
-            document.getElementById(
-                "editPenjualanId"
-            ).value
-        );
+    const qty = Number(
+        document.getElementById("editPenjualanQty").value
+    );
 
-    const qty =
-        Number(
-            document.getElementById(
-                "editPenjualanQty"
-            ).value
-        );
+    const hargaInput = document.getElementById(
+        "editPenjualanHarga"
+    ).value;
 
-    const hargaInput =
-        document.getElementById(
-            "editPenjualanHarga"
-        ).value;
+    const harga = Number(
+        hargaInput
+            .replace(/\./g, "")
+            .replace(/,/g, "")
+    );
 
-    const harga =
-        Number(
-            hargaInput
-                .replace(/\./g, "")
-                .replace(/,/g, "")
-        );
+    const brand = document.getElementById(
+        "editPenjualanBrand"
+    ).value;
 
-    const brand =
-        document.getElementById(
-            "editPenjualanBrand"
-        ).value;
-
-    const tanggal =
-        document.getElementById(
-            "editPenjualanTanggal"
-        ).value;
-
-
-    // ==============================
-    // VALIDASI
-    // ==============================
+    const tanggal = document.getElementById(
+        "editPenjualanTanggal"
+    ).value;
 
     if (!id) {
         showToast(
@@ -2548,27 +2431,16 @@ async function simpanEditPenjualan() {
         return;
     }
 
-
-    // ==============================
-    // KONFIRMASI
-    // ==============================
-
-    const konfirmasi =
-        confirm(
-            "Simpan perubahan penjualan ini?"
-        );
+    const konfirmasi = confirm(
+        "Simpan perubahan penjualan ini?"
+    );
 
     if (!konfirmasi) {
         return;
     }
 
-
     try {
-
-        const {
-            data,
-            error
-        } =
+        const { data, error } =
             await supabaseClient.rpc(
                 "edit_penjualan_atomic",
                 {
@@ -2580,9 +2452,7 @@ async function simpanEditPenjualan() {
                 }
             );
 
-
         if (error) {
-
             console.error(
                 "ERROR EDIT PENJUALAN:",
                 error
@@ -2590,23 +2460,16 @@ async function simpanEditPenjualan() {
 
             showToast(
                 "❌ Gagal mengubah penjualan: " +
-                error.message,
+                    error.message,
                 "error"
             );
-
             return;
         }
-
 
         console.log(
             "EDIT PENJUALAN BERHASIL:",
             data
         );
-
-
-        // ==============================
-        // AMBIL DATA TERBARU
-        // ==============================
 
         await loadTransactions();
         await loadBarang();
@@ -2616,21 +2479,13 @@ async function simpanEditPenjualan() {
         updateStats();
         renderHistory();
 
-
-        // ==============================
-        // TUTUP MODAL
-        // ==============================
-
         closeEditPenjualan();
-
 
         showToast(
             "✅ Penjualan berhasil diperbarui",
             "success"
         );
-
     } catch (error) {
-
         console.error(
             "ERROR EDIT PENJUALAN:",
             error
@@ -2642,12 +2497,13 @@ async function simpanEditPenjualan() {
         );
     }
 }
-/*/*==================================
+
+
+/* ==================================
    HAPUS PENJUALAN
-===================================================== */
+================================== */
 
 async function hapusPenjualan(id) {
-
     if (window.sedangMenghapusPenjualan) {
         return;
     }
@@ -2655,7 +2511,6 @@ async function hapusPenjualan(id) {
     window.sedangMenghapusPenjualan = true;
 
     try {
-
         const konfirmasi = confirm(
             "Hapus penjualan ini?\n\n" +
             "Data penjualan akan dihapus dan stok akan dikembalikan."
@@ -2665,11 +2520,6 @@ async function hapusPenjualan(id) {
             return;
         }
 
-
-        // =========================================
-        // HAPUS SECARA ATOMIC MELALUI SUPABASE RPC
-        // =========================================
-
         const { data, error } =
             await supabaseClient.rpc(
                 "hapus_penjualan_atomic",
@@ -2678,13 +2528,7 @@ async function hapusPenjualan(id) {
                 }
             );
 
-
-        // =========================================
-        // JIKA GAGAL
-        // =========================================
-
         if (error) {
-
             console.error(
                 "ERROR HAPUS PENJUALAN:",
                 error
@@ -2692,43 +2536,30 @@ async function hapusPenjualan(id) {
 
             showToast(
                 "❌ Gagal menghapus penjualan: " +
-                error.message,
+                    error.message,
                 "error"
             );
-
             return;
         }
-
-
-        // =========================================
-        // BERHASIL
-        // =========================================
 
         console.log(
             "PENJUALAN BERHASIL DIHAPUS:",
             data
         );
 
-
-        // Ambil data terbaru dari database
         await loadTransactions();
         await loadBarang();
         await loadPenjualan();
 
-
-        // Update tampilan
         updateTable();
         updateStats();
         renderHistory();
-
 
         showToast(
             "✅ Penjualan berhasil dihapus dan stok dikembalikan",
             "success"
         );
-
     } catch (error) {
-
         console.error(
             "ERROR HAPUS PENJUALAN:",
             error
@@ -2738,46 +2569,33 @@ async function hapusPenjualan(id) {
             "❌ Terjadi kesalahan saat menghapus penjualan",
             "error"
         );
-
     } finally {
-
         window.sedangMenghapusPenjualan = false;
-
     }
 }
+
+
+/* ==================================
+   FILTER PENJUALAN
+================================== */
+
 async function initFilterPenjualan() {
+    const bulan = document.getElementById(
+        "filterBulan"
+    );
 
-    const bulan =
-        document.getElementById(
-            "filterBulan"
-        );
+    const brand = document.getElementById(
+        "filterBrand"
+    );
 
-    const brand =
-        document.getElementById(
-            "filterBrand"
-        );
-
-    if (
-        !bulan ||
-        !brand
-    ) {
-
+    if (!bulan || !brand) {
         return;
     }
-const bulanSaatIni =
-    bulan.value;
 
-const brandSaatIni =
-    brand.value;
+    const bulanSaatIni = bulan.value;
+    const brandSaatIni = brand.value;
 
-    /*/*==============================
-       AMBIL DATA PENJUALAN
-   /*============================== */
-
-    const {
-        data,
-        error
-    } =
+    const { data, error } =
         await supabaseClient
             .from("penjualan")
             .select(
@@ -2790,107 +2608,64 @@ const brandSaatIni =
                 }
             );
 
-
     if (error) {
-
         console.error(
             "ERROR FILTER PENJUALAN:",
             error
         );
-
         return;
     }
 
-
-    /*/*==============================
-       FILTER BULAN
-   /*============================== */
-
-    const bulanSet =
-        new Set();
+    const bulanSet = new Set();
 
     bulanSet.add("");
 
-
     (data || []).forEach(
         function(item) {
-
-            if (
-                item.tanggal_pembelian
-            ) {
-
+            if (item.tanggal_pembelian) {
                 bulanSet.add(
                     String(
                         item.tanggal_pembelian
-                    ).substring(
-                        0,
-                        7
-                    )
+                    ).substring(0, 7)
                 );
             }
         }
     );
 
-
-    /*/*==============================
-       BULAN SEKARANG
-   /*============================== */
-
-    const sekarang =
-        new Date();
+    const sekarang = new Date();
 
     const bulanSekarang =
         `${sekarang.getFullYear()}-${String(
             sekarang.getMonth() + 1
         ).padStart(2, "0")}`;
 
+    bulanSet.add(bulanSekarang);
 
-    bulanSet.add(
-        bulanSekarang
-    );
-
-
-    const daftarBulan =
-        [...bulanSet]
-            .filter(
-                function(value) {
-                    return value !== "";
-                }
-            )
-            .sort()
-            .reverse();
-
-
-    /*/*==============================
-       ISI DROPDOWN BULAN
-   /*============================== */
+    const daftarBulan = [...bulanSet]
+        .filter(
+            function(value) {
+                return value !== "";
+            }
+        )
+        .sort()
+        .reverse();
 
     bulan.innerHTML = "";
 
-
     const optionSemuaBulan =
-        document.createElement(
-            "option"
-        );
+        document.createElement("option");
 
-    optionSemuaBulan.value =
-        "";
-
+    optionSemuaBulan.value = "";
     optionSemuaBulan.textContent =
         "Semua Bulan";
 
-    bulan.appendChild(
-        optionSemuaBulan
-    );
-
+    bulan.appendChild(optionSemuaBulan);
 
     daftarBulan.forEach(
         function(value) {
-
-            const tanggal =
-                new Date(
-                    value + "-01"
-                );
+            const tanggal = new Date(
+                value + "-01"
+            );
 
             const label =
                 tanggal.toLocaleDateString(
@@ -2901,119 +2676,80 @@ const brandSaatIni =
                     }
                 );
 
-
             const option =
-                document.createElement(
-                    "option"
-                );
+                document.createElement("option");
 
-            option.value =
-                value;
+            option.value = value;
 
             option.textContent =
                 label.charAt(0).toUpperCase() +
                 label.slice(1);
 
-            bulan.appendChild(
-                option
-            );
+            bulan.appendChild(option);
         }
     );
 
-
-    
-const daftarBrand = [
-    ...new Set(
-        (data || [])
-            .map(function(item) {
-                return String(item.brand || "").trim();
-            })
-            .filter(function(brand) {
-                return brand !== "";
-            })
-    )
-].sort(function(a, b) {
-    return a.localeCompare(b, "id");
-});
-
-    /*/*==============================
-       ISI DROPDOWN BRAND
-   /*============================== */
+    const daftarBrand = [
+        ...new Set(
+            (data || [])
+                .map(function(item) {
+                    return String(
+                        item.brand || ""
+                    ).trim();
+                })
+                .filter(function(namaBrand) {
+                    return namaBrand !== "";
+                })
+        )
+    ].sort(function(a, b) {
+        return a.localeCompare(
+            b,
+            "id"
+        );
+    });
 
     brand.innerHTML = "";
 
-
     const optionSemuaBrand =
-        document.createElement(
-            "option"
-        );
+        document.createElement("option");
 
-    optionSemuaBrand.value =
-        "";
-
+    optionSemuaBrand.value = "";
     optionSemuaBrand.textContent =
         "Semua Brand";
 
-    brand.appendChild(
-        optionSemuaBrand
-    );
-
+    brand.appendChild(optionSemuaBrand);
 
     daftarBrand.forEach(
         function(namaBrand) {
-
             const option =
-                document.createElement(
-                    "option"
-                );
+                document.createElement("option");
 
-            option.value =
-                namaBrand;
+            option.value = namaBrand;
+            option.textContent = namaBrand;
 
-            option.textContent =
-                namaBrand;
-
-            brand.appendChild(
-                option
-            );
+            brand.appendChild(option);
         }
     );
 
+    if (bulanSaatIni) {
+        bulan.value = bulanSaatIni;
+    } else {
+        bulan.value = bulanSekarang;
+    }
 
-
-if (bulanSaatIni) {
-
-    bulan.value =
-        bulanSaatIni;
-
-} else {
-
-    bulan.value =
-        bulanSekarang;
-}
-
-
-if (brandSaatIni) {
-
-    brand.value =
-        brandSaatIni;
-
-} else {
-
-    brand.value =
-        "";
-}
-
-    /*/*==============================
-       TAMPILKAN DATA
-   /*============================== */
+    if (brandSaatIni) {
+        brand.value = brandSaatIni;
+    } else {
+        brand.value = "";
+    }
 
     await loadPenjualan();
 }
 
-/*/*==================================
+
+/* ==================================
    EVENT FILTER PENJUALAN
-===================================================== */
+================================== */
 
 const filterBulanElement =
     document.getElementById(
@@ -3026,118 +2762,108 @@ const filterBrandElement =
     );
 
 if (filterBulanElement) {
-
     filterBulanElement.addEventListener(
         "change",
         function() {
-
             loadPenjualan();
         }
     );
 }
 
 if (filterBrandElement) {
-
     filterBrandElement.addEventListener(
         "change",
         function() {
-
             loadPenjualan();
         }
     );
 }
 
-/*/*==================================
+
+/* ==================================
    XLSX LANDSCAPE
-===================================================== */
+================================== */
 
-let jsZipPromise = null;
+let jsZipLoadPromise = null;
 
-
-function loadJSZip() {
-
+function loadJsZipLibrary() {
     if (typeof JSZip !== "undefined") {
         return Promise.resolve();
     }
 
-    if (jsZipPromise) {
-        return jsZipPromise;
+    if (jsZipLoadPromise) {
+        return jsZipLoadPromise;
     }
 
-    jsZipPromise =
-        new Promise(function(resolve, reject) {
-
+    jsZipLoadPromise = new Promise(
+        function(resolve, reject) {
             const script =
-                document.createElement("script");
+                document.createElement(
+                    "script"
+                );
 
             script.src =
                 "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
-            script.onload =
-                function() {
-                    resolve();
-                };
+            script.onload = function() {
+                resolve();
+            };
 
-            script.onerror =
-                function() {
+            script.onerror = function() {
+                jsZipLoadPromise = null;
 
-                    jsZipPromise = null;
+                reject(
+                    new Error(
+                        "Library JSZip gagal dimuat."
+                    )
+                );
+            };
 
-                    reject(
-                        new Error(
-                            "Library JSZip gagal dimuat."
-                        )
-                    );
-                };
+            document.head.appendChild(
+                script
+            );
+        }
+    );
 
-            document.head.appendChild(script);
-        });
-
-    return jsZipPromise;
+    return jsZipLoadPromise;
 }
 
-
-async function buatBlobExcelLandscape(
+async function createLandscapeExcelBlob(
     excelData
 ) {
+    await loadJsZipLibrary();
 
-    await loadJSZip();
+    const zip = await JSZip.loadAsync(
+        excelData
+    );
 
-    const zip =
-        await JSZip.loadAsync(excelData);
-
-    const daftarSheet =
+    const worksheetFiles =
         Object.keys(zip.files).filter(
             function(path) {
-
-                return (
-                    /^xl\/worksheets\/sheet\d+\.xml$/.test(
-                        path
-                    )
+                return /^xl\/worksheets\/sheet\d+\.xml$/.test(
+                    path
                 );
             }
         );
 
     await Promise.all(
-        daftarSheet.map(
+        worksheetFiles.map(
             async function(path) {
-
-                let xml =
-                    await zip
-                        .file(path)
-                        .async("string");
+                let xml = await zip
+                    .file(path)
+                    .async("string");
 
                 if (
-                    /<pageSetup\b[^>]*\/>/.test(xml)
+                    /<pageSetup\b[^>]*\/>/.test(
+                        xml
+                    )
                 ) {
-
                     xml = xml.replace(
                         /<pageSetup\b([^>]*)\/>/,
                         function(
                             pageSetup,
                             attributes
                         ) {
-
                             const cleanAttributes =
                                 attributes.replace(
                                     /\sorientation="[^"]*"/,
@@ -3149,9 +2875,7 @@ async function buatBlobExcelLandscape(
                             );
                         }
                     );
-
                 } else {
-
                     xml = xml.replace(
                         /(<ignoredErrors\b|<drawing\b|<legacyDrawing\b|<extLst\b|<\/worksheet>)/,
                         '<pageSetup orientation="landscape"/>$1'
@@ -3163,52 +2887,34 @@ async function buatBlobExcelLandscape(
         )
     );
 
-    const hasilExcel =
+    const landscapeExcelData =
         await zip.generateAsync({
             type: "arraybuffer",
             compression: "DEFLATE"
         });
 
     return new Blob(
-        [hasilExcel],
+        [landscapeExcelData],
         {
             type:
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
     );
 }
-
-/*/*==================================
-   EXPORT EXCEL
-===================================================== */
+/* ==================================
+   EXPORT EXCEL STOK
+================================== */
 
 async function exportExcel() {
-
-    if (
-        typeof XLSX ===
-        "undefined"
-    ) {
-
-        alert(
-            "Library Excel belum dimuat."
-        );
-
+    if (typeof XLSX === "undefined") {
+        alert("Library Excel belum dimuat.");
         return;
     }
 
-
-    const now =
-        new Date();
-
-    const tahun =
-        now.getFullYear();
-
-    const bulan =
-        now.getMonth();
-
-    const hariIni =
-        now.getDate();
-
+    const now = new Date();
+    const tahun = now.getFullYear();
+    const bulan = now.getMonth();
+    const hariIni = now.getDate();
 
     const namaBulan = [
         "Januari",
@@ -3225,18 +2931,14 @@ async function exportExcel() {
         "Desember"
     ];
 
-
-    const jumlahHari =
-        new Date(
-            tahun,
-            bulan + 1,
-            0
-        ).getDate();
+    const jumlahHari = new Date(
+        tahun,
+        bulan + 1,
+        0
+    ).getDate();
 
 
-    /*/*==============================
-       HEADER
-   /*============================== */
+    /* HEADER EXCEL */
 
     const header = [];
 
@@ -3244,175 +2946,110 @@ async function exportExcel() {
         `${namaBulan[bulan]}-${tahun}`
     );
 
-
     for (
         let hari = 1;
         hari <= jumlahHari;
         hari++
     ) {
-
         header.push(
             `${hari}/${bulan + 1}`
         );
     }
 
-
-    const dataExcel =
-        [header];
+    const dataExcel = [header];
 
 
-    /*/*==============================
-       DATA BARANG
-   /*============================== */
+    /* DATA BARANG */
 
     dataBarang.forEach(
         function(barang) {
-
             let stok =
-                Number(
-                    barang.stok_awal
-                ) || 0;
-
+                Number(barang.stok_awal) || 0;
 
             const row = [
                 barang.nama
             ];
-
 
             for (
                 let hari = 1;
                 hari <= jumlahHari;
                 hari++
             ) {
-
-                if (
-                    hari > hariIni
-                ) {
-
+                if (hari > hariIni) {
                     row.push("");
-
                     continue;
                 }
-
 
                 const tanggal =
                     `${tahun}-${String(
                         bulan + 1
-                    ).padStart(
-                        2,
-                        "0"
-                    )}-${String(
+                    ).padStart(2, "0")}-${String(
                         hari
-                    ).padStart(
-                        2,
-                        "0"
-                    )}`;
-
+                    ).padStart(2, "0")}`;
 
                 const transaksiHari =
                     transactions.filter(
                         function(transaction) {
-
                             return (
                                 Number(
                                     transaction.barang_id
                                 ) ===
-                                Number(
-                                    barang.id
-                                ) &&
-
+                                    Number(barang.id) &&
                                 transaction.tanggal ===
-                                tanggal
+                                    tanggal
                             );
                         }
                     );
 
-
                 let perubahan = 0;
-
-                let adaTransaksi =
-                    false;
-
+                let adaTransaksi = false;
 
                 transaksiHari.forEach(
                     function(transaction) {
-
                         const qty =
                             Number(
                                 transaction.qty
                             ) || 0;
 
-
                         if (
                             transaction.type ===
                             "masuk"
                         ) {
-
-                            perubahan +=
-                                qty;
-
-                            adaTransaksi =
-                                true;
+                            perubahan += qty;
+                            adaTransaksi = true;
                         }
-
 
                         if (
                             transaction.type ===
                             "laku"
                         ) {
-
-                            perubahan -=
-                                qty;
-
-                            adaTransaksi =
-                                true;
+                            perubahan -= qty;
+                            adaTransaksi = true;
                         }
                     }
                 );
 
-
-                if (
-                    adaTransaksi
-                ) {
-
-                    if (
-                        perubahan > 0
-                    ) {
-
+                if (adaTransaksi) {
+                    if (perubahan > 0) {
                         row.push(
                             `+${perubahan}`
                         );
-
                     } else {
-
-                        row.push(
-                            perubahan
-                        );
+                        row.push(perubahan);
                     }
 
-
-                    stok +=
-                        perubahan;
-
+                    stok += perubahan;
                 } else {
-
-                    row.push(
-                        stok
-                    );
+                    row.push(stok);
                 }
             }
 
-
-            dataExcel.push(
-                row
-            );
+            dataExcel.push(row);
         }
     );
 
 
-    /*/*==============================
-       BUAT EXCEL
-   /*============================== */
+    /* BUAT WORKBOOK EXCEL */
 
     const worksheet =
         XLSX.utils.aoa_to_sheet(
@@ -3422,7 +3059,6 @@ async function exportExcel() {
     const workbook =
         XLSX.utils.book_new();
 
-
     XLSX.utils.book_append_sheet(
         workbook,
         worksheet,
@@ -3430,9 +3066,7 @@ async function exportExcel() {
     );
 
 
-    /*/*==============================
-       LEBAR KOLOM
-   /*============================== */
+    /* LEBAR KOLOM */
 
     const widths = [
         {
@@ -3440,33 +3074,26 @@ async function exportExcel() {
         }
     ];
 
-
     for (
         let i = 0;
         i < jumlahHari;
         i++
     ) {
-
         widths.push({
             wch: 7
         });
     }
 
-
-    worksheet["!cols"] =
-        widths;
+    worksheet["!cols"] = widths;
 
 
-    /*/*==============================
-       STYLE HEADER
-   /*============================== */
+    /* STYLE HEADER */
 
     for (
         let c = 0;
         c <= jumlahHari;
         c++
     ) {
-
         const cell =
             worksheet[
                 XLSX.utils.encode_cell({
@@ -3475,14 +3102,11 @@ async function exportExcel() {
                 })
             ];
 
-
         if (!cell) {
             continue;
         }
 
-
         cell.s = {
-
             font: {
                 bold: true
             },
@@ -3495,92 +3119,67 @@ async function exportExcel() {
     }
 
 
-    /*/*==============================
-       STYLE DATA
-   /*============================== */
+    /* STYLE DATA */
 
     for (
         let r = 1;
         r < dataExcel.length;
         r++
     ) {
-
         for (
             let c = 1;
             c <= jumlahHari;
             c++
         ) {
-
             const cellAddress =
                 XLSX.utils.encode_cell({
                     r: r,
                     c: c
                 });
 
-
             const cell =
                 worksheet[cellAddress];
-
 
             if (!cell) {
                 continue;
             }
 
-
             cell.s = {
-
                 alignment: {
                     horizontal: "center",
                     vertical: "center"
                 }
             };
 
-
             const barang =
                 dataBarang[r - 1];
 
-
-            const hari =
-                c;
-
+            const hari = c;
 
             const tanggal =
                 `${tahun}-${String(
                     bulan + 1
-                ).padStart(
-                    2,
-                    "0"
-                )}-${String(
+                ).padStart(2, "0")}-${String(
                     hari
-                ).padStart(
-                    2,
-                    "0"
-                )}`;
-
+                ).padStart(2, "0")}`;
 
             const transaksiHari =
                 transactions.filter(
                     function(transaction) {
-
                         return (
                             Number(
                                 transaction.barang_id
                             ) ===
-                            Number(
-                                barang.id
-                            ) &&
-
+                                Number(barang.id) &&
                             transaction.tanggal ===
-                            tanggal
+                                tanggal
                         );
                     }
                 );
 
-
             const adaLaku =
                 transaksiHari.some(
                     function(transaction) {
-
                         return (
                             transaction.type ===
                             "laku"
@@ -3588,11 +3187,9 @@ async function exportExcel() {
                     }
                 );
 
-
             const adaMasuk =
                 transaksiHari.some(
                     function(transaction) {
-
                         return (
                             transaction.type ===
                             "masuk"
@@ -3600,48 +3197,8 @@ async function exportExcel() {
                     }
                 );
 
-
-            /*/*==============================
-               LAKU
-           /*============================== */
-
-            if (
-                adaLaku
-            ) {
-
+            if (adaLaku || adaMasuk) {
                 cell.s = {
-
-                    font: {
-                        bold: true,
-                        color: {
-                            rgb: "FFFFFF"
-                        }
-                    },
-
-                    fill: {
-                        fgColor: {
-                            rgb: "000000"
-                        }
-                    },
-
-                    alignment: {
-                        horizontal: "center",
-                        vertical: "center"
-                    }
-                };
-            }
-
-
-            /*/*==============================
-               MASUK
-           /*============================== */
-
-            else if (
-                adaMasuk
-            ) {
-
-                cell.s = {
-
                     font: {
                         bold: true,
                         color: {
@@ -3665,9 +3222,7 @@ async function exportExcel() {
     }
 
 
-    /*/*==============================
-       EXPORT XLSX
-   /*============================== */
+    /* EXPORT XLSX LANDSCAPE */
 
     const excelData =
         XLSX.write(
@@ -3678,60 +3233,48 @@ async function exportExcel() {
             }
         );
 
+    let blob;
 
-    const blob =
-        new Blob(
-            [excelData],
-            {
-                type:
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            }
+    try {
+        blob =
+            await createLandscapeExcelBlob(
+                excelData
+            );
+    } catch (error) {
+        console.error(error);
+
+        alert(
+            "Gagal membuat file Excel Landscape."
         );
-
+        return;
+    }
 
     const url =
-        URL.createObjectURL(
-            blob
-        );
-
+        URL.createObjectURL(blob);
 
     const link =
-        document.createElement(
-            "a"
-        );
+        document.createElement("a");
 
-
-    link.href =
-        url;
-
+    link.href = url;
 
     link.download =
         `Rekap-Stok-${namaBulan[bulan]}-${tahun}.xlsx`;
 
-
-    document.body.appendChild(
-        link
-    );
-
+    document.body.appendChild(link);
 
     link.click();
 
+    document.body.removeChild(link);
 
-    document.body.removeChild(
-        link
-    );
-
-
-    URL.revokeObjectURL(
-        url
-    );
+    URL.revokeObjectURL(url);
 }
-/*/*==================================
-   EXPORT PENJUALAN
+
+
+/* ==================================
+   EXPORT EXCEL PENJUALAN
 ================================== */
 
 async function exportPenjualanExcel() {
-
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
         return;
@@ -3750,7 +3293,6 @@ async function exportPenjualanExcel() {
     const data =
         (window.dataPenjualan || []).filter(
             function(item) {
-
                 if (
                     bulan &&
                     !String(
@@ -3765,9 +3307,9 @@ async function exportPenjualanExcel() {
                     String(item.brand || "")
                         .trim()
                         .toLowerCase() !==
-                    String(brand)
-                        .trim()
-                        .toLowerCase()
+                        String(brand)
+                            .trim()
+                            .toLowerCase()
                 ) {
                     return false;
                 }
@@ -3782,7 +3324,6 @@ async function exportPenjualanExcel() {
         );
         return;
     }
-
 
     const excelData = [
         [
@@ -3799,16 +3340,18 @@ async function exportPenjualanExcel() {
     let totalQty = 0;
     let totalPenjualan = 0;
 
-
     data.forEach(
         function(item, index) {
-
             const barang =
                 dataBarang.find(
-                    function(b) {
+                    function(barangItem) {
                         return (
-                            String(b.id) ===
-                            String(item.barang_id)
+                            String(
+                                barangItem.id
+                            ) ===
+                            String(
+                                item.barang_id
+                            )
                         );
                     }
                 );
@@ -3830,12 +3373,11 @@ async function exportPenjualanExcel() {
             totalQty += qty;
             totalPenjualan += total;
 
-
             const tanggal =
                 item.tanggal_pembelian
                     ? new Date(
                         item.tanggal_pembelian +
-                        "T00:00:00"
+                            "T00:00:00"
                     ).toLocaleDateString(
                         "id-ID",
                         {
@@ -3845,7 +3387,6 @@ async function exportPenjualanExcel() {
                         }
                     )
                     : "-";
-
 
             excelData.push([
                 index + 1,
@@ -3859,7 +3400,6 @@ async function exportPenjualanExcel() {
         }
     );
 
-
     excelData.push([
         "",
         "",
@@ -3871,6 +3411,8 @@ async function exportPenjualanExcel() {
     ]);
 
 
+    /* BUAT WORKBOOK PENJUALAN */
+
     const worksheet =
         XLSX.utils.aoa_to_sheet(
             excelData
@@ -3879,13 +3421,14 @@ async function exportPenjualanExcel() {
     const workbook =
         XLSX.utils.book_new();
 
-
     XLSX.utils.book_append_sheet(
         workbook,
         worksheet,
         "Penjualan"
     );
 
+
+    /* LEBAR KOLOM */
 
     worksheet["!cols"] = [
         { wch: 6 },
@@ -3898,13 +3441,13 @@ async function exportPenjualanExcel() {
     ];
 
 
-    /* HEADER */
+    /* STYLE HEADER */
+
     for (
         let c = 0;
         c < 7;
         c++
     ) {
-
         const cell =
             worksheet[
                 XLSX.utils.encode_cell({
@@ -3918,6 +3461,7 @@ async function exportPenjualanExcel() {
                 font: {
                     bold: true
                 },
+
                 alignment: {
                     horizontal: "center",
                     vertical: "center"
@@ -3927,13 +3471,13 @@ async function exportPenjualanExcel() {
     }
 
 
-    /* FORMAT HARGA & TOTAL */
+    /* FORMAT HARGA DAN TOTAL */
+
     for (
         let r = 1;
         r < excelData.length;
         r++
     ) {
-
         const hargaCell =
             worksheet[
                 XLSX.utils.encode_cell({
@@ -3962,7 +3506,8 @@ async function exportPenjualanExcel() {
     }
 
 
-    /* FORMAT TOTAL */
+    /* STYLE BARIS TOTAL */
+
     const totalRow =
         excelData.length - 1;
 
@@ -3971,7 +3516,6 @@ async function exportPenjualanExcel() {
         c < 7;
         c++
     ) {
-
         const cell =
             worksheet[
                 XLSX.utils.encode_cell({
@@ -3990,61 +3534,42 @@ async function exportPenjualanExcel() {
     }
 
 
+    /* EXPORT XLSX LANDSCAPE */
+
+    const excelDataArray =
+        XLSX.write(
+            workbook,
+            {
+                bookType: "xlsx",
+                type: "array"
+            }
+        );
+
     let blob;
 
-try {
+    try {
+        blob =
+            await createLandscapeExcelBlob(
+                excelDataArray
+            );
+    } catch (error) {
+        console.error(error);
 
-    blob =
-        await buatBlobExcelLandscape(
-            excelDataArray
+        alert(
+            "Gagal membuat file Excel Landscape."
         );
-
-} catch (error) {
-
-    console.error(error);
-
-    alert(
-        "Gagal membuat file Excel Landscape."
-    );
-
-    return;
-}
-
-
-   let blob;
-
-try {
-
-    blob =
-        await buatBlobExcelLandscape(
-            excelData
-        );
-
-} catch (error) {
-
-    console.error(error);
-
-    alert(
-        "Gagal membuat file Excel Landscape."
-    );
-
-    return;
-}
-
+        return;
+    }
 
     const url =
-        URL.createObjectURL(
-            blob
-        );
+        URL.createObjectURL(blob);
 
     const link =
         document.createElement("a");
 
     link.href = url;
 
-
-    let namaFile =
-        "Penjualan";
+    let namaFile = "Penjualan";
 
     if (brand) {
         namaFile +=
@@ -4075,94 +3600,81 @@ try {
             tahun;
     }
 
-
     link.download =
         `${namaFile}.xlsx`;
 
-    document.body.appendChild(
-        link
-    );
+    document.body.appendChild(link);
 
     link.click();
 
-    document.body.removeChild(
-        link
-    );
+    document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
 }
-/*/*==================================
+
+
+/* ==================================
    INIT
-===================================================== */
+================================== */
 
 async function init() {
-
     tanggalDipilih =
         getTodayDate();
-
 
     const tanggal =
         document.getElementById(
             "tanggal"
         );
 
-
     if (tanggal) {
-
         tanggal.value =
             tanggalDipilih;
-            /* 
-   TANGGAL PENJUALAN = HARI INI
- */
-
-const tanggalPenjualan =
-    document.getElementById(
-        "penjualanTanggal"
-    );
-
-if (tanggalPenjualan) {
-
-    const hariIni =
-        new Date();
-
-    const tahun =
-        hariIni.getFullYear();
-
-    const bulan =
-        String(
-            hariIni.getMonth() + 1
-        ).padStart(2, "0");
-
-    const hari =
-        String(
-            hariIni.getDate()
-        ).padStart(2, "0");
-
-    tanggalPenjualan.value =
-        `${tahun}-${bulan}-${hari}`;
-}
     }
 
 
-    /*/*==============================
-       LOAD DATA UTAMA
-   /*============================== */
+    /* TANGGAL PENJUALAN HARI INI */
+
+    const tanggalPenjualan =
+        document.getElementById(
+            "penjualanTanggal"
+        );
+
+    if (tanggalPenjualan) {
+        const hariIni =
+            new Date();
+
+        const tahun =
+            hariIni.getFullYear();
+
+        const bulan =
+            String(
+                hariIni.getMonth() + 1
+            ).padStart(2, "0");
+
+        const hari =
+            String(
+                hariIni.getDate()
+            ).padStart(2, "0");
+
+        tanggalPenjualan.value =
+            `${tahun}-${bulan}-${hari}`;
+    }
+
+
+    /* LOAD DATA UTAMA */
 
     await loadBarang();
-
     await loadTransactions();
 
 
-    /*/*==============================
-       FILTER PENJUALAN
-   /*============================== */
+    /* FILTER DAN DATA PENJUALAN */
 
     await initFilterPenjualan();
 }
 
 
-/*/*==================================
+/* ==================================
    JALANKAN APLIKASI
-===================================================== */
+================================== */
 
 init();
