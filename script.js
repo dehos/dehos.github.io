@@ -3108,10 +3108,10 @@ async function createLandscapeExcelBlob(
                     'verticalCentered="1"/>' +
 
                     '<pageMargins ' +
-                    'left="0.25" ' +
-                    'right="0.25" ' +
-                    'top="0.75" ' +
-                    'bottom="0.4" ' +
+                    'left="0.2" ' +
+                    'right="0.2" ' +
+                    'top="0.5" ' +
+                    'bottom="0.15" ' +
                     'header="0.3" ' +
                     'footer="0.3"/>' +
 
@@ -3393,7 +3393,7 @@ for (
 ) {
     widths.push({
         // Kolom B sampai tanggal terakhir
-        wch: 2.5
+        wch: 3
     });
 }
 
