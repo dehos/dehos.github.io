@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260831-5">
+    <link rel="stylesheet" href="style.css?v=20260831-6">
     <link
         rel="icon"
         type="image/png"
@@ -195,6 +195,32 @@
     </div>
 </div>
     
+    <!-- FILTER STOK -->
+    <div class="stock-filter-toolbar">
+        <div class="stock-filter-field">
+            <label for="search">
+                🔎 Cari produk
+            </label>
+            <input
+                type="text"
+                id="search"
+                class="form-control form-control-sm"
+                placeholder="Ketik nama produk..."
+            >
+        </div>
+
+        <div class="stock-filter-field">
+            <label for="tanggal">
+                📅 Stok per tanggal
+            </label>
+            <input
+                type="date"
+                id="tanggal"
+                class="form-control form-control-sm"
+            >
+        </div>
+    </div>
+
     <div id="stockListContent">
 
         <div class="stock-list-inner">
@@ -260,25 +286,6 @@
         class="stock-pagination"
         aria-label="Navigasi halaman stok"
     ></div>
-</div>
-    <!-- FILTER -->
-<div class="cari">
-    <input
-        type="text"
-        id="search"
-        class="form-control form-control-sm"
-        placeholder="Filter Produk..."
-    >
-    <!-- HTML — index.html -->
-<div class="tanggal-stok">
-    <label for="tanggal">
-        📅 Stok per tanggal
-    </label>
-    <input
-        type="date"
-        id="tanggal"
-        class="form-control form-control-sm"
-    >
 </div>
 </section>
 <!-- CATATAN PENJUALAN -->
