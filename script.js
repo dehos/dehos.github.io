@@ -200,7 +200,75 @@ function getTodayDate() {
     );
 }
 
+/*/*==================================
+   LOAD BRAND BARANG BARU
+===================================================== */
 
+async function loadBrandBarangBaru() {
+
+    const selectBrand =
+        document.getElementById(
+            "brandBarangBaru"
+        );
+
+    if (!selectBrand) {
+        return;
+    }
+
+    selectBrand.innerHTML =
+        '<option value="">Memuat daftar brand...</option>';
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("brand")
+            .select("id, nama")
+            .eq("aktif", true)
+            .order(
+                "nama",
+                {
+                    ascending: true
+                }
+            );
+
+    if (error) {
+
+        console.error(
+            "ERROR LOAD BRAND:",
+            error
+        );
+
+        selectBrand.innerHTML =
+            '<option value="">Gagal memuat brand</option>';
+
+        return;
+    }
+
+    selectBrand.innerHTML =
+        '<option value="">Pilih Brand</option>';
+
+    (data || []).forEach(
+        function(item) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                String(item.id);
+
+            option.textContent =
+                item.nama;
+
+            selectBrand.appendChild(
+                option
+            );
+        }
+    );
+}
 /*/*==================================
    LOAD BARANG
 ===================================================== */
@@ -344,12 +412,22 @@ async function tambahBarang() {
             "stokAwal"
         );
 
+    const brandInput =
+        document.getElementById(
+            "brandBarangBaru"
+        );
+
     const nama =
         namaInput.value.trim();
 
     const stokAwal =
         Number(
             stokInput.value
+        );
+
+    const brandId =
+        Number(
+            brandInput?.value
         );
 
     if (!nama) {
@@ -371,6 +449,22 @@ async function tambahBarang() {
         alert(
             "Stok awal tidak valid."
         );
+
+        stokInput.focus();
+
+        return;
+    }
+
+    if (
+        !Number.isInteger(brandId) ||
+        brandId < 1
+    ) {
+
+        alert(
+            "Pilih brand barang."
+        );
+
+        brandInput?.focus();
 
         return;
     }
@@ -411,17 +505,22 @@ async function tambahBarang() {
 
                 nama: nama,
 
-                stok_awal: stokAwal
+                stok_awal: stokAwal,
+
+                brand_id: brandId
 
             });
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "ERROR TAMBAH BARANG:",
+            error
+        );
 
         setDatabaseStatus(
             "❌ Gagal menyimpan barang: " +
-            error.message,
+                error.message,
             "error"
         );
 
@@ -431,6 +530,10 @@ async function tambahBarang() {
     namaInput.value = "";
 
     stokInput.value = "0";
+
+    if (brandInput) {
+        brandInput.value = "";
+    }
 
     setDatabaseStatus(
         "✅ Barang berhasil ditambahkan.",
@@ -4813,8 +4916,9 @@ async function init() {
 
     /* LOAD DATA UTAMA */
 
-    await loadBarang();
-    await loadTransactions();
+await loadBrandBarangBaru();
+await loadBarang();
+await loadTransactions();
 
 
     /* FILTER DAN DATA PENJUALAN */
