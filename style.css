@@ -1302,3 +1302,14 @@ footer small {
             minmax(0, 1fr);
     }
 }
+
+
+/* =====================================================
+   UKURAN FONT TIGA TABEL
+===================================================== */
+
+#stockListContent table,
+.penjualan-wrapper table,
+.history-table {
+    font-size: 11px;
+}
