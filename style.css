@@ -1197,3 +1197,66 @@ footer small {
     max-width: 1200px;
     margin: 0 auto;
 }
+
+
+/* =====================================================
+   NAVIGASI BULAN RIWAYAT
+===================================================== */
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.history-header h3 {
+    margin: 0;
+}
+
+.history-month-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.history-month-nav strong {
+    min-width: 132px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.history-month-nav button {
+    width: 34px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.history-month-nav button:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.history-month-nav button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .history-month-nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .history-month-nav strong {
+        flex: 1;
+    }
+}
