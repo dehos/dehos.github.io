@@ -657,6 +657,129 @@ function getCurrentStock(barang) {
 }
 
 
+/* =====================================================
+   PENCARIAN BARANG BERDASARKAN RELEVANSI
+===================================================== */
+
+function normalizeSearchValue(value) {
+
+    return String(value ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase("id-ID")
+        .trim();
+}
+
+function getBarangSearchScore(
+    barang,
+    keyword
+) {
+
+    const query =
+        normalizeSearchValue(keyword);
+
+    if (!query) {
+        return 0;
+    }
+
+    const nama =
+        normalizeSearchValue(
+            barang?.nama
+        );
+
+    const brand =
+        normalizeSearchValue(
+            barang?.brand?.nama
+        );
+
+    const namaWords =
+        nama.split(/[\s\-_/]+/);
+
+    const brandWords =
+        brand.split(/[\s\-_/]+/);
+
+    if (brand === query) {
+        return 0;
+    }
+
+    if (brand.startsWith(query)) {
+        return 1;
+    }
+
+    if (nama === query) {
+        return 2;
+    }
+
+    if (nama.startsWith(query)) {
+        return 3;
+    }
+
+    if (
+        brandWords.some(
+            word => word.startsWith(query)
+        )
+    ) {
+        return 4;
+    }
+
+    if (
+        namaWords.some(
+            word => word.startsWith(query)
+        )
+    ) {
+        return 5;
+    }
+
+    if (brand.includes(query)) {
+        return 6;
+    }
+
+    if (nama.includes(query)) {
+        return 7;
+    }
+
+    return Number.POSITIVE_INFINITY;
+}
+
+function compareBarangSearchResults(
+    a,
+    b,
+    keyword
+) {
+
+    const scoreDifference =
+        getBarangSearchScore(a, keyword) -
+        getBarangSearchScore(b, keyword);
+
+    if (scoreDifference !== 0) {
+        return scoreDifference;
+    }
+
+    const brandComparison =
+        String(a?.brand?.nama || "")
+            .localeCompare(
+                String(b?.brand?.nama || ""),
+                "id",
+                {
+                    sensitivity: "base"
+                }
+            );
+
+    if (brandComparison !== 0) {
+        return brandComparison;
+    }
+
+    return String(a?.nama || "")
+        .localeCompare(
+            String(b?.nama || ""),
+            "id",
+            {
+                sensitivity: "base"
+            }
+        );
+}
+
+
 /*/*==================================
    UPDATE TABEL STOK
 ===================================================== */
@@ -708,16 +831,31 @@ renderPaginationStok(0);
         dataBarang.filter(
             function(barang) {
 
-                return String(
-                    barang.nama
-                )
-                    .toLowerCase()
-                    .includes(search);
+                return (
+                    getBarangSearchScore(
+                        barang,
+                        search
+                    ) <
+                    Number.POSITIVE_INFINITY
+                );
             }
         );
 
 
-    if (
+    if (search) {
+
+        filtered.sort(
+            function(a, b) {
+
+                return compareBarangSearchResults(
+                    a,
+                    b,
+                    search
+                );
+            }
+        );
+
+    } else if (
         sortMode === "nama"
     ) {
 
@@ -764,7 +902,6 @@ renderPaginationStok(0);
             }
         );
     }
-
 
     if (
         filtered.length === 0
@@ -2229,18 +2366,29 @@ if (inputPenjualanBrand) {
             }
 
             const hasil =
-                dataBarang.filter(
-                    function(item) {
+                dataBarang
+                    .filter(
+                        function(item) {
 
-                        return String(
-                            item.nama
-                        )
-                            .toLowerCase()
-                            .includes(
+                            return (
+                                getBarangSearchScore(
+                                    item,
+                                    keyword
+                                ) <
+                                Number.POSITIVE_INFINITY
+                            );
+                        }
+                    )
+                    .sort(
+                        function(a, b) {
+
+                            return compareBarangSearchResults(
+                                a,
+                                b,
                                 keyword
                             );
-                    }
-                );
+                        }
+                    );
 
             hasil
                 .slice(0, 8)
@@ -2256,7 +2404,13 @@ if (inputPenjualanBrand) {
                             "saran-item";
 
                         div.textContent =
-                            item.nama;
+                            item.nama +
+                            (
+                                item.brand?.nama
+                                    ? " — " +
+                                      item.brand.nama
+                                    : ""
+                            );
 
                         div.onclick =
                             function() {
