@@ -1313,3 +1313,21 @@ footer small {
 .history-table {
     font-size: 11px;
 }
+
+
+/* =====================================================
+   FONT UTAMA - INTER
+===================================================== */
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+table {
+    font-family:
+        "Inter",
+        Arial,
+        sans-serif;
+}
