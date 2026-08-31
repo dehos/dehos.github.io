@@ -859,32 +859,36 @@ dataHalaman.forEach(
                 )}
             </td>
 
-            <td
-                class="${statusClass}"
-            >
-                ${formatNumber(
-                    stok
-                )}
+            <td class="stock-cell">
+                <span class="stock-badge ${statusClass}">
+                    ${formatNumber(
+                        stok
+                    )}
+                </span>
             </td>
 
-            <td>
-                <button
-                    type="button"
-                    class="action-btn btn btn-success btn-sm"
-                    onclick="openTransaction(${Number(barang.id)}, 'masuk')"
-                >
-                    ↓ in
-                </button>
-            </td>
+            <td class="stock-actions-cell">
+                <div class="stock-action-group">
+                    <button
+                        type="button"
+                        class="action-btn stock-in-btn btn btn-success btn-sm"
+                        onclick="openTransaction(${Number(barang.id)}, 'masuk')"
+                        aria-label="Tambah stok ${escapeHTML(barang.nama)}"
+                        title="Barang masuk"
+                    >
+                        ↓ Masuk
+                    </button>
 
-            <td>
-                <button
-                    type="button"
-                    class="action-btn btn btn-danger btn-sm"
-                    onclick="openTransaction(${Number(barang.id)}, 'laku')"
-                >
-                    ↑ out
-                </button>
+                    <button
+                        type="button"
+                        class="action-btn stock-out-btn btn btn-danger btn-sm"
+                        onclick="openTransaction(${Number(barang.id)}, 'laku')"
+                        aria-label="Kurangi stok ${escapeHTML(barang.nama)}"
+                        title="Barang keluar"
+                    >
+                        ↑ Keluar
+                    </button>
+                </div>
             </td>
             `;
 
