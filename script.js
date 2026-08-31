@@ -1906,7 +1906,10 @@ const saranBarang =
     document.getElementById(
         "saranBarang"
     );
-
+const inputPenjualanBrand =
+    document.getElementById(
+        "penjualanBrand"
+    );
 
 if (
     inputPenjualanBarang &&
@@ -1919,7 +1922,9 @@ if (
 
             inputPenjualanBarang.dataset.id =
                 "";
-
+if (inputPenjualanBrand) {
+    inputPenjualanBrand.value = "";
+}
             const keyword =
                 this.value
                     .trim()
@@ -1970,7 +1975,10 @@ if (
 
                                 inputPenjualanBarang.dataset.id =
                                     item.id;
-
+if (inputPenjualanBrand) {
+    inputPenjualanBrand.value =
+        item.brand?.nama || "";
+}
                                 saranBarang.innerHTML =
                                     "";
                             };
@@ -2065,14 +2073,8 @@ async function simpanPenjualan() {
     const barangId =
         inputPenjualanBarang.dataset.id;
 
-    const brandDropdown =
-        document.getElementById(
-            "brandDropdown"
-        );
-
     const brand =
-        brandDropdown?.dataset.value || "";
-
+    inputPenjualanBrand?.value.trim() || "";
     const qty =
         Number(
             document.getElementById(
@@ -2108,10 +2110,10 @@ async function simpanPenjualan() {
 
     if (!brand) {
 
-        return alert(
-            "Pilih brand."
-        );
-    }
+    return alert(
+        "Barang belum memiliki brand."
+    );
+}
 
     if (!qty || qty < 1) {
 
@@ -2288,17 +2290,6 @@ async function simpanPenjualan() {
     document.getElementById(
         "penjualanBrand"
     ).value = "";
-
-    if (brandDropdown) {
-
-        delete brandDropdown.dataset.value;
-    }
-
-    if (brandDropdownText) {
-
-        brandDropdownText.textContent =
-            "Pilih Brand";
-    }
 
     document.getElementById(
         "penjualanQty"
