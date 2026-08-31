@@ -27,6 +27,16 @@ let tanggalDipilih = "";
 let selectedProduct = null;
 let selectedTransactionType = "";
 
+let bulanRiwayat =
+    new Date();
+
+bulanRiwayat =
+    new Date(
+        bulanRiwayat.getFullYear(),
+        bulanRiwayat.getMonth(),
+        1
+    );
+
 
 /*/*==================================
    TOAST NOTIFICATION
@@ -1473,6 +1483,158 @@ async function confirmTransaction() {
    RIWAYAT TRANSAKSI
 ===================================================== */
 
+function getAwalBulanSekarang() {
+
+    const sekarang =
+        new Date();
+
+    return new Date(
+        sekarang.getFullYear(),
+        sekarang.getMonth(),
+        1
+    );
+}
+
+
+function getBulanTransaksiTertua() {
+
+    const tanggalValid =
+        transactions
+            .map(
+                function(transaction) {
+                    return String(
+                        transaction.tanggal || ""
+                    );
+                }
+            )
+            .filter(
+                function(tanggal) {
+                    return /^\d{4}-\d{2}-\d{2}$/.test(
+                        tanggal
+                    );
+                }
+            )
+            .sort();
+
+    if (tanggalValid.length === 0) {
+        return null;
+    }
+
+    const bagian =
+        tanggalValid[0].split("-");
+
+    return new Date(
+        Number(bagian[0]),
+        Number(bagian[1]) - 1,
+        1
+    );
+}
+
+
+function formatBulanRiwayat(tanggal) {
+
+    const teks =
+        tanggal.toLocaleDateString(
+            "id-ID",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    return (
+        teks.charAt(0).toUpperCase() +
+        teks.slice(1)
+    );
+}
+
+
+function updateNavigasiBulanRiwayat() {
+
+    const label =
+        document.getElementById(
+            "historyMonthLabel"
+        );
+
+    const tombolSebelumnya =
+        document.getElementById(
+            "historyPrevMonth"
+        );
+
+    const tombolBerikutnya =
+        document.getElementById(
+            "historyNextMonth"
+        );
+
+    const bulanSekarang =
+        getAwalBulanSekarang();
+
+    const bulanTertua =
+        getBulanTransaksiTertua();
+
+    if (label) {
+        label.textContent =
+            formatBulanRiwayat(
+                bulanRiwayat
+            );
+    }
+
+    if (tombolSebelumnya) {
+        tombolSebelumnya.disabled =
+            !bulanTertua ||
+            bulanRiwayat <=
+                bulanTertua;
+    }
+
+    if (tombolBerikutnya) {
+        tombolBerikutnya.disabled =
+            bulanRiwayat >=
+                bulanSekarang;
+    }
+}
+
+
+function ubahBulanRiwayat(perubahan) {
+
+    const bulanTujuan =
+        new Date(
+            bulanRiwayat.getFullYear(),
+            bulanRiwayat.getMonth() +
+                Number(perubahan),
+            1
+        );
+
+    const bulanSekarang =
+        getAwalBulanSekarang();
+
+    const bulanTertua =
+        getBulanTransaksiTertua();
+
+    if (
+        bulanTujuan >
+        bulanSekarang
+    ) {
+        return;
+    }
+
+    if (
+        Number(perubahan) < 0 &&
+        (
+            !bulanTertua ||
+            bulanTujuan <
+                bulanTertua
+        )
+    ) {
+        return;
+    }
+
+    bulanRiwayat =
+        bulanTujuan;
+
+    renderHistory();
+}
+
+
 function renderHistory() {
 
     const tbody =
@@ -1484,18 +1646,77 @@ function renderHistory() {
         return;
     }
 
-    if (
-        transactions.length === 0
-    ) {
+    updateNavigasiBulanRiwayat();
+
+    const tahun =
+        bulanRiwayat.getFullYear();
+
+    const bulan =
+        String(
+            bulanRiwayat.getMonth() + 1
+        ).padStart(2, "0");
+
+    const awalanTanggal =
+        tahun + "-" + bulan;
+
+    const history =
+        transactions
+            .filter(
+                function(transaction) {
+
+                    return String(
+                        transaction.tanggal ||
+                        ""
+                    ).startsWith(
+                        awalanTanggal
+                    );
+                }
+            )
+            .sort(
+                function(a, b) {
+
+                    const tanggalA =
+                        String(
+                            a.tanggal || ""
+                        );
+
+                    const tanggalB =
+                        String(
+                            b.tanggal || ""
+                        );
+
+                    if (
+                        tanggalB !==
+                        tanggalA
+                    ) {
+
+                        return tanggalB.localeCompare(
+                            tanggalA
+                        );
+                    }
+
+                    return (
+                        Number(b.id) -
+                        Number(a.id)
+                    );
+                }
+            );
+
+    if (history.length === 0) {
 
         tbody.innerHTML =
             `
             <tr>
                 <td
-                    colspan="6"
+                    colspan="5"
                     class="empty"
                 >
-                    Belum ada transaksi
+                    Tidak ada transaksi pada
+                    ${escapeHTML(
+                        formatBulanRiwayat(
+                            bulanRiwayat
+                        )
+                    )}
                 </td>
             </tr>
             `;
@@ -1503,41 +1724,7 @@ function renderHistory() {
         return;
     }
 
-
-    const history =
-        [...transactions].sort(
-            function(a, b) {
-
-                const tanggalA =
-                    String(
-                        a.tanggal || ""
-                    );
-
-                const tanggalB =
-                    String(
-                        b.tanggal || ""
-                    );
-
-                if (
-                    tanggalB !==
-                    tanggalA
-                ) {
-
-                    return tanggalB.localeCompare(
-                        tanggalA
-                    );
-                }
-
-                return (
-                    Number(b.id) -
-                    Number(a.id)
-                );
-            }
-        );
-
-
     tbody.innerHTML = "";
-
 
     history.forEach(
         function(transaction) {
@@ -1562,13 +1749,11 @@ function renderHistory() {
                     ? barang.nama
                     : "Barang dihapus";
 
-
             const typeText =
                 transaction.type ===
                 "masuk"
                     ? "Masuk"
                     : "Keluar";
-
 
             const qtyText =
                 transaction.type ===
@@ -1582,7 +1767,6 @@ function renderHistory() {
                           transaction.qty
                       );
 
-
             let stokAkhir =
                 "-";
 
@@ -1595,7 +1779,6 @@ function renderHistory() {
                     );
             }
 
-
             const waktu =
                 transaction.tanggal
                     ? new Date(
@@ -1606,12 +1789,10 @@ function renderHistory() {
                     )
                     : "-";
 
-
             const tr =
                 document.createElement(
                     "tr"
                 );
-
 
             tr.innerHTML =
                 `
