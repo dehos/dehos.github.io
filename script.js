@@ -2757,6 +2757,424 @@ async function simpanPenjualan() {
 }
 
 
+/* =====================================================
+   TARGET PENJUALAN BULANAN PER BRAND
+===================================================== */
+
+const TARGET_PENJUALAN_BRAND =
+    Object.freeze([
+        {
+            nama: "Belleza",
+            target: 15000000
+        },
+        {
+            nama: "Solid",
+            target: 15000000
+        },
+        {
+            nama: "Dekkson",
+            target: 15000000
+        },
+        {
+            nama: "PJS Handle",
+            target: null
+        },
+        {
+            nama: "Rona",
+            target: 20000000
+        },
+        {
+            nama: "Vapely",
+            target: 15000000
+        },
+        {
+            nama: "Tsunami",
+            target: 15000000
+        },
+        {
+            nama: "Trisensa",
+            target: 10000000
+        },
+        {
+            nama: "Violet",
+            target: 15000000
+        },
+        {
+            nama: "Wepe",
+            target: 15000000
+        }
+    ]);
+
+const TARGET_BRAND_COLORS =
+    Object.freeze([
+        ["#0f766e", "#2dd4bf"],
+        ["#0891b2", "#22d3ee"],
+        ["#4338ca", "#8b5cf6"],
+        ["#be185d", "#ec4899"],
+        ["#ea580c", "#fb923c"],
+        ["#2563eb", "#60a5fa"],
+        ["#7c3aed", "#c084fc"],
+        ["#0f766e", "#34d399"],
+        ["#b45309", "#fbbf24"]
+    ]);
+
+function getCanonicalTargetBrand(
+    brandName
+) {
+
+    const normalized =
+        normalizeSearchValue(
+            brandName
+        );
+
+    if (normalized === "bellezza") {
+        return "Belleza";
+    }
+
+    const match =
+        TARGET_PENJUALAN_BRAND.find(
+            function(item) {
+
+                return (
+                    normalizeSearchValue(
+                        item.nama
+                    ) ===
+                    normalized
+                );
+            }
+        );
+
+    return match
+        ? match.nama
+        : "";
+}
+
+function renderTargetPenjualan(
+    penjualan,
+    bulan
+) {
+
+    const list =
+        document.getElementById(
+            "targetPenjualanList"
+        );
+
+    const monthLabel =
+        document.getElementById(
+            "targetPenjualanMonthLabel"
+        );
+
+    const totalTargetElement =
+        document.getElementById(
+            "targetPenjualanTotal"
+        );
+
+    const achievementElement =
+        document.getElementById(
+            "targetPenjualanAchievement"
+        );
+
+    if (
+        !list ||
+        !monthLabel ||
+        !totalTargetElement ||
+        !achievementElement
+    ) {
+        return;
+    }
+
+    const periode =
+        bulan ||
+        getBulanPenjualanSekarang();
+
+    monthLabel.textContent =
+        formatBulanPenjualan(
+            periode
+        );
+
+    const totals = {};
+
+    TARGET_PENJUALAN_BRAND.forEach(
+        function(item) {
+            totals[item.nama] = 0;
+        }
+    );
+
+    (penjualan || []).forEach(
+        function(item) {
+
+            if (
+                periode &&
+                !String(
+                    item.tanggal_pembelian || ""
+                ).startsWith(
+                    periode
+                )
+            ) {
+                return;
+            }
+
+            const canonicalBrand =
+                getCanonicalTargetBrand(
+                    item.brand
+                );
+
+            if (!canonicalBrand) {
+                return;
+            }
+
+            const qty =
+                Number(item.qty) || 0;
+
+            const harga =
+                Number(item.harga) || 0;
+
+            totals[canonicalBrand] +=
+                qty * harga;
+        }
+    );
+
+    const targetedBrands =
+        TARGET_PENJUALAN_BRAND
+            .filter(
+                function(item) {
+                    return item.target !== null;
+                }
+            )
+            .map(
+                function(item) {
+
+                    const actual =
+                        totals[item.nama] || 0;
+
+                    const percentage =
+                        item.target > 0
+                            ? (
+                                actual /
+                                item.target
+                              ) * 100
+                            : 0;
+
+                    return {
+                        ...item,
+                        actual,
+                        percentage
+                    };
+                }
+            )
+            .sort(
+                function(a, b) {
+
+                    if (
+                        b.percentage !==
+                        a.percentage
+                    ) {
+                        return (
+                            b.percentage -
+                            a.percentage
+                        );
+                    }
+
+                    return a.nama.localeCompare(
+                        b.nama,
+                        "id",
+                        {
+                            sensitivity: "base"
+                        }
+                    );
+                }
+            );
+
+    const totalTarget =
+        targetedBrands.reduce(
+            function(total, item) {
+                return total + item.target;
+            },
+            0
+        );
+
+    const totalActual =
+        targetedBrands.reduce(
+            function(total, item) {
+                return total + item.actual;
+            },
+            0
+        );
+
+    const totalPercentage =
+        totalTarget > 0
+            ? (
+                totalActual /
+                totalTarget
+              ) * 100
+            : 0;
+
+    totalTargetElement.textContent =
+        "Rp" +
+        formatNumber(
+            totalTarget
+        );
+
+    achievementElement.textContent =
+        "Pencapaian " +
+        formatNumber(
+            Math.round(
+                totalPercentage
+            )
+        ) +
+        "% · Rp" +
+        formatNumber(
+            totalActual
+        );
+
+    list.innerHTML = "";
+
+    targetedBrands.forEach(
+        function(item, index) {
+
+            const percentageRounded =
+                Math.round(
+                    item.percentage
+                );
+
+            const progressWidth =
+                Math.min(
+                    Math.max(
+                        item.percentage,
+                        0
+                    ),
+                    100
+                );
+
+            const colors =
+                TARGET_BRAND_COLORS[
+                    index %
+                    TARGET_BRAND_COLORS.length
+                ];
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "target-brand-row";
+
+            row.style.setProperty(
+                "--target-start",
+                colors[0]
+            );
+
+            row.style.setProperty(
+                "--target-end",
+                colors[1]
+            );
+
+            row.innerHTML =
+                `
+                <div class="target-brand-rank">
+                    ${String(index + 1).padStart(2, "0")}
+                </div>
+
+                <div class="target-brand-content">
+                    <div class="target-brand-info">
+                        <strong>
+                            ${escapeHTML(item.nama)}
+                        </strong>
+
+                        <span>
+                            Rp${formatNumber(item.actual)}
+                            /
+                            Rp${formatNumber(item.target)}
+                        </span>
+                    </div>
+
+                    <div class="target-progress-panel">
+                        <span class="target-percent">
+                            ${formatNumber(percentageRounded)}%
+                        </span>
+
+                        <div
+                            class="target-progress-track"
+                            role="progressbar"
+                            aria-label="Pencapaian ${escapeHTML(item.nama)}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="${Math.round(progressWidth)}"
+                        >
+                            <span
+                                class="target-progress-fill"
+                                style="width: ${progressWidth}%"
+                            ></span>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+            list.appendChild(
+                row
+            );
+        }
+    );
+
+    const pjsTarget =
+        TARGET_PENJUALAN_BRAND.find(
+            function(item) {
+                return (
+                    item.nama ===
+                    "PJS Handle"
+                );
+            }
+        );
+
+    if (pjsTarget) {
+
+        const pjsRow =
+            document.createElement(
+                "div"
+            );
+
+        pjsRow.className =
+            "target-brand-row target-brand-no-target";
+
+        pjsRow.innerHTML =
+            `
+            <div class="target-brand-rank">
+                —
+            </div>
+
+            <div class="target-brand-content">
+                <div class="target-brand-info">
+                    <strong>
+                        PJS Handle
+                    </strong>
+
+                    <span>
+                        Tanpa target
+                    </span>
+                </div>
+
+                <div class="target-no-target-total">
+                    <small>
+                        Total Penjualan
+                    </small>
+
+                    <strong>
+                        Rp${formatNumber(
+                            totals["PJS Handle"] || 0
+                        )}
+                    </strong>
+                </div>
+            </div>
+            `;
+
+        list.appendChild(
+            pjsRow
+        );
+    }
+}
+
+
 /*/*==================================
    LOAD PENJUALAN
 ===================================================== */
@@ -2826,6 +3244,13 @@ async function loadPenjualan() {
 
         window.dataPenjualan = [];
 
+        renderTargetPenjualan(
+            [],
+            document.getElementById(
+                "filterBulan"
+            )?.value || ""
+        );
+
         return;
     }
 
@@ -2860,6 +3285,11 @@ async function loadPenjualan() {
         )?.value || "";
 
     updateNavigasiBulanPenjualan();
+
+    renderTargetPenjualan(
+        data || [],
+        bulan
+    );
 
 
     const hasil =
