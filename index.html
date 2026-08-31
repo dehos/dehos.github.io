@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
     <title>Stock Barang</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260831-2">
     <link
         rel="icon"
         type="image/png"
@@ -361,6 +361,33 @@
         <h3>
             📜 Riwayat in/out
         </h3>
+
+        <div
+            class="history-month-nav"
+            aria-label="Navigasi bulan riwayat"
+        >
+            <button
+                type="button"
+                id="historyPrevMonth"
+                aria-label="Lihat bulan sebelumnya"
+                onclick="ubahBulanRiwayat(-1)"
+            >
+                ‹
+            </button>
+
+            <strong id="historyMonthLabel">
+                Memuat bulan...
+            </strong>
+
+            <button
+                type="button"
+                id="historyNextMonth"
+                aria-label="Lihat bulan berikutnya"
+                onclick="ubahBulanRiwayat(1)"
+            >
+                ›
+            </button>
+        </div>
     </div>
     <div class="table-wrapper history-wrapper">
 
@@ -717,6 +744,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260831-1"></script>
+<script src="script.js?v=20260831-2"></script>
 </body>
 </html>
