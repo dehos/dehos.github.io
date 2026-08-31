@@ -223,7 +223,9 @@ async function loadBarang() {
         const { data, error } =
             await supabaseClient
                 .from("barang")
-                .select("*")
+                .select(
+    "id, nama, stok_awal, created_at, brand_id, brand:brand!barang_brand_id_fkey(id, nama, aktif)"
+)
                 .order(
                     "nama",
                     {
@@ -277,9 +279,9 @@ async function loadBarang() {
         semuaBarang;
 
     setDatabaseStatus(
-        "✅ Database terhubung, " +
+        "✅ Database aktif " +
             dataBarang.length +
-            " item barang",
+            "· barang",
         "success"
     );
 
