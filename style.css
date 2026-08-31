@@ -1260,3 +1260,45 @@ footer small {
         flex: 1;
     }
 }
+
+
+/* =====================================================
+   NAVIGASI BULAN CATATAN PENJUALAN
+===================================================== */
+
+.penjualan-header-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.penjualan-filter-row {
+    grid-template-columns:
+        minmax(180px, 320px);
+
+    justify-content: end;
+}
+
+@media (max-width: 600px) {
+    .penjualan-history-header
+    .penjualan-header-tools {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .penjualan-header-tools
+    .history-month-nav {
+        width: auto;
+        flex: 1;
+    }
+
+    .penjualan-header-tools
+    .btn {
+        flex: 0 0 auto;
+    }
+
+    .penjualan-filter-row {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+}
