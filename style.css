@@ -1186,3 +1186,14 @@ footer small {
         padding: 0 6px;
     }
 }
+#saranBarang:empty {
+    display: none;
+}
+
+#saranBarang:not(:empty) {
+    display: block;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
