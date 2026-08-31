@@ -37,6 +37,9 @@ bulanRiwayat =
         1
     );
 
+let bulanPenjualanTertua =
+    "";
+
 
 /*/*==================================
    TOAST NOTIFICATION
@@ -2698,6 +2701,8 @@ async function loadPenjualan() {
             "filterBrand"
         )?.value || "";
 
+    updateNavigasiBulanPenjualan();
+
 
     const hasil =
         (data || []).filter(
@@ -2744,6 +2749,26 @@ async function loadPenjualan() {
     let totalQty = 0;
 
     let totalPenjualan = 0;
+
+    if (hasil.length === 0) {
+
+        tbody.innerHTML =
+            `
+            <tr>
+                <td
+                    colspan="7"
+                    class="text-center"
+                >
+                    Tidak ada penjualan pada
+                    ${escapeHTML(
+                        formatBulanPenjualan(
+                            bulan
+                        )
+                    )}
+                </td>
+            </tr>
+            `;
+    }
 
 
     hasil.forEach(
@@ -3200,26 +3225,213 @@ async function hapusPenjualan(id) {
 
 
 /* ==================================
+   NAVIGASI BULAN PENJUALAN
+================================== */
+
+function getBulanPenjualanSekarang() {
+
+    const sekarang =
+        new Date();
+
+    return (
+        sekarang.getFullYear() +
+        "-" +
+        String(
+            sekarang.getMonth() + 1
+        ).padStart(2, "0")
+    );
+}
+
+
+function formatBulanPenjualan(value) {
+
+    if (
+        !/^\d{4}-\d{2}$/.test(
+            String(value || "")
+        )
+    ) {
+        return "-";
+    }
+
+    const bagian =
+        String(value).split("-");
+
+    const tanggal =
+        new Date(
+            Number(bagian[0]),
+            Number(bagian[1]) - 1,
+            1
+        );
+
+    const teks =
+        tanggal.toLocaleDateString(
+            "id-ID",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    return (
+        teks.charAt(0).toUpperCase() +
+        teks.slice(1)
+    );
+}
+
+
+function updateNavigasiBulanPenjualan() {
+
+    const bulanInput =
+        document.getElementById(
+            "filterBulan"
+        );
+
+    const label =
+        document.getElementById(
+            "penjualanMonthLabel"
+        );
+
+    const tombolSebelumnya =
+        document.getElementById(
+            "penjualanPrevMonth"
+        );
+
+    const tombolBerikutnya =
+        document.getElementById(
+            "penjualanNextMonth"
+        );
+
+    if (!bulanInput) {
+        return;
+    }
+
+    const bulanSekarang =
+        getBulanPenjualanSekarang();
+
+    const bulanAktif =
+        bulanInput.value ||
+        bulanSekarang;
+
+    bulanInput.value =
+        bulanAktif;
+
+    if (label) {
+        label.textContent =
+            formatBulanPenjualan(
+                bulanAktif
+            );
+    }
+
+    if (tombolSebelumnya) {
+        tombolSebelumnya.disabled =
+            !bulanPenjualanTertua ||
+            bulanAktif <=
+                bulanPenjualanTertua;
+    }
+
+    if (tombolBerikutnya) {
+        tombolBerikutnya.disabled =
+            bulanAktif >=
+                bulanSekarang;
+    }
+}
+
+
+async function ubahBulanPenjualan(
+    perubahan
+) {
+
+    const bulanInput =
+        document.getElementById(
+            "filterBulan"
+        );
+
+    if (!bulanInput) {
+        return;
+    }
+
+    const bulanAktif =
+        bulanInput.value ||
+        getBulanPenjualanSekarang();
+
+    const bagian =
+        bulanAktif.split("-");
+
+    const bulanTujuanDate =
+        new Date(
+            Number(bagian[0]),
+            Number(bagian[1]) - 1 +
+                Number(perubahan),
+            1
+        );
+
+    const bulanTujuan =
+        bulanTujuanDate.getFullYear() +
+        "-" +
+        String(
+            bulanTujuanDate.getMonth() + 1
+        ).padStart(2, "0");
+
+    const bulanSekarang =
+        getBulanPenjualanSekarang();
+
+    if (
+        bulanTujuan >
+        bulanSekarang
+    ) {
+        return;
+    }
+
+    if (
+        Number(perubahan) < 0 &&
+        (
+            !bulanPenjualanTertua ||
+            bulanTujuan <
+                bulanPenjualanTertua
+        )
+    ) {
+        return;
+    }
+
+    bulanInput.value =
+        bulanTujuan;
+
+    updateNavigasiBulanPenjualan();
+
+    await loadPenjualan();
+}
+
+
+/* ==================================
    FILTER PENJUALAN
 ================================== */
 
 async function initFilterPenjualan() {
-    const bulan = document.getElementById(
-        "filterBulan"
-    );
 
-    const brand = document.getElementById(
-        "filterBrand"
-    );
+    const bulan =
+        document.getElementById(
+            "filterBulan"
+        );
+
+    const brand =
+        document.getElementById(
+            "filterBrand"
+        );
 
     if (!bulan || !brand) {
         return;
     }
 
-    const bulanSaatIni = bulan.value;
-    const brandSaatIni = brand.value;
+    const bulanSaatIni =
+        bulan.value;
 
-    const { data, error } =
+    const brandSaatIni =
+        brand.value;
+
+    const {
+        data,
+        error
+    } =
         await supabaseClient
             .from("penjualan")
             .select(
@@ -3233,139 +3445,145 @@ async function initFilterPenjualan() {
             );
 
     if (error) {
+
         console.error(
             "ERROR FILTER PENJUALAN:",
             error
         );
+
         return;
     }
 
-    const bulanSet = new Set();
+    const daftarBulan =
+        (data || [])
+            .map(
+                function(item) {
 
-    bulanSet.add("");
+                    return String(
+                        item.tanggal_pembelian ||
+                        ""
+                    ).substring(0, 7);
+                }
+            )
+            .filter(
+                function(value) {
+
+                    return /^\d{4}-\d{2}$/.test(
+                        value
+                    );
+                }
+            )
+            .sort();
+
+    bulanPenjualanTertua =
+        daftarBulan.length > 0
+            ? daftarBulan[0]
+            : "";
+
+    const bulanSekarang =
+        getBulanPenjualanSekarang();
+
+    let bulanTerpilih =
+        /^\d{4}-\d{2}$/.test(
+            bulanSaatIni
+        )
+            ? bulanSaatIni
+            : bulanSekarang;
+
+    if (
+        bulanTerpilih >
+        bulanSekarang
+    ) {
+        bulanTerpilih =
+            bulanSekarang;
+    }
+
+    if (
+        bulanPenjualanTertua &&
+        bulanTerpilih <
+            bulanPenjualanTertua
+    ) {
+        bulanTerpilih =
+            bulanPenjualanTertua;
+    }
+
+    bulan.value =
+        bulanTerpilih;
+
+    const brandSet =
+        new Set();
 
     (data || []).forEach(
         function(item) {
-            if (item.tanggal_pembelian) {
-                bulanSet.add(
-                    String(
-                        item.tanggal_pembelian
-                    ).substring(0, 7)
+
+            const namaBrand =
+                String(
+                    item.brand || ""
+                ).trim();
+
+            if (namaBrand) {
+                brandSet.add(
+                    namaBrand
                 );
             }
         }
     );
 
-    const sekarang = new Date();
+    const daftarBrand =
+        [...brandSet].sort(
+            function(a, b) {
 
-    const bulanSekarang =
-        `${sekarang.getFullYear()}-${String(
-            sekarang.getMonth() + 1
-        ).padStart(2, "0")}`;
-
-    bulanSet.add(bulanSekarang);
-
-    const daftarBulan = [...bulanSet]
-        .filter(
-            function(value) {
-                return value !== "";
-            }
-        )
-        .sort()
-        .reverse();
-
-    bulan.innerHTML = "";
-
-    const optionSemuaBulan =
-        document.createElement("option");
-
-    optionSemuaBulan.value = "";
-    optionSemuaBulan.textContent =
-        "Semua Bulan";
-
-    bulan.appendChild(optionSemuaBulan);
-
-    daftarBulan.forEach(
-        function(value) {
-            const tanggal = new Date(
-                value + "-01"
-            );
-
-            const label =
-                tanggal.toLocaleDateString(
-                    "id-ID",
-                    {
-                        month: "long",
-                        year: "numeric"
-                    }
+                return a.localeCompare(
+                    b,
+                    "id"
                 );
-
-            const option =
-                document.createElement("option");
-
-            option.value = value;
-
-            option.textContent =
-                label.charAt(0).toUpperCase() +
-                label.slice(1);
-
-            bulan.appendChild(option);
-        }
-    );
-
-    const daftarBrand = [
-        ...new Set(
-            (data || [])
-                .map(function(item) {
-                    return String(
-                        item.brand || ""
-                    ).trim();
-                })
-                .filter(function(namaBrand) {
-                    return namaBrand !== "";
-                })
-        )
-    ].sort(function(a, b) {
-        return a.localeCompare(
-            b,
-            "id"
+            }
         );
-    });
 
     brand.innerHTML = "";
 
     const optionSemuaBrand =
-        document.createElement("option");
+        document.createElement(
+            "option"
+        );
 
     optionSemuaBrand.value = "";
+
     optionSemuaBrand.textContent =
         "Semua Brand";
 
-    brand.appendChild(optionSemuaBrand);
+    brand.appendChild(
+        optionSemuaBrand
+    );
 
     daftarBrand.forEach(
         function(namaBrand) {
+
             const option =
-                document.createElement("option");
+                document.createElement(
+                    "option"
+                );
 
-            option.value = namaBrand;
-            option.textContent = namaBrand;
+            option.value =
+                namaBrand;
 
-            brand.appendChild(option);
+            option.textContent =
+                namaBrand;
+
+            brand.appendChild(
+                option
+            );
         }
     );
 
-    if (bulanSaatIni) {
-        bulan.value = bulanSaatIni;
-    } else {
-        bulan.value = bulanSekarang;
-    }
+    brand.value =
+        daftarBrand.includes(
+            brandSaatIni
+        )
+            ? brandSaatIni
+            : "";
 
-    if (brandSaatIni) {
-        brand.value = brandSaatIni;
-    } else {
-        brand.value = "";
-    }
+    updateNavigasiBulanPenjualan();
 
     await loadPenjualan();
 }
