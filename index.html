@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
     <title>Stock Barang</title>
-    <link rel="stylesheet" href="style.css?v=20260831-2">
+    <link rel="stylesheet" href="style.css?v=20260831-3">
     <link
         rel="icon"
         type="image/png"
@@ -269,34 +269,64 @@
 </section>
 <!-- CATATAN PENJUALAN -->
 <section class="card">
-    <div class="history-header">
-    <h3>🧾 Catatan Penjualan</h3>
+    <div class="history-header penjualan-history-header">
+        <h3>
+            🧾 Catatan Penjualan
+        </h3>
 
-    <button
-        type="button"
-        class="btn btn-success btn-sm"
-        onclick="exportPenjualanExcel()"
-    >
-        📊 Export
-    </button>
-</div>
-    <div class="cari">
+        <div class="penjualan-header-tools">
+            <div
+                class="history-month-nav"
+                aria-label="Navigasi bulan catatan penjualan"
+            >
+                <button
+                    type="button"
+                    id="penjualanPrevMonth"
+                    aria-label="Lihat bulan sebelumnya"
+                    onclick="ubahBulanPenjualan(-1)"
+                >
+                    ‹
+                </button>
 
-        <div>
-            <select id="filterBulan" class="form-select form-select-sm">
-                <option value="">Memuat...</option>
-            </select>
+                <strong id="penjualanMonthLabel">
+                    Memuat bulan...
+                </strong>
+
+                <button
+                    type="button"
+                    id="penjualanNextMonth"
+                    aria-label="Lihat bulan berikutnya"
+                    onclick="ubahBulanPenjualan(1)"
+                >
+                    ›
+                </button>
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-success btn-sm"
+                onclick="exportPenjualanExcel()"
+            >
+                📊 Export
+            </button>
         </div>
+    </div>
+
+    <div class="cari penjualan-filter-row">
+        <input
+            type="hidden"
+            id="filterBulan"
+            value=""
+        >
+
         <div>
-            <select id="filterBrand" class="form-select form-select-sm">
-                <option value="">Semua Brand</option>
-                <option>Belleza</option>
-                <option>Solid</option>
-                <option>Dekkson</option>
-                <option>Rona</option>
-                <option>Tsunami</option>
-                <option>Vapely</option>
-                <option>Trisensa</option>
+            <select
+                id="filterBrand"
+                class="form-select form-select-sm"
+            >
+                <option value="">
+                    Semua Brand
+                </option>
             </select>
         </div>
     </div>
@@ -744,6 +774,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260831-2"></script>
+<script src="script.js?v=20260831-3"></script>
 </body>
 </html>
