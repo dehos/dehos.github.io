@@ -1374,9 +1374,23 @@ table {
 
 @media (max-width: 600px) {
     .stock-filter-toolbar {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
         margin-bottom: 10px;
+    }
+
+    .stock-filter-field label {
+        min-height: 18px;
+        margin-bottom: 5px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .stock-filter-field input {
+        height: 36px;
+        padding-right: 7px;
+        padding-left: 7px;
+        font-size: 11px;
     }
 
     .stock-pagination-area {
@@ -1392,5 +1406,112 @@ table {
         max-width: 100%;
         overflow-x: auto;
         padding-bottom: 2px;
+    }
+}
+
+
+/* =====================================================
+   TABEL STOK - AKSI RINGKAS DAN STATUS
+===================================================== */
+
+#stockListContent .table-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
+}
+
+#stockListContent .table-wrapper::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+#stockListContent .table-wrapper::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 999px;
+}
+
+#stockListContent .table-wrapper::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border: 2px solid #f3f4f6;
+    border-radius: 999px;
+}
+
+#stockListContent .table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+#stockTable .stock-cell,
+#stockTable .stock-actions-cell {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.stock-actions-header,
+#stockTable .stock-actions-cell {
+    width: 145px;
+}
+
+#stockTable .stock-action-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#stockTable .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    height: 29px;
+    padding: 3px 7px;
+    margin: 0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+#stockTable .stock-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+#stockTable .stock-badge.stock-habis {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+#stockTable .stock-badge.stock-menipis {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+#stockTable .stock-badge.stock-aman {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+@media (max-width: 600px) {
+    .stock-actions-header,
+    #stockTable .stock-actions-cell {
+        width: 128px;
+    }
+
+    #stockTable .stock-action-group {
+        gap: 4px;
+    }
+
+    #stockTable .action-btn {
+        min-width: 59px;
+        height: 28px;
+        padding: 3px 5px;
+        font-size: 10px;
     }
 }
