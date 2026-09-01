@@ -3935,3 +3935,144 @@ footer small {
         animation: none;
     }
 }
+
+
+/* =====================================================
+   UI ICON SYSTEM — SVG ONLY
+===================================================== */
+
+.ui-svg-icon {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 1em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+}
+
+.inline-title-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.section-heading-svg {
+    width: 22px;
+    height: 22px;
+    color: #315bd6;
+}
+
+.modern-title-icon .ui-svg-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.modern-primary-button .button-plus-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.stock-filter-field label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.search-label-icon {
+    width: 13px;
+    height: 13px;
+    color: #64748b;
+}
+
+.loading-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.loading-svg-icon {
+    width: 15px;
+    height: 15px;
+    color: #64748b;
+    animation: databaseStatusSpin .85s linear infinite;
+}
+
+#stockTable .loading::before {
+    display: none;
+}
+
+.history-month-nav button .ui-svg-icon,
+.modern-month-nav button .ui-svg-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.modal-title-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-title-icon {
+    width: 18px;
+    height: 18px;
+    color: #315bd6;
+}
+
+.export-confirm-icon .ui-svg-icon {
+    width: 21px;
+    height: 21px;
+}
+
+.stock-action-icon {
+    width: 13px;
+    height: 13px;
+    font-size: inherit;
+}
+
+.pagination-icon {
+    width: 14px;
+    height: 14px;
+}
+
+#toastMessage {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toast-status-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.toast.success .toast-status-icon {
+    color: #dcfce7;
+}
+
+.toast.error .toast-status-icon {
+    color: #ffe4e6;
+}
+
+@media (max-width: 600px) {
+    .section-heading-svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .stock-action-icon {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-svg-icon {
+        animation: none;
+    }
+}
