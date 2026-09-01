@@ -3523,22 +3523,57 @@ footer small {
     }
 }
 
-
-/* Catatan penjualan: kolom nama barang lebar, kolom lain otomatis */
+/* Catatan penjualan: nama lengkap dengan ukuran proporsional */
 #penjualanTable {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 760px;
     table-layout: auto;
 }
 
 #penjualanTable th:nth-child(2),
 #penjualanTable td:nth-child(2) {
-    width: 300px !important;
-    min-width: 300px !important;
-    max-width: 300px !important;
+    width: 260px;
+    min-width: 220px;
+    max-width: 300px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.4;
+    vertical-align: middle;
 }
 
 #penjualanTable th:not(:nth-child(2)),
 #penjualanTable td:not(:nth-child(2)) {
     width: auto;
+}
+
+.sales-name-marquee {
+    overflow: visible;
+    white-space: normal;
+}
+
+.sales-name-track {
+    display: block;
+    min-width: 0;
+    animation: none;
+    transform: none;
+}
+
+.sales-name-track > span:first-child {
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.sales-name-track > span[aria-hidden="true"] {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    #penjualanTable th:nth-child(2),
+    #penjualanTable td:nth-child(2) {
+        width: 210px;
+        min-width: 190px;
+        max-width: 230px;
+    }
 }
