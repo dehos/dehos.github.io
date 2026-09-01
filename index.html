@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-9">
+    <link rel="stylesheet" href="style.css?v=20260901-10">
     <link
         rel="icon"
         type="image/png"
@@ -73,93 +73,59 @@
     >
         ⏳ Menghubungkan ke database...
     </div></div>
-    <div class="cari">
- <div class="position-relative">
-    <label for="penjualanBarang">
-        Nama Barang
-    </label>
-<input
-    type="text"
-    id="penjualanBarang"
-    class="form-control form-control-sm"
-    placeholder="Ketik nama barang..."
-    autocomplete="off"
->
-
-    <div
-        id="saranBarang"
-        class="position-absolute w-100 bg-white border rounded shadow-sm"
-        style="z-index:1050;"
-    ></div>
-</div>
-
-<div>
-    <label for="penjualanBrand">
-        Brand
-    </label>
-
-    <input
-        type="text"
-        id="penjualanBrand"
-        class="form-control form-control-sm"
-        placeholder="Otomatis mengikuti barang"
-        readonly
-    >
-</div>
-        
-        <div>
-            <label for="penjualanQty">
-                Quantity
-            </label>
-<input
-    type="number"
-    id="penjualanQty"
-    class="form-control form-control-sm"
-    min="1"
-    value="1"
->
+    <div class="sales-entry-grid">
+        <div class="sales-field sales-product-field position-relative">
+            <label for="penjualanBarang">Nama Barang</label>
+            <input type="text" id="penjualanBarang" class="form-control form-control-sm"
+                placeholder="Ketik nama barang..." autocomplete="off">
+            <div id="saranBarang"
+                class="sales-suggestions position-absolute w-100 bg-white border rounded shadow-sm"></div>
         </div>
 
-
-        <div>
-            <label for="penjualanHarga">
-                Harga/Unit
-            </label>
-<div class="harga-input-wrapper">
-    <span class="harga-prefix">Rp.</span>
-
-    <input
-        type="text"
-        id="penjualanHarga"
-        class="form-control form-control-sm"
-        inputmode="numeric"
-        autocomplete="off"
-        placeholder="0"
-    >
-</div>
+        <div class="sales-field">
+            <label for="penjualanBrand">Brand</label>
+            <input type="text" id="penjualanBrand"
+                class="form-control form-control-sm sales-readonly"
+                placeholder="Otomatis mengikuti barang" readonly>
         </div>
-        <div>
-            <label for="penjualanTanggal">
-                Tanggal Pembelian
-            </label>
-<input
-    type="date"
-    id="penjualanTanggal"
-    class="form-control form-control-sm"
->
+
+        <div class="sales-field">
+            <label for="penjualanTanggal">Tanggal Pembelian</label>
+            <input type="date" id="penjualanTanggal" class="form-control form-control-sm">
         </div>
-    <div class="penjualan-button">
-        <label>&nbsp;</label>
-        <p>
-        <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            onclick="simpanPenjualan()"
-        >
-           Catat Penjualan
+
+        <div class="sales-field">
+            <label for="penjualanQty">Quantity</label>
+            <input type="number" id="penjualanQty" class="form-control form-control-sm"
+                min="1" value="1">
+        </div>
+
+        <div class="sales-field">
+            <label for="penjualanHarga">Harga/Unit</label>
+            <div class="harga-input-wrapper">
+                <span class="harga-prefix">Rp.</span>
+                <input type="text" id="penjualanHarga" class="form-control form-control-sm"
+                    inputmode="numeric" autocomplete="off" placeholder="0">
+            </div>
+        </div>
+
+        <div class="sales-total-card" aria-live="polite">
+            <span>Total Penjualan</span>
+            <strong id="penjualanTotalPreview">Rp0</strong>
+            <small id="penjualanCalculation">1 × Rp0</small>
+        </div>
+    </div>
+
+    <div class="sales-entry-footer">
+        <div id="penjualanStockInfo" class="sales-stock-info" aria-live="polite">
+            Pilih barang untuk melihat stok.
+        </div>
+        <button type="button" id="simpanPenjualanButton"
+            class="btn btn-primary btn-sm" onclick="simpanPenjualan()" disabled>
+            Catat Penjualan
         </button>
-        </div>
-</div>
+    </div>
+
 </section>
 <!--====================================================
      DAFTAR STOK
@@ -824,6 +790,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260901-7"></script>
+<script src="script.js?v=20260901-10"></script>
 </body>
 </html>
