@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-40">
+    <link rel="stylesheet" href="style.css?v=20260901-41">
     <link
         rel="icon"
         type="image/png"
@@ -68,7 +68,16 @@
 ===================================================== -->
 
 <section class="card">
-<div class="history-header"><h2>🛒Penjualan</h2><div
+<div class="history-header">
+    <h2 class="inline-title-heading">
+        <svg class="ui-svg-icon section-heading-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16l-1.4 11H5.4z"/>
+            <path d="M8 7a4 4 0 0 1 8 0"/>
+            <path d="M9 11v3M15 11v3"/>
+        </svg>
+        <span>Penjualan</span>
+    </h2>
+    <div
         id="databaseStatus"
         class="status"
     >
@@ -143,7 +152,12 @@
 <!-- HTML — index.html -->
 <div class="history-header modern-section-header stock-section-header">
     <div class="modern-title-group">
-        <span class="modern-title-icon" aria-hidden="true">▦</span>
+        <span class="modern-title-icon" aria-hidden="true">
+            <svg class="ui-svg-icon" viewBox="0 0 24 24">
+                <path d="M4 5h16v14H4z"/>
+                <path d="M4 10h16M9 10v9M15 10v9"/>
+            </svg>
+        </span>
         <div>
             <h3>Stok Barang</h3>
             <small>Kelola persediaan dan pergerakan stok</small>
@@ -156,8 +170,10 @@
             class="modern-primary-button"
             onclick="openTambahBarang()"
         >
-            <span aria-hidden="true">＋</span>
-            Tambah Barang
+            <svg class="ui-svg-icon button-plus-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span>Tambah Barang</span>
         </button>
 
         <details class="modern-export-menu">
@@ -214,7 +230,11 @@
     <div class="stock-filter-toolbar">
         <div class="stock-filter-field">
             <label for="search">
-                🔎 Cari produk
+                <svg class="ui-svg-icon search-label-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6"/>
+                    <path d="m16 16 4 4"/>
+                </svg>
+                <span>Cari produk</span>
             </label>
             <input
                 type="text"
@@ -279,7 +299,13 @@
                                 colspan="4"
                                 class="loading"
                             >
-                                ⏳ Memuat data...
+                                <span class="loading-content">
+                                    <svg class="ui-svg-icon loading-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="8"/>
+                                        <path d="M12 4a8 8 0 0 1 8 8"/>
+                                    </svg>
+                                    <span>Memuat data...</span>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -304,7 +330,12 @@
 <section class="card">
     <div class="history-header penjualan-history-header modern-sales-header">
         <div class="modern-title-group">
-            <span class="modern-title-icon" aria-hidden="true">▤</span>
+            <span class="modern-title-icon" aria-hidden="true">
+                <svg class="ui-svg-icon" viewBox="0 0 24 24">
+                    <path d="M5 3h14v18H5z"/>
+                    <path d="M8 8h8M8 12h8M8 16h5"/>
+                </svg>
+            </span>
             <div>
                 <h3>Catatan Penjualan</h3>
                 <small>Riwayat transaksi bulan berjalan</small>
@@ -322,8 +353,10 @@
                     aria-label="Lihat bulan sebelumnya"
                     onclick="ubahBulanPenjualan(-1)"
                 >
-                    ‹
-                </button>
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button>
 
                 <strong id="penjualanMonthLabel">
                     Memuat bulan...
@@ -335,8 +368,10 @@
                     aria-label="Lihat bulan berikutnya"
                     onclick="ubahBulanPenjualan(1)"
                 >
-                    ›
-                </button>
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6"/>
+                </svg>
+            </button>
             </div>
 
             <button
@@ -446,7 +481,9 @@
                 aria-label="Lihat bulan sebelumnya"
                 onclick="ubahBulanRiwayat(-1)"
             >
-                ‹
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
             </button>
 
             <strong id="historyMonthLabel">
@@ -459,7 +496,9 @@
                 aria-label="Lihat bulan berikutnya"
                 onclick="ubahBulanRiwayat(1)"
             >
-                ›
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6"/>
+                </svg>
             </button>
         </div>
     </div>
@@ -655,8 +694,12 @@
 >
     <div class="modal-content">
 
-        <div class="modal-title">
-            ✏️ Edit Penjualan
+        <div class="modal-title modal-title-with-icon">
+            <svg class="ui-svg-icon modal-title-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+            </svg>
+            <span>Edit Penjualan</span>
         </div>
 
         <input
@@ -835,7 +878,13 @@
 </footer>
 <dialog id="exportConfirmDialog" class="export-confirm-dialog">
     <form method="dialog" class="export-confirm-card">
-        <div class="export-confirm-icon" aria-hidden="true">⇩</div>
+        <div class="export-confirm-icon" aria-hidden="true">
+            <svg class="ui-svg-icon" viewBox="0 0 24 24">
+                <path d="M12 3v12"/>
+                <path d="m7 10 5 5 5-5"/>
+                <path d="M5 21h14"/>
+            </svg>
+        </div>
         <h3>Konfirmasi Export</h3>
         <p id="exportConfirmMessage">Apakah Anda ingin melanjutkan export?</p>
         <div class="export-confirm-actions">
@@ -864,6 +913,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260901-20"></script>
+<script src="script.js?v=20260901-21"></script>
 </body>
 </html>
