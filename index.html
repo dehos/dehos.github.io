@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-39">
+    <link rel="stylesheet" href="style.css?v=20260901-40">
     <link
         rel="icon"
         type="image/png"
@@ -72,7 +72,15 @@
         id="databaseStatus"
         class="status"
     >
-        ⏳ Menghubungkan ke database...
+        <svg
+            class="database-status-icon database-status-icon-loading"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+        >
+            <circle cx="12" cy="12" r="8"></circle>
+            <path d="M12 4a8 8 0 0 1 8 8"></path>
+        </svg>
+        <span>Menghubungkan ke database...</span>
     </div></div>
     <div class="sales-entry-grid">
         <div class="sales-field sales-product-field position-relative">
@@ -856,6 +864,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260901-19"></script>
+<script src="script.js?v=20260901-20"></script>
 </body>
 </html>
