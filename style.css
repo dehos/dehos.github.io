@@ -3443,3 +3443,138 @@ footer small {
         font-size: 9px;
     }
 }
+
+
+/* =====================================================
+   UI POLISH TAHAP 7 — SALES TOTAL & SAVE ACTION
+   Visual only: kalkulasi dan penyimpanan tetap sama
+===================================================== */
+
+.sales-total-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 64px;
+    padding: 10px 13px;
+    border: 1px solid #cddcff;
+    border-radius: 11px;
+    background:
+        linear-gradient(135deg, #f6f9ff 0%, #edf4ff 100%);
+    box-shadow: inset 3px 0 0 #5b7cfa;
+}
+
+.sales-total-card::after {
+    content: "";
+    position: absolute;
+    top: -30px;
+    right: -25px;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: rgba(91, 124, 250, .07);
+    pointer-events: none;
+}
+
+.sales-total-card span {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 2px;
+    color: #64748b;
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .045em;
+}
+
+.sales-total-card strong {
+    position: relative;
+    z-index: 1;
+    color: #244fc7;
+    font-size: 18px;
+    font-weight: 750;
+    letter-spacing: -.025em;
+}
+
+.sales-total-card small {
+    position: relative;
+    z-index: 1;
+    color: #7c899b;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+#simpanPenjualanButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 146px;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid #2856d7;
+    border-radius: 9px;
+    background: #315bd6;
+    color: #fff;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1;
+    box-shadow: 0 5px 12px rgba(49, 91, 214, .2);
+    transition:
+        background-color .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease,
+        transform .15s ease;
+}
+
+#simpanPenjualanButton:hover:not(:disabled) {
+    border-color: #2149bd;
+    background: #2852ca;
+    box-shadow: 0 7px 16px rgba(49, 91, 214, .26);
+    transform: translateY(-1px);
+}
+
+#simpanPenjualanButton:active:not(:disabled) {
+    box-shadow: 0 3px 8px rgba(49, 91, 214, .18);
+    transform: translateY(0);
+}
+
+#simpanPenjualanButton:focus-visible {
+    outline: 2px solid rgba(49, 91, 214, .38);
+    outline-offset: 2px;
+}
+
+#simpanPenjualanButton:disabled {
+    border-color: #e2e8f0;
+    background: #f1f5f9;
+    color: #a3adba;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .sales-total-card {
+        min-height: 50px;
+        padding: 8px 10px;
+        border-radius: 9px;
+    }
+
+    .sales-total-card span {
+        font-size: 8px;
+    }
+
+    .sales-total-card strong {
+        font-size: 15px;
+    }
+
+    .sales-total-card small {
+        font-size: 8px;
+    }
+
+    #simpanPenjualanButton {
+        min-width: 120px;
+        min-height: 35px;
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 10px;
+    }
+}
