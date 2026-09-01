@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-20">
+    <link rel="stylesheet" href="style.css?v=20260901-21">
     <link
         rel="icon"
         type="image/png"
@@ -794,6 +794,20 @@
         © 2026 Tony. All rights reserved.
     </small>
 </footer>
+<dialog id="exportConfirmDialog" class="export-confirm-dialog">
+    <form method="dialog" class="export-confirm-card">
+        <div class="export-confirm-icon" aria-hidden="true">⇩</div>
+        <h3>Konfirmasi Export</h3>
+        <p id="exportConfirmMessage">Apakah Anda ingin melanjutkan export?</p>
+        <div class="export-confirm-actions">
+            <button type="button" class="export-confirm-no"
+                onclick="selesaikanKonfirmasiExport(false)">Tidak</button>
+            <button type="button" class="export-confirm-yes"
+                onclick="selesaikanKonfirmasiExport(true)">Ya, Export</button>
+        </div>
+    </form>
+</dialog>
+
 <!-- =====================================================
      TOAST
 ===================================================== -->
@@ -811,6 +825,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260901-15"></script>
+<script src="script.js?v=20260901-16"></script>
 </body>
 </html>
