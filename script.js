@@ -3622,9 +3622,15 @@ async function loadPenjualan() {
                     </td>
 
                     <td>
-                        ${escapeHTML(
-                            namaBarang
-                        )}
+                        <div
+                            class="sales-name-marquee"
+                            title="${escapeHTML(namaBarang)}"
+                        >
+                            <span class="sales-name-track">
+                                <span>${escapeHTML(namaBarang)}</span>
+                                <span aria-hidden="true">${escapeHTML(namaBarang)}</span>
+                            </span>
+                        </div>
                     </td>
 
                     <td class="text-center">
