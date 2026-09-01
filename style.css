@@ -2619,3 +2619,165 @@ table {
         max-height: 320px;
     }
 }
+
+
+/* =====================================================
+   UI POLISH — MODAL & NOTIFIKASI
+   Visual only: mempertahankan ID, event, dan alur data lama
+===================================================== */
+
+.modal {
+    padding: 20px;
+    background: rgba(15, 23, 42, .46);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    width: min(100%, 440px);
+    max-width: 440px;
+    max-height: calc(100vh - 40px);
+    padding: 22px;
+    border: 1px solid rgba(226, 232, 240, .95);
+    border-radius: 16px;
+    box-shadow:
+        0 24px 60px rgba(15, 23, 42, .18),
+        0 4px 16px rgba(15, 23, 42, .08);
+    animation: modalEnter .18s ease-out;
+}
+
+@keyframes modalEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-title {
+    margin-bottom: 6px;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.modal-product {
+    margin-bottom: 18px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.modal-content label {
+    margin: 14px 0 6px;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="date"],
+.modal-content select {
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+    background: #fff;
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 13px;
+    transition:
+        border-color .16s ease,
+        box-shadow .16s ease;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    border-color: #94a3b8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, .16);
+}
+
+.modal-actions {
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid #eef2f7;
+}
+
+.modal-actions button {
+    flex: 0 1 auto;
+    min-width: 96px;
+    min-height: 40px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#toast.toast {
+    top: 18px;
+    width: max-content;
+    max-width: min(420px, calc(100% - 28px));
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 12px;
+    background: #172033;
+    box-shadow:
+        0 14px 34px rgba(15, 23, 42, .18),
+        0 2px 8px rgba(15, 23, 42, .08);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+    text-align: left;
+    transition:
+        opacity .22s ease,
+        transform .22s ease,
+        visibility .22s ease;
+}
+
+#toast.toast.success {
+    background: #137a50;
+}
+
+#toast.toast.error {
+    background: #c93645;
+}
+
+@media (max-width: 600px) {
+    .modal {
+        padding: 12px;
+        align-items: flex-end;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 24px);
+        padding: 20px 17px 17px;
+        border-radius: 16px;
+    }
+
+    .modal-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .modal-actions button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #toast.toast {
+        top: 12px;
+        width: calc(100% - 24px);
+        max-width: calc(100% - 24px);
+        text-align: center;
+    }
+}
