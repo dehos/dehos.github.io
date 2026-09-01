@@ -4810,6 +4810,35 @@ function kelompokkanBarangExport(items) {
 }
 
 
+function formatNamaBarangExport(namaBarang) {
+    let nama = String(namaBarang || "").trim().replace(/\s+/g, " ");
+    const awalanDihapus = [
+        /^BELLEZ{1,2}A\b[\s:.-]*/i,
+        /^SOLID\b[\s:.-]*/i,
+        /^DEKKSON\b[\s:.-]*/i,
+        /^RONA\b[\s:.-]*/i,
+        /^TRISENSA\b[\s:.-]*/i,
+        /^VIOLET\s+PINTU\s+ALUMUNIUM\b[\s:.-]*/i
+    ];
+
+    for (const pola of awalanDihapus) {
+        if (pola.test(nama)) {
+            nama = nama.replace(pola, "");
+            break;
+        }
+    }
+
+    if (/^VAPELY\b/i.test(nama)) {
+        nama = nama.replace(
+            /^VAPELY\b[\s:.-]*/i,
+            "VPLY "
+        );
+    }
+
+    return nama.trim();
+}
+
+
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
@@ -4919,8 +4948,10 @@ kelompokBarangExport.forEach(
                     ) || 0;
 
                 const row = [
-                    barang.nama
-                ];
+                        formatNamaBarangExport(
+                            barang.nama
+                        )
+                    ];
 
                 for (
                     let hari = 1;
@@ -5004,6 +5035,33 @@ kelompokBarangExport.forEach(
 );
 
 
+    const totalExcel = ["TOTAL"];
+
+    for (let kolom = 1; kolom <= jumlahHari; kolom++) {
+        if (kolom > hariIni) {
+            totalExcel.push("");
+            continue;
+        }
+
+        const totalKolom = dataExcel.reduce(
+            function(total, row, rowIndex) {
+                if (metadataBarisExcel[rowIndex]?.type !== "barang") {
+                    return total;
+                }
+
+                const nilai = Number(row[kolom]);
+                return total + (Number.isFinite(nilai) ? nilai : 0);
+            },
+            0
+        );
+
+        totalExcel.push(totalKolom);
+    }
+
+    dataExcel.push(totalExcel);
+    metadataBarisExcel.push({ type: "total" });
+
+
     /* BUAT WORKBOOK EXCEL */
 
     const worksheet =
@@ -5020,19 +5078,6 @@ kelompokBarangExport.forEach(
         "Rekap Stok"
     );
 
-    worksheet["!merges"] =
-        worksheet["!merges"] || [];
-
-    metadataBarisExcel.forEach(
-        function(metadata, rowIndex) {
-            if (metadata.type === "brand") {
-                worksheet["!merges"].push({
-                    s: { r: rowIndex, c: 0 },
-                    e: { r: rowIndex, c: jumlahHari }
-                });
-            }
-        }
-    );
 /* PRINT TITLE: ULANGI BARIS 1 */
 
 workbook.Workbook =
@@ -5193,11 +5238,41 @@ for (
                     fill: {
                         patternType: "solid",
                         fgColor: {
-                            rgb: "374151"
+                            rgb: "808080"
                         }
                     },
                     alignment: {
-                        horizontal: "left",
+                        horizontal: "center",
+                        vertical: "center"
+                    }
+                };
+            }
+
+            continue;
+        }
+
+        if (metadata?.type === "total") {
+            for (let c = 0; c <= jumlahHari; c++) {
+                const totalCell = worksheet[
+                    XLSX.utils.encode_cell({ r, c })
+                ];
+
+                if (!totalCell) {
+                    continue;
+                }
+
+                totalCell.s = {
+                    font: {
+                        name: "Aptos",
+                        sz: 8,
+                        bold: true
+                    },
+                    fill: {
+                        patternType: "solid",
+                        fgColor: { rgb: "E5E7EB" }
+                    },
+                    alignment: {
+                        horizontal: c === 0 ? "left" : "center",
                         vertical: "center"
                     }
                 };
@@ -5562,15 +5637,17 @@ async function exportPDF() {
 
     kelompokBarangPDF.forEach(
         function(kelompok) {
-            dataPDF.push([
-                {
-                    content:
-                        kelompok.brand.toLocaleUpperCase(
-                            "id-ID"
-                        ),
-                    colSpan: jumlahHari + 1
-                }
-            ]);
+            const brandRow = [
+                kelompok.brand.toLocaleUpperCase(
+                    "id-ID"
+                )
+            ];
+
+            for (let kolom = 1; kolom <= jumlahHari; kolom++) {
+                brandRow.push("");
+            }
+
+            dataPDF.push(brandRow);
 
             metadataBarisPDF.push({
                 type: "brand",
@@ -5585,7 +5662,9 @@ async function exportPDF() {
                         ) || 0;
 
                     const row = [
-                        barang.nama
+                        formatNamaBarangExport(
+                            barang.nama
+                        )
                     ];
 
                     for (
@@ -5668,6 +5747,33 @@ async function exportPDF() {
             );
         }
     );
+
+
+    const totalPDF = ["TOTAL"];
+
+    for (let kolom = 1; kolom <= jumlahHari; kolom++) {
+        if (kolom > hariIni) {
+            totalPDF.push("");
+            continue;
+        }
+
+        const totalKolom = dataPDF.reduce(
+            function(total, row, rowIndex) {
+                if (metadataBarisPDF[rowIndex]?.type !== "barang") {
+                    return total;
+                }
+
+                const nilai = Number(row[kolom]);
+                return total + (Number.isFinite(nilai) ? nilai : 0);
+            },
+            0
+        );
+
+        totalPDF.push(totalKolom);
+    }
+
+    dataPDF.push(totalPDF);
+    metadataBarisPDF.push({ type: "total" });
 
 
     /* UKURAN HALAMAN DAN KOLOM */
@@ -5876,28 +5982,27 @@ async function exportPDF() {
                         data.row.index
                     ];
 
-                if (
-                    metadata?.type ===
-                    "brand"
-                ) {
-                    data.cell.styles.fillColor =
-                        [55, 65, 81];
+                if (metadata?.type === "brand") {
+                    if (data.column.index === 0) {
+                        data.cell.styles.fillColor = [128, 128, 128];
+                        data.cell.styles.textColor = [255, 255, 255];
+                        data.cell.styles.fontStyle = "bold";
+                        data.cell.styles.fontSize = 9;
+                        data.cell.styles.halign = "center";
+                        data.cell.styles.cellPadding = 1.2;
+                    }
 
-                    data.cell.styles.textColor =
-                        [255, 255, 255];
+                    return;
+                }
 
-                    data.cell.styles.fontStyle =
-                        "bold";
-
-                    data.cell.styles.fontSize =
-                        9;
-
+                if (metadata?.type === "total") {
+                    data.cell.styles.fillColor = [229, 231, 235];
+                    data.cell.styles.textColor = [0, 0, 0];
+                    data.cell.styles.fontStyle = "bold";
                     data.cell.styles.halign =
-                        "left";
-
-                    data.cell.styles.cellPadding =
-                        1.2;
-
+                        data.column.index === 0
+                            ? "left"
+                            : "center";
                     return;
                 }
 
