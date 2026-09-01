@@ -1567,7 +1567,7 @@ table {
 
 .target-brand-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 9px;
     padding: 0;
 }
@@ -1722,7 +1722,7 @@ table {
     }
 
     .target-brand-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 7px;
     }
 
@@ -1748,17 +1748,17 @@ table {
     }
 
     .target-donut {
-        width: 116px;
-        height: 116px;
+        width: min(92px, 25vw);
+        height: min(92px, 25vw);
     }
 
     .target-donut-center {
-        width: 86px;
-        height: 86px;
+        width: min(68px, 18.5vw);
+        height: min(68px, 18.5vw);
     }
 
     .target-donut-center strong {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .target-donut-center small {
