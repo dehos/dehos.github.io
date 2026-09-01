@@ -45,6 +45,39 @@ let bulanPenjualanTertua =
    TOAST NOTIFICATION
 ===================================================== */
 
+const UI_ICON_PATHS = {
+    plus:
+        '<path d="M12 5v14M5 12h14"></path>',
+    minus:
+        '<path d="M5 12h14"></path>',
+    chevronLeft:
+        '<path d="m15 18-6-6 6-6"></path>',
+    chevronRight:
+        '<path d="m9 18 6-6-6-6"></path>',
+    success:
+        '<circle cx="12" cy="12" r="9"></circle>' +
+        '<path d="m8 12 2.6 2.6L16.5 9"></path>',
+    error:
+        '<circle cx="12" cy="12" r="9"></circle>' +
+        '<path d="m9 9 6 6M15 9l-6 6"></path>'
+};
+
+function getUiIconSvg(
+    name,
+    className = ""
+) {
+    const paths =
+        UI_ICON_PATHS[name] || "";
+
+    return (
+        '<svg class="ui-svg-icon ' +
+        className +
+        '" viewBox="0 0 24 24" aria-hidden="true">' +
+        paths +
+        "</svg>"
+    );
+}
+
 let toastTimer = null;
 
 function showToast(message, type = "success") {
@@ -63,7 +96,26 @@ function showToast(message, type = "success") {
         clearTimeout(toastTimer);
     }
 
-    toastMessage.textContent = message;
+    const toastIconName =
+        type === "error"
+            ? "error"
+            : "success";
+
+    toastMessage.innerHTML =
+        getUiIconSvg(
+            toastIconName,
+            "toast-status-icon"
+        );
+
+    const toastText =
+        document.createElement("span");
+
+    toastText.textContent =
+        String(message || "").trim();
+
+    toastMessage.appendChild(
+        toastText
+    );
 
     toast.className = "toast";
 
@@ -223,10 +275,6 @@ function setDatabaseStatus(
 
     text.textContent =
         String(message || "")
-            .replace(
-                /^[✅❌⏳]\s*/u,
-                ""
-            )
             .trim();
 
     element.replaceChildren(
@@ -343,7 +391,7 @@ async function loadBrandBarangBaru() {
 ===================================================== */
 async function loadBarang() {
     setDatabaseStatus(
-        "⏳ Mengambil data barang..."
+        "Mengambil data barang..."
     );
 
     const batasPerHalaman = 1000;
@@ -387,7 +435,7 @@ async function loadBarang() {
             );
 
             setDatabaseStatus(
-                "❌ Gagal mengambil data barang: " +
+                "Gagal mengambil data barang: " +
                     error.message,
                 "error"
             );
@@ -416,7 +464,7 @@ async function loadBarang() {
         semuaBarang;
 
     setDatabaseStatus(
-        "✅ Database aktif " +
+        "Database aktif " +
             dataBarang.length +
             "· barang",
         "success"
@@ -451,7 +499,7 @@ async function loadTransactions() {
         console.error(error);
 
         setDatabaseStatus(
-            "❌ Gagal mengambil transaksi: " +
+            "Gagal mengambil transaksi: " +
             error.message,
             "error"
         );
@@ -562,7 +610,7 @@ async function tambahBarang() {
     }
 
     setDatabaseStatus(
-        "⏳ Menyimpan barang..."
+        "Menyimpan barang..."
     );
 
     const {
@@ -588,7 +636,7 @@ async function tambahBarang() {
         );
 
         setDatabaseStatus(
-            "❌ Gagal menyimpan barang: " +
+            "Gagal menyimpan barang: " +
                 error.message,
             "error"
         );
@@ -605,7 +653,7 @@ async function tambahBarang() {
     }
 
     setDatabaseStatus(
-        "✅ Barang berhasil ditambahkan.",
+        "Barang berhasil ditambahkan.",
         "success"
     );
 
@@ -1069,7 +1117,7 @@ dataHalaman.forEach(
                         aria-label="Tambah stok ${escapeHTML(barang.nama)}"
                         title="Barang masuk"
                     >
-                        <span class="stock-action-icon" aria-hidden="true">＋</span>
+                        ${getUiIconSvg("plus", "stock-action-icon")}
                         <span>Masuk</span>
                     </button>
 
@@ -1080,7 +1128,7 @@ dataHalaman.forEach(
                         aria-label="Kurangi stok ${escapeHTML(barang.nama)}"
                         title="Barang keluar"
                     >
-                        <span class="stock-action-icon" aria-hidden="true">−</span>
+                        ${getUiIconSvg("minus", "stock-action-icon")}
                         <span>Keluar</span>
                     </button>
                 </div>
@@ -1155,8 +1203,11 @@ function renderPaginationStok(totalData) {
     tombolSebelumnya.type =
         "button";
 
-    tombolSebelumnya.textContent =
-        "‹";
+    tombolSebelumnya.innerHTML =
+        getUiIconSvg(
+            "chevronLeft",
+            "pagination-icon"
+        );
 
     tombolSebelumnya.disabled =
         halamanStok === 1;
@@ -1277,8 +1328,11 @@ function renderPaginationStok(totalData) {
     tombolBerikutnya.type =
         "button";
 
-    tombolBerikutnya.textContent =
-        "›";
+    tombolBerikutnya.innerHTML =
+        getUiIconSvg(
+            "chevronRight",
+            "pagination-icon"
+        );
 
     tombolBerikutnya.disabled =
         halamanStok ===
@@ -1677,7 +1731,7 @@ async function confirmTransaction() {
             : "Barang keluar";
 
     showToast(
-        `✅ ${namaTransaksi} ${formatNumber(qty)}`,
+        `${namaTransaksi} ${formatNumber(qty)}`,
         "success"
     );
 }
@@ -2086,7 +2140,7 @@ async function hapusTransaksi(id) {
         console.error(error);
 
         showToast(
-            "❌ Gagal menghapus transaksi",
+            "Gagal menghapus transaksi",
             "error"
         );
 
@@ -2096,7 +2150,7 @@ async function hapusTransaksi(id) {
     await loadTransactions();
 
     showToast(
-        "✅ Transaksi berhasil dihapus",
+        "Transaksi berhasil dihapus",
         "success"
     );
 }
@@ -3031,7 +3085,7 @@ async function simpanPenjualan() {
     updatePenjualanSummary();
 
     showToast(
-        "✅ Penjualan berhasil dicatat dan stok berkurang " +
+        "Penjualan berhasil dicatat dan stok berkurang " +
         formatNumber(qty),
         "success"
     );
@@ -3853,7 +3907,7 @@ async function simpanEditPenjualan() {
 
     if (!penjualan) {
         showToast(
-            "❌ Data penjualan tidak ditemukan",
+            "Data penjualan tidak ditemukan",
             "error"
         );
         return;
@@ -3893,7 +3947,7 @@ async function simpanEditPenjualan() {
 
     if (!id) {
         showToast(
-            "❌ Data penjualan tidak valid",
+            "Data penjualan tidak valid",
             "error"
         );
         return;
@@ -3901,7 +3955,7 @@ async function simpanEditPenjualan() {
 
     if (!barangId) {
         showToast(
-            "❌ Barang penjualan tidak valid",
+            "Barang penjualan tidak valid",
             "error"
         );
         return;
@@ -3909,7 +3963,7 @@ async function simpanEditPenjualan() {
 
     if (!qty || qty <= 0) {
         showToast(
-            "❌ Quantity harus lebih dari 0",
+            "Quantity harus lebih dari 0",
             "error"
         );
         return;
@@ -3920,7 +3974,7 @@ async function simpanEditPenjualan() {
         harga < 0
     ) {
         showToast(
-            "❌ Harga tidak valid",
+            "Harga tidak valid",
             "error"
         );
         return;
@@ -3928,7 +3982,7 @@ async function simpanEditPenjualan() {
 
     if (!brand) {
         showToast(
-            "❌ Brand harus dipilih",
+            "Brand harus dipilih",
             "error"
         );
         return;
@@ -3936,7 +3990,7 @@ async function simpanEditPenjualan() {
 
     if (!tanggal) {
         showToast(
-            "❌ Tanggal harus diisi",
+            "Tanggal harus diisi",
             "error"
         );
         return;
@@ -3972,7 +4026,7 @@ async function simpanEditPenjualan() {
             );
 
             showToast(
-                "❌ Gagal mengubah penjualan: " +
+                "Gagal mengubah penjualan: " +
                     error.message,
                 "error"
             );
@@ -3995,7 +4049,7 @@ async function simpanEditPenjualan() {
         closeEditPenjualan();
 
         showToast(
-            "✅ Penjualan berhasil diperbarui",
+            "Penjualan berhasil diperbarui",
             "success"
         );
     } catch (error) {
@@ -4005,7 +4059,7 @@ async function simpanEditPenjualan() {
         );
 
         showToast(
-            "❌ Terjadi kesalahan saat mengedit penjualan",
+            "Terjadi kesalahan saat mengedit penjualan",
             "error"
         );
     }
@@ -4047,7 +4101,7 @@ async function hapusPenjualan(id) {
             );
 
             showToast(
-                "❌ Gagal menghapus penjualan: " +
+                "Gagal menghapus penjualan: " +
                     error.message,
                 "error"
             );
@@ -4068,7 +4122,7 @@ async function hapusPenjualan(id) {
         renderHistory();
 
         showToast(
-            "✅ Penjualan berhasil dihapus dan stok dikembalikan",
+            "Penjualan berhasil dihapus dan stok dikembalikan",
             "success"
         );
     } catch (error) {
@@ -4078,7 +4132,7 @@ async function hapusPenjualan(id) {
         );
 
         showToast(
-            "❌ Terjadi kesalahan saat menghapus penjualan",
+            "Terjadi kesalahan saat menghapus penjualan",
             "error"
         );
     } finally {
