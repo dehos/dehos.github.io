@@ -3827,3 +3827,58 @@ footer small {
         font-size: 9.5px;
     }
 }
+
+
+/* Export controls: vector icons */
+.modern-export-leading-icon svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.modern-export-menu > summary .modern-chevron {
+    width: 14px;
+    height: 14px;
+    margin-left: 3px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    color: #cbd5e1;
+    transition: transform .16s ease;
+}
+
+.modern-export-options .export-file-icon {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+.modern-export-options .export-file-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.modern-export-options .excel-accent {
+    background: #168454;
+}
+
+.modern-export-options .pdf-accent {
+    background: #d84a55;
+}
