@@ -2414,3 +2414,97 @@ table {
         font-size: 9.5px;
     }
 }
+
+
+/* =====================================================
+   AKSI STOK SEGMENTED DAN RIWAYAT NORMAL
+===================================================== */
+
+.modern-stock-table #stockTable .stock-action-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    background: #f3f4f6;
+}
+
+.modern-stock-table #stockTable .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 62px;
+    height: 27px;
+    gap: 4px;
+    padding: 4px 7px;
+    margin: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: none;
+    cursor: pointer;
+    transition:
+        color 140ms ease,
+        background-color 140ms ease,
+        box-shadow 140ms ease;
+}
+
+.modern-stock-table #stockTable .stock-in-btn {
+    color: #15803d;
+}
+
+.modern-stock-table #stockTable .stock-out-btn {
+    color: #b91c1c;
+}
+
+.modern-stock-table #stockTable .stock-in-btn:hover {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.modern-stock-table #stockTable .stock-out-btn:hover {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.modern-stock-table #stockTable .action-btn:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+}
+
+.stock-action-icon {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.modern-history-table tbody td,
+.modern-history-table tbody td *,
+.modern-history-table .stock-badge {
+    font-weight: 400 !important;
+}
+
+@media (max-width: 700px) {
+    .modern-stock-table #stockTable .stock-action-group {
+        gap: 1px;
+        padding: 2px;
+    }
+
+    .modern-stock-table #stockTable .action-btn {
+        min-width: 55px;
+        height: 26px;
+        gap: 3px;
+        padding: 3px 5px;
+        font-size: 8.5px;
+    }
+
+    .stock-action-icon {
+        font-size: 12px;
+    }
+}
