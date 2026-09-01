@@ -2784,7 +2784,7 @@ const TARGET_PENJUALAN_BRAND =
             target: 20000000
         },
         {
-            nama: "Vapely",
+            nama: "Vapely/Wepe",
             target: 15000000
         },
         {
@@ -2797,10 +2797,6 @@ const TARGET_PENJUALAN_BRAND =
         },
         {
             nama: "Violet",
-            target: 15000000
-        },
-        {
-            nama: "Wepe",
             target: 15000000
         }
     ]);
@@ -2829,6 +2825,19 @@ function getCanonicalTargetBrand(
 
     if (normalized === "bellezza") {
         return "Belleza";
+    }
+
+    if (
+        [
+            "vapely",
+            "wepe",
+            "vapely/wepe",
+            "wepe/vapely"
+        ].includes(
+            normalized
+        )
+    ) {
+        return "Vapely/Wepe";
     }
 
     const match =
