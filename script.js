@@ -4694,6 +4694,64 @@ function getStockAktualUntukExport(
    EXPORT EXCEL STOK
 ================================== */
 
+let penyelesaiKonfirmasiExport = null;
+
+function mintaKonfirmasiExport(message) {
+    const dialog =
+        document.getElementById("exportConfirmDialog");
+
+    const messageElement =
+        document.getElementById("exportConfirmMessage");
+
+    if (!dialog) {
+        return Promise.resolve(
+            window.confirm(message)
+        );
+    }
+
+    if (messageElement) {
+        messageElement.textContent = message;
+    }
+
+    if (dialog.open) {
+        dialog.close();
+    }
+
+    dialog.showModal();
+
+    return new Promise(
+        function(resolve) {
+            penyelesaiKonfirmasiExport = resolve;
+        }
+    );
+}
+
+function selesaikanKonfirmasiExport(disetujui) {
+    const dialog =
+        document.getElementById("exportConfirmDialog");
+
+    if (dialog?.open) {
+        dialog.close();
+    }
+
+    if (penyelesaiKonfirmasiExport) {
+        penyelesaiKonfirmasiExport(
+            Boolean(disetujui)
+        );
+        penyelesaiKonfirmasiExport = null;
+    }
+}
+
+document.getElementById("exportConfirmDialog")
+    ?.addEventListener(
+        "cancel",
+        function(event) {
+            event.preventDefault();
+            selesaikanKonfirmasiExport(false);
+        }
+    );
+
+
 function kelompokkanBarangExport(items) {
     const kelompok = new Map();
 
@@ -4749,6 +4807,15 @@ function kelompokkanBarangExport(items) {
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
+        return;
+    }
+
+    const disetujui =
+        await mintaKonfirmasiExport(
+            "Export rekap stok ke Excel?"
+        );
+
+    if (!disetujui) {
         return;
     }
 
@@ -5363,7 +5430,7 @@ for (
    EXPORT PDF REKAP STOK
 ================================== */
 
-function exportPDF() {
+async function exportPDF() {
     if (
         typeof window.jspdf ===
             "undefined" ||
@@ -5392,6 +5459,16 @@ function exportPDF() {
         alert(
             "Library tabel PDF belum dimuat."
         );
+        return;
+    }
+
+
+    const disetujui =
+        await mintaKonfirmasiExport(
+            "Export rekap stok ke PDF?"
+        );
+
+    if (!disetujui) {
         return;
     }
 
@@ -5879,6 +5956,15 @@ function exportPDF() {
 async function exportPenjualanExcel() {
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
+        return;
+    }
+
+    const disetujui =
+        await mintaKonfirmasiExport(
+            "Export catatan penjualan ke Excel?"
+        );
+
+    if (!disetujui) {
         return;
     }
 
