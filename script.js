@@ -2339,6 +2339,153 @@ const inputPenjualanBrand =
         "penjualanBrand"
     );
 
+const inputPenjualanQty =
+    document.getElementById("penjualanQty");
+
+const inputPenjualanHarga =
+    document.getElementById("penjualanHarga");
+
+const inputPenjualanTanggal =
+    document.getElementById("penjualanTanggal");
+
+const simpanPenjualanButton =
+    document.getElementById("simpanPenjualanButton");
+
+let penjualanSedangDisimpan = false;
+
+function getPenjualanStock(
+    barang,
+    tanggal
+) {
+    if (!barang) return 0;
+
+    const tanggalSebelumnya =
+        tanggalDipilih;
+
+    tanggalDipilih =
+        tanggal || tanggalSebelumnya;
+
+    const stok =
+        getCurrentStock(barang);
+
+    tanggalDipilih =
+        tanggalSebelumnya;
+
+    return stok;
+}
+
+function getSelectedPenjualanBarang() {
+    const barangId =
+        inputPenjualanBarang?.dataset.id;
+
+    return dataBarang.find(
+        function(item) {
+            return String(item.id) ===
+                String(barangId);
+        }
+    );
+}
+
+function setPenjualanSaving(saving) {
+    penjualanSedangDisimpan = saving;
+
+    if (!simpanPenjualanButton) return;
+
+    simpanPenjualanButton.textContent =
+        saving
+            ? "Menyimpan..."
+            : "Catat Penjualan";
+
+    simpanPenjualanButton.disabled =
+        saving;
+}
+
+function updatePenjualanSummary() {
+    const barang =
+        getSelectedPenjualanBarang();
+
+    const qty =
+        Math.max(
+            Number(inputPenjualanQty?.value) || 0,
+            0
+        );
+
+    const harga =
+        Number(
+            String(inputPenjualanHarga?.value || "")
+                .replace(/\./g, "")
+        ) || 0;
+
+    const stok =
+        getPenjualanStock(
+            barang,
+            inputPenjualanTanggal?.value
+        );
+
+    const total =
+        qty * harga;
+
+    const totalElement =
+        document.getElementById(
+            "penjualanTotalPreview"
+        );
+
+    const calculationElement =
+        document.getElementById(
+            "penjualanCalculation"
+        );
+
+    const stockElement =
+        document.getElementById(
+            "penjualanStockInfo"
+        );
+
+    if (totalElement) {
+        totalElement.textContent =
+            "Rp" + formatNumber(total);
+    }
+
+    if (calculationElement) {
+        calculationElement.textContent =
+            formatNumber(qty) +
+            " × Rp" +
+            formatNumber(harga);
+    }
+
+    const stokTidakCukup =
+        Boolean(barang) &&
+        qty > stok;
+
+    if (stockElement) {
+        stockElement.classList.toggle(
+            "is-error",
+            stokTidakCukup
+        );
+
+        stockElement.textContent =
+            barang
+                ? (
+                    stokTidakCukup
+                        ? "⚠ Quantity melebihi stok. Tersedia: " +
+                          formatNumber(stok)
+                        : "Stok tersedia: " +
+                          formatNumber(stok)
+                  )
+                : "Pilih barang untuk melihat stok.";
+    }
+
+    if (simpanPenjualanButton) {
+        simpanPenjualanButton.disabled =
+            penjualanSedangDisimpan ||
+            !barang ||
+            !inputPenjualanBrand?.value.trim() ||
+            qty < 1 ||
+            !inputPenjualanHarga?.value ||
+            !inputPenjualanTanggal?.value ||
+            stokTidakCukup;
+    }
+}
+
 if (
     inputPenjualanBarang &&
     saranBarang
@@ -2353,6 +2500,8 @@ if (
 if (inputPenjualanBrand) {
     inputPenjualanBrand.value = "";
 }
+            updatePenjualanSummary();
+
             const keyword =
                 this.value
                     .trim()
@@ -2403,14 +2552,23 @@ if (inputPenjualanBrand) {
                         div.className =
                             "saran-item";
 
-                        div.textContent =
-                            item.nama +
-                            (
-                                item.brand?.nama
-                                    ? " — " +
-                                      item.brand.nama
-                                    : ""
+                        const stokSaran =
+                            getPenjualanStock(
+                                item,
+                                inputPenjualanTanggal?.value
                             );
+
+                        div.innerHTML =
+                            "<strong>" +
+                            escapeHTML(item.nama) +
+                            "</strong><small>" +
+                            escapeHTML(
+                                item.brand?.nama ||
+                                "Tanpa brand"
+                            ) +
+                            " · Stok " +
+                            formatNumber(stokSaran) +
+                            "</small>";
 
                         div.onclick =
                             function() {
@@ -2426,6 +2584,9 @@ if (inputPenjualanBrand) {
 }
                                 saranBarang.innerHTML =
                                     "";
+
+                                updatePenjualanSummary();
+                                inputPenjualanQty?.focus();
                             };
 
                         saranBarang.appendChild(
@@ -2437,6 +2598,40 @@ if (inputPenjualanBrand) {
     );
 }
 
+
+[inputPenjualanQty, inputPenjualanHarga, inputPenjualanTanggal]
+    .filter(Boolean)
+    .forEach(
+        function(input) {
+            input.addEventListener(
+                "input",
+                updatePenjualanSummary
+            );
+            input.addEventListener(
+                "change",
+                updatePenjualanSummary
+            );
+        }
+    );
+
+[inputPenjualanBarang, inputPenjualanQty, inputPenjualanHarga]
+    .filter(Boolean)
+    .forEach(
+        function(input) {
+            input.addEventListener(
+                "keydown",
+                function(event) {
+                    if (
+                        event.key === "Enter" &&
+                        !simpanPenjualanButton?.disabled
+                    ) {
+                        event.preventDefault();
+                        simpanPenjualan();
+                    }
+                }
+            );
+        }
+    );
 
 /* =====================================================
    DROPDOWN BRAND CATAT PENJUALAN
@@ -2514,6 +2709,10 @@ if (
 ===================================================== */
 
 async function simpanPenjualan() {
+
+    if (penjualanSedangDisimpan) {
+        return;
+    }
 
     const barangId =
         inputPenjualanBarang.dataset.id;
@@ -2634,6 +2833,21 @@ async function simpanPenjualan() {
     }
 
 
+    const dikonfirmasi =
+        window.confirm(
+            "Catat penjualan ini?\n\n" +
+            "Barang: " + barang.nama + "\n" +
+            "Quantity: " + formatNumber(qty) + "\n" +
+            "Total: Rp" +
+            formatNumber(qty * harga)
+        );
+
+    if (!dikonfirmasi) {
+        return;
+    }
+
+    setPenjualanSaving(true);
+
     const {
         data: penjualanBaru,
         error: errorPenjualan
@@ -2667,6 +2881,9 @@ async function simpanPenjualan() {
             "ERROR PENJUALAN:",
             errorPenjualan
         );
+
+        setPenjualanSaving(false);
+        updatePenjualanSummary();
 
         return alert(
             "Gagal menyimpan penjualan:\n" +
@@ -2714,6 +2931,9 @@ async function simpanPenjualan() {
                 penjualanBaru.id
             );
 
+        setPenjualanSaving(false);
+        updatePenjualanSummary();
+
         return alert(
             "Penjualan gagal mengurangi stok.\n\n" +
             errorTransaksi.message
@@ -2748,6 +2968,9 @@ async function simpanPenjualan() {
         "saranBarang"
     ).innerHTML = "";
 
+
+    setPenjualanSaving(false);
+    updatePenjualanSummary();
 
     showToast(
         "✅ Penjualan berhasil dicatat dan stok berkurang " +
