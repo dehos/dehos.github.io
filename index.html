@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-38">
+    <link rel="stylesheet" href="style.css?v=20260901-39">
     <link
         rel="icon"
         type="image/png"
@@ -154,24 +154,48 @@
 
         <details class="modern-export-menu">
             <summary>
-                <span aria-hidden="true">⇩</span>
-                Export
-                <span class="modern-chevron" aria-hidden="true">⌄</span>
+                <span class="modern-export-leading-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3v12"/>
+                        <path d="m7 10 5 5 5-5"/>
+                        <path d="M5 21h14"/>
+                    </svg>
+                </span>
+                <span>Export</span>
+                <svg
+                    class="modern-chevron"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="m7 10 5 5 5-5"/>
+                </svg>
             </summary>
             <div class="modern-export-options">
                 <button
                     type="button"
                     onclick="this.closest('details').removeAttribute('open'); exportExcel()"
                 >
-                    <span class="export-accent excel-accent"></span>
-                    Export Excel
+                    <span class="export-accent export-file-icon excel-accent" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h9l3 3v15H6z"/>
+                            <path d="M15 3v4h4"/>
+                            <path d="m9 11 5 6M14 11l-5 6"/>
+                        </svg>
+                    </span>
+                    <span>Export Excel</span>
                 </button>
                 <button
                     type="button"
                     onclick="this.closest('details').removeAttribute('open'); exportPDF()"
                 >
-                    <span class="export-accent pdf-accent"></span>
-                    Export PDF
+                    <span class="export-accent export-file-icon pdf-accent" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h9l3 3v15H6z"/>
+                            <path d="M15 3v4h4"/>
+                            <path d="M9 12h6M9 16h5"/>
+                        </svg>
+                    </span>
+                    <span>Export PDF</span>
                 </button>
             </div>
         </details>
