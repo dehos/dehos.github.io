@@ -1567,12 +1567,10 @@ table {
 
 .target-brand-list {
     display: grid;
-    gap: 10px;
-    max-height: 470px;
-    padding: 2px 6px 2px 1px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #9ca3af #f3f4f6;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
+    row-gap: 14px;
+    padding: 2px 1px;
 }
 
 .target-brand-list::-webkit-scrollbar {
@@ -1722,6 +1720,13 @@ table {
 .target-no-target-total strong {
     color: #111827;
     font-size: 13px;
+}
+
+@media (max-width: 820px) {
+    .target-brand-list {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
 }
 
 @media (max-width: 600px) {
