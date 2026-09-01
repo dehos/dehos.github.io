@@ -3882,3 +3882,56 @@ footer small {
 .modern-export-options .pdf-accent {
     background: #d84a55;
 }
+
+
+/* Database status: SVG icons */
+#databaseStatus.status {
+    gap: 6px;
+}
+
+.database-status-icon {
+    flex: 0 0 auto;
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.database-status-icon-loading {
+    color: #64748b;
+    animation: databaseStatusSpin .85s linear infinite;
+}
+
+.database-status-icon-loading circle {
+    opacity: .28;
+}
+
+.database-status-icon-success {
+    color: #15915b;
+}
+
+.database-status-icon-error {
+    color: #d14452;
+}
+
+@keyframes databaseStatusSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .database-status-icon {
+        width: 13px;
+        height: 13px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .database-status-icon-loading {
+        animation: none;
+    }
+}
