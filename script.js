@@ -4843,7 +4843,6 @@ const metadataBarisExcel = [
     { type: "header" }
 ];
 
-let nomorBarangExport = 1;
 
 kelompokBarangExport.forEach(
     function(kelompok) {
@@ -4864,12 +4863,8 @@ kelompokBarangExport.forEach(
                     ) || 0;
 
                 const row = [
-                    nomorBarangExport +
-                    ". " +
                     barang.nama
                 ];
-
-                nomorBarangExport++;
 
                 for (
                     let hari = 1;
@@ -5498,7 +5493,6 @@ function exportPDF() {
             dataBarangPDF
         );
 
-    let nomorBarangPDF = 1;
 
     kelompokBarangPDF.forEach(
         function(kelompok) {
@@ -5522,12 +5516,8 @@ function exportPDF() {
                         ) || 0;
 
                     const row = [
-                        nomorBarangPDF +
-                        ". " +
                         barang.nama
                     ];
-
-                    nomorBarangPDF++;
 
                     for (
                         let hari = 1;
