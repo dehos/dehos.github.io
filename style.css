@@ -2917,3 +2917,135 @@ body {
             0 4px 14px rgba(15, 23, 42, .04);
     }
 }
+
+
+/* =====================================================
+   UI POLISH TAHAP 3 — FORM CONTROL & EMPTY STATE
+   Visual only: fungsi input dan proses data tetap sama
+===================================================== */
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #172033;
+    font-size: 12px;
+    line-height: 1.4;
+    transition:
+        border-color .16s ease,
+        box-shadow .16s ease,
+        background-color .16s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+select:hover {
+    border-color: #c5cfdb;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #6b8afd;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 99, 246, .11);
+}
+
+input:disabled,
+select:disabled {
+    cursor: not-allowed;
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+label {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.empty,
+.loading {
+    color: #7c899b;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.empty {
+    padding: 30px 18px;
+}
+
+.empty::before {
+    content: "—";
+    display: block;
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 7px;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    background: #f8fafc;
+    color: #94a3b8;
+    font-size: 15px;
+    line-height: 25px;
+}
+
+.loading {
+    padding: 28px 18px;
+}
+
+.loading::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    border: 2px solid #dbe3ec;
+    border-top-color: #64748b;
+    border-radius: 50%;
+    vertical-align: -3px;
+    animation: loadingSpin .7s linear infinite;
+}
+
+@keyframes loadingSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading::before {
+        animation: none;
+    }
+}
+
+@media (max-width: 600px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+        min-height: 38px;
+        padding: 8px 10px;
+        border-radius: 9px;
+        font-size: 11px;
+    }
+
+    .empty,
+    .loading {
+        font-size: 11px;
+    }
+}
