@@ -1587,11 +1587,7 @@ table {
     grid-template-rows: auto auto auto;
     justify-items: center;
     min-width: 0;
-    padding: 11px 10px 10px;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    background: #ffffff;
-    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.07);
+    padding: 4px 2px;
 }
 
 .target-card-header {
@@ -1727,8 +1723,7 @@ table {
     }
 
     .target-brand-card {
-        padding: 8px 5px 7px;
-        border-radius: 11px;
+        padding: 3px 1px;
     }
 
     .target-card-header {
