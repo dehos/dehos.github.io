@@ -1792,3 +1792,145 @@ table {
         padding: 6px 10px;
     }
 }
+
+
+/* =====================================================
+   FORM PENCATATAN PENJUALAN
+===================================================== */
+
+.sales-entry-grid {
+    display: grid;
+    grid-template-columns: minmax(260px, 2fr) minmax(150px, 1fr) minmax(155px, 1fr);
+    gap: 14px;
+    align-items: end;
+}
+
+.sales-field {
+    min-width: 0;
+}
+
+.sales-field label,
+.sales-total-card span {
+    display: block;
+    margin-bottom: 5px;
+    color: #4b5563;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.sales-product-field {
+    z-index: 20;
+}
+
+.sales-suggestions {
+    top: calc(100% + 4px);
+    z-index: 1050;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.sales-suggestions:empty {
+    display: none;
+}
+
+.sales-suggestions .saran-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.sales-suggestions .saran-item:hover {
+    background: #eff6ff;
+}
+
+.sales-suggestions .saran-item strong {
+    color: #111827;
+    font-size: 12px;
+}
+
+.sales-suggestions .saran-item small {
+    color: #6b7280;
+    font-size: 10px;
+}
+
+.sales-readonly {
+    background: #f3f4f6 !important;
+    color: #4b5563;
+}
+
+.sales-total-card {
+    min-height: 58px;
+    padding: 8px 12px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: #eff6ff;
+}
+
+.sales-total-card span {
+    margin-bottom: 1px;
+}
+
+.sales-total-card strong {
+    display: block;
+    color: #1d4ed8;
+    font-size: 17px;
+    line-height: 1.15;
+}
+
+.sales-total-card small {
+    color: #64748b;
+    font-size: 10px;
+}
+
+.sales-entry-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.sales-stock-info {
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.sales-stock-info.is-error {
+    color: #b91c1c;
+}
+
+#simpanPenjualanButton {
+    min-width: 150px;
+}
+
+#simpanPenjualanButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+    .sales-entry-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .sales-entry-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .sales-entry-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    #simpanPenjualanButton {
+        width: 100%;
+    }
+}
