@@ -4713,6 +4713,58 @@ function getStockAktualUntukExport(
    EXPORT EXCEL STOK
 ================================== */
 
+function kelompokkanBarangExport(items) {
+    const kelompok = new Map();
+
+    (items || []).forEach(
+        function(barang) {
+            const namaBrand =
+                String(
+                    barang.brand?.nama ||
+                    "Tanpa Brand"
+                ).trim() ||
+                "Tanpa Brand";
+
+            if (!kelompok.has(namaBrand)) {
+                kelompok.set(namaBrand, []);
+            }
+
+            kelompok.get(namaBrand).push(barang);
+        }
+    );
+
+    return Array.from(
+        kelompok.entries()
+    )
+        .sort(
+            function(a, b) {
+                return a[0].localeCompare(
+                    b[0],
+                    "id",
+                    { sensitivity: "base" }
+                );
+            }
+        )
+        .map(
+            function([brand, barang]) {
+                return {
+                    brand,
+                    barang: barang.sort(
+                        function(a, b) {
+                            return String(a.nama)
+                                .localeCompare(
+                                    String(b.nama),
+                                    "id",
+                                    { sensitivity: "base" }
+                                );
+                        }
+                    )
+                };
+            }
+        );
+}
+
+
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
@@ -4775,103 +4827,130 @@ const dataBarangExport =
         }
     );
 
-if (
-    dataBarangExport.length === 0
-) {
+if (dataBarangExport.length === 0) {
     alert(
         "Tidak ada barang dengan stok tersedia."
     );
     return;
 }
 
-    /* DATA BARANG */
+const kelompokBarangExport =
+    kelompokkanBarangExport(
+        dataBarangExport
+    );
 
-    dataBarangExport.forEach(
-    function(barang) {
-            let stok =
-                Number(barang.stok_awal) || 0;
+const metadataBarisExcel = [
+    { type: "header" }
+];
 
-            const row = [
-                barang.nama
-            ];
+let nomorBarangExport = 1;
 
-            for (
-                let hari = 1;
-                hari <= jumlahHari;
-                hari++
-            ) {
-                if (hari > hariIni) {
-                    row.push("");
-                    continue;
-                }
+kelompokBarangExport.forEach(
+    function(kelompok) {
+        dataExcel.push([
+            kelompok.brand
+        ]);
 
-                const tanggal =
-                    `${tahun}-${String(
-                        bulan + 1
-                    ).padStart(2, "0")}-${String(
-                        hari
-                    ).padStart(2, "0")}`;
+        metadataBarisExcel.push({
+            type: "brand",
+            brand: kelompok.brand
+        });
 
-                const transaksiHari =
-                    transactions.filter(
+        kelompok.barang.forEach(
+            function(barang) {
+                let stok =
+                    Number(
+                        barang.stok_awal
+                    ) || 0;
+
+                const row = [
+                    nomorBarangExport +
+                    ". " +
+                    barang.nama
+                ];
+
+                nomorBarangExport++;
+
+                for (
+                    let hari = 1;
+                    hari <= jumlahHari;
+                    hari++
+                ) {
+                    if (hari > hariIni) {
+                        row.push("");
+                        continue;
+                    }
+
+                    const tanggal =
+                        `${tahun}-${String(
+                            bulan + 1
+                        ).padStart(2, "0")}-${String(
+                            hari
+                        ).padStart(2, "0")}`;
+
+                    const transaksiHari =
+                        transactions.filter(
+                            function(transaction) {
+                                return (
+                                    Number(
+                                        transaction.barang_id
+                                    ) ===
+                                        Number(barang.id) &&
+                                    transaction.tanggal ===
+                                        tanggal
+                                );
+                            }
+                        );
+
+                    let perubahan = 0;
+                    let adaTransaksi = false;
+
+                    transaksiHari.forEach(
                         function(transaction) {
-                            return (
+                            const qty =
                                 Number(
-                                    transaction.barang_id
-                                ) ===
-                                    Number(barang.id) &&
-                                transaction.tanggal ===
-                                    tanggal
-                            );
+                                    transaction.qty
+                                ) || 0;
+
+                            if (
+                                transaction.type ===
+                                "masuk"
+                            ) {
+                                perubahan += qty;
+                                adaTransaksi = true;
+                            }
+
+                            if (
+                                transaction.type ===
+                                "laku"
+                            ) {
+                                perubahan -= qty;
+                                adaTransaksi = true;
+                            }
                         }
                     );
 
-                let perubahan = 0;
-                let adaTransaksi = false;
-
-                transaksiHari.forEach(
-                    function(transaction) {
-                        const qty =
-                            Number(
-                                transaction.qty
-                            ) || 0;
-
-                        if (
-                            transaction.type ===
-                            "masuk"
-                        ) {
-                            perubahan += qty;
-                            adaTransaksi = true;
-                        }
-
-                        if (
-                            transaction.type ===
-                            "laku"
-                        ) {
-                            perubahan -= qty;
-                            adaTransaksi = true;
-                        }
-                    }
-                );
-
-                if (adaTransaksi) {
-                    if (perubahan > 0) {
+                    if (adaTransaksi) {
                         row.push(
-                            `+${perubahan}`
+                            perubahan > 0
+                                ? `+${perubahan}`
+                                : perubahan
                         );
+                        stok += perubahan;
                     } else {
-                        row.push(perubahan);
+                        row.push(stok);
                     }
-
-                    stok += perubahan;
-                } else {
-                    row.push(stok);
                 }
-            }
 
-            dataExcel.push(row);
-        }
-    );
+                dataExcel.push(row);
+                metadataBarisExcel.push({
+                    type: "barang",
+                    barang
+                });
+            }
+        );
+    }
+);
 
 
     /* BUAT WORKBOOK EXCEL */
@@ -4888,6 +4967,20 @@ if (
         workbook,
         worksheet,
         "Rekap Stok"
+    );
+
+    worksheet["!merges"] =
+        worksheet["!merges"] || [];
+
+    metadataBarisExcel.forEach(
+        function(metadata, rowIndex) {
+            if (metadata.type === "brand") {
+                worksheet["!merges"].push({
+                    s: { r: rowIndex, c: 0 },
+                    e: { r: rowIndex, c: jumlahHari }
+                });
+            }
+        }
     );
 /* PRINT TITLE: ULANGI BARIS 1 */
 
@@ -5014,13 +5107,61 @@ for (
         }
     };
 }
-    /* STYLE DATA */
+    /* STYLE DATA DAN HEADER BRAND */
 
     for (
         let r = 1;
         r < dataExcel.length;
         r++
     ) {
+        const metadata =
+            metadataBarisExcel[r];
+
+        if (
+            metadata?.type ===
+            "brand"
+        ) {
+            const brandCell =
+                worksheet[
+                    XLSX.utils.encode_cell({
+                        r,
+                        c: 0
+                    })
+                ];
+
+            if (brandCell) {
+                brandCell.s = {
+                    font: {
+                        name: "Aptos",
+                        sz: 9,
+                        bold: true,
+                        color: {
+                            rgb: "FFFFFF"
+                        }
+                    },
+                    fill: {
+                        patternType: "solid",
+                        fgColor: {
+                            rgb: "374151"
+                        }
+                    },
+                    alignment: {
+                        horizontal: "left",
+                        vertical: "center"
+                    }
+                };
+            }
+
+            continue;
+        }
+
+        const barang =
+            metadata?.barang;
+
+        if (!barang) {
+            continue;
+        }
+
         for (
             let c = 1;
             c <= jumlahHari;
@@ -5028,8 +5169,8 @@ for (
         ) {
             const cellAddress =
                 XLSX.utils.encode_cell({
-                    r: r,
-                    c: c
+                    r,
+                    c
                 });
 
             const cell =
@@ -5046,20 +5187,15 @@ for (
                 }
             };
 
-            const barang =
-    dataBarangExport[r - 1];
-
-            const hari = c;
-
             const tanggal =
                 `${tahun}-${String(
                     bulan + 1
                 ).padStart(2, "0")}-${String(
-                    hari
+                    c
                 ).padStart(2, "0")}`;
 
-            const transaksiHari =
-                transactions.filter(
+            const adaTransaksi =
+                transactions.some(
                     function(transaction) {
                         return (
                             Number(
@@ -5072,27 +5208,7 @@ for (
                     }
                 );
 
-            const adaLaku =
-                transaksiHari.some(
-                    function(transaction) {
-                        return (
-                            transaction.type ===
-                            "laku"
-                        );
-                    }
-                );
-
-            const adaMasuk =
-                transaksiHari.some(
-                    function(transaction) {
-                        return (
-                            transaction.type ===
-                            "masuk"
-                        );
-                    }
-                );
-
-            if (adaLaku || adaMasuk) {
+            if (adaTransaksi) {
                 cell.s = {
                     font: {
                         bold: true,
@@ -5100,14 +5216,12 @@ for (
                             rgb: "FFFFFF"
                         }
                     },
-
                     fill: {
                         patternType: "solid",
                         fgColor: {
                             rgb: "000000"
                         }
                     },
-
                     alignment: {
                         horizontal: "center",
                         vertical: "center"
@@ -5359,122 +5473,140 @@ function exportPDF() {
     /* DATA PDF */
 
     const dataPDF = [];
+    const metadataBarisPDF = [];
 
-const dataBarangPDF =
-    dataBarang.filter(
-        function(barang) {
-            return (
-                getStockAktualUntukExport(
-                    barang
-                ) !== 0
-            );
-        }
-    );
-
-if (
-    dataBarangPDF.length === 0
-) {
-    alert(
-        "Tidak ada barang dengan stok tersedia."
-    );
-    return;
-}
-
-dataBarangPDF.forEach(
-    function(barang) {
-        let stok =
-            Number(
-                barang.stok_awal
-            ) || 0;
-
-        const row = [
-            barang.nama
-        ];
-            for (
-                let hari = 1;
-                hari <= jumlahHari;
-                hari++
-            ) {
-                if (hari > hariIni) {
-                    row.push("");
-                    continue;
-                }
-
-                const tanggal =
-                    `${tahun}-${String(
-                        bulan + 1
-                    ).padStart(
-                        2,
-                        "0"
-                    )}-${String(
-                        hari
-                    ).padStart(
-                        2,
-                        "0"
-                    )}`;
-
-                const transaksiHari =
-                    transactions.filter(
-                        function(transaction) {
-                            return (
-                                Number(
-                                    transaction.barang_id
-                                ) ===
-                                    Number(
-                                        barang.id
-                                    ) &&
-                                transaction.tanggal ===
-                                    tanggal
-                            );
-                        }
-                    );
-
-                let perubahan = 0;
-                let adaTransaksi = false;
-
-                transaksiHari.forEach(
-                    function(transaction) {
-                        const qty =
-                            Number(
-                                transaction.qty
-                            ) || 0;
-
-                        if (
-                            transaction.type ===
-                            "masuk"
-                        ) {
-                            perubahan += qty;
-                            adaTransaksi = true;
-                        }
-
-                        if (
-                            transaction.type ===
-                            "laku"
-                        ) {
-                            perubahan -= qty;
-                            adaTransaksi = true;
-                        }
-                    }
+    const dataBarangPDF =
+        dataBarang.filter(
+            function(barang) {
+                return (
+                    getStockAktualUntukExport(
+                        barang
+                    ) !== 0
                 );
+            }
+        );
 
-                if (adaTransaksi) {
-                    if (perubahan > 0) {
-                        row.push(
-                            `+${perubahan}`
+    if (dataBarangPDF.length === 0) {
+        alert(
+            "Tidak ada barang dengan stok tersedia."
+        );
+        return;
+    }
+
+    const kelompokBarangPDF =
+        kelompokkanBarangExport(
+            dataBarangPDF
+        );
+
+    let nomorBarangPDF = 1;
+
+    kelompokBarangPDF.forEach(
+        function(kelompok) {
+            dataPDF.push([
+                {
+                    content: kelompok.brand,
+                    colSpan: jumlahHari + 1
+                }
+            ]);
+
+            metadataBarisPDF.push({
+                type: "brand",
+                brand: kelompok.brand
+            });
+
+            kelompok.barang.forEach(
+                function(barang) {
+                    let stok =
+                        Number(
+                            barang.stok_awal
+                        ) || 0;
+
+                    const row = [
+                        nomorBarangPDF +
+                        ". " +
+                        barang.nama
+                    ];
+
+                    nomorBarangPDF++;
+
+                    for (
+                        let hari = 1;
+                        hari <= jumlahHari;
+                        hari++
+                    ) {
+                        if (hari > hariIni) {
+                            row.push("");
+                            continue;
+                        }
+
+                        const tanggal =
+                            `${tahun}-${String(
+                                bulan + 1
+                            ).padStart(2, "0")}-${String(
+                                hari
+                            ).padStart(2, "0")}`;
+
+                        const transaksiHari =
+                            transactions.filter(
+                                function(transaction) {
+                                    return (
+                                        Number(
+                                            transaction.barang_id
+                                        ) ===
+                                            Number(barang.id) &&
+                                        transaction.tanggal ===
+                                            tanggal
+                                    );
+                                }
+                            );
+
+                        let perubahan = 0;
+                        let adaTransaksi = false;
+
+                        transaksiHari.forEach(
+                            function(transaction) {
+                                const qty =
+                                    Number(
+                                        transaction.qty
+                                    ) || 0;
+
+                                if (
+                                    transaction.type ===
+                                    "masuk"
+                                ) {
+                                    perubahan += qty;
+                                    adaTransaksi = true;
+                                }
+
+                                if (
+                                    transaction.type ===
+                                    "laku"
+                                ) {
+                                    perubahan -= qty;
+                                    adaTransaksi = true;
+                                }
+                            }
                         );
-                    } else {
-                        row.push(
-                            perubahan
-                        );
+
+                        if (adaTransaksi) {
+                            row.push(
+                                perubahan > 0
+                                    ? `+${perubahan}`
+                                    : perubahan
+                            );
+                            stok += perubahan;
+                        } else {
+                            row.push(stok);
+                        }
                     }
 
-                    stok += perubahan;
-                } else {
-                    row.push(stok);
+                    dataPDF.push(row);
+                    metadataBarisPDF.push({
+                        type: "barang",
+                        barang
+                    });
                 }
-            }
-
-            dataPDF.push(row);
+            );
         }
     );
 
@@ -5675,36 +5807,60 @@ dataBarangPDF.forEach(
             function(data) {
                 if (
                     data.section !==
-                        "body" ||
+                    "body"
+                ) {
+                    return;
+                }
+
+                const metadata =
+                    metadataBarisPDF[
+                        data.row.index
+                    ];
+
+                if (
+                    metadata?.type ===
+                    "brand"
+                ) {
+                    data.cell.styles.fillColor =
+                        [55, 65, 81];
+
+                    data.cell.styles.textColor =
+                        [255, 255, 255];
+
+                    data.cell.styles.fontStyle =
+                        "bold";
+
+                    data.cell.styles.fontSize =
+                        9;
+
+                    data.cell.styles.halign =
+                        "left";
+
+                    data.cell.styles.cellPadding =
+                        1.2;
+
+                    return;
+                }
+
+                if (
                     data.column.index === 0
                 ) {
                     return;
                 }
 
                 const barang =
-                dataBarangPDF[
-                    data.row.index
-                ];
+                    metadata?.barang;
 
                 if (!barang) {
                     return;
                 }
 
-                const hari =
-                    data.column.index;
-
                 const tanggal =
                     `${tahun}-${String(
                         bulan + 1
-                    ).padStart(
-                        2,
-                        "0"
-                    )}-${String(
-                        hari
-                    ).padStart(
-                        2,
-                        "0"
-                    )}`;
+                    ).padStart(2, "0")}-${String(
+                        data.column.index
+                    ).padStart(2, "0")}`;
 
                 const adaTransaksi =
                     transactions.some(
@@ -5713,9 +5869,7 @@ dataBarangPDF.forEach(
                                 Number(
                                     transaction.barang_id
                                 ) ===
-                                    Number(
-                                        barang.id
-                                    ) &&
+                                    Number(barang.id) &&
                                 transaction.tanggal ===
                                     tanggal
                             );
