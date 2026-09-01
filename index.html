@@ -22,7 +22,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260901-17">
+    <link rel="stylesheet" href="style.css?v=20260901-18">
     <link
         rel="icon"
         type="image/png"
@@ -132,32 +132,48 @@
 =====================================================-->
 <section class="card">
 <!-- HTML — index.html -->
-<div class="history-header">
-    <h3>📁 Stok Barang</h3>
+<div class="history-header modern-section-header stock-section-header">
+    <div class="modern-title-group">
+        <span class="modern-title-icon" aria-hidden="true">▦</span>
+        <div>
+            <h3>Stok Barang</h3>
+            <small>Kelola persediaan dan pergerakan stok</small>
+        </div>
+    </div>
 
-    <div class="d-flex gap-1">
+    <div class="modern-header-actions">
         <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="modern-primary-button"
             onclick="openTambahBarang()"
         >
-            ➕ Barang Baru
+            <span aria-hidden="true">＋</span>
+            Tambah Barang
         </button>
 
-        <button
-            type="button"
-            class="btn btn-success btn-sm"
-            onclick="exportExcel()"
-        >
-            📊 Export Excel
-        </button>
-        <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            onclick="exportPDF()"
-        >
-            📄 Export PDF
-        </button>
+        <details class="modern-export-menu">
+            <summary>
+                <span aria-hidden="true">⇩</span>
+                Export
+                <span class="modern-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="modern-export-options">
+                <button
+                    type="button"
+                    onclick="this.closest('details').removeAttribute('open'); exportExcel()"
+                >
+                    <span class="export-accent excel-accent"></span>
+                    Export Excel
+                </button>
+                <button
+                    type="button"
+                    onclick="this.closest('details').removeAttribute('open'); exportPDF()"
+                >
+                    <span class="export-accent pdf-accent"></span>
+                    Export PDF
+                </button>
+            </div>
+        </details>
     </div>
 </div>
     
@@ -253,14 +269,18 @@
 </section>
 <!-- CATATAN PENJUALAN -->
 <section class="card">
-    <div class="history-header penjualan-history-header">
-        <h3>
-            🧾 Catatan Penjualan
-        </h3>
+    <div class="history-header penjualan-history-header modern-sales-header">
+        <div class="modern-title-group">
+            <span class="modern-title-icon" aria-hidden="true">▤</span>
+            <div>
+                <h3>Catatan Penjualan</h3>
+                <small>Riwayat transaksi bulan berjalan</small>
+            </div>
+        </div>
 
-        <div class="penjualan-header-tools">
+        <div class="penjualan-header-tools modern-sales-tools">
             <div
-                class="history-month-nav"
+                class="history-month-nav modern-month-nav"
                 aria-label="Navigasi bulan catatan penjualan"
             >
                 <button
@@ -288,15 +308,16 @@
 
             <button
                 type="button"
-                class="btn btn-success btn-sm"
+                class="modern-secondary-button"
                 onclick="exportPenjualanExcel()"
             >
-                📊 Export
+                <span aria-hidden="true">⇩</span>
+                Export
             </button>
         </div>
     </div>
 
-    <div class="cari penjualan-filter-row">
+    <div class="penjualan-filter-row modern-sales-filter">
         <input
             type="hidden"
             id="filterBulan"
@@ -314,9 +335,9 @@
             </select>
         </div>
     </div>
-<div class="table-wrapper penjualan-wrapper">
+<div class="table-wrapper penjualan-wrapper modern-sales-table-wrapper">
 
-    <table class="table table-sm table-bordered align-middle mb-0">
+    <table class="table table-sm align-middle mb-0 modern-sales-table">
             <thead class="table-light">
 <tr>
 <th class="text-center">Tanggal</th>
@@ -790,6 +811,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260901-13"></script>
+<script src="script.js?v=20260901-14"></script>
 </body>
 </html>
