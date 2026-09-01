@@ -2319,3 +2319,98 @@ table {
         width: 100%;
     }
 }
+
+
+/* =====================================================
+   TABEL STOK DAN RIWAYAT MODERN
+===================================================== */
+
+.modern-data-table-wrapper {
+    overflow: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.modern-data-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.modern-data-table thead th {
+    padding: 9px 8px;
+    border: 0;
+    border-bottom: 1px solid #d1d5db;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    vertical-align: middle;
+}
+
+.modern-data-table tbody td {
+    padding: 9px 8px;
+    border: 0;
+    border-bottom: 1px solid #eef2f7;
+    color: #334155;
+    font-size: 10.5px;
+    vertical-align: middle;
+}
+
+.modern-data-table tbody tr {
+    transition: background-color 140ms ease;
+}
+
+.modern-data-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.modern-data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.modern-data-table .loading,
+.modern-data-table .empty {
+    padding: 24px 12px;
+    color: #64748b;
+    text-align: center;
+}
+
+.modern-stock-table {
+    min-width: 620px;
+}
+
+.modern-history-table {
+    min-width: 650px;
+}
+
+.modern-stock-table thead th:first-child,
+.modern-history-table thead th:first-child {
+    border-top-left-radius: 9px;
+}
+
+.modern-stock-table thead th:last-child,
+.modern-history-table thead th:last-child {
+    border-top-right-radius: 9px;
+}
+
+.modern-stock-table #namaHeader:hover,
+.modern-stock-table #stokHeader:hover {
+    background: #eef2f7;
+    color: #1d4ed8;
+}
+
+@media (max-width: 700px) {
+    .modern-data-table thead th {
+        padding: 8px 7px;
+        font-size: 9px;
+    }
+
+    .modern-data-table tbody td {
+        padding: 8px 7px;
+        font-size: 9.5px;
+    }
+}
