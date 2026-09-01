@@ -3416,10 +3416,20 @@ footer small {
     display: inline-flex;
     min-width: max-content;
     gap: 34px;
+    animation: salesNameScroll 11s linear infinite;
 }
 
 .sales-name-track > span {
     flex: 0 0 auto;
+}
+
+#penjualanTable th:nth-child(2),
+#penjualanTable td:nth-child(2) {
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 @media (max-width: 768px) {
@@ -3476,10 +3486,6 @@ footer small {
         max-width: 150px;
         overflow: hidden;
         text-overflow: clip;
-    }
-
-    .sales-name-track {
-        animation: salesNameScroll 11s linear infinite;
     }
 
     .sales-name-marquee:hover .sales-name-track,
