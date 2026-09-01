@@ -3025,17 +3025,16 @@ const TARGET_PENJUALAN_BRAND =
     ]);
 
 const TARGET_BRAND_COLORS =
-    Object.freeze([
-        ["#0f766e", "#2dd4bf"],
-        ["#0891b2", "#22d3ee"],
-        ["#4338ca", "#8b5cf6"],
-        ["#be185d", "#ec4899"],
-        ["#ea580c", "#fb923c"],
-        ["#2563eb", "#60a5fa"],
-        ["#7c3aed", "#c084fc"],
-        ["#0f766e", "#34d399"],
-        ["#b45309", "#fbbf24"]
-    ]);
+    Object.freeze({
+        Belleza: "#86cfa5",
+        Solid: "#b58a16",
+        Dekkson: "#7cb8d8",
+        Violet: "#a78bca",
+        "Vapely/Wepe": "#8b5e3c",
+        Tsunami: "#ef8354",
+        Trisensa: "#176b45",
+        Rona: "#9ca3af"
+    });
 
 function getCanonicalTargetBrand(
     brandName
@@ -3263,147 +3262,117 @@ function renderTargetPenjualan(
 
     targetedBrands.forEach(
         function(item, index) {
-
             const percentageRounded =
-                Math.round(
-                    item.percentage
-                );
+                Math.round(item.percentage);
 
-            const progressWidth =
+            const progressValue =
                 Math.min(
-                    Math.max(
-                        item.percentage,
-                        0
-                    ),
+                    Math.max(item.percentage, 0),
                     100
                 );
 
-            const colors =
-                TARGET_BRAND_COLORS[
-                    index %
-                    TARGET_BRAND_COLORS.length
-                ];
+            const brandColor =
+                TARGET_BRAND_COLORS[item.nama] ||
+                "#64748b";
 
-            const row =
-                document.createElement(
-                    "div"
-                );
+            const card =
+                document.createElement("article");
 
-            row.className =
-                "target-brand-row";
+            card.className =
+                "target-brand-card";
 
-            row.style.setProperty(
-                "--target-start",
-                colors[0]
+            card.style.setProperty(
+                "--brand-color",
+                brandColor
             );
 
-            row.style.setProperty(
-                "--target-end",
-                colors[1]
+            card.style.setProperty(
+                "--progress",
+                progressValue
             );
 
-            row.innerHTML =
+            card.innerHTML =
                 `
-                <div class="target-brand-rank">
-                    ${String(index + 1).padStart(2, "0")}
+                <div class="target-card-header">
+                    <span class="target-card-rank">
+                        ${String(index + 1).padStart(2, "0")}
+                    </span>
+                    <strong>${escapeHTML(item.nama)}</strong>
                 </div>
 
-                <div class="target-brand-content">
-                    <div class="target-brand-info">
+                <div
+                    class="target-donut"
+                    role="progressbar"
+                    aria-label="Pencapaian ${escapeHTML(item.nama)}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="${Math.round(progressValue)}"
+                >
+                    <div class="target-donut-center">
                         <strong>
-                            ${escapeHTML(item.nama)}
-                        </strong>
-
-                        <span>
-                            Rp${formatNumber(item.actual)}
-                            /
-                            Rp${formatNumber(item.target)}
-                        </span>
-                    </div>
-
-                    <div class="target-progress-panel">
-                        <span class="target-percent">
                             ${formatNumber(percentageRounded)}%
-                        </span>
-
-                        <div
-                            class="target-progress-track"
-                            role="progressbar"
-                            aria-label="Pencapaian ${escapeHTML(item.nama)}"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                            aria-valuenow="${Math.round(progressWidth)}"
-                        >
-                            <span
-                                class="target-progress-fill"
-                                style="width: ${progressWidth}%"
-                            ></span>
-                        </div>
+                        </strong>
                     </div>
+                </div>
+
+                <div class="target-card-values">
+                    <strong>
+                        Rp${formatNumber(item.actual)}
+                    </strong>
+                    <span>
+                        dari Rp${formatNumber(item.target)}
+                    </span>
                 </div>
                 `;
 
-            list.appendChild(
-                row
-            );
+            list.appendChild(card);
         }
     );
 
     const pjsTarget =
         TARGET_PENJUALAN_BRAND.find(
             function(item) {
-                return (
-                    item.nama ===
-                    "PJS Handle"
-                );
+                return item.nama ===
+                    "PJS Handle";
             }
         );
 
     if (pjsTarget) {
+        const pjsCard =
+            document.createElement("article");
 
-        const pjsRow =
-            document.createElement(
-                "div"
-            );
+        pjsCard.className =
+            "target-brand-card target-brand-rainbow";
 
-        pjsRow.className =
-            "target-brand-row target-brand-no-target";
-
-        pjsRow.innerHTML =
+        pjsCard.innerHTML =
             `
-            <div class="target-brand-rank">
-                —
+            <div class="target-card-header">
+                <span class="target-card-rank">—</span>
+                <strong>PJS Handle</strong>
             </div>
 
-            <div class="target-brand-content">
-                <div class="target-brand-info">
-                    <strong>
-                        PJS Handle
-                    </strong>
-
-                    <span>
-                        Tanpa target
-                    </span>
+            <div
+                class="target-donut target-donut-rainbow"
+                aria-label="PJS Handle tanpa target"
+            >
+                <div class="target-donut-center">
+                    <small>TOTAL</small>
                 </div>
+            </div>
 
-                <div class="target-no-target-total">
-                    <small>
-                        Total Penjualan
-                    </small>
-
-                    <strong>
-                        Rp${formatNumber(
-                            totals["PJS Handle"] || 0
-                        )}
-                    </strong>
-                </div>
+            <div class="target-card-values">
+                <strong>
+                    Rp${formatNumber(
+                        totals["PJS Handle"] || 0
+                    )}
+                </strong>
+                <span>Tanpa target</span>
             </div>
             `;
 
-        list.appendChild(
-            pjsRow
-        );
+        list.appendChild(pjsCard);
     }
+
 }
 
 
