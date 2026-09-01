@@ -4839,6 +4839,40 @@ function formatNamaBarangExport(namaBarang) {
 }
 
 
+function getStokTanggalSatuExport(barang, tahun, bulan) {
+    let stok = Number(barang?.stok_awal) || 0;
+
+    const tanggalSatu =
+        `${tahun}-${String(
+            bulan + 1
+        ).padStart(2, "0")}-01`;
+
+    transactions.forEach(
+        function(transaction) {
+            if (
+                Number(transaction.barang_id) !==
+                    Number(barang?.id) ||
+                transaction.tanggal !== tanggalSatu
+            ) {
+                return;
+            }
+
+            const qty = Number(transaction.qty) || 0;
+
+            if (transaction.type === "masuk") {
+                stok += qty;
+            }
+
+            if (transaction.type === "laku") {
+                stok -= qty;
+            }
+        }
+    );
+
+    return stok;
+}
+
+
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
         alert("Library Excel belum dimuat.");
@@ -4903,8 +4937,10 @@ const dataBarangExport =
     dataBarang.filter(
         function(barang) {
             return (
-                getStockAktualUntukExport(
-                    barang
+                getStokTanggalSatuExport(
+                    barang,
+                    tahun,
+                    bulan
                 ) !== 0
             );
         }
@@ -4912,7 +4948,7 @@ const dataBarangExport =
 
 if (dataBarangExport.length === 0) {
     alert(
-        "Tidak ada barang dengan stok tersedia."
+        "Tidak ada barang dengan stok pada tanggal 1."
     );
     return;
 }
@@ -5035,31 +5071,17 @@ kelompokBarangExport.forEach(
 );
 
 
-    const totalExcel = ["TOTAL"];
+    const jumlahBarangExcel = [
+        "JUMLAH BARANG",
+        dataBarangExport.length
+    ];
 
-    for (let kolom = 1; kolom <= jumlahHari; kolom++) {
-        if (kolom > hariIni) {
-            totalExcel.push("");
-            continue;
-        }
-
-        const totalKolom = dataExcel.reduce(
-            function(total, row, rowIndex) {
-                if (metadataBarisExcel[rowIndex]?.type !== "barang") {
-                    return total;
-                }
-
-                const nilai = Number(row[kolom]);
-                return total + (Number.isFinite(nilai) ? nilai : 0);
-            },
-            0
-        );
-
-        totalExcel.push(totalKolom);
+    while (jumlahBarangExcel.length <= jumlahHari) {
+        jumlahBarangExcel.push("");
     }
 
-    dataExcel.push(totalExcel);
-    metadataBarisExcel.push({ type: "total" });
+    dataExcel.push(jumlahBarangExcel);
+    metadataBarisExcel.push({ type: "jumlah" });
 
 
     /* BUAT WORKBOOK EXCEL */
@@ -5251,7 +5273,7 @@ for (
             continue;
         }
 
-        if (metadata?.type === "total") {
+        if (metadata?.type === "jumlah") {
             for (let c = 0; c <= jumlahHari; c++) {
                 const totalCell = worksheet[
                     XLSX.utils.encode_cell({ r, c })
@@ -5615,16 +5637,18 @@ async function exportPDF() {
         dataBarang.filter(
             function(barang) {
                 return (
-                    getStockAktualUntukExport(
-                        barang
-                    ) !== 0
+                    getStokTanggalSatuExport(
+                    barang,
+                    tahun,
+                    bulan
+                ) !== 0
                 );
             }
         );
 
     if (dataBarangPDF.length === 0) {
         alert(
-            "Tidak ada barang dengan stok tersedia."
+            "Tidak ada barang dengan stok pada tanggal 1."
         );
         return;
     }
@@ -5749,31 +5773,17 @@ async function exportPDF() {
     );
 
 
-    const totalPDF = ["TOTAL"];
+    const jumlahBarangPDF = [
+        "JUMLAH BARANG",
+        dataBarangPDF.length
+    ];
 
-    for (let kolom = 1; kolom <= jumlahHari; kolom++) {
-        if (kolom > hariIni) {
-            totalPDF.push("");
-            continue;
-        }
-
-        const totalKolom = dataPDF.reduce(
-            function(total, row, rowIndex) {
-                if (metadataBarisPDF[rowIndex]?.type !== "barang") {
-                    return total;
-                }
-
-                const nilai = Number(row[kolom]);
-                return total + (Number.isFinite(nilai) ? nilai : 0);
-            },
-            0
-        );
-
-        totalPDF.push(totalKolom);
+    while (jumlahBarangPDF.length <= jumlahHari) {
+        jumlahBarangPDF.push("");
     }
 
-    dataPDF.push(totalPDF);
-    metadataBarisPDF.push({ type: "total" });
+    dataPDF.push(jumlahBarangPDF);
+    metadataBarisPDF.push({ type: "jumlah" });
 
 
     /* UKURAN HALAMAN DAN KOLOM */
@@ -5995,7 +6005,7 @@ async function exportPDF() {
                     return;
                 }
 
-                if (metadata?.type === "total") {
+                if (metadata?.type === "jumlah") {
                     data.cell.styles.fillColor = [229, 231, 235];
                     data.cell.styles.textColor = [0, 0, 0];
                     data.cell.styles.fontStyle = "bold";
