@@ -3577,3 +3577,151 @@ footer small {
         max-width: 230px;
     }
 }
+
+
+/* =====================================================
+   EXPORT BUTTONS — MODERN ACTION STYLE
+===================================================== */
+
+.modern-export-menu > summary,
+.modern-secondary-button {
+    min-height: 38px;
+    gap: 7px;
+    padding: 8px 13px;
+    border: 1px solid #27364d;
+    border-radius: 10px;
+    background:
+        linear-gradient(135deg, #27364d 0%, #172033 100%);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 650;
+    box-shadow:
+        0 5px 12px rgba(15, 23, 42, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.modern-export-menu > summary:hover,
+.modern-secondary-button:hover {
+    border-color: #1e2b3e;
+    background:
+        linear-gradient(135deg, #31415a 0%, #1b2638 100%);
+    color: #ffffff;
+    box-shadow:
+        0 7px 16px rgba(15, 23, 42, .2),
+        inset 0 1px 0 rgba(255, 255, 255, .1);
+    transform: translateY(-1px);
+}
+
+.modern-export-menu > summary:active,
+.modern-secondary-button:active {
+    box-shadow: 0 3px 8px rgba(15, 23, 42, .15);
+    transform: translateY(0);
+}
+
+.modern-export-menu > summary:focus-visible,
+.modern-secondary-button:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, .42);
+    outline-offset: 2px;
+}
+
+.modern-export-menu > summary > span:first-child,
+.modern-secondary-button > span:first-child {
+    display: inline-grid;
+    place-items: center;
+    width: 21px;
+    height: 21px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .12);
+    color: #dbeafe;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.modern-chevron {
+    margin-left: 3px;
+    color: #cbd5e1;
+    font-size: 12px;
+    transition: transform .16s ease;
+}
+
+.modern-export-menu[open] .modern-chevron {
+    transform: rotate(180deg);
+}
+
+.modern-export-options {
+    top: calc(100% + 8px);
+    min-width: 184px;
+    padding: 7px;
+    border-color: #dfe5ed;
+    border-radius: 12px;
+    box-shadow:
+        0 18px 40px rgba(15, 23, 42, .16),
+        0 3px 10px rgba(15, 23, 42, .05);
+    animation: exportMenuEnter .15s ease-out;
+}
+
+@keyframes exportMenuEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-5px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modern-export-options button {
+    min-height: 38px;
+    padding: 9px 10px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: #334155;
+    transition:
+        color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease;
+}
+
+.modern-export-options button:hover {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.modern-export-options button:focus-visible {
+    outline: 2px solid rgba(49, 91, 214, .32);
+    outline-offset: -1px;
+}
+
+.export-accent {
+    width: 10px;
+    height: 10px;
+    border: 2px solid rgba(255, 255, 255, .9);
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, .1);
+}
+
+@media (max-width: 700px) {
+    .modern-export-menu > summary,
+    .modern-secondary-button {
+        min-height: 36px;
+        padding: 7px 10px;
+        border-radius: 9px;
+        font-size: 10px;
+    }
+
+    .modern-export-options {
+        width: min(210px, calc(100vw - 28px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modern-export-options {
+        animation: none;
+    }
+
+    .modern-chevron {
+        transition: none;
+    }
+}
