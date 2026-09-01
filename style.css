@@ -1062,83 +1062,6 @@ footer small {
 #tambahBarangModal .modal-actions {
     margin-top: 15px;
 }
-/* =====================================================
-   PAGINATION TABEL STOK
-===================================================== */
-
-.stock-pagination-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.stock-pagination-info {
-    font-size: 11px;
-    color: #6b7280;
-}
-
-.stock-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 4px;
-}
-
-.stock-pagination button {
-    min-width: 30px;
-    height: 30px;
-    padding: 0 7px;
-
-    border: 1px solid #d1d5db;
-    border-radius: 5px;
-
-    background: #ffffff;
-    color: #374151;
-
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.stock-pagination button:hover:not(:disabled) {
-    background: #e5e7eb;
-}
-
-.stock-pagination button.active {
-    background: #0d6efd;
-    border-color: #0d6efd;
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.stock-pagination button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.pagination-dots {
-    padding: 0 3px;
-    color: #6b7280;
-}
-
-@media (max-width: 600px) {
-
-    .stock-pagination-area {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .stock-pagination {
-        justify-content: center;
-    }
-
-    .stock-pagination button {
-        min-width: 29px;
-        height: 29px;
-        padding: 0 6px;
-    }
-}
 #saranBarang:empty {
     display: none;
 }
@@ -1793,29 +1716,6 @@ table {
     color: #4b5563;
 }
 
-.sales-total-card {
-    min-height: 58px;
-    padding: 8px 12px;
-    border: 1px solid #bfdbfe;
-    border-radius: 8px;
-    background: #eff6ff;
-}
-
-.sales-total-card span {
-    margin-bottom: 1px;
-}
-
-.sales-total-card strong {
-    display: block;
-    color: #1d4ed8;
-    font-size: 17px;
-    line-height: 1.15;
-}
-
-.sales-total-card small {
-    color: #64748b;
-    font-size: 10px;
-}
 
 .sales-entry-footer {
     display: flex;
@@ -1827,24 +1727,7 @@ table {
     border-top: 1px solid #e5e7eb;
 }
 
-.sales-stock-info {
-    color: #15803d;
-    font-size: 11px;
-    font-weight: 700;
-}
 
-.sales-stock-info.is-error {
-    color: #b91c1c;
-}
-
-#simpanPenjualanButton {
-    min-width: 150px;
-}
-
-#simpanPenjualanButton:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
 
 @media (max-width: 900px) {
     .sales-entry-grid {
