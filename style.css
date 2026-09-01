@@ -316,20 +316,6 @@ select {
 
 
 /* =====================================================
-   TOMBOL AKSI STOK
-   BOOTSTRAP
-===================================================== */
-
-#stockTable .action-btn {
-    margin: 1px;
-
-    white-space: nowrap;
-
-    font-size: 11px;
-}
-
-
-/* =====================================================
    RIWAYAT TRANSAKSI
 ===================================================== */
 
@@ -392,13 +378,6 @@ select {
 .history-table th:nth-child(5),
 .history-table td:nth-child(5) {
     text-align: center;
-}
-/* =====================================================
-   WARNA TRANSAKSI
-===================================================== */
-
-.history-masuk {
-    color: #198754;
 }
 
 .history-laku {
@@ -563,30 +542,12 @@ select {
     overflow-y: auto;
 }
 
-.modal-title {
-    font-size: 20px;
-
-    font-weight: bold;
-
-    margin-bottom: 8px;
-}
-
-.modal-product {
-    color: #6b7280;
-
-    margin-bottom: 18px;
-}
-
 .modal-actions {
     display: flex;
 
     gap: 10px;
 
     margin-top: 15px;
-}
-
-.modal-actions button {
-    flex: 1;
 }
 
 
@@ -701,29 +662,6 @@ footer small {
 
 @media (max-width: 600px) {
 
-    .container {
-        padding: 10px;
-    }
-
-    .card {
-        padding: 15px;
-    }
-
-
-    /* HEADER */
-
-    .header {
-        padding: 17px;
-    }
-
-    .header h1 {
-        font-size: 21px;
-    }
-
-    .header p {
-        font-size: 22px;
-    }
-
 
     /* FILTER */
 
@@ -743,15 +681,6 @@ footer small {
 
     #stockListContent table,
     .history-table {
-        font-size: 11px;
-    }
-
-
-    /* AKSI */
-
-    #stockTable .action-btn {
-        padding: 4px 7px;
-
         font-size: 11px;
     }
 
@@ -786,13 +715,6 @@ footer small {
 
     .stat small {
         font-size: 11px;
-    }
-
-
-    /* MODAL */
-
-    .modal-content {
-        padding: 18px;
     }
 
 
@@ -1242,12 +1164,6 @@ table {
     margin: 0;
 }
 
-.stock-pagination-area {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid #e5e7eb;
-}
-
 @media (max-width: 600px) {
     .stock-filter-toolbar {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1272,10 +1188,6 @@ table {
     .stock-pagination-area {
         align-items: center;
         padding-top: 9px;
-    }
-
-    .stock-pagination-info {
-        text-align: center;
     }
 
     .stock-pagination {
@@ -1728,7 +1640,6 @@ table {
 }
 
 
-
 @media (max-width: 900px) {
     .sales-entry-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1776,10 +1687,6 @@ table {
         grid-column: 2;
         font-size: 15px;
         text-align: right;
-    }
-
-    .sales-total-card small {
-        font-size: 9px;
     }
 
     .sales-entry-footer {
@@ -2088,15 +1995,6 @@ table {
 
 .modern-sales-table .delete-history-btn {
     color: #64748b;
-}
-
-.modern-sales-table .edit-history-btn:hover {
-    background: #dbeafe;
-}
-
-.modern-sales-table .delete-history-btn:hover {
-    background: #fee2e2;
-    color: #dc2626;
 }
 
 .modern-sales-table .edit-history-btn svg,
