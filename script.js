@@ -176,7 +176,63 @@ function setDatabaseStatus(
         return;
     }
 
-    element.textContent = message;
+    const statusType =
+        type === "success" ||
+        type === "error"
+            ? type
+            : "loading";
+
+    const icon =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+        );
+
+    icon.setAttribute(
+        "viewBox",
+        "0 0 24 24"
+    );
+
+    icon.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    icon.classList.add(
+        "database-status-icon",
+        "database-status-icon-" +
+            statusType
+    );
+
+    if (statusType === "success") {
+        icon.innerHTML =
+            '<circle cx="12" cy="12" r="9"></circle>' +
+            '<path d="m8 12 2.6 2.6L16.5 9"></path>';
+    } else if (statusType === "error") {
+        icon.innerHTML =
+            '<circle cx="12" cy="12" r="9"></circle>' +
+            '<path d="m9 9 6 6M15 9l-6 6"></path>';
+    } else {
+        icon.innerHTML =
+            '<circle cx="12" cy="12" r="8"></circle>' +
+            '<path d="M12 4a8 8 0 0 1 8 8"></path>';
+    }
+
+    const text =
+        document.createElement("span");
+
+    text.textContent =
+        String(message || "")
+            .replace(
+                /^[✅❌⏳]\s*/u,
+                ""
+            )
+            .trim();
+
+    element.replaceChildren(
+        icon,
+        text
+    );
 
     element.className =
         "status " + type;
