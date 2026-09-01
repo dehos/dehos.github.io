@@ -1008,22 +1008,24 @@ dataHalaman.forEach(
                 <div class="stock-action-group">
                     <button
                         type="button"
-                        class="action-btn stock-in-btn btn btn-success btn-sm"
+                        class="action-btn stock-in-btn"
                         onclick="openTransaction(${Number(barang.id)}, 'masuk')"
                         aria-label="Tambah stok ${escapeHTML(barang.nama)}"
                         title="Barang masuk"
                     >
-                        ↓ Masuk
+                        <span class="stock-action-icon" aria-hidden="true">＋</span>
+                        <span>Masuk</span>
                     </button>
 
                     <button
                         type="button"
-                        class="action-btn stock-out-btn btn btn-danger btn-sm"
+                        class="action-btn stock-out-btn"
                         onclick="openTransaction(${Number(barang.id)}, 'laku')"
                         aria-label="Kurangi stok ${escapeHTML(barang.nama)}"
                         title="Barang keluar"
                     >
-                        ↑ Keluar
+                        <span class="stock-action-icon" aria-hidden="true">−</span>
+                        <span>Keluar</span>
                     </button>
                 </div>
             </td>
