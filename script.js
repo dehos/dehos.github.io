@@ -4847,7 +4847,9 @@ const metadataBarisExcel = [
 kelompokBarangExport.forEach(
     function(kelompok) {
         dataExcel.push([
-            kelompok.brand
+            kelompok.brand.toLocaleUpperCase(
+                "id-ID"
+            )
         ]);
 
         metadataBarisExcel.push({
@@ -5498,7 +5500,10 @@ function exportPDF() {
         function(kelompok) {
             dataPDF.push([
                 {
-                    content: kelompok.brand,
+                    content:
+                        kelompok.brand.toLocaleUpperCase(
+                            "id-ID"
+                        ),
                     colSpan: jumlahHari + 1
                 }
             ]);
