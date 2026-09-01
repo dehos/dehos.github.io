@@ -3522,3 +3522,23 @@ footer small {
         display: none;
     }
 }
+
+
+/* Catatan penjualan: kolom nama barang lebar, kolom lain otomatis */
+#penjualanTable {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
+}
+
+#penjualanTable th:nth-child(2),
+#penjualanTable td:nth-child(2) {
+    width: 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+}
+
+#penjualanTable th:not(:nth-child(2)),
+#penjualanTable td:not(:nth-child(2)) {
+    width: auto;
+}
