@@ -3501,3 +3501,120 @@ footer small {
         font-size: 8px;
     }
 }
+
+
+/* =====================================================
+   MOBILE TABLE — COMPACT STOCK & SCROLLING SALES NAME
+===================================================== */
+
+.sales-name-marquee {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sales-name-track {
+    display: inline-flex;
+    min-width: max-content;
+    gap: 34px;
+}
+
+.sales-name-track > span {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+    #stockTable {
+        width: 100%;
+        min-width: 350px;
+        table-layout: fixed;
+    }
+
+    #stockTable th,
+    #stockTable td {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #stockTable th:nth-child(1),
+    #stockTable td:nth-child(1) {
+        width: 32px;
+    }
+
+    #stockTable th:nth-child(2),
+    #stockTable td:nth-child(2) {
+        width: auto;
+        padding-right: 3px;
+    }
+
+    #stockTable th:nth-child(3),
+    #stockTable td:nth-child(3) {
+        width: 48px;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .stock-actions-header,
+    #stockTable .stock-actions-cell {
+        width: 118px;
+    }
+
+    #stockTable .stock-action-group {
+        width: 100%;
+    }
+
+    .modern-stock-table #stockTable .action-btn {
+        min-width: 0;
+        flex: 1 1 0;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    #penjualanTable th:nth-child(2),
+    #penjualanTable td:nth-child(2) {
+        width: 150px;
+        min-width: 150px;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+
+    .sales-name-track {
+        animation: salesNameScroll 11s linear infinite;
+    }
+
+    .sales-name-marquee:hover .sales-name-track,
+    .sales-name-marquee:focus-within .sales-name-track {
+        animation-play-state: paused;
+    }
+}
+
+@keyframes salesNameScroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-50% - 17px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sales-name-marquee {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .sales-name-marquee::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sales-name-track {
+        animation: none;
+    }
+
+    .sales-name-track > span[aria-hidden="true"] {
+        display: none;
+    }
+}
