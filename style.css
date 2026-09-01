@@ -3192,3 +3192,167 @@ label {
         font-size: 10px;
     }
 }
+
+
+/* =====================================================
+   UI POLISH TAHAP 5 — SUGGESTIONS & MONTH NAVIGATION
+   Visual only: pilihan barang dan navigasi bulan tetap sama
+===================================================== */
+
+#saranBarang:not(:empty),
+.sales-suggestions:not(:empty) {
+    overflow: hidden auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+    background: #fff;
+    box-shadow:
+        0 14px 32px rgba(15, 23, 42, .12),
+        0 3px 8px rgba(15, 23, 42, .05);
+    scrollbar-width: thin;
+    scrollbar-color: #c2ccd8 transparent;
+}
+
+.sales-suggestions {
+    margin-top: 2px;
+}
+
+.sales-suggestions .saran-item,
+#saranBarang .saran-item {
+    position: relative;
+    gap: 3px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f3f7;
+    background: #fff;
+    transition:
+        background-color .14s ease,
+        padding-left .14s ease;
+}
+
+.sales-suggestions .saran-item:last-child,
+#saranBarang .saran-item:last-child {
+    border-bottom: 0;
+}
+
+.sales-suggestions .saran-item:hover,
+#saranBarang .saran-item:hover {
+    padding-left: 15px;
+    background: #f5f8ff;
+}
+
+.sales-suggestions .saran-item:active,
+#saranBarang .saran-item:active {
+    background: #edf3ff;
+}
+
+.sales-suggestions .saran-item strong,
+#saranBarang .saran-item strong {
+    color: #172033;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.sales-suggestions .saran-item small,
+#saranBarang .saran-item small {
+    color: #7c899b;
+    font-size: 9.5px;
+    font-weight: 400;
+    line-height: 1.35;
+}
+
+.history-month-nav,
+.modern-month-nav {
+    gap: 6px;
+    padding: 3px;
+    border: 1px solid #e8edf3;
+    border-radius: 11px;
+    background: #f7f9fc;
+}
+
+.history-month-nav button,
+.modern-month-nav button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: #fff;
+    color: #475569;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    transition:
+        color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease;
+}
+
+.history-month-nav button:hover:not(:disabled),
+.modern-month-nav button:hover:not(:disabled) {
+    border-color: #d7deea;
+    background: #fff;
+    color: #1d4ed8;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, .07);
+}
+
+.history-month-nav button:focus-visible,
+.modern-month-nav button:focus-visible {
+    outline: 2px solid rgba(49, 91, 214, .36);
+    outline-offset: 1px;
+}
+
+.history-month-nav button:disabled,
+.modern-month-nav button:disabled {
+    background: transparent;
+    color: #b8c1cd;
+    box-shadow: none;
+    opacity: 1;
+}
+
+.history-month-nav strong,
+.modern-month-nav strong {
+    min-width: 118px;
+    color: #172033;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .sales-suggestions .saran-item,
+    #saranBarang .saran-item {
+        padding: 9px 10px;
+    }
+
+    .sales-suggestions .saran-item:hover,
+    #saranBarang .saran-item:hover {
+        padding-left: 12px;
+    }
+
+    .history-month-nav,
+    .modern-month-nav {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .history-month-nav strong,
+    .modern-month-nav strong {
+        min-width: 94px;
+        font-size: 10px;
+    }
+
+    .history-month-nav button,
+    .modern-month-nav button {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        font-size: 15px;
+    }
+}
