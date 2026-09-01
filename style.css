@@ -3049,3 +3049,146 @@ label {
         font-size: 11px;
     }
 }
+
+
+/* =====================================================
+   UI POLISH TAHAP 4 — PAGINATION & TABLE SCROLL
+   Visual only: jumlah baris dan logika navigasi tetap sama
+===================================================== */
+
+.stock-pagination-area {
+    min-height: 38px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eef2f7;
+}
+
+.stock-pagination-info {
+    color: #7c899b;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.stock-pagination {
+    gap: 5px;
+}
+
+.stock-pagination button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    color: #475569;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .025);
+    transition:
+        color .15s ease,
+        border-color .15s ease,
+        background-color .15s ease,
+        box-shadow .15s ease,
+        transform .15s ease;
+}
+
+.stock-pagination button:hover:not(:disabled):not(.active) {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+    color: #0f172a;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, .06);
+    transform: translateY(-1px);
+}
+
+.stock-pagination button.active {
+    border-color: #315bd6;
+    background: #315bd6;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(49, 91, 214, .22);
+}
+
+.stock-pagination button:focus-visible {
+    outline: 2px solid rgba(49, 91, 214, .38);
+    outline-offset: 2px;
+}
+
+.stock-pagination button:disabled {
+    border-color: #eef2f7;
+    background: #f8fafc;
+    color: #b6c0cd;
+    opacity: 1;
+}
+
+.pagination-dots {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.table-wrapper,
+.history-wrapper,
+.penjualan-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #b8c2cf #f4f6f8;
+}
+
+.table-wrapper::-webkit-scrollbar,
+.history-wrapper::-webkit-scrollbar,
+.penjualan-wrapper::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.table-wrapper::-webkit-scrollbar-track,
+.history-wrapper::-webkit-scrollbar-track,
+.penjualan-wrapper::-webkit-scrollbar-track {
+    background: #f4f6f8;
+    border-radius: 999px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb,
+.history-wrapper::-webkit-scrollbar-thumb,
+.penjualan-wrapper::-webkit-scrollbar-thumb {
+    border: 2px solid #f4f6f8;
+    border-radius: 999px;
+    background: #b8c2cf;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover,
+.history-wrapper::-webkit-scrollbar-thumb:hover,
+.penjualan-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #8d9aaa;
+}
+
+@media (max-width: 600px) {
+    .stock-pagination-area {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 9px;
+        padding-top: 9px;
+    }
+
+    .stock-pagination-info {
+        width: 100%;
+        text-align: center;
+    }
+
+    .stock-pagination {
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .stock-pagination button {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 6px;
+        border-radius: 7px;
+        font-size: 10px;
+    }
+}
