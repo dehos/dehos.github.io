@@ -3578,3 +3578,90 @@ footer small {
         font-size: 10px;
     }
 }
+
+
+/* =====================================================
+   UI POLISH TAHAP 8 — TABLE ACTIONS & STOCK INFO
+   Visual only: event tombol dan validasi stok tetap sama
+===================================================== */
+
+.modern-sales-table .edit-history-btn,
+.modern-sales-table .delete-history-btn {
+    border: 1px solid transparent;
+    box-shadow: none;
+    transition:
+        color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease;
+}
+
+.modern-sales-table .edit-history-btn:hover {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.modern-sales-table .delete-history-btn:hover {
+    border-color: #fecdd3;
+    background: #fff1f2;
+    color: #be3344;
+}
+
+.modern-sales-table .edit-history-btn:focus-visible {
+    border-color: #93c5fd;
+    outline: 2px solid rgba(37, 99, 235, .28);
+    outline-offset: 1px;
+    background: #eff6ff;
+}
+
+.modern-sales-table .delete-history-btn:focus-visible {
+    border-color: #fda4af;
+    outline: 2px solid rgba(225, 29, 72, .22);
+    outline-offset: 1px;
+    background: #fff1f2;
+}
+
+.modern-sales-table .edit-history-btn:active,
+.modern-sales-table .delete-history-btn:active {
+    transform: scale(.92);
+}
+
+.sales-stock-info {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 27px;
+    padding: 5px 9px;
+    border: 1px solid #c7ead6;
+    border-radius: 999px;
+    background: #f0faf4;
+    color: #14724a;
+    font-size: 9.5px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.sales-stock-info.is-error {
+    border-color: #fecdd3;
+    background: #fff1f2;
+    color: #be3344;
+}
+
+@media (max-width: 600px) {
+    .modern-sales-table .edit-history-btn,
+    .modern-sales-table .delete-history-btn {
+        width: 27px;
+        height: 27px;
+        margin: 0 1px;
+        border-radius: 7px;
+    }
+
+    .sales-stock-info {
+        min-height: 24px;
+        padding: 4px 7px;
+        font-size: 8px;
+    }
+}
