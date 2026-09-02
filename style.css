@@ -7586,3 +7586,81 @@ select:disabled {
         animation: none;
     }
 }
+
+
+/* =====================================================
+   LIVE VISUAL QA — REDESIGN TAHAP 7
+   Koreksi konflik hover lama dan overflow tabel desktop
+===================================================== */
+
+.dashboard-card .target-card-header > strong {
+    text-align: left;
+}
+
+#stok-barang .modern-stock-table tbody tr,
+#catatan-penjualan .modern-sales-table tbody tr,
+#riwayat-transaksi .modern-history-table tbody tr {
+    --bs-table-accent-bg: transparent;
+    --bs-table-bg-state: transparent;
+    background: transparent !important;
+}
+
+#stok-barang .modern-stock-table tbody tr:hover,
+#catatan-penjualan .modern-sales-table tbody tr:hover,
+#riwayat-transaksi .modern-history-table tbody tr:hover {
+    --bs-table-accent-bg: transparent;
+    --bs-table-bg-state: transparent;
+    background: transparent !important;
+}
+
+#stok-barang .modern-stock-table tbody tr:hover > td,
+#catatan-penjualan .modern-sales-table tbody tr:hover > td,
+#riwayat-transaksi .modern-history-table tbody tr:hover > td {
+    background: rgba(123, 114, 255, .065) !important;
+    color: var(--app-text) !important;
+}
+
+#stok-barang .modern-stock-table th:nth-child(4),
+#stok-barang .modern-stock-table td:nth-child(4) {
+    width: 166px;
+}
+
+#stok-barang .modern-stock-table-wrapper {
+    overscroll-behavior-inline: contain;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper,
+#riwayat-transaksi .modern-history-table-wrapper {
+    overscroll-behavior-inline: contain;
+}
+
+@media (max-width: 700px) {
+    #stok-barang .modern-stock-table th:nth-child(4),
+    #stok-barang .modern-stock-table td:nth-child(4) {
+        width: 110px;
+    }
+
+    #stok-barang .modern-stock-table tbody tr:hover > td,
+    #catatan-penjualan .modern-sales-table tbody tr:hover > td,
+    #riwayat-transaksi .modern-history-table tbody tr:hover > td {
+        background: rgba(123, 114, 255, .045) !important;
+    }
+}
+
+@media (hover: none) {
+    #stok-barang .modern-stock-table tbody tr:hover > td,
+    #catatan-penjualan .modern-sales-table tbody tr:hover > td,
+    #riwayat-transaksi .modern-history-table tbody tr:hover > td {
+        background: transparent !important;
+        color: var(--app-text-soft) !important;
+    }
+
+    #riwayat-transaksi .modern-history-table td.history-masuk {
+        color: var(--app-green) !important;
+    }
+
+    #riwayat-transaksi .modern-history-table td.history-laku,
+    #riwayat-transaksi .modern-history-table td.history-keluar {
+        color: var(--app-red) !important;
+    }
+}
