@@ -7861,3 +7861,75 @@ select:disabled {
         height: 36px;
     }
 }
+
+
+/* =====================================================
+   MODAL INTERACTION POLISH — REDESIGN TAHAP 15
+   Fokus konsisten, ikon aksi, dan kenyamanan sentuh
+===================================================== */
+
+#transactionModal .modal-actions button,
+#editPenjualanModal .modal-actions button,
+#tambahBarangModal .modal-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease;
+}
+
+#transactionModal .modal-actions button:hover,
+#editPenjualanModal .modal-actions button:hover,
+#tambahBarangModal .modal-actions button:hover {
+    transform: translateY(-1px);
+}
+
+#transactionModal .modal-actions button:active,
+#editPenjualanModal .modal-actions button:active,
+#tambahBarangModal .modal-actions button:active {
+    transform: translateY(0);
+}
+
+.modal-action-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+}
+
+#transactionModal .modal-content input:hover,
+#editPenjualanModal .modal-content input:hover,
+#editPenjualanModal .modal-content select:hover,
+#tambahBarangModal .modal-content input:hover,
+#tambahBarangModal .modal-content select:hover {
+    border-color: #34476f;
+}
+
+#transactionModal .modal-content input:focus-visible,
+#editPenjualanModal .modal-content input:focus-visible,
+#editPenjualanModal .modal-content select:focus-visible,
+#tambahBarangModal .modal-content input:focus-visible,
+#tambahBarangModal .modal-content select:focus-visible {
+    outline: 2px solid rgba(55, 215, 255, .72);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    #transactionModal .modal-actions button,
+    #editPenjualanModal .modal-actions button,
+    #tambahBarangModal .modal-actions button {
+        min-height: 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #transactionModal .modal-actions button,
+    #editPenjualanModal .modal-actions button,
+    #tambahBarangModal .modal-actions button {
+        transition: none;
+    }
+}
