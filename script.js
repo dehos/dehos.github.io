@@ -4985,17 +4985,39 @@ function formatPerubahanSuperscriptExport(perubahan) {
 }
 
 
-function formatStokTransaksiExport(stokSebelum, perubahan) {
+function formatStokTransaksiExport(
+    stokSebelum,
+    totalMasuk,
+    totalKeluar
+) {
     const stok =
         Number(stokSebelum) || 0;
 
-    return (
-        `${stok}` +
-        formatPerubahanSuperscriptExport(
-            perubahan
-        )
-    );
+    let hasil =
+        `${stok}`;
+
+    if (Number(totalMasuk) > 0) {
+        hasil +=
+            formatPerubahanSuperscriptExport(
+                Number(totalMasuk)
+            );
+    }
+
+    if (Number(totalKeluar) > 0) {
+        hasil +=
+            formatPerubahanSuperscriptExport(
+                -Number(totalKeluar)
+            );
+    }
+
+    return hasil;
 }
+
+
+const KETERANGAN_EXPORT =
+    "Keterangan: angka utama = stok sebelum transaksi | " +
+    "+ pangkat = barang masuk | - pangkat = barang keluar | " +
+    "sel hitam = terdapat transaksi";
 
 
 function getStokTanggalSatuExport(barang, tahun, bulan) {
@@ -5180,6 +5202,8 @@ kelompokBarangExport.forEach(
                         );
 
                     let perubahan = 0;
+                    let totalMasuk = 0;
+                    let totalKeluar = 0;
                     let adaTransaksi = false;
 
                     transaksiHari.forEach(
@@ -5194,6 +5218,7 @@ kelompokBarangExport.forEach(
                                 "masuk"
                             ) {
                                 perubahan += qty;
+                                totalMasuk += qty;
                                 adaTransaksi = true;
                             }
 
@@ -5202,6 +5227,7 @@ kelompokBarangExport.forEach(
                                 "laku"
                             ) {
                                 perubahan -= qty;
+                                totalKeluar += qty;
                                 adaTransaksi = true;
                             }
                         }
@@ -5211,7 +5237,8 @@ kelompokBarangExport.forEach(
                         row.push(
                             formatStokTransaksiExport(
                                 stok,
-                                perubahan
+                                totalMasuk,
+                                totalKeluar
                             )
                         );
                         stok += perubahan;
@@ -5243,6 +5270,17 @@ kelompokBarangExport.forEach(
     dataExcel.push(jumlahBarangExcel);
     metadataBarisExcel.push({ type: "jumlah" });
 
+    const legendaExcel = [
+        KETERANGAN_EXPORT
+    ];
+
+    while (legendaExcel.length <= jumlahHari) {
+        legendaExcel.push("");
+    }
+
+    dataExcel.push(legendaExcel);
+    metadataBarisExcel.push({ type: "legenda" });
+
 
     /* BUAT WORKBOOK EXCEL */
 
@@ -5250,6 +5288,23 @@ kelompokBarangExport.forEach(
         XLSX.utils.aoa_to_sheet(
             dataExcel
         );
+
+    const barisLegendaExcel =
+        dataExcel.length - 1;
+
+    worksheet["!merges"] =
+        worksheet["!merges"] || [];
+
+    worksheet["!merges"].push({
+        s: {
+            r: barisLegendaExcel,
+            c: 0
+        },
+        e: {
+            r: barisLegendaExcel,
+            c: jumlahHari
+        }
+    });
 
     const workbook =
         XLSX.utils.book_new();
@@ -5425,6 +5480,35 @@ for (
                     },
                     alignment: {
                         horizontal: "center",
+                        vertical: "center"
+                    }
+                };
+            }
+
+            continue;
+        }
+
+        if (metadata?.type === "legenda") {
+            const legendaCell =
+                worksheet[
+                    XLSX.utils.encode_cell({
+                        r,
+                        c: 0
+                    })
+                ];
+
+            if (legendaCell) {
+                legendaCell.s = {
+                    font: {
+                        name: "Aptos",
+                        sz: 7,
+                        italic: true,
+                        color: {
+                            rgb: "4B5563"
+                        }
+                    },
+                    alignment: {
+                        horizontal: "left",
                         vertical: "center"
                     }
                 };
@@ -5792,6 +5876,7 @@ async function exportPDF() {
 
     const dataPDF = [];
     const metadataBarisPDF = [];
+    const transaksiCellPDF = new Map();
 
     const dataBarangPDF =
         dataBarang.filter(
@@ -5840,6 +5925,9 @@ async function exportPDF() {
 
             kelompok.barang.forEach(
                 function(barang) {
+                    const indexBarisPDF =
+                        dataPDF.length;
+
                     let stok =
                         Number(
                             barang.stok_awal
@@ -5883,6 +5971,8 @@ async function exportPDF() {
                             );
 
                         let perubahan = 0;
+                        let totalMasuk = 0;
+                        let totalKeluar = 0;
                         let adaTransaksi = false;
 
                         transaksiHari.forEach(
@@ -5897,6 +5987,7 @@ async function exportPDF() {
                                     "masuk"
                                 ) {
                                     perubahan += qty;
+                                    totalMasuk += qty;
                                     adaTransaksi = true;
                                 }
 
@@ -5905,19 +5996,24 @@ async function exportPDF() {
                                     "laku"
                                 ) {
                                     perubahan -= qty;
+                                    totalKeluar += qty;
                                     adaTransaksi = true;
                                 }
                             }
                         );
 
                         if (adaTransaksi) {
-                            row.push(
-                            formatStokTransaksiExport(
-                                stok,
-                                perubahan
-                            )
-                        );
-                        stok += perubahan;
+                            transaksiCellPDF.set(
+                                `${indexBarisPDF}:${hari}`,
+                                {
+                                    stokSebelum: stok,
+                                    totalMasuk,
+                                    totalKeluar
+                                }
+                            );
+
+                            row.push(stok);
+                            stok += perubahan;
                         } else {
                             row.push(stok);
                         }
@@ -5945,6 +6041,20 @@ async function exportPDF() {
 
     dataPDF.push(jumlahBarangPDF);
     metadataBarisPDF.push({ type: "jumlah" });
+
+    dataPDF.push([
+        {
+            content:
+                KETERANGAN_EXPORT,
+
+            colSpan:
+                jumlahHari + 1
+        }
+    ]);
+
+    metadataBarisPDF.push({
+        type: "legenda"
+    });
 
 
     /* UKURAN HALAMAN DAN KOLOM */
@@ -6162,6 +6272,28 @@ async function exportPDF() {
                         data.cell.styles.halign = "center";
                         data.cell.styles.cellPadding = 1.2;
                     }
+
+                    return;
+                }
+
+                if (metadata?.type === "legenda") {
+                    data.cell.styles.fillColor =
+                        [255, 255, 255];
+
+                    data.cell.styles.textColor =
+                        [75, 85, 99];
+
+                    data.cell.styles.fontStyle =
+                        "italic";
+
+                    data.cell.styles.fontSize =
+                        5.5;
+
+                    data.cell.styles.halign =
+                        "left";
+
+                    data.cell.styles.cellPadding =
+                        1.2;
 
                     return;
                 }
