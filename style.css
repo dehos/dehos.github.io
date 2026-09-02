@@ -7664,3 +7664,95 @@ select:disabled {
         color: var(--app-red) !important;
     }
 }
+
+
+/* =====================================================
+   NAVIGATION COMPLETENESS — REDESIGN TAHAP 8
+   Menyamakan akses lima halaman pada desktop dan mobile
+===================================================== */
+
+@media (min-width: 701px) and (max-width: 980px) {
+    .app-nav a::after {
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 11px);
+        z-index: 80;
+        width: max-content;
+        max-width: 180px;
+        padding: 7px 9px;
+        border: 1px solid var(--app-border);
+        border-radius: 8px;
+        background: rgba(15, 23, 48, .98);
+        color: var(--app-text-soft);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .34);
+        content: attr(data-label);
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-5px, -50%);
+        transition: opacity .15s ease, transform .15s ease;
+        white-space: nowrap;
+    }
+
+    .app-nav a:hover::after,
+    .app-nav a:focus-visible::after {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
+@media (max-width: 700px) {
+    .app-mobile-nav {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .app-mobile-nav a {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .app-mobile-nav a span {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .app-mobile-nav a.active::after {
+        position: absolute;
+        right: 24%;
+        bottom: 3px;
+        left: 24%;
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--app-accent), var(--app-cyan));
+        content: "";
+        box-shadow: 0 0 9px rgba(55, 215, 255, .42);
+    }
+}
+
+@media (max-width: 380px) {
+    .app-mobile-nav {
+        padding: 5px 4px;
+    }
+
+    .app-mobile-nav a {
+        min-height: 50px;
+        font-size: 8.5px;
+    }
+
+    .app-mobile-nav .ui-svg-icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-nav a::after {
+        transition: none;
+    }
+}
