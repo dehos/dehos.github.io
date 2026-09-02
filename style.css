@@ -4087,7 +4087,7 @@ footer small {
     width: 100%;
 }
 
-#tanggalTampilan {
+.localized-date-display {
     width: 100%;
     padding-right: 40px;
     font-family:
@@ -4145,7 +4145,7 @@ footer small {
 }
 
 @media (max-width: 600px) {
-    #tanggalTampilan {
+    .localized-date-display {
         padding-right: 35px;
         font-size: 11px;
     }
