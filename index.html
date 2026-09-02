@@ -46,12 +46,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20260902-32"></script>
+    <script defer src="script.js?v=20260902-33"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260902-56">
+    <link rel="stylesheet" href="style.css?v=20260902-57">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">Lewati ke konten utama</a>
@@ -1171,6 +1171,56 @@
     </div>
     <small class="app-footer-copyright">© 2026 Tony. All rights reserved.</small>
 </footer>
+
+<!-- =====================================================
+     DIALOG PESAN APLIKASI
+===================================================== -->
+<dialog
+    id="appMessageDialog"
+    class="app-message-dialog"
+    data-type="info"
+    aria-labelledby="appMessageTitle"
+    aria-describedby="appMessageText"
+>
+    <form method="dialog" class="app-message-card">
+        <div id="appMessageIcon" class="app-message-icon" aria-hidden="true">
+            <svg class="ui-svg-icon app-message-status-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 11v5M12 8h.01"/>
+            </svg>
+        </div>
+        <div class="app-message-copy">
+            <h3 id="appMessageTitle">Perhatian</h3>
+            <p id="appMessageText"></p>
+        </div>
+        <div class="app-message-actions">
+            <button
+                type="button"
+                id="appMessageCancel"
+                class="app-message-cancel"
+                onclick="selesaikanDialogAplikasi(false)"
+                hidden
+            >
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m7 7 10 10M17 7 7 17"/>
+                </svg>
+                <span id="appMessageCancelText">Batal</span>
+            </button>
+            <button
+                type="button"
+                id="appMessageConfirm"
+                class="app-message-confirm"
+                onclick="selesaikanDialogAplikasi(true)"
+            >
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m5 12 4 4L19 6"/>
+                </svg>
+                <span id="appMessageConfirmText">Mengerti</span>
+            </button>
+        </div>
+    </form>
+</dialog>
+
 <dialog
     id="exportConfirmDialog"
     class="export-confirm-dialog"
@@ -1189,9 +1239,21 @@
         <p id="exportConfirmMessage">Apakah Anda ingin melanjutkan export?</p>
         <div class="export-confirm-actions">
             <button type="button" class="export-confirm-no"
-                onclick="selesaikanKonfirmasiExport(false)">Tidak</button>
+                onclick="selesaikanKonfirmasiExport(false)">
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m7 7 10 10M17 7 7 17"/>
+                </svg>
+                <span>Tidak</span>
+            </button>
             <button type="button" class="export-confirm-yes"
-                onclick="selesaikanKonfirmasiExport(true)">Ya, Export</button>
+                onclick="selesaikanKonfirmasiExport(true)">
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v12"/>
+                    <path d="m7 10 5 5 5-5"/>
+                    <path d="M5 21h14"/>
+                </svg>
+                <span>Ya, Export</span>
+            </button>
         </div>
     </form>
 </dialog>
