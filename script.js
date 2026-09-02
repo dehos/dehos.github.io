@@ -2726,10 +2726,136 @@ const inputPenjualanHarga =
 const inputPenjualanTanggal =
     document.getElementById("penjualanTanggal");
 
+const inputPenjualanTanggalTampilan =
+    document.getElementById(
+        "penjualanTanggalTampilan"
+    );
+
+const penjualanTanggalPickerButton =
+    document.getElementById(
+        "penjualanTanggalPickerButton"
+    );
+
 const simpanPenjualanButton =
     document.getElementById("simpanPenjualanButton");
 
 let penjualanSedangDisimpan = false;
+
+
+function sinkronkanTanggalPenjualanTampilan() {
+    if (!inputPenjualanTanggalTampilan) {
+        return;
+    }
+
+    inputPenjualanTanggalTampilan.value =
+        formatTanggalTampilan(
+            inputPenjualanTanggal?.value
+        );
+}
+
+
+function terapkanTanggalPenjualanTampilan() {
+    if (
+        !inputPenjualanTanggal ||
+        !inputPenjualanTanggalTampilan
+    ) {
+        return;
+    }
+
+    const nilaiTampilan =
+        inputPenjualanTanggalTampilan
+            .value
+            .trim();
+
+    if (!nilaiTampilan) {
+        sinkronkanTanggalPenjualanTampilan();
+        return;
+    }
+
+    const nilaiIso =
+        parseTanggalTampilan(
+            nilaiTampilan
+        );
+
+    if (!nilaiIso) {
+        showToast(
+            "Gunakan format tanggal/bulan/tahun.",
+            "error"
+        );
+
+        sinkronkanTanggalPenjualanTampilan();
+        return;
+    }
+
+    inputPenjualanTanggal.value =
+        nilaiIso;
+
+    sinkronkanTanggalPenjualanTampilan();
+    updatePenjualanSummary();
+}
+
+
+if (inputPenjualanTanggal) {
+    inputPenjualanTanggal.addEventListener(
+        "change",
+        sinkronkanTanggalPenjualanTampilan
+    );
+}
+
+
+if (inputPenjualanTanggalTampilan) {
+    inputPenjualanTanggalTampilan.addEventListener(
+        "input",
+        function() {
+            this.value =
+                formatKetikTanggal(
+                    this.value
+                );
+        }
+    );
+
+    inputPenjualanTanggalTampilan.addEventListener(
+        "blur",
+        terapkanTanggalPenjualanTampilan
+    );
+
+    inputPenjualanTanggalTampilan.addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                terapkanTanggalPenjualanTampilan();
+                this.blur();
+            }
+
+            if (event.key === "Escape") {
+                sinkronkanTanggalPenjualanTampilan();
+                this.blur();
+            }
+        }
+    );
+}
+
+
+if (
+    penjualanTanggalPickerButton &&
+    inputPenjualanTanggal
+) {
+    penjualanTanggalPickerButton.addEventListener(
+        "click",
+        function() {
+            if (
+                typeof inputPenjualanTanggal.showPicker ===
+                    "function"
+            ) {
+                inputPenjualanTanggal.showPicker();
+                return;
+            }
+
+            inputPenjualanTanggal.click();
+        }
+    );
+}
 
 function getPenjualanStock(
     barang,
@@ -7416,6 +7542,8 @@ async function init() {
 
         tanggalPenjualan.value =
             `${tahun}-${bulan}-${hari}`;
+
+        sinkronkanTanggalPenjualanTampilan();
     }
 
 
