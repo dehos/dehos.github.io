@@ -89,6 +89,96 @@ function getUiIconSvg(
 
 let toastTimer = null;
 
+let lastModalTrigger = null;
+
+const APP_MODAL_IDS = [
+    "transactionModal",
+    "editPenjualanModal",
+    "tambahBarangModal"
+];
+
+function showAppModal(
+    modal,
+    focusTarget
+) {
+    if (!modal) {
+        return;
+    }
+
+    lastModalTrigger =
+        document.activeElement;
+
+    modal.style.display = "flex";
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    requestAnimationFrame(function() {
+        focusTarget?.focus();
+    });
+}
+
+function hideAppModal(modal) {
+    if (!modal) {
+        return;
+    }
+
+    modal.style.display = "none";
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    const returnTarget =
+        lastModalTrigger;
+
+    lastModalTrigger = null;
+
+    requestAnimationFrame(function() {
+        if (
+            returnTarget instanceof HTMLElement &&
+            returnTarget.isConnected
+        ) {
+            returnTarget.focus();
+        }
+    });
+}
+
+function getVisibleAppModal() {
+    return APP_MODAL_IDS
+        .map(function(id) {
+            return document.getElementById(id);
+        })
+        .find(function(modal) {
+            return (
+                modal &&
+                modal.style.display === "flex"
+            );
+        }) || null;
+}
+
+function closeVisibleAppModal() {
+    const modal =
+        getVisibleAppModal();
+
+    if (!modal) {
+        return;
+    }
+
+    if (modal.id === "transactionModal") {
+        closeModal();
+    } else if (
+        modal.id === "editPenjualanModal"
+    ) {
+        closeEditPenjualan();
+    } else if (
+        modal.id === "tambahBarangModal"
+    ) {
+        closeTambahBarang();
+    }
+}
+
 function showToast(message, type = "success") {
 
     const toast =
@@ -729,13 +819,12 @@ function openTambahBarang() {
             "tambahBarangModal"
         );
 
-    if (modal) {
-        modal.style.display = "flex";
-    }
-
-    document.getElementById(
-        "namaBarang"
-    )?.focus();
+    showAppModal(
+        modal,
+        document.getElementById(
+            "namaBarang"
+        )
+    );
 }
 
 
@@ -750,9 +839,7 @@ function closeTambahBarang() {
             "tambahBarangModal"
         );
 
-    if (modal) {
-        modal.style.display = "none";
-    }
+    hideAppModal(modal);
 }
 
 
@@ -1751,8 +1838,10 @@ function openTransaction(
         qtyInput.value = 1;
     }
 
-    modal.style.display =
-        "flex";
+    showAppModal(
+        modal,
+        qtyInput
+    );
 }
 
 
@@ -1767,10 +1856,7 @@ function closeModal() {
             "transactionModal"
         );
 
-    if (modal) {
-        modal.style.display =
-            "none";
-    }
+    hideAppModal(modal);
 }
 
 
@@ -2530,17 +2616,11 @@ function toggleStockList() {
 window.addEventListener(
     "click",
     function(event) {
-
-        const modal =
-            document.getElementById(
-                "transactionModal"
-            );
-
         if (
-            event.target === modal
+            event.target instanceof HTMLElement &&
+            event.target.classList.contains("modal")
         ) {
-
-            closeModal();
+            closeVisibleAppModal();
         }
     }
 );
@@ -2579,12 +2659,56 @@ if (stokAwalElement) {
 document.addEventListener(
     "keydown",
     function(event) {
+        const modal =
+            getVisibleAppModal();
 
-        if (
-            event.key === "Escape"
-        ) {
+        if (!modal) {
+            return;
+        }
 
-            closeModal();
+        if (event.key === "Escape") {
+            event.preventDefault();
+            closeVisibleAppModal();
+            return;
+        }
+
+        if (event.key === "Tab") {
+            const focusable =
+                Array.from(
+                    modal.querySelectorAll(
+                        "button:not([disabled]), " +
+                        "input:not([disabled]):not([type='hidden']), " +
+                        "select:not([disabled]), " +
+                        "textarea:not([disabled]), " +
+                        "[tabindex]:not([tabindex='-1'])"
+                    )
+                ).filter(function(element) {
+                    return element.offsetParent !== null;
+                });
+
+            if (focusable.length === 0) {
+                return;
+            }
+
+            const first = focusable[0];
+            const last =
+                focusable[
+                    focusable.length - 1
+                ];
+
+            if (
+                event.shiftKey &&
+                document.activeElement === first
+            ) {
+                event.preventDefault();
+                last.focus();
+            } else if (
+                !event.shiftKey &&
+                document.activeElement === last
+            ) {
+                event.preventDefault();
+                first.focus();
+            }
         }
     }
 );
@@ -4426,8 +4550,17 @@ function editPenjualan(id) {
     document.getElementById("editPenjualanTanggal").value =
         penjualan.tanggal_pembelian || "";
 
-    document.getElementById("editPenjualanModal").style.display =
-        "flex";
+    const modal =
+        document.getElementById(
+            "editPenjualanModal"
+        );
+
+    showAppModal(
+        modal,
+        document.getElementById(
+            "editPenjualanQty"
+        )
+    );
 }
 
 function closeEditPenjualan() {
@@ -4435,9 +4568,7 @@ function closeEditPenjualan() {
         "editPenjualanModal"
     );
 
-    if (modal) {
-        modal.style.display = "none";
-    }
+    hideAppModal(modal);
 }
 
 async function simpanEditPenjualan() {
