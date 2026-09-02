@@ -22,7 +22,6 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260902-44">
     <link
         rel="icon"
         type="image/png"
@@ -40,8 +39,11 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
+    <link rel="stylesheet" href="style.css?v=20260902-45">
 </head>
 <body>
+<div class="app-shell">
+<aside class="app-sidebar" aria-label="Navigasi aplikasi">
 <!-- =====================================================
      HEADER
 ===================================================== -->
@@ -62,21 +64,63 @@
     </div>
 </header>
 
-<main class="container">
-<!-- =====================================================
-     CATAT PENJUALAN
-===================================================== -->
-
-<section class="card">
-<div class="history-header">
-    <h2 class="inline-title-heading">
-        <svg class="ui-svg-icon section-heading-svg" viewBox="0 0 24 24" aria-hidden="true">
+<nav class="app-nav" aria-label="Menu utama">
+    <a href="#dashboard" class="active">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="2"/>
+            <rect x="14" y="3" width="7" height="7" rx="2"/>
+            <rect x="3" y="14" width="7" height="7" rx="2"/>
+            <rect x="14" y="14" width="7" height="7" rx="2"/>
+        </svg>
+        <span>Dashboard</span>
+    </a>
+    <a href="#penjualan">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16l-1.4 11H5.4z"/>
             <path d="M8 7a4 4 0 0 1 8 0"/>
-            <path d="M9 11v3M15 11v3"/>
         </svg>
         <span>Penjualan</span>
-    </h2>
+    </a>
+    <a href="#stok-barang">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h16v14H4z"/>
+            <path d="M4 10h16M9 10v9M15 10v9"/>
+        </svg>
+        <span>Stok Barang</span>
+    </a>
+    <a href="#catatan-penjualan">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 3h14v18H5z"/>
+            <path d="M8 8h8M8 12h8M8 16h5"/>
+        </svg>
+        <span>Catatan Penjualan</span>
+    </a>
+    <a href="#riwayat-transaksi">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h11M4 12h8M4 17h11"/>
+            <path d="m16 14 4 3-4 3"/>
+        </svg>
+        <span>Riwayat In/Out</span>
+    </a>
+</nav>
+
+<div class="app-sidebar-note">
+    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <ellipse cx="12" cy="5" rx="8" ry="3"/>
+        <path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/>
+        <path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>
+    </svg>
+    <span>Data tersimpan aman</span>
+</div>
+</aside>
+
+<div class="app-workspace">
+<header class="app-topbar">
+    <div>
+        <span class="app-topbar-eyebrow">Workspace</span>
+        <h2 id="appPageTitle">Dashboard</h2>
+        <p id="appPageSubtitle">Ringkasan stok dan aktivitas penjualan</p>
+    </div>
     <div
         id="databaseStatus"
         class="status"
@@ -90,7 +134,25 @@
             <path d="M12 4a8 8 0 0 1 8 8"></path>
         </svg>
         <span>Menghubungkan ke database...</span>
-    </div></div>
+    </div>
+</header>
+
+<main class="container">
+<!-- =====================================================
+     CATAT PENJUALAN
+===================================================== -->
+
+<section class="card" id="penjualan">
+<div class="history-header">
+    <h2 class="inline-title-heading">
+        <svg class="ui-svg-icon section-heading-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16l-1.4 11H5.4z"/>
+            <path d="M8 7a4 4 0 0 1 8 0"/>
+            <path d="M9 11v3M15 11v3"/>
+        </svg>
+        <span>Penjualan</span>
+    </h2>
+</div>
     <div class="sales-entry-grid">
         <div class="sales-field sales-product-field position-relative">
             <label for="penjualanBarang">Nama Barang</label>
@@ -178,7 +240,7 @@
 <!--====================================================
      DAFTAR STOK
 =====================================================-->
-<section class="card">
+<section class="card" id="stok-barang">
 <!-- HTML — index.html -->
 <div class="history-header modern-section-header stock-section-header">
     <div class="modern-title-group">
@@ -387,7 +449,7 @@
 </div>
 </section>
 <!-- CATATAN PENJUALAN -->
-<section class="card">
+<section class="card" id="catatan-penjualan">
     <div class="history-header penjualan-history-header modern-sales-header">
         <div class="modern-title-group">
             <span class="modern-title-icon" aria-hidden="true">
@@ -525,7 +587,7 @@
 <!-- =====================================================
      RIWAYAT TRANSAKSI
 ===================================================== -->
-<section class="card">
+<section class="card" id="riwayat-transaksi">
     <div class="history-header">
         <h3>
             📜 Riwayat in/out
@@ -605,11 +667,19 @@
      STATISTIK
 ===================================================== -->
 
-<section class="card">
+<section class="card dashboard-card" id="dashboard">
 
-    <h2>
-        Statistik 📊
-    </h2>
+    <div class="dashboard-section-heading">
+        <div>
+            <span class="dashboard-kicker">Overview</span>
+            <h2>Statistik Utama</h2>
+            <p>Data stok dan pencapaian penjualan terkini</p>
+        </div>
+        <span class="dashboard-live-badge">
+            <span aria-hidden="true"></span>
+            Live data
+        </span>
+    </div>
 
 
     <div class="stats">
@@ -658,7 +728,13 @@
     <div class="sales-target-section">
         <div class="sales-target-header">
             <div>
-                <h3>🎯 Target Penjualan per Brand</h3>
+                <h3>
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 17 9 12l4 3 7-8"/>
+                        <path d="M15 7h5v5"/>
+                    </svg>
+                    <span>Performa Brand</span>
+                </h3>
                 <p id="targetPenjualanMonthLabel">
                     Memuat periode...
                 </p>
@@ -690,6 +766,42 @@
 
 
 </main>
+
+</div>
+
+<nav class="app-mobile-nav" aria-label="Navigasi mobile">
+    <a href="#dashboard" aria-label="Dashboard">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="2"/>
+            <rect x="14" y="3" width="7" height="7" rx="2"/>
+            <rect x="3" y="14" width="7" height="7" rx="2"/>
+            <rect x="14" y="14" width="7" height="7" rx="2"/>
+        </svg>
+        <span>Dashboard</span>
+    </a>
+    <a href="#penjualan" aria-label="Penjualan">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16l-1.4 11H5.4z"/>
+            <path d="M8 7a4 4 0 0 1 8 0"/>
+        </svg>
+        <span>Jual</span>
+    </a>
+    <a href="#stok-barang" aria-label="Stok barang">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 5h16v14H4z"/>
+            <path d="M4 10h16M9 10v9M15 10v9"/>
+        </svg>
+        <span>Stok</span>
+    </a>
+    <a href="#riwayat-transaksi" aria-label="Riwayat transaksi">
+        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h11M4 12h8M4 17h11"/>
+            <path d="m16 14 4 3-4 3"/>
+        </svg>
+        <span>Riwayat</span>
+    </a>
+</nav>
+</div>
 
 
 
@@ -973,6 +1085,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
 
 <!-- JAVASCRIPT UTAMA -->
-<script src="script.js?v=20260902-26"></script>
+<script src="script.js?v=20260902-27"></script>
 </body>
 </html>
