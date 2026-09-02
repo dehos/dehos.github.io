@@ -7966,3 +7966,302 @@ select:disabled {
         animation: none;
     }
 }
+
+
+/* =====================================================
+   APP DIALOG & TOAST — REDESIGN TAHAP 17
+   Mengganti notifikasi browser dengan sistem tema aplikasi
+===================================================== */
+
+.app-message-dialog {
+    width: min(430px, calc(100% - 28px));
+    max-width: 430px;
+    padding: 0;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    color: var(--app-text);
+    overflow: visible;
+}
+
+.app-message-dialog::backdrop {
+    background: rgba(2, 5, 15, .76);
+    -webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
+}
+
+.app-message-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 13px 14px;
+    padding: 22px;
+    border: 1px solid var(--app-border);
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(123, 114, 255, .14), transparent 38%),
+        linear-gradient(160deg, #151f3f, #0d142b 72%);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .56);
+    animation: appMessageEnter .2s ease-out;
+}
+
+@keyframes appMessageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.app-message-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border: 1px solid rgba(55, 215, 255, .2);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(55, 215, 255, .14), rgba(123, 114, 255, .12));
+    color: var(--app-cyan);
+    box-shadow: 0 12px 30px rgba(4, 23, 49, .28);
+}
+
+.app-message-status-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.app-message-dialog[data-type="danger"] .app-message-icon,
+.app-message-dialog[data-type="error"] .app-message-icon {
+    border-color: rgba(255, 111, 145, .24);
+    background: rgba(255, 111, 145, .1);
+    color: var(--app-red);
+}
+
+.app-message-copy {
+    min-width: 0;
+    padding-top: 2px;
+}
+
+.app-message-copy h3 {
+    margin: 0;
+    color: var(--app-text);
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+.app-message-copy p {
+    margin: 7px 0 0;
+    color: var(--app-muted);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.app-message-actions {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 5px;
+    padding-top: 15px;
+    border-top: 1px solid var(--app-border-soft);
+}
+
+.app-message-actions button,
+.export-confirm-actions button {
+    display: inline-flex;
+    min-height: 41px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.app-message-actions button:hover,
+.export-confirm-actions button:hover {
+    transform: translateY(-1px);
+}
+
+.app-message-actions .ui-svg-icon,
+.export-confirm-actions .ui-svg-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.app-message-cancel {
+    border: 1px solid var(--app-border);
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+}
+
+.app-message-cancel:hover {
+    border-color: #3a4e78;
+    background: rgba(21, 31, 63, .9);
+    color: var(--app-text);
+}
+
+.app-message-confirm {
+    border: 1px solid var(--app-accent);
+    background: linear-gradient(135deg, var(--app-accent), #6258e8);
+    color: #fff;
+    box-shadow: 0 9px 22px rgba(60, 51, 175, .27);
+}
+
+.app-message-confirm:hover {
+    border-color: #968fff;
+    background: linear-gradient(135deg, #8982ff, #6d63ec);
+}
+
+.app-message-dialog[data-type="danger"] .app-message-confirm,
+.app-message-dialog[data-type="error"] .app-message-confirm {
+    border-color: rgba(255, 111, 145, .72);
+    background: linear-gradient(135deg, #e84f76, #c93665);
+    box-shadow: 0 9px 22px rgba(201, 54, 101, .24);
+}
+
+#toast.toast {
+    --toast-accent: var(--app-green);
+    top: auto;
+    right: 24px;
+    bottom: 24px;
+    left: auto;
+    width: min(370px, calc(100% - 48px));
+    max-width: 370px;
+    padding: 13px 15px 15px;
+    overflow: hidden;
+    border: 1px solid var(--app-border);
+    border-left: 3px solid var(--toast-accent);
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--toast-accent) 12%, transparent), transparent 45%),
+        rgba(15, 23, 48, .97);
+    color: var(--app-text-soft);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, .42);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: left;
+    transform: translateY(16px) scale(.985);
+    transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+}
+
+#toast.toast.success {
+    --toast-accent: var(--app-green);
+    background:
+        radial-gradient(circle at 100% 0%, rgba(83, 224, 172, .11), transparent 45%),
+        rgba(15, 23, 48, .97);
+}
+
+#toast.toast.error {
+    --toast-accent: var(--app-red);
+    background:
+        radial-gradient(circle at 100% 0%, rgba(255, 111, 145, .12), transparent 45%),
+        rgba(15, 23, 48, .97);
+}
+
+#toast.toast.show {
+    transform: translateY(0) scale(1);
+}
+
+#toast.toast::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--toast-accent), color-mix(in srgb, var(--toast-accent) 55%, white));
+    content: "";
+    opacity: 0;
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+#toast.toast.show::after {
+    opacity: .9;
+    animation: appToastCountdown var(--toast-duration, 3000ms) linear forwards;
+}
+
+@keyframes appToastCountdown {
+    to {
+        transform: scaleX(0);
+    }
+}
+
+#toastMessage {
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#toastMessage > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#toast.toast .toast-status-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin-top: 0;
+    color: var(--toast-accent);
+}
+
+@media (max-width: 600px) {
+    .app-message-dialog {
+        width: calc(100% - 24px);
+        max-width: none;
+        margin-bottom: 12px;
+    }
+
+    .app-message-card {
+        padding: 19px 16px 16px;
+        border-radius: 17px;
+    }
+
+    .app-message-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .app-message-actions button:only-child,
+    .app-message-actions button[hidden] + button {
+        grid-column: 1 / -1;
+    }
+
+    .app-message-actions button {
+        min-height: 44px;
+    }
+
+    #toast.toast {
+        right: 12px;
+        bottom: calc(84px + env(safe-area-inset-bottom));
+        left: 12px;
+        width: auto;
+        max-width: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-message-card,
+    #toast.toast.show::after {
+        animation: none;
+    }
+
+    .app-message-actions button,
+    .export-confirm-actions button,
+    #toast.toast {
+        transition: none;
+    }
+}
