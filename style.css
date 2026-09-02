@@ -4076,3 +4076,83 @@ footer small {
         animation: none;
     }
 }
+
+
+/* =====================================================
+   TANGGAL STOK - FORMAT INDONESIA
+===================================================== */
+
+.localized-date-control {
+    position: relative;
+    width: 100%;
+}
+
+#tanggalTampilan {
+    width: 100%;
+    padding-right: 40px;
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+.stock-filter-field .localized-date-native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.localized-date-picker-button {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+        color 160ms ease,
+        background-color 160ms ease;
+}
+
+.localized-date-picker-button:hover {
+    background: #eef2ff;
+    color: #315bd6;
+}
+
+.localized-date-picker-button:focus-visible {
+    outline: 2px solid #315bd6;
+    outline-offset: 1px;
+}
+
+.localized-date-picker-button .ui-svg-icon {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 600px) {
+    #tanggalTampilan {
+        padding-right: 35px;
+        font-size: 11px;
+    }
+
+    .localized-date-picker-button {
+        right: 3px;
+        width: 28px;
+        height: 28px;
+    }
+}
