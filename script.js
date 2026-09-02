@@ -3744,6 +3744,17 @@ function renderTargetPenjualan(
               ) * 100
             : 0;
 
+    const highestPercentage =
+        targetedBrands.reduce(
+            function(highest, item) {
+                return Math.max(
+                    highest,
+                    item.percentage
+                );
+            },
+            0
+        );
+
     totalTargetElement.textContent =
         "Rp" +
         formatNumber(
@@ -3775,6 +3786,17 @@ function renderTargetPenjualan(
                     100
                 );
 
+            const visualProgress =
+                highestPercentage > 0
+                    ? Math.min(
+                        (
+                            item.percentage /
+                            highestPercentage
+                        ) * 100,
+                        100
+                    )
+                    : 0;
+
             const brandColor =
                 TARGET_BRAND_COLORS[item.nama] ||
                 "#64748b";
@@ -3792,7 +3814,7 @@ function renderTargetPenjualan(
 
             card.style.setProperty(
                 "--progress",
-                progressValue
+                visualProgress
             );
 
             card.innerHTML =
@@ -3802,21 +3824,20 @@ function renderTargetPenjualan(
                         ${String(index + 1).padStart(2, "0")}
                     </span>
                     <strong>${escapeHTML(item.nama)}</strong>
+                    <span class="target-card-percentage">
+                        ${formatNumber(percentageRounded)}%
+                    </span>
                 </div>
 
                 <div
-                    class="target-donut"
+                    class="target-progress-track"
                     role="progressbar"
                     aria-label="Pencapaian ${escapeHTML(item.nama)}"
                     aria-valuemin="0"
                     aria-valuemax="100"
                     aria-valuenow="${Math.round(progressValue)}"
                 >
-                    <div class="target-donut-center">
-                        <strong>
-                            ${formatNumber(percentageRounded)}%
-                        </strong>
-                    </div>
+                    <span class="target-progress-fill"></span>
                 </div>
 
                 <div class="target-card-values">
@@ -3853,15 +3874,14 @@ function renderTargetPenjualan(
             <div class="target-card-header">
                 <span class="target-card-rank">—</span>
                 <strong>PJS Handle</strong>
+                <span class="target-card-percentage">Total</span>
             </div>
 
             <div
-                class="target-donut target-donut-rainbow"
+                class="target-progress-track"
                 aria-label="PJS Handle tanpa target"
             >
-                <div class="target-donut-center">
-                    <small>TOTAL</small>
-                </div>
+                <span class="target-progress-fill target-progress-rainbow"></span>
             </div>
 
             <div class="target-card-values">
@@ -7564,4 +7584,147 @@ await loadTransactions();
    JALANKAN APLIKASI
 ================================== */
 
+function initAppNavigation() {
+    const sectionCopy = {
+        dashboard: [
+            "Dashboard",
+            "Ringkasan stok dan aktivitas penjualan"
+        ],
+        penjualan: [
+            "Penjualan",
+            "Catat transaksi penjualan baru"
+        ],
+        "stok-barang": [
+            "Stok Barang",
+            "Kelola persediaan dan pergerakan stok"
+        ],
+        "catatan-penjualan": [
+            "Catatan Penjualan",
+            "Lihat transaksi penjualan per bulan"
+        ],
+        "riwayat-transaksi": [
+            "Riwayat In/Out",
+            "Pantau seluruh pergerakan barang"
+        ]
+    };
+
+    const links =
+        Array.from(
+            document.querySelectorAll(
+                ".app-nav a, .app-mobile-nav a"
+            )
+        );
+
+    const title =
+        document.getElementById(
+            "appPageTitle"
+        );
+
+    const subtitle =
+        document.getElementById(
+            "appPageSubtitle"
+        );
+
+    function setActiveSection(sectionId) {
+        const copy =
+            sectionCopy[sectionId] ||
+            sectionCopy.dashboard;
+
+        links.forEach(
+            function(link) {
+                link.classList.toggle(
+                    "active",
+                    link.getAttribute("href") ===
+                        `#${sectionId}`
+                );
+            }
+        );
+
+        if (title) {
+            title.textContent = copy[0];
+        }
+
+        if (subtitle) {
+            subtitle.textContent = copy[1];
+        }
+    }
+
+    links.forEach(
+        function(link) {
+            link.addEventListener(
+                "click",
+                function() {
+                    setActiveSection(
+                        link.getAttribute("href")
+                            .replace("#", "")
+                    );
+                }
+            );
+        }
+    );
+
+    const sections =
+        Object.keys(sectionCopy)
+            .map(
+                function(sectionId) {
+                    return document.getElementById(
+                        sectionId
+                    );
+                }
+            )
+            .filter(Boolean);
+
+    if (
+        "IntersectionObserver" in window
+    ) {
+        const observer =
+            new IntersectionObserver(
+                function(entries) {
+                    const visibleEntry =
+                        entries
+                            .filter(
+                                function(entry) {
+                                    return entry.isIntersecting;
+                                }
+                            )
+                            .sort(
+                                function(a, b) {
+                                    return (
+                                        b.intersectionRatio -
+                                        a.intersectionRatio
+                                    );
+                                }
+                            )[0];
+
+                    if (visibleEntry) {
+                        setActiveSection(
+                            visibleEntry.target.id
+                        );
+                    }
+                },
+                {
+                    rootMargin: "-18% 0px -62% 0px",
+                    threshold: [0, 0.1, 0.35]
+                }
+            );
+
+        sections.forEach(
+            function(section) {
+                observer.observe(section);
+            }
+        );
+    }
+
+    const initialSection =
+        window.location.hash
+            .replace("#", "");
+
+    setActiveSection(
+        sectionCopy[initialSection]
+            ? initialSection
+            : "dashboard"
+    );
+}
+
 init();
+initAppNavigation();
