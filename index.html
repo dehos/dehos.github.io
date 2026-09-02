@@ -39,9 +39,10 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260902-49">
+    <link rel="stylesheet" href="style.css?v=20260902-50">
 </head>
 <body>
+<a class="skip-link" href="#mainContent">Lewati ke konten utama</a>
 <div class="app-shell">
 <aside class="app-sidebar" aria-label="Navigasi aplikasi">
 <!-- =====================================================
@@ -124,6 +125,9 @@
     <div
         id="databaseStatus"
         class="status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
     >
         <svg
             class="database-status-icon database-status-icon-loading"
@@ -137,7 +141,7 @@
     </div>
 </header>
 
-<main class="container">
+<main class="container" id="mainContent">
 <!-- =====================================================
      CATAT PENJUALAN
 ===================================================== -->
@@ -844,6 +848,9 @@
 <div
     class="modal"
     id="transactionModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
 >
 
     <div class="modal-content">
@@ -895,10 +902,13 @@
 <div
     class="modal"
     id="editPenjualanModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editPenjualanTitle"
 >
     <div class="modal-content">
 
-        <div class="modal-title modal-title-with-icon">
+        <div class="modal-title modal-title-with-icon" id="editPenjualanTitle">
             <svg class="ui-svg-icon modal-title-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 20h9"/>
                 <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
@@ -1003,10 +1013,13 @@
 <div
     class="modal"
     id="tambahBarangModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tambahBarangTitle"
 >
     <div class="modal-content">
 
-        <div class="modal-title modal-title-with-icon">
+        <div class="modal-title modal-title-with-icon" id="tambahBarangTitle">
             <svg class="ui-svg-icon modal-title-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 5h16v14H4z"/>
                 <path d="M12 8v8M8 12h8"/>
@@ -1074,17 +1087,27 @@
 <!-- =====================================================
      FOOTER
 ===================================================== -->
-<div align="center">
-    <sd>
-        Aplikasinya bagus, omsetnya kurang bagus
-    </sd>
-</div>
-<footer>
-    <small>
-        © 2026 Tony. All rights reserved.
-    </small>
+<footer class="app-footer">
+    <div class="app-footer-brand">
+        <span class="app-footer-icon" aria-hidden="true">
+            <svg class="ui-svg-icon" viewBox="0 0 24 24">
+                <path d="M4 5h16v14H4z"/>
+                <path d="M4 10h16M9 10v9M15 10v9"/>
+            </svg>
+        </span>
+        <div>
+            <strong>Stock Barang</strong>
+            <small>Aplikasinya bagus, omsetnya kurang bagus</small>
+        </div>
+    </div>
+    <small class="app-footer-copyright">© 2026 Tony. All rights reserved.</small>
 </footer>
-<dialog id="exportConfirmDialog" class="export-confirm-dialog">
+<dialog
+    id="exportConfirmDialog"
+    class="export-confirm-dialog"
+    aria-labelledby="exportConfirmTitle"
+    aria-describedby="exportConfirmMessage"
+>
     <form method="dialog" class="export-confirm-card">
         <div class="export-confirm-icon" aria-hidden="true">
             <svg class="ui-svg-icon" viewBox="0 0 24 24">
@@ -1093,7 +1116,7 @@
                 <path d="M5 21h14"/>
             </svg>
         </div>
-        <h3>Konfirmasi Export</h3>
+        <h3 id="exportConfirmTitle">Konfirmasi Export</h3>
         <p id="exportConfirmMessage">Apakah Anda ingin melanjutkan export?</p>
         <div class="export-confirm-actions">
             <button type="button" class="export-confirm-no"
@@ -1110,6 +1133,9 @@
 <div
     id="toast"
     class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
 >
     <div id="toastMessage"></div>
 
