@@ -2083,14 +2083,16 @@ function renderHistory() {
                     );
             }
 
+            const tanggalISO =
+                String(
+                    transaction.tanggal || ""
+                );
+
             const waktu =
-                transaction.tanggal
-                    ? new Date(
-                        transaction.tanggal +
-                        "T00:00:00"
-                    ).toLocaleDateString(
-                        "id-ID"
-                    )
+                tanggalISO
+                    ? formatTanggalTampilan(
+                        tanggalISO
+                    ) || "-"
                     : "-";
 
             const tr =
@@ -2101,9 +2103,11 @@ function renderHistory() {
             tr.innerHTML =
                 `
                 <td>
-                    ${escapeHTML(
+                    <time datetime="${escapeHTML(
+                        tanggalISO
+                    )}">${escapeHTML(
                         waktu
-                    )}
+                    )}</time>
                 </td>
 
                 <td>
@@ -4129,19 +4133,16 @@ async function loadPenjualan() {
             totalPenjualan += total;
 
 
+            const tanggalISO =
+                String(
+                    item.tanggal_pembelian || ""
+                );
+
             const tanggal =
-                item.tanggal_pembelian
-                    ? new Date(
-                        item.tanggal_pembelian +
-                        "T00:00:00"
-                    ).toLocaleDateString(
-                        "id-ID",
-                        {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "2-digit"
-                        }
-                    )
+                tanggalISO
+                    ? formatTanggalTampilan(
+                        tanggalISO
+                    ) || "-"
                     : "-";
 
 
@@ -4149,7 +4150,11 @@ async function loadPenjualan() {
                 `
                 <tr>
                     <td class="text-center">
-                        ${tanggal}
+                        <time datetime="${escapeHTML(
+                            tanggalISO
+                        )}">${escapeHTML(
+                            tanggal
+                        )}</time>
                     </td>
 
                     <td>
