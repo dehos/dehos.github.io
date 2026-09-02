@@ -284,6 +284,13 @@ function setDatabaseStatus(
 
     element.className =
         "status " + type;
+
+    element.setAttribute(
+        "aria-busy",
+        statusType === "loading"
+            ? "true"
+            : "false"
+    );
 }
 
 
@@ -464,9 +471,11 @@ async function loadBarang() {
         semuaBarang;
 
     setDatabaseStatus(
-        "Database aktif " +
-            dataBarang.length +
-            "· barang",
+        "Database aktif · " +
+            formatNumber(
+                dataBarang.length
+            ) +
+            " barang",
         "success"
     );
 
@@ -7632,11 +7641,25 @@ function initAppNavigation() {
 
         links.forEach(
             function(link) {
+                const isActive =
+                    link.getAttribute("href") ===
+                        `#${sectionId}`;
+
                 link.classList.toggle(
                     "active",
-                    link.getAttribute("href") ===
-                        `#${sectionId}`
+                    isActive
                 );
+
+                if (isActive) {
+                    link.setAttribute(
+                        "aria-current",
+                        "page"
+                    );
+                } else {
+                    link.removeAttribute(
+                        "aria-current"
+                    );
+                }
             }
         );
 
@@ -7647,6 +7670,10 @@ function initAppNavigation() {
         if (subtitle) {
             subtitle.textContent = copy[1];
         }
+
+        document.title =
+            copy[0] +
+            " · Stock Barang";
     }
 
     links.forEach(
