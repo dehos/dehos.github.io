@@ -6584,7 +6584,6 @@ body > footer {
 #catatan-penjualan .modern-sales-table th:nth-child(1),
 #catatan-penjualan .modern-sales-table td:nth-child(1) {
     width: 92px;
-    font-family: "Courier New", Courier, monospace;
     font-variant-numeric: tabular-nums;
 }
 
@@ -7121,7 +7120,6 @@ body > footer {
 #riwayat-transaksi .modern-history-table th:nth-child(1),
 #riwayat-transaksi .modern-history-table td:nth-child(1) {
     width: 112px;
-    font-family: "Courier New", Courier, monospace;
     font-variant-numeric: tabular-nums;
 }
 
@@ -7755,4 +7753,48 @@ select:disabled {
     .app-nav a::after {
         transition: none;
     }
+}
+
+
+/* =====================================================
+   TABLE TYPOGRAPHY — REDESIGN TAHAP 12
+   Menyamakan font tanggal dan angka dengan sistem Inter
+===================================================== */
+
+#stok-barang .modern-stock-table th,
+#stok-barang .modern-stock-table td,
+#catatan-penjualan .modern-sales-table th,
+#catatan-penjualan .modern-sales-table td,
+#riwayat-transaksi .modern-history-table th,
+#riwayat-transaksi .modern-history-table td {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(1),
+#catatan-penjualan .modern-sales-table td:nth-child(1),
+#riwayat-transaksi .modern-history-table th:nth-child(1),
+#riwayat-transaksi .modern-history-table td:nth-child(1) {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
+#stok-barang .modern-stock-table th:nth-child(1),
+#stok-barang .modern-stock-table td:nth-child(1),
+#stok-barang .modern-stock-table th:nth-child(3),
+#stok-barang .modern-stock-table td:nth-child(3),
+#catatan-penjualan .modern-sales-table th:nth-child(3),
+#catatan-penjualan .modern-sales-table td:nth-child(3),
+#catatan-penjualan .modern-sales-table th:nth-child(4),
+#catatan-penjualan .modern-sales-table td:nth-child(4),
+#catatan-penjualan .modern-sales-table th:nth-child(5),
+#catatan-penjualan .modern-sales-table td:nth-child(5),
+#riwayat-transaksi .modern-history-table th:nth-child(4),
+#riwayat-transaksi .modern-history-table td:nth-child(4),
+#riwayat-transaksi .modern-history-table th:nth-child(5),
+#riwayat-transaksi .modern-history-table td:nth-child(5) {
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
 }
