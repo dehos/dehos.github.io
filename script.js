@@ -2457,6 +2457,176 @@ const tanggalElement =
         "tanggal"
     );
 
+const tanggalTampilanElement =
+    document.getElementById(
+        "tanggalTampilan"
+    );
+
+const tanggalPickerButton =
+    document.getElementById(
+        "tanggalPickerButton"
+    );
+
+
+function formatTanggalTampilan(
+    nilaiTanggal
+) {
+    const cocok =
+        String(nilaiTanggal || "")
+            .match(
+                /^(\d{4})-(\d{2})-(\d{2})$/
+            );
+
+    if (!cocok) {
+        return "";
+    }
+
+    return (
+        cocok[3] +
+        "/" +
+        cocok[2] +
+        "/" +
+        cocok[1]
+    );
+}
+
+
+function parseTanggalTampilan(
+    nilaiTanggal
+) {
+    const cocok =
+        String(nilaiTanggal || "")
+            .trim()
+            .match(
+                /^(\d{2})\/(\d{2})\/(\d{4})$/
+            );
+
+    if (!cocok) {
+        return "";
+    }
+
+    const hari =
+        Number(cocok[1]);
+
+    const bulan =
+        Number(cocok[2]);
+
+    const tahun =
+        Number(cocok[3]);
+
+    const tanggal =
+        new Date(
+            tahun,
+            bulan - 1,
+            hari
+        );
+
+    if (
+        tanggal.getFullYear() !== tahun ||
+        tanggal.getMonth() !== bulan - 1 ||
+        tanggal.getDate() !== hari
+    ) {
+        return "";
+    }
+
+    return (
+        String(tahun).padStart(4, "0") +
+        "-" +
+        String(bulan).padStart(2, "0") +
+        "-" +
+        String(hari).padStart(2, "0")
+    );
+}
+
+
+function formatKetikTanggal(
+    nilaiTanggal
+) {
+    const angka =
+        String(nilaiTanggal || "")
+            .replace(/\D/g, "")
+            .slice(0, 8);
+
+    const bagian = [];
+
+    if (angka.length > 0) {
+        bagian.push(
+            angka.slice(0, 2)
+        );
+    }
+
+    if (angka.length > 2) {
+        bagian.push(
+            angka.slice(2, 4)
+        );
+    }
+
+    if (angka.length > 4) {
+        bagian.push(
+            angka.slice(4, 8)
+        );
+    }
+
+    return bagian.join("/");
+}
+
+
+function sinkronkanTanggalTampilan() {
+    if (!tanggalTampilanElement) {
+        return;
+    }
+
+    tanggalTampilanElement.value =
+        formatTanggalTampilan(
+            tanggalElement?.value ||
+            tanggalDipilih
+        );
+}
+
+
+function terapkanTanggalTampilan() {
+    if (
+        !tanggalElement ||
+        !tanggalTampilanElement
+    ) {
+        return;
+    }
+
+    const nilaiTampilan =
+        tanggalTampilanElement.value
+            .trim();
+
+    if (!nilaiTampilan) {
+        sinkronkanTanggalTampilan();
+        return;
+    }
+
+    const nilaiIso =
+        parseTanggalTampilan(
+            nilaiTampilan
+        );
+
+    if (!nilaiIso) {
+        showToast(
+            "Gunakan format tanggal/bulan/tahun.",
+            "error"
+        );
+
+        sinkronkanTanggalTampilan();
+        return;
+    }
+
+    tanggalElement.value =
+        nilaiIso;
+
+    tanggalDipilih =
+        nilaiIso;
+
+    sinkronkanTanggalTampilan();
+    updateTable();
+}
+
+
 if (tanggalElement) {
 
     tanggalElement.addEventListener(
@@ -2466,7 +2636,64 @@ if (tanggalElement) {
             tanggalDipilih =
                 this.value;
 
+            sinkronkanTanggalTampilan();
             updateTable();
+        }
+    );
+}
+
+
+if (tanggalTampilanElement) {
+
+    tanggalTampilanElement.addEventListener(
+        "input",
+        function() {
+            this.value =
+                formatKetikTanggal(
+                    this.value
+                );
+        }
+    );
+
+    tanggalTampilanElement.addEventListener(
+        "blur",
+        terapkanTanggalTampilan
+    );
+
+    tanggalTampilanElement.addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                terapkanTanggalTampilan();
+                this.blur();
+            }
+
+            if (event.key === "Escape") {
+                sinkronkanTanggalTampilan();
+                this.blur();
+            }
+        }
+    );
+}
+
+
+if (
+    tanggalPickerButton &&
+    tanggalElement
+) {
+    tanggalPickerButton.addEventListener(
+        "click",
+        function() {
+            if (
+                typeof tanggalElement.showPicker ===
+                "function"
+            ) {
+                tanggalElement.showPicker();
+                return;
+            }
+
+            tanggalElement.click();
         }
     );
 }
@@ -7158,6 +7385,8 @@ async function init() {
     if (tanggal) {
         tanggal.value =
             tanggalDipilih;
+
+        sinkronkanTanggalTampilan();
     }
 
 
