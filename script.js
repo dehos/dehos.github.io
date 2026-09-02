@@ -480,34 +480,73 @@ async function loadBarang() {
 
 async function loadTransactions() {
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("transaksi")
-            .select("*")
-            .order(
-                "tanggal",
-                {
-                    ascending: true
-                }
+    const batasPerHalaman = 1000;
+    let posisiAwal = 0;
+    const semuaTransaksi = [];
+
+    while (true) {
+        const posisiAkhir =
+            posisiAwal +
+            batasPerHalaman -
+            1;
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("transaksi")
+                .select("*")
+                .order(
+                    "tanggal",
+                    {
+                        ascending: true
+                    }
+                )
+                .order(
+                    "id",
+                    {
+                        ascending: true
+                    }
+                )
+                .range(
+                    posisiAwal,
+                    posisiAkhir
+                );
+
+        if (error) {
+
+            console.error(error);
+
+            setDatabaseStatus(
+                "Gagal mengambil transaksi: " +
+                error.message,
+                "error"
             );
 
-    if (error) {
+            return;
+        }
 
-        console.error(error);
+        const hasil =
+            data || [];
 
-        setDatabaseStatus(
-            "Gagal mengambil transaksi: " +
-            error.message,
-            "error"
+        semuaTransaksi.push(
+            ...hasil
         );
 
-        return;
+        if (
+            hasil.length <
+            batasPerHalaman
+        ) {
+            break;
+        }
+
+        posisiAwal +=
+            batasPerHalaman;
     }
 
-    transactions = data || [];
+    transactions =
+        semuaTransaksi;
 
     updateTable();
 }
@@ -5020,8 +5059,192 @@ const KETERANGAN_EXPORT =
     "sel hitam = terdapat transaksi";
 
 
-function getStokTanggalSatuExport(barang, tahun, bulan) {
-    let stok = Number(barang?.stok_awal) || 0;
+function getPeriodeExportTerpilih() {
+    const nilaiTanggal =
+        document.getElementById(
+            "tanggal"
+        )?.value ||
+        tanggalDipilih ||
+        getTodayDate();
+
+    const cocok =
+        String(nilaiTanggal).match(
+            /^(\d{4})-(\d{2})/
+        );
+
+    if (!cocok) {
+        const hariIni =
+            new Date();
+
+        return {
+            tahun:
+                hariIni.getFullYear(),
+
+            bulan:
+                hariIni.getMonth()
+        };
+    }
+
+    return {
+        tahun:
+            Number(cocok[1]),
+
+        bulan:
+            Number(cocok[2]) - 1
+    };
+}
+
+
+function getHariTerakhirExport(
+    tahun,
+    bulan
+) {
+    const hariIni =
+        new Date();
+
+    const periodeSekarang =
+        hariIni.getFullYear() * 12 +
+        hariIni.getMonth();
+
+    const periodeDipilih =
+        tahun * 12 +
+        bulan;
+
+    if (
+        periodeDipilih >
+        periodeSekarang
+    ) {
+        return 0;
+    }
+
+    if (
+        periodeDipilih ===
+        periodeSekarang
+    ) {
+        return hariIni.getDate();
+    }
+
+    return new Date(
+        tahun,
+        bulan + 1,
+        0
+    ).getDate();
+}
+
+
+function getTanggalPembuatanBarangExport(
+    barang
+) {
+    const tanggal =
+        new Date(
+            barang?.created_at || ""
+        );
+
+    if (
+        Number.isNaN(
+            tanggal.getTime()
+        )
+    ) {
+        return "";
+    }
+
+    return (
+        tanggal.getFullYear() +
+        "-" +
+        String(
+            tanggal.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            tanggal.getDate()
+        ).padStart(2, "0")
+    );
+}
+
+
+function getStokAwalBulanExport(
+    barang,
+    tahun,
+    bulan
+) {
+    const tanggalSatu =
+        `${tahun}-${String(
+            bulan + 1
+        ).padStart(2, "0")}-01`;
+
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    /*
+     * Barang yang belum ada pada
+     * tanggal 1 tidak masuk rekap,
+     * sesuai aturan stok tanggal 1.
+     */
+    if (
+        tanggalPembuatan &&
+        tanggalPembuatan >
+            tanggalSatu
+    ) {
+        return 0;
+    }
+
+    let stok =
+        Number(
+            barang?.stok_awal
+        ) || 0;
+
+    transactions.forEach(
+        function(transaction) {
+            if (
+                Number(
+                    transaction.barang_id
+                ) !==
+                    Number(barang?.id) ||
+                !transaction.tanggal ||
+                transaction.tanggal >=
+                    tanggalSatu
+            ) {
+                return;
+            }
+
+            const qty =
+                Number(
+                    transaction.qty
+                ) || 0;
+
+            if (
+                transaction.type ===
+                "masuk"
+            ) {
+                stok += qty;
+            }
+
+            if (
+                transaction.type ===
+                "laku"
+            ) {
+                stok -= qty;
+            }
+        }
+    );
+
+    return stok;
+}
+
+
+function getStokTanggalSatuExport(
+    barang,
+    tahun,
+    bulan
+) {
+    let stok =
+        getStokAwalBulanExport(
+            barang,
+            tahun,
+            bulan
+        );
 
     const tanggalSatu =
         `${tahun}-${String(
@@ -5031,20 +5254,32 @@ function getStokTanggalSatuExport(barang, tahun, bulan) {
     transactions.forEach(
         function(transaction) {
             if (
-                Number(transaction.barang_id) !==
+                Number(
+                    transaction.barang_id
+                ) !==
                     Number(barang?.id) ||
-                transaction.tanggal !== tanggalSatu
+                transaction.tanggal !==
+                    tanggalSatu
             ) {
                 return;
             }
 
-            const qty = Number(transaction.qty) || 0;
+            const qty =
+                Number(
+                    transaction.qty
+                ) || 0;
 
-            if (transaction.type === "masuk") {
+            if (
+                transaction.type ===
+                "masuk"
+            ) {
                 stok += qty;
             }
 
-            if (transaction.type === "laku") {
+            if (
+                transaction.type ===
+                "laku"
+            ) {
                 stok -= qty;
             }
         }
@@ -5060,19 +5295,27 @@ async function exportExcel() {
         return;
     }
 
-    const disetujui =
-        await mintaKonfirmasiExport(
-            "Export rekap stok ke Excel?"
+    const periodeExport =
+        getPeriodeExportTerpilih();
+
+    const tahun =
+        periodeExport.tahun;
+
+    const bulan =
+        periodeExport.bulan;
+
+    const hariTerakhirExport =
+        getHariTerakhirExport(
+            tahun,
+            bulan
         );
 
-    if (!disetujui) {
+    if (hariTerakhirExport === 0) {
+        alert(
+            "Bulan yang dipilih belum dimulai."
+        );
         return;
     }
-
-    const now = new Date();
-    const tahun = now.getFullYear();
-    const bulan = now.getMonth();
-    const hariIni = now.getDate();
 
     const namaBulan = [
         "Januari",
@@ -5088,6 +5331,19 @@ async function exportExcel() {
         "November",
         "Desember"
     ];
+
+    const disetujui =
+        await mintaKonfirmasiExport(
+            "Export rekap stok " +
+            namaBulan[bulan] +
+            " " +
+            tahun +
+            " ke Excel?"
+        );
+
+    if (!disetujui) {
+        return;
+    }
 
     const jumlahHari = new Date(
         tahun,
@@ -5160,9 +5416,11 @@ kelompokBarangExport.forEach(
         kelompok.barang.forEach(
             function(barang) {
                 let stok =
-                    Number(
-                        barang.stok_awal
-                    ) || 0;
+                    getStokAwalBulanExport(
+                        barang,
+                        tahun,
+                        bulan
+                    );
 
                 const row = [
                         formatNamaBarangExport(
@@ -5175,7 +5433,7 @@ kelompokBarangExport.forEach(
                     hari <= jumlahHari;
                     hari++
                 ) {
-                    if (hari > hariIni) {
+                    if (hari > hariTerakhirExport) {
                         row.push("");
                         continue;
                     }
@@ -5810,29 +6068,27 @@ async function exportPDF() {
     }
 
 
-    const disetujui =
-        await mintaKonfirmasiExport(
-            "Export rekap stok ke PDF?"
-        );
-
-    if (!disetujui) {
-        return;
-    }
-
-
-    /* TANGGAL SEKARANG */
-
-    const sekarang =
-        new Date();
+    const periodeExport =
+        getPeriodeExportTerpilih();
 
     const tahun =
-        sekarang.getFullYear();
+        periodeExport.tahun;
 
     const bulan =
-        sekarang.getMonth();
+        periodeExport.bulan;
 
-    const hariIni =
-        sekarang.getDate();
+    const hariTerakhirExport =
+        getHariTerakhirExport(
+            tahun,
+            bulan
+        );
+
+    if (hariTerakhirExport === 0) {
+        alert(
+            "Bulan yang dipilih belum dimulai."
+        );
+        return;
+    }
 
     const namaBulan = [
         "Januari",
@@ -5848,6 +6104,19 @@ async function exportPDF() {
         "November",
         "Desember"
     ];
+
+    const disetujui =
+        await mintaKonfirmasiExport(
+            "Export rekap stok " +
+            namaBulan[bulan] +
+            " " +
+            tahun +
+            " ke PDF?"
+        );
+
+    if (!disetujui) {
+        return;
+    }
 
     const jumlahHari =
         new Date(
@@ -5929,9 +6198,11 @@ async function exportPDF() {
                         dataPDF.length;
 
                     let stok =
-                        Number(
-                            barang.stok_awal
-                        ) || 0;
+                        getStokAwalBulanExport(
+                            barang,
+                            tahun,
+                            bulan
+                        );
 
                     const row = [
                         formatNamaBarangExport(
@@ -5944,7 +6215,7 @@ async function exportPDF() {
                         hari <= jumlahHari;
                         hari++
                     ) {
-                        if (hari > hariIni) {
+                        if (hari > hariTerakhirExport) {
                             row.push("");
                             continue;
                         }
