@@ -6305,3 +6305,617 @@ body > footer {
         min-width: 0;
     }
 }
+
+
+/* =====================================================
+   SALES HISTORY — REDESIGN TAHAP 4
+===================================================== */
+
+#catatan-penjualan {
+    scroll-margin-top: 18px;
+}
+
+#catatan-penjualan .modern-sales-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 13px;
+    padding: 0 0 15px;
+    border-bottom: 1px solid var(--app-border-soft);
+}
+
+#catatan-penjualan .modern-title-group {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 11px;
+}
+
+#catatan-penjualan .modern-title-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(123, 114, 255, .26);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgba(123, 114, 255, .18), rgba(55, 215, 255, .08));
+    color: #aaa5ff;
+    box-shadow: 0 9px 24px rgba(20, 24, 76, .22);
+}
+
+#catatan-penjualan .modern-title-icon .ui-svg-icon {
+    width: 18px;
+    height: 18px;
+}
+
+#catatan-penjualan .modern-title-group h3 {
+    margin: 0;
+    color: var(--app-text);
+    font-size: 16px;
+    font-weight: 650;
+    letter-spacing: -.015em;
+}
+
+#catatan-penjualan .modern-title-group small {
+    display: block;
+    margin-top: 3px;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+#catatan-penjualan .modern-sales-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#catatan-penjualan .modern-month-nav {
+    display: flex;
+    min-height: 39px;
+    align-items: center;
+    gap: 4px;
+    padding: 3px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 11px;
+    background: rgba(7, 13, 31, .62);
+}
+
+#catatan-penjualan .modern-month-nav button {
+    display: inline-grid;
+    width: 31px;
+    height: 31px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--app-muted);
+    box-shadow: none;
+}
+
+#catatan-penjualan .modern-month-nav button:hover:not(:disabled) {
+    border-color: rgba(123, 114, 255, .2);
+    background: var(--app-accent-soft);
+    color: var(--app-text);
+}
+
+#catatan-penjualan .modern-month-nav button:disabled {
+    border-color: transparent;
+    background: transparent;
+    color: #596886;
+    opacity: 1;
+}
+
+#catatan-penjualan .modern-month-nav button .ui-svg-icon {
+    width: 15px;
+    height: 15px;
+}
+
+#catatan-penjualan .modern-month-nav strong {
+    min-width: 124px;
+    color: var(--app-text-soft);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#catatan-penjualan .modern-secondary-button {
+    display: inline-flex;
+    min-height: 39px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: none;
+}
+
+#catatan-penjualan .modern-secondary-button:hover {
+    border-color: #3a4e78;
+    background: rgba(21, 31, 63, .85);
+    color: var(--app-text);
+    transform: translateY(-1px);
+}
+
+#catatan-penjualan .modern-secondary-button .modern-export-leading-icon {
+    display: inline-grid;
+    width: 23px;
+    height: 23px;
+    place-items: center;
+    border-radius: 7px;
+    background: rgba(55, 215, 255, .1);
+    color: #7de4ff;
+}
+
+#catatan-penjualan .modern-secondary-button svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#catatan-penjualan .modern-sales-filter {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 12px;
+}
+
+#catatan-penjualan .sales-filter-control {
+    display: grid;
+    width: min(250px, 100%);
+    gap: 5px;
+}
+
+#catatan-penjualan .sales-filter-control label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+#catatan-penjualan .sales-filter-control label .ui-svg-icon {
+    width: 13px;
+    height: 13px;
+    color: #7de4ff;
+}
+
+#catatan-penjualan .modern-sales-filter .form-select {
+    min-height: 39px;
+    padding: 7px 34px 7px 10px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background-color: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    box-shadow: none;
+}
+
+#catatan-penjualan .modern-sales-filter .form-select:focus {
+    border-color: var(--app-accent);
+    box-shadow: 0 0 0 3px rgba(123, 114, 255, .14);
+}
+
+#catatan-penjualan .modern-sales-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 13px;
+    background: rgba(6, 12, 29, .38);
+    scrollbar-color: #42557e rgba(7, 13, 31, .6);
+}
+
+#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-track {
+    background: rgba(7, 13, 31, .6);
+}
+
+#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-thumb {
+    border-color: rgba(7, 13, 31, .6);
+    background: #42557e;
+}
+
+#catatan-penjualan .modern-sales-table,
+#catatan-penjualan #penjualanTable {
+    width: 100%;
+    min-width: 900px;
+    margin: 0;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--app-text-soft);
+    font-size: 12px;
+}
+
+#catatan-penjualan .modern-sales-table thead,
+#catatan-penjualan .modern-sales-table thead.table-light {
+    --bs-table-bg: rgba(7, 13, 31, .8);
+    --bs-table-color: var(--app-muted);
+    background: rgba(7, 13, 31, .8);
+    color: var(--app-muted);
+}
+
+#catatan-penjualan .modern-sales-table thead th {
+    padding: 11px 10px;
+    border: 0;
+    border-bottom: 1px solid var(--app-border);
+    background: transparent;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .025em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+#catatan-penjualan .modern-sales-table tbody td {
+    padding: 11px 10px;
+    border: 0;
+    border-bottom: 1px solid var(--app-border-soft);
+    background: transparent;
+    color: var(--app-text-soft);
+    font-size: 12px;
+    font-weight: 400;
+    vertical-align: middle;
+}
+
+#catatan-penjualan .modern-sales-table tbody tr:hover td {
+    background: rgba(123, 114, 255, .055);
+    color: var(--app-text);
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(1),
+#catatan-penjualan .modern-sales-table td:nth-child(1) {
+    width: 92px;
+    font-family: "Courier New", Courier, monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(2),
+#catatan-penjualan .modern-sales-table td:nth-child(2) {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(3),
+#catatan-penjualan .modern-sales-table td:nth-child(3) {
+    width: 58px;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(4),
+#catatan-penjualan .modern-sales-table td:nth-child(4) {
+    width: 112px;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(5),
+#catatan-penjualan .modern-sales-table td:nth-child(5) {
+    width: 125px;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(6),
+#catatan-penjualan .modern-sales-table td:nth-child(6) {
+    width: 112px;
+}
+
+#catatan-penjualan .modern-sales-table th:nth-child(7),
+#catatan-penjualan .modern-sales-table td:nth-child(7) {
+    width: 80px;
+}
+
+#catatan-penjualan .sales-name-marquee {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    white-space: normal;
+}
+
+#catatan-penjualan .sales-name-track {
+    display: block;
+    min-width: 0;
+    animation: none;
+    transform: none;
+}
+
+#catatan-penjualan .sales-name-track > span:first-child {
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#catatan-penjualan .sales-name-track > span[aria-hidden="true"] {
+    display: none;
+}
+
+#catatan-penjualan .modern-sales-table .edit-history-btn,
+#catatan-penjualan .modern-sales-table .delete-history-btn {
+    display: inline-grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    margin: 0 2px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    box-shadow: none;
+}
+
+#catatan-penjualan .modern-sales-table .edit-history-btn {
+    color: #8fe8ff;
+}
+
+#catatan-penjualan .modern-sales-table .delete-history-btn {
+    color: #ff9eb2;
+}
+
+#catatan-penjualan .modern-sales-table .edit-history-btn:hover {
+    border-color: rgba(55, 215, 255, .18);
+    background: rgba(55, 215, 255, .09);
+    color: #b9f1ff;
+}
+
+#catatan-penjualan .modern-sales-table .delete-history-btn:hover {
+    border-color: rgba(255, 111, 145, .2);
+    background: rgba(255, 111, 145, .09);
+    color: #ffc1ce;
+}
+
+#catatan-penjualan .modern-sales-table .edit-history-btn svg,
+#catatan-penjualan .modern-sales-table .delete-history-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#catatan-penjualan .modern-sales-table tfoot,
+#catatan-penjualan .modern-sales-table tfoot.table-light {
+    --bs-table-bg: rgba(123, 114, 255, .1);
+    --bs-table-color: var(--app-text-soft);
+}
+
+#catatan-penjualan .modern-sales-table tfoot th {
+    padding: 11px 10px;
+    border: 0;
+    border-top: 1px solid rgba(123, 114, 255, .24);
+    background: rgba(123, 114, 255, .08);
+    color: var(--app-text-soft);
+    font-size: 11px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+@media (max-width: 760px) {
+    #catatan-penjualan .modern-sales-header {
+        display: grid;
+        align-items: start;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding-bottom: 13px;
+    }
+
+    #catatan-penjualan .modern-title-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    #catatan-penjualan .modern-title-group h3 {
+        font-size: 15px;
+    }
+
+    #catatan-penjualan .modern-title-group small {
+        font-size: 11px;
+    }
+
+    #catatan-penjualan .modern-sales-tools {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    #catatan-penjualan .modern-month-nav {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    #catatan-penjualan .modern-month-nav strong {
+        min-width: 0;
+        flex: 1 1 auto;
+        font-size: 11px;
+    }
+
+    #catatan-penjualan .modern-secondary-button {
+        min-height: 39px;
+        flex: 0 0 auto;
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    #catatan-penjualan .sales-filter-control {
+        width: 100%;
+    }
+
+    #catatan-penjualan .modern-sales-table,
+    #catatan-penjualan #penjualanTable {
+        min-width: 830px;
+    }
+
+    #catatan-penjualan .modern-sales-table thead th,
+    #catatan-penjualan .modern-sales-table tbody td,
+    #catatan-penjualan .modern-sales-table tfoot th {
+        padding: 9px 7px;
+        font-size: 11px;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(2),
+    #catatan-penjualan .modern-sales-table td:nth-child(2) {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 430px) {
+    #catatan-penjualan .modern-secondary-button > span:last-child {
+        display: none;
+    }
+
+    #catatan-penjualan .modern-secondary-button {
+        width: 39px;
+        padding: 0;
+    }
+}
+
+#editPenjualanModal {
+    padding: 18px;
+    background: rgba(1, 4, 14, .72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+#editPenjualanModal .modal-content {
+    width: min(100%, 450px);
+    max-width: 450px;
+    max-height: calc(100vh - 36px);
+    padding: 21px;
+    overflow-y: auto;
+    border: 1px solid var(--app-border);
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 100% 0, rgba(123, 114, 255, .12), transparent 36%),
+        #0d162d;
+    color: var(--app-text-soft);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .52);
+}
+
+#editPenjualanModal .modal-title {
+    gap: 9px;
+    margin: 0 0 17px;
+    color: var(--app-text);
+    font-size: 18px;
+    font-weight: 650;
+}
+
+#editPenjualanModal .modal-title-icon {
+    width: 20px;
+    height: 20px;
+    color: #8fe8ff;
+}
+
+#editPenjualanModal .modal-content label {
+    margin: 13px 0 6px;
+    color: var(--app-muted);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#editPenjualanModal .modal-content input,
+#editPenjualanModal .modal-content select {
+    min-height: 42px;
+    padding: 9px 11px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+}
+
+#editPenjualanModal #editPenjualanBarang {
+    background: rgba(169, 182, 211, .055);
+    color: #bac6df;
+}
+
+#editPenjualanModal #editPenjualanTanggal {
+    font-family: "Courier New", Courier, monospace;
+    font-variant-numeric: tabular-nums;
+    color-scheme: dark;
+}
+
+#editPenjualanModal .modal-content input:focus,
+#editPenjualanModal .modal-content select:focus {
+    border-color: var(--app-accent);
+    outline: none;
+    background: rgba(8, 15, 36, .94);
+    box-shadow: 0 0 0 3px rgba(123, 114, 255, .14);
+}
+
+#editPenjualanModal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--app-border-soft);
+}
+
+#editPenjualanModal .modal-actions button {
+    min-width: 98px;
+    min-height: 40px;
+    border-radius: 10px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#editPenjualanModal .modal-actions .btn-secondary {
+    border: 1px solid var(--app-border);
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-muted);
+}
+
+#editPenjualanModal .modal-actions .btn-primary {
+    border: 1px solid var(--app-accent);
+    background: linear-gradient(135deg, var(--app-accent), #6258e8);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(60, 51, 175, .23);
+}
+
+@media (max-width: 600px) {
+    #editPenjualanModal {
+        align-items: flex-end;
+        padding: 10px;
+    }
+
+    #editPenjualanModal .modal-content {
+        max-height: calc(100vh - 20px);
+        padding: 18px 15px 15px;
+    }
+
+    #editPenjualanModal .modal-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #editPenjualanModal .modal-actions button {
+        width: 100%;
+        min-width: 0;
+    }
+}
