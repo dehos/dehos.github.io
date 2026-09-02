@@ -6322,28 +6322,12 @@ async function exportPDF() {
                     return;
                 }
 
-                const tanggal =
-                    `${tahun}-${String(
-                        bulan + 1
-                    ).padStart(2, "0")}-${String(
-                        data.column.index
-                    ).padStart(2, "0")}`;
-
-                const adaTransaksi =
-                    transactions.some(
-                        function(transaction) {
-                            return (
-                                Number(
-                                    transaction.barang_id
-                                ) ===
-                                    Number(barang.id) &&
-                                transaction.tanggal ===
-                                    tanggal
-                            );
-                        }
+                const detailTransaksi =
+                    transaksiCellPDF.get(
+                        `${data.row.index}:${data.column.index}`
                     );
 
-                if (adaTransaksi) {
+                if (detailTransaksi) {
                     data.cell.styles.fillColor =
                         [0, 0, 0];
 
@@ -6352,6 +6336,178 @@ async function exportPDF() {
 
                     data.cell.styles.fontStyle =
                         "bold";
+
+                    /*
+                     * Teks digambar ulang pada
+                     * didDrawCell agar pangkat
+                     * selalu tampil dengan benar.
+                     */
+                    data.cell.text = [""];
+                }
+            },
+
+        didDrawCell:
+            function(data) {
+                if (
+                    data.section !== "body" ||
+                    data.column.index === 0
+                ) {
+                    return;
+                }
+
+                const detailTransaksi =
+                    transaksiCellPDF.get(
+                        `${data.row.index}:${data.column.index}`
+                    );
+
+                if (!detailTransaksi) {
+                    return;
+                }
+
+                const stokText =
+                    String(
+                        detailTransaksi.stokSebelum
+                    );
+
+                const perubahanText =
+                    (
+                        detailTransaksi.totalMasuk > 0
+                            ? `+${detailTransaksi.totalMasuk}`
+                            : ""
+                    ) +
+                    (
+                        detailTransaksi.totalKeluar > 0
+                            ? `-${detailTransaksi.totalKeluar}`
+                            : ""
+                    );
+
+                let ukuranStok = 8;
+                let ukuranPangkat = 5;
+                const jarak = 0.2;
+                const lebarTersedia =
+                    Math.max(
+                        data.cell.width - 1,
+                        1
+                    );
+
+                pdf.setFont(
+                    "helvetica",
+                    "bold"
+                );
+
+                pdf.setFontSize(
+                    ukuranStok
+                );
+
+                let lebarStok =
+                    pdf.getTextWidth(
+                        stokText
+                    );
+
+                pdf.setFontSize(
+                    ukuranPangkat
+                );
+
+                let lebarPangkat =
+                    pdf.getTextWidth(
+                        perubahanText
+                    );
+
+                let lebarGabungan =
+                    lebarStok +
+                    (
+                        perubahanText
+                            ? jarak + lebarPangkat
+                            : 0
+                    );
+
+                if (
+                    lebarGabungan >
+                    lebarTersedia
+                ) {
+                    const skala =
+                        lebarTersedia /
+                        lebarGabungan;
+
+                    ukuranStok =
+                        Math.max(
+                            5,
+                            ukuranStok * skala
+                        );
+
+                    ukuranPangkat =
+                        Math.max(
+                            3,
+                            ukuranPangkat * skala
+                        );
+
+                    pdf.setFontSize(
+                        ukuranStok
+                    );
+
+                    lebarStok =
+                        pdf.getTextWidth(
+                            stokText
+                        );
+
+                    pdf.setFontSize(
+                        ukuranPangkat
+                    );
+
+                    lebarPangkat =
+                        pdf.getTextWidth(
+                            perubahanText
+                        );
+
+                    lebarGabungan =
+                        lebarStok +
+                        (
+                            perubahanText
+                                ? jarak + lebarPangkat
+                                : 0
+                        );
+                }
+
+                const posisiX =
+                    data.cell.x +
+                    (
+                        data.cell.width -
+                        lebarGabungan
+                    ) / 2;
+
+                const posisiY =
+                    data.cell.y +
+                    data.cell.height / 2 +
+                    0.9;
+
+                pdf.setTextColor(
+                    255,
+                    255,
+                    255
+                );
+
+                pdf.setFontSize(
+                    ukuranStok
+                );
+
+                pdf.text(
+                    stokText,
+                    posisiX,
+                    posisiY
+                );
+
+                if (perubahanText) {
+                    pdf.setFontSize(
+                        ukuranPangkat
+                    );
+
+                    pdf.text(
+                        perubahanText,
+                        posisiX +
+                            lebarStok +
+                            jarak,
+                        posisiY - 1.25
+                    );
                 }
             }
     });
