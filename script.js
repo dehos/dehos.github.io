@@ -63,6 +63,9 @@ const UI_ICON_PATHS = {
     sortNeutral:
         '<path d="m8 9 4-4 4 4"></path>' +
         '<path d="m16 15-4 4-4-4"></path>',
+    loading:
+        '<circle cx="12" cy="12" r="8"></circle>' +
+        '<path d="M12 4a8 8 0 0 1 8 8"></path>',
     success:
         '<circle cx="12" cy="12" r="9"></circle>' +
         '<path d="m8 12 2.6 2.6L16.5 9"></path>',
@@ -96,6 +99,57 @@ const APP_MODAL_IDS = [
     "editPenjualanModal",
     "tambahBarangModal"
 ];
+
+const modalSubmitState = {
+    tambahBarang: false,
+    transaksi: false,
+    editPenjualan: false
+};
+
+function setModalSubmitBusy(
+    buttonId,
+    isBusy,
+    busyLabel = "Menyimpan..."
+) {
+    const button =
+        document.getElementById(
+            buttonId
+        );
+
+    if (!button) {
+        return;
+    }
+
+    if (isBusy) {
+        button.dataset.idleHtml =
+            button.innerHTML;
+        button.disabled = true;
+        button.setAttribute(
+            "aria-busy",
+            "true"
+        );
+        button.innerHTML =
+            getUiIconSvg(
+                "loading",
+                "button-loading-icon"
+            ) +
+            "<span>" +
+            escapeHTML(busyLabel) +
+            "</span>";
+        return;
+    }
+
+    button.disabled = false;
+    button.removeAttribute(
+        "aria-busy"
+    );
+
+    if (button.dataset.idleHtml) {
+        button.innerHTML =
+            button.dataset.idleHtml;
+        delete button.dataset.idleHtml;
+    }
+}
 
 function showAppModal(
     modal,
@@ -666,6 +720,10 @@ async function loadTransactions() {
 
 async function tambahBarang() {
 
+    if (modalSubmitState.tambahBarang) {
+        return;
+    }
+
     const namaInput =
         document.getElementById(
             "namaBarang"
@@ -756,55 +814,79 @@ async function tambahBarang() {
         return;
     }
 
-    setDatabaseStatus(
-        "Menyimpan barang..."
+    modalSubmitState.tambahBarang = true;
+    setModalSubmitBusy(
+        "tambahBarangSubmit",
+        true
     );
 
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("barang")
-            .insert({
+    try {
+        setDatabaseStatus(
+            "Menyimpan barang..."
+        );
 
-                nama: nama,
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("barang")
+                .insert({
 
-                stok_awal: stokAwal,
+                    nama: nama,
 
-                brand_id: brandId
+                    stok_awal: stokAwal,
 
-            });
+                    brand_id: brandId
 
-    if (error) {
+                });
 
+        if (error) {
+
+            console.error(
+                "ERROR TAMBAH BARANG:",
+                error
+            );
+
+            setDatabaseStatus(
+                "Gagal menyimpan barang: " +
+                    error.message,
+                "error"
+            );
+
+            return;
+        }
+
+        namaInput.value = "";
+
+        stokInput.value = "0";
+
+        if (brandInput) {
+            brandInput.value = "";
+        }
+
+        setDatabaseStatus(
+            "Barang berhasil ditambahkan.",
+            "success"
+        );
+
+        await loadBarang();
+    } catch (error) {
         console.error(
             "ERROR TAMBAH BARANG:",
             error
         );
 
         setDatabaseStatus(
-            "Gagal menyimpan barang: " +
-                error.message,
+            "Gagal menyimpan barang.",
             "error"
         );
-
-        return;
+    } finally {
+        modalSubmitState.tambahBarang = false;
+        setModalSubmitBusy(
+            "tambahBarangSubmit",
+            false
+        );
     }
-
-    namaInput.value = "";
-
-    stokInput.value = "0";
-
-    if (brandInput) {
-        brandInput.value = "";
-    }
-
-    setDatabaseStatus(
-        "Barang berhasil ditambahkan.",
-        "success"
-    );
-
-    await loadBarang();
 }
 
 
@@ -1866,6 +1948,10 @@ function closeModal() {
 
 async function confirmTransaction() {
 
+    if (modalSubmitState.transaksi) {
+        return;
+    }
+
     const input =
         document.getElementById(
             "transactionQty"
@@ -1943,60 +2029,84 @@ async function confirmTransaction() {
         getTodayDate();
 
 
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("transaksi")
-            .insert({
+    modalSubmitState.transaksi = true;
+    setModalSubmitBusy(
+        "transactionSubmit",
+        true
+    );
 
-                barang_id:
-                    barang.id,
+    try {
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("transaksi")
+                .insert({
 
-                tanggal:
-                    tanggal,
+                    barang_id:
+                        barang.id,
 
-                type:
-                    selectedTransactionType,
+                    tanggal:
+                        tanggal,
 
-                qty:
-                    qty
+                    type:
+                        selectedTransactionType,
 
-            });
+                    qty:
+                        qty
+
+                });
 
 
-    if (error) {
+        if (error) {
 
+            console.error(
+                error
+            );
+
+            alert(
+                "Gagal menyimpan transaksi:\n" +
+                error.message
+            );
+
+            return;
+        }
+
+
+        closeModal();
+
+        await loadTransactions();
+
+        updateTable();
+
+
+        const namaTransaksi =
+            selectedTransactionType ===
+            "masuk"
+                ? "Barang masuk"
+                : "Barang keluar";
+
+        showToast(
+            `${namaTransaksi} ${formatNumber(qty)}`,
+            "success"
+        );
+    } catch (error) {
         console.error(
+            "ERROR SIMPAN TRANSAKSI:",
             error
         );
 
-        alert(
-            "Gagal menyimpan transaksi:\n" +
-            error.message
+        showToast(
+            "Gagal menyimpan transaksi",
+            "error"
         );
-
-        return;
+    } finally {
+        modalSubmitState.transaksi = false;
+        setModalSubmitBusy(
+            "transactionSubmit",
+            false
+        );
     }
-
-
-    closeModal();
-
-    await loadTransactions();
-
-    updateTable();
-
-
-    const namaTransaksi =
-        selectedTransactionType ===
-        "masuk"
-            ? "Barang masuk"
-            : "Barang keluar";
-
-    showToast(
-        `${namaTransaksi} ${formatNumber(qty)}`,
-        "success"
-    );
 }
 /*/*==================================
    RIWAYAT TRANSAKSI
@@ -4690,6 +4800,16 @@ async function simpanEditPenjualan() {
         return;
     }
 
+    if (modalSubmitState.editPenjualan) {
+        return;
+    }
+
+    modalSubmitState.editPenjualan = true;
+    setModalSubmitBusy(
+        "editPenjualanSubmit",
+        true
+    );
+
     try {
         const { data, error } =
             await supabaseClient.rpc(
@@ -4747,6 +4867,12 @@ async function simpanEditPenjualan() {
         showToast(
             "Terjadi kesalahan saat mengedit penjualan",
             "error"
+        );
+    } finally {
+        modalSubmitState.editPenjualan = false;
+        setModalSubmitBusy(
+            "editPenjualanSubmit",
+            false
         );
     }
 }
