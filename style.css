@@ -4098,7 +4098,7 @@ footer small {
     letter-spacing: 0.02em;
 }
 
-.stock-filter-field .localized-date-native {
+.localized-date-native {
     position: absolute;
     width: 1px;
     height: 1px;
