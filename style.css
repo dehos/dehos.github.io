@@ -7336,3 +7336,253 @@ body > footer {
         text-align: left;
     }
 }
+
+
+/* =====================================================
+   FINAL UI SYSTEM — REDESIGN TAHAP 6
+   Accessibility, responsive polish, dan state visual
+===================================================== */
+
+::selection {
+    background: rgba(123, 114, 255, .36);
+    color: #fff;
+}
+
+.skip-link {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 300;
+    padding: 9px 12px;
+    border: 1px solid var(--app-accent);
+    border-radius: 9px;
+    background: var(--app-surface-raised);
+    color: var(--app-text);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform .16s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid rgba(55, 215, 255, .78);
+    outline-offset: 2px;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+    cursor: not-allowed;
+}
+
+.container > .card {
+    isolation: isolate;
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.container > .card:hover {
+    border-color: rgba(114, 137, 184, .26);
+    box-shadow: 0 20px 54px rgba(1, 4, 14, .24);
+}
+
+.container .empty,
+.container .loading {
+    color: var(--app-muted);
+    font-weight: 400;
+    line-height: 1.55;
+}
+
+.container .empty {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(123, 114, 255, .055), transparent 44%),
+        transparent;
+}
+
+.container .loading-content {
+    color: var(--app-muted);
+}
+
+.container .loading-svg-icon {
+    color: var(--app-cyan);
+}
+
+.dashboard-card .target-brand-loading {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--app-border-soft);
+    background: rgba(7, 13, 31, .48);
+}
+
+.dashboard-card .target-brand-loading::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(123, 114, 255, .12) 48%, transparent 76%);
+    content: "";
+    transform: translateX(-100%);
+    animation: appLoadingSweep 1.5s ease-in-out infinite;
+}
+
+@keyframes appLoadingSweep {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.app-topbar #databaseStatus.status {
+    min-width: 0;
+}
+
+.app-topbar #databaseStatus.status span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.app-footer {
+    display: flex;
+    min-height: 84px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-left: 228px;
+    padding: 18px 25px 22px;
+    border-top: 1px solid var(--app-border-soft);
+    background: var(--app-bg);
+    color: var(--app-muted);
+}
+
+.app-footer-brand {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-footer-icon {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(123, 114, 255, .22);
+    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(123, 114, 255, .14), rgba(55, 215, 255, .07));
+    color: #aaa5ff;
+}
+
+.app-footer-icon .ui-svg-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.app-footer-brand strong,
+.app-footer-brand small {
+    display: block;
+}
+
+.app-footer-brand strong {
+    color: var(--app-text-soft);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.app-footer-brand small,
+.app-footer-copyright {
+    margin-top: 2px;
+    color: var(--app-muted);
+    font-size: 10px;
+    font-weight: 400;
+}
+
+@media (max-width: 980px) {
+    .app-footer {
+        margin-left: 78px;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        padding-bottom: calc(78px + env(safe-area-inset-bottom));
+    }
+
+    .app-topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(110px, 145px);
+        gap: 9px;
+    }
+
+    .app-topbar > div:first-child {
+        min-width: 0;
+    }
+
+    .app-topbar h2,
+    .app-topbar p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .app-mobile-nav {
+        bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+
+    .app-footer {
+        display: grid;
+        min-height: 0;
+        gap: 10px;
+        margin-left: 0;
+        padding: 18px 14px 24px;
+    }
+
+    .app-footer-copyright {
+        margin-left: 44px;
+    }
+}
+
+@media (max-width: 380px) {
+    .app-topbar {
+        grid-template-columns: minmax(0, 1fr) 124px;
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .app-topbar #databaseStatus.status {
+        max-width: 124px;
+    }
+
+    .container {
+        padding-right: 9px;
+        padding-left: 9px;
+    }
+
+    .container > .card {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .app-mobile-nav {
+        right: 7px;
+        left: 7px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skip-link,
+    .container > .card {
+        transition: none;
+    }
+
+    .dashboard-card .target-brand-loading::after {
+        animation: none;
+    }
+}
