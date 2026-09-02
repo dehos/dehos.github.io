@@ -54,6 +54,15 @@ const UI_ICON_PATHS = {
         '<path d="m15 18-6-6 6-6"></path>',
     chevronRight:
         '<path d="m9 18 6-6-6-6"></path>',
+    sortAscending:
+        '<path d="M12 19V5"></path>' +
+        '<path d="m7 10 5-5 5 5"></path>',
+    sortDescending:
+        '<path d="M12 5v14"></path>' +
+        '<path d="m7 14 5 5 5-5"></path>',
+    sortNeutral:
+        '<path d="m8 9 4-4 4 4"></path>' +
+        '<path d="m16 15-4 4-4-4"></path>',
     success:
         '<circle cx="12" cy="12" r="9"></circle>' +
         '<path d="m8 12 2.6 2.6L16.5 9"></path>',
@@ -1251,6 +1260,11 @@ function renderPaginationStok(totalData) {
     tombolSebelumnya.type =
         "button";
 
+    tombolSebelumnya.setAttribute(
+        "aria-label",
+        "Halaman stok sebelumnya"
+    );
+
     tombolSebelumnya.innerHTML =
         getUiIconSvg(
             "chevronLeft",
@@ -1298,6 +1312,11 @@ function renderPaginationStok(totalData) {
         titikAwal.className =
             "pagination-dots";
 
+        titikAwal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
         titikAwal.textContent =
             "…";
 
@@ -1323,12 +1342,29 @@ function renderPaginationStok(totalData) {
         tombol.textContent =
             halaman;
 
+        tombol.setAttribute(
+            "aria-label",
+            "Buka halaman stok " + halaman
+        );
+
         if (
             halaman ===
             halamanStok
         ) {
             tombol.classList.add(
                 "active"
+            );
+
+            tombol.setAttribute(
+                "aria-current",
+                "page"
+            );
+
+            tombol.setAttribute(
+                "aria-label",
+                "Halaman stok " +
+                halaman +
+                ", halaman aktif"
             );
         }
 
@@ -1360,6 +1396,11 @@ function renderPaginationStok(totalData) {
         titikAkhir.className =
             "pagination-dots";
 
+        titikAkhir.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
         titikAkhir.textContent =
             "…";
 
@@ -1375,6 +1416,11 @@ function renderPaginationStok(totalData) {
 
     tombolBerikutnya.type =
         "button";
+
+    tombolBerikutnya.setAttribute(
+        "aria-label",
+        "Halaman stok berikutnya"
+    );
 
     tombolBerikutnya.innerHTML =
         getUiIconSvg(
@@ -1438,18 +1484,7 @@ function sortStock() {
     stockSortAsc =
         !stockSortAsc;
 
-    const header =
-        document.getElementById(
-            "stokHeader"
-        );
-
-    if (header) {
-
-        header.textContent =
-            stockSortAsc
-                ? "↓"
-                : "↑";
-    }
+    updateStockSortHeaders();
 
     updateTable();
 }
@@ -1459,7 +1494,101 @@ function sortNama() {
 
     sortMode = "nama";
 
+    updateStockSortHeaders();
+
     updateTable();
+}
+
+
+function updateStockSortHeaders() {
+
+    const namaHeader =
+        document.getElementById(
+            "namaHeader"
+        );
+
+    const stokHeader =
+        document.getElementById(
+            "stokHeader"
+        );
+
+    const namaButton =
+        namaHeader?.querySelector(
+            ".table-sort-button"
+        );
+
+    const stokButton =
+        stokHeader?.querySelector(
+            ".table-sort-button"
+        );
+
+    const namaAktif =
+        sortMode === "nama";
+
+    const stokAktif =
+        sortMode === "stok";
+
+    if (namaHeader && namaButton) {
+
+        namaHeader.setAttribute(
+            "aria-sort",
+            namaAktif
+                ? "ascending"
+                : "none"
+        );
+
+        namaButton.setAttribute(
+            "aria-label",
+            namaAktif
+                ? "Nama barang diurutkan naik"
+                : "Urutkan berdasarkan nama barang"
+        );
+
+        namaButton.innerHTML =
+            "<span>Nama Barang</span>" +
+            getUiIconSvg(
+                namaAktif
+                    ? "sortAscending"
+                    : "sortNeutral",
+                "table-sort-icon"
+            );
+    }
+
+    if (stokHeader && stokButton) {
+
+        const arahStok =
+            stockSortAsc
+                ? "ascending"
+                : "descending";
+
+        stokHeader.setAttribute(
+            "aria-sort",
+            stokAktif
+                ? arahStok
+                : "none"
+        );
+
+        stokButton.setAttribute(
+            "aria-label",
+            stokAktif
+                ? "Stok diurutkan " +
+                    (stockSortAsc
+                        ? "naik"
+                        : "turun")
+                : "Urutkan berdasarkan jumlah stok"
+        );
+
+        stokButton.innerHTML =
+            "<span>Stok</span>" +
+            getUiIconSvg(
+                stokAktif
+                    ? (stockSortAsc
+                        ? "sortAscending"
+                        : "sortDescending")
+                    : "sortNeutral",
+                "table-sort-icon"
+            );
+    }
 }
 
 
