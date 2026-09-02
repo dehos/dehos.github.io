@@ -4949,6 +4949,55 @@ function formatNamaBarangExport(namaBarang) {
 }
 
 
+const SUPERSCRIPT_EXPORT = {
+    "0": "⁰",
+    "1": "¹",
+    "2": "²",
+    "3": "³",
+    "4": "⁴",
+    "5": "⁵",
+    "6": "⁶",
+    "7": "⁷",
+    "8": "⁸",
+    "9": "⁹",
+    "+": "⁺",
+    "-": "⁻"
+};
+
+
+function formatPerubahanSuperscriptExport(perubahan) {
+    const nilai = Number(perubahan) || 0;
+    const teks =
+        nilai > 0
+            ? `+${nilai}`
+            : String(nilai);
+
+    return Array.from(teks)
+        .map(
+            function(karakter) {
+                return (
+                    SUPERSCRIPT_EXPORT[karakter] ||
+                    karakter
+                );
+            }
+        )
+        .join("");
+}
+
+
+function formatStokTransaksiExport(stokSebelum, perubahan) {
+    const stok =
+        Number(stokSebelum) || 0;
+
+    return (
+        `${stok}` +
+        formatPerubahanSuperscriptExport(
+            perubahan
+        )
+    );
+}
+
+
 function getStokTanggalSatuExport(barang, tahun, bulan) {
     let stok = Number(barang?.stok_awal) || 0;
 
@@ -5160,9 +5209,10 @@ kelompokBarangExport.forEach(
 
                     if (adaTransaksi) {
                         row.push(
-                            perubahan > 0
-                                ? `+${perubahan}`
-                                : perubahan
+                            formatStokTransaksiExport(
+                                stok,
+                                perubahan
+                            )
                         );
                         stok += perubahan;
                     } else {
@@ -5862,11 +5912,12 @@ async function exportPDF() {
 
                         if (adaTransaksi) {
                             row.push(
-                                perubahan > 0
-                                    ? `+${perubahan}`
-                                    : perubahan
-                            );
-                            stok += perubahan;
+                            formatStokTransaksiExport(
+                                stok,
+                                perubahan
+                            )
+                        );
+                        stok += perubahan;
                         } else {
                             row.push(stok);
                         }
