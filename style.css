@@ -5438,3 +5438,870 @@ body > footer {
         max-width: none;
     }
 }
+
+
+/* =====================================================
+   STOCK MANAGEMENT — REDESIGN TAHAP 3
+===================================================== */
+
+#stok-barang {
+    scroll-margin-top: 18px;
+}
+
+#stok-barang .stock-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 16px;
+    padding: 0 0 15px;
+    border-bottom: 1px solid var(--app-border-soft);
+}
+
+#stok-barang .modern-title-group {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 11px;
+}
+
+#stok-barang .modern-title-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(55, 215, 255, .22);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgba(55, 215, 255, .15), rgba(123, 114, 255, .11));
+    color: #7de4ff;
+    box-shadow: 0 9px 24px rgba(13, 54, 87, .2);
+}
+
+#stok-barang .modern-title-icon .ui-svg-icon {
+    width: 18px;
+    height: 18px;
+}
+
+#stok-barang .modern-title-group h3 {
+    margin: 0;
+    color: var(--app-text);
+    font-size: 16px;
+    font-weight: 650;
+    letter-spacing: -.015em;
+}
+
+#stok-barang .modern-title-group small {
+    display: block;
+    margin-top: 3px;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+#stok-barang .modern-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#stok-barang .modern-primary-button,
+#stok-barang .modern-export-menu > summary {
+    display: inline-flex;
+    min-height: 39px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#stok-barang .modern-primary-button {
+    border: 1px solid var(--app-accent);
+    background: linear-gradient(135deg, var(--app-accent), #6258e8);
+    color: #fff;
+    box-shadow: 0 9px 22px rgba(60, 51, 175, .23);
+}
+
+#stok-barang .modern-primary-button:hover {
+    border-color: #968fff;
+    background: linear-gradient(135deg, #8982ff, #6d63ec);
+    box-shadow: 0 12px 28px rgba(60, 51, 175, .32);
+    transform: translateY(-1px);
+}
+
+#stok-barang .modern-export-menu {
+    position: relative;
+    z-index: 24;
+}
+
+#stok-barang .modern-export-menu > summary {
+    border: 1px solid var(--app-border);
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+    box-shadow: none;
+    list-style: none;
+}
+
+#stok-barang .modern-export-menu > summary:hover {
+    border-color: #3a4e78;
+    background: rgba(21, 31, 63, .84);
+    color: var(--app-text);
+}
+
+#stok-barang .modern-export-leading-icon {
+    display: inline-grid;
+    width: 23px;
+    height: 23px;
+    place-items: center;
+    border-radius: 7px;
+    background: rgba(55, 215, 255, .1);
+    color: #7de4ff;
+}
+
+#stok-barang .modern-export-leading-icon svg,
+#stok-barang .modern-chevron {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#stok-barang .modern-chevron {
+    margin-left: 2px;
+    color: var(--app-muted);
+}
+
+#stok-barang .modern-export-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 1200;
+    display: grid;
+    min-width: 190px;
+    padding: 7px;
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    background: #0b1329;
+    box-shadow: 0 20px 42px rgba(0, 0, 0, .44);
+}
+
+#stok-barang .modern-export-options button {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: left;
+}
+
+#stok-barang .modern-export-options button:hover {
+    border-color: var(--app-border-soft);
+    background: var(--app-accent-soft);
+    color: var(--app-text);
+}
+
+#stok-barang .modern-export-options .export-file-icon {
+    width: 29px;
+    height: 29px;
+    border-radius: 8px;
+}
+
+#stok-barang .stock-filter-toolbar {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.45fr) minmax(210px, .65fr);
+    align-items: end;
+    gap: 12px;
+    margin: 0 0 14px;
+    padding: 13px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 13px;
+    background: rgba(6, 12, 29, .48);
+}
+
+#stok-barang .stock-filter-field {
+    min-width: 0;
+}
+
+#stok-barang .stock-filter-field label {
+    display: flex;
+    min-height: 20px;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 6px;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+#stok-barang .search-label-icon {
+    width: 14px;
+    height: 14px;
+    color: #7de4ff;
+}
+
+#stok-barang .form-control,
+#stok-barang input[type="text"] {
+    min-height: 41px;
+    padding: 8px 10px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: rgba(7, 13, 31, .74);
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+}
+
+#stok-barang .form-control:hover,
+#stok-barang input[type="text"]:hover {
+    border-color: #34476f;
+}
+
+#stok-barang .form-control:focus,
+#stok-barang input[type="text"]:focus {
+    border-color: var(--app-accent);
+    background: rgba(8, 15, 36, .94);
+    color: var(--app-text);
+    box-shadow: 0 0 0 3px rgba(123, 114, 255, .14);
+}
+
+#stok-barang .localized-date-display {
+    padding-right: 42px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+
+#stok-barang .localized-date-picker-button {
+    right: 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: var(--app-muted);
+}
+
+#stok-barang .localized-date-picker-button:hover {
+    background: var(--app-accent-soft);
+    color: #b7b2ff;
+}
+
+#stok-barang #stockListContent {
+    min-width: 0;
+}
+
+#stok-barang .modern-stock-table-wrapper {
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: visible;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 13px;
+    background: rgba(6, 12, 29, .38);
+    scrollbar-color: #42557e rgba(7, 13, 31, .6);
+}
+
+#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-track {
+    background: rgba(7, 13, 31, .6);
+}
+
+#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-thumb {
+    border-color: rgba(7, 13, 31, .6);
+    background: #42557e;
+}
+
+#stok-barang .modern-stock-table {
+    width: 100%;
+    min-width: 640px;
+    margin: 0;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--app-text-soft);
+    font-size: 12px;
+}
+
+#stok-barang .modern-stock-table thead,
+#stok-barang .modern-stock-table thead.table-light {
+    --bs-table-bg: rgba(7, 13, 31, .8);
+    --bs-table-color: var(--app-muted);
+    background: rgba(7, 13, 31, .8);
+    color: var(--app-muted);
+}
+
+#stok-barang .modern-stock-table thead th {
+    padding: 11px 12px;
+    border: 0;
+    border-bottom: 1px solid var(--app-border);
+    background: transparent;
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .025em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+#stok-barang .modern-stock-table tbody td {
+    padding: 11px 12px;
+    border: 0;
+    border-bottom: 1px solid var(--app-border-soft);
+    background: transparent;
+    color: var(--app-text-soft);
+    font-size: 12px;
+    font-weight: 400;
+    vertical-align: middle;
+}
+
+#stok-barang .modern-stock-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+#stok-barang .modern-stock-table tbody tr:hover td {
+    background: rgba(123, 114, 255, .055);
+    color: var(--app-text);
+}
+
+#stok-barang .modern-stock-table th:nth-child(1),
+#stok-barang .modern-stock-table td:nth-child(1) {
+    width: 58px;
+    text-align: center;
+}
+
+#stok-barang .modern-stock-table th:nth-child(2),
+#stok-barang .modern-stock-table td:nth-child(2) {
+    width: auto;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+#stok-barang .modern-stock-table th:nth-child(3),
+#stok-barang .modern-stock-table td:nth-child(3) {
+    width: 84px;
+    text-align: center;
+}
+
+#stok-barang .modern-stock-table th:nth-child(4),
+#stok-barang .modern-stock-table td:nth-child(4) {
+    width: 150px;
+    text-align: center;
+}
+
+#stok-barang .modern-stock-table #namaHeader:hover,
+#stok-barang .modern-stock-table #stokHeader:hover {
+    background: rgba(123, 114, 255, .1);
+    color: #c0bcff;
+}
+
+#stok-barang #stockTable .stock-badge {
+    display: inline-flex;
+    min-width: 38px;
+    min-height: 27px;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+#stok-barang #stockTable .stock-badge.stock-aman {
+    border-color: rgba(83, 224, 172, .18);
+    background: rgba(83, 224, 172, .09);
+    color: #a8f0d3;
+}
+
+#stok-barang #stockTable .stock-badge.stock-menipis {
+    border-color: rgba(240, 187, 79, .2);
+    background: rgba(240, 187, 79, .09);
+    color: #f7d99b;
+}
+
+#stok-barang #stockTable .stock-badge.stock-habis {
+    border-color: rgba(255, 111, 145, .22);
+    background: rgba(255, 111, 145, .09);
+    color: #ffb3c3;
+}
+
+#stok-barang #stockTable .stock-action-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 9px;
+    background: rgba(7, 13, 31, .62);
+}
+
+#stok-barang #stockTable .action-btn {
+    display: inline-flex;
+    min-width: 64px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 8px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+#stok-barang #stockTable .stock-in-btn {
+    color: #96ebc9;
+}
+
+#stok-barang #stockTable .stock-out-btn {
+    color: #ff9eb2;
+}
+
+#stok-barang #stockTable .stock-in-btn:hover {
+    background: rgba(83, 224, 172, .12);
+    color: #b8f4dc;
+}
+
+#stok-barang #stockTable .stock-out-btn:hover {
+    background: rgba(255, 111, 145, .12);
+    color: #ffc1ce;
+}
+
+#stok-barang #stockTable .action-btn:focus-visible {
+    outline: 2px solid rgba(183, 178, 255, .62);
+    outline-offset: 1px;
+}
+
+#stok-barang .loading-content {
+    color: var(--app-muted);
+    font-size: 12px;
+}
+
+#stok-barang .loading-svg-icon {
+    color: var(--app-cyan);
+}
+
+#stok-barang .stock-pagination-area {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 11px;
+    border-top: 1px solid var(--app-border-soft);
+}
+
+#stok-barang .stock-pagination-info {
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+#stok-barang .stock-pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#stok-barang .stock-pagination button {
+    display: inline-flex;
+    min-width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 8px;
+    background: rgba(7, 13, 31, .62);
+    color: var(--app-muted);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+#stok-barang .stock-pagination button:hover:not(:disabled):not(.active) {
+    border-color: #3a4e78;
+    background: rgba(21, 31, 63, .85);
+    color: var(--app-text);
+    transform: translateY(-1px);
+}
+
+#stok-barang .stock-pagination button.active {
+    border-color: var(--app-accent);
+    background: var(--app-accent);
+    color: #fff;
+    box-shadow: 0 7px 18px rgba(60, 51, 175, .25);
+}
+
+#stok-barang .stock-pagination button:disabled {
+    border-color: rgba(114, 137, 184, .1);
+    background: rgba(169, 182, 211, .035);
+    color: #5f6d8a;
+    opacity: 1;
+}
+
+#stok-barang .pagination-dots {
+    color: #7383a3;
+    font-size: 11px;
+}
+
+@media (max-width: 700px) {
+    #stok-barang .stock-section-header {
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 13px;
+        padding-bottom: 13px;
+    }
+
+    #stok-barang .modern-title-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    #stok-barang .modern-title-group h3 {
+        font-size: 15px;
+    }
+
+    #stok-barang .modern-title-group small {
+        max-width: 155px;
+        font-size: 11px;
+        line-height: 1.35;
+    }
+
+    #stok-barang .modern-header-actions {
+        gap: 6px;
+    }
+
+    #stok-barang .modern-primary-button,
+    #stok-barang .modern-export-menu > summary {
+        min-height: 36px;
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    #stok-barang .modern-export-leading-icon {
+        width: 21px;
+        height: 21px;
+    }
+
+    #stok-barang .stock-filter-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 11px;
+        padding: 10px;
+    }
+
+    #stok-barang .stock-filter-field label {
+        gap: 5px;
+        font-size: 11px;
+        white-space: normal;
+    }
+
+    #stok-barang .form-control,
+    #stok-barang input[type="text"] {
+        min-height: 38px;
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+
+    #stok-barang .localized-date-display {
+        padding-right: 36px;
+        font-size: 12px;
+    }
+
+    #stok-barang .modern-stock-table-wrapper {
+        overflow-x: hidden;
+    }
+
+    #stok-barang .modern-stock-table,
+    #stok-barang #stockTable {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    #stok-barang .modern-stock-table thead th,
+    #stok-barang .modern-stock-table tbody td {
+        padding: 8px 5px;
+        font-size: 11px;
+    }
+
+    #stok-barang .modern-stock-table thead th {
+        font-size: 10px;
+    }
+
+    #stok-barang .modern-stock-table th:nth-child(1),
+    #stok-barang .modern-stock-table td:nth-child(1) {
+        width: 29px;
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+
+    #stok-barang .modern-stock-table th:nth-child(2),
+    #stok-barang .modern-stock-table td:nth-child(2) {
+        width: auto;
+        padding-right: 3px;
+        padding-left: 5px;
+        line-height: 1.35;
+    }
+
+    #stok-barang .modern-stock-table th:nth-child(3),
+    #stok-barang .modern-stock-table td:nth-child(3) {
+        width: 43px;
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+
+    #stok-barang .modern-stock-table th:nth-child(4),
+    #stok-barang .modern-stock-table td:nth-child(4) {
+        width: 110px;
+        padding-right: 3px;
+        padding-left: 3px;
+    }
+
+    #stok-barang #stockTable .stock-badge {
+        min-width: 31px;
+        min-height: 25px;
+        padding: 3px 5px;
+        font-size: 10px;
+    }
+
+    #stok-barang #stockTable .stock-action-group {
+        width: 100%;
+        gap: 2px;
+        padding: 2px;
+    }
+
+    #stok-barang #stockTable .action-btn {
+        min-width: 0;
+        height: 28px;
+        flex: 1 1 0;
+        gap: 3px;
+        padding: 4px 3px;
+        font-size: 10px;
+    }
+
+    #stok-barang .stock-pagination-area {
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 9px;
+        padding-top: 9px;
+    }
+
+    #stok-barang .stock-pagination {
+        max-width: 100%;
+        justify-content: center;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    #stok-barang .stock-pagination-info {
+        width: 100%;
+        font-size: 11px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 540px) {
+    #stok-barang .stock-section-header {
+        flex-wrap: wrap;
+    }
+
+    #stok-barang .modern-header-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 370px) {
+    #stok-barang .modern-primary-button span,
+    #stok-barang .modern-export-menu > summary > span:nth-child(2) {
+        display: none;
+    }
+
+    #stok-barang .modern-primary-button,
+    #stok-barang .modern-export-menu > summary {
+        width: 38px;
+        padding: 0;
+    }
+}
+
+#transactionModal,
+#tambahBarangModal {
+    padding: 18px;
+    background: rgba(1, 4, 14, .72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+#transactionModal .modal-content,
+#tambahBarangModal .modal-content {
+    width: min(100%, 430px);
+    max-width: 430px;
+    max-height: calc(100vh - 36px);
+    padding: 21px;
+    overflow-y: auto;
+    border: 1px solid var(--app-border);
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 100% 0, rgba(123, 114, 255, .12), transparent 36%),
+        #0d162d;
+    color: var(--app-text-soft);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, .52);
+}
+
+#transactionModal .modal-title,
+#tambahBarangModal .modal-title {
+    margin: 0 0 7px;
+    color: var(--app-text);
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.35;
+}
+
+#tambahBarangModal .modal-title-with-icon {
+    gap: 9px;
+    margin-bottom: 17px;
+}
+
+#tambahBarangModal .modal-title-icon {
+    width: 20px;
+    height: 20px;
+    color: #8fe8ff;
+}
+
+#transactionModal .modal-product {
+    margin: 0 0 17px;
+    padding: 10px 11px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 10px;
+    background: rgba(7, 13, 31, .58);
+    color: var(--app-muted);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#transactionModal .modal-content label,
+#tambahBarangModal .modal-content label {
+    margin: 13px 0 6px;
+    color: var(--app-muted);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#transactionModal .modal-content input,
+#tambahBarangModal .modal-content input,
+#tambahBarangModal .modal-content select {
+    min-height: 42px;
+    padding: 9px 11px;
+    border: 1px solid var(--app-border);
+    border-radius: 10px;
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-text-soft);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+}
+
+#transactionModal .modal-content input:focus,
+#tambahBarangModal .modal-content input:focus,
+#tambahBarangModal .modal-content select:focus {
+    border-color: var(--app-accent);
+    outline: none;
+    background: rgba(8, 15, 36, .94);
+    box-shadow: 0 0 0 3px rgba(123, 114, 255, .14);
+}
+
+#transactionModal .modal-actions,
+#tambahBarangModal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--app-border-soft);
+}
+
+#transactionModal .modal-actions button,
+#tambahBarangModal .modal-actions button {
+    min-width: 98px;
+    min-height: 40px;
+    border-radius: 10px;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#transactionModal .modal-actions .btn-secondary,
+#tambahBarangModal .modal-actions .btn-secondary {
+    border: 1px solid var(--app-border);
+    background: rgba(7, 13, 31, .72);
+    color: var(--app-muted);
+}
+
+#transactionModal .modal-actions .btn-secondary:hover,
+#tambahBarangModal .modal-actions .btn-secondary:hover {
+    border-color: #3a4e78;
+    background: rgba(21, 31, 63, .85);
+    color: var(--app-text);
+}
+
+#transactionModal .modal-actions .btn-primary,
+#tambahBarangModal .modal-actions .btn-primary {
+    border: 1px solid var(--app-accent);
+    background: linear-gradient(135deg, var(--app-accent), #6258e8);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(60, 51, 175, .23);
+}
+
+#transactionModal .modal-actions .btn-primary:hover,
+#tambahBarangModal .modal-actions .btn-primary:hover {
+    border-color: #968fff;
+    background: linear-gradient(135deg, #8982ff, #6d63ec);
+}
+
+@media (max-width: 600px) {
+    #transactionModal,
+    #tambahBarangModal {
+        align-items: flex-end;
+        padding: 10px;
+    }
+
+    #transactionModal .modal-content,
+    #tambahBarangModal .modal-content {
+        max-height: calc(100vh - 20px);
+        padding: 18px 15px 15px;
+        border-radius: 16px;
+    }
+
+    #transactionModal .modal-actions,
+    #tambahBarangModal .modal-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #transactionModal .modal-actions button,
+    #tambahBarangModal .modal-actions button {
+        width: 100%;
+        min-width: 0;
+    }
+}
