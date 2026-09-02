@@ -2767,6 +2767,7 @@ label {
     }
 }
 
+
 @media (max-width: 600px) {
     input[type="text"],
     input[type="number"],
@@ -3522,6 +3523,7 @@ footer small {
         display: none;
     }
 }
+
 
 /* Catatan penjualan: nama lengkap dengan ukuran proporsional */
 #penjualanTable {
@@ -7931,5 +7933,36 @@ select:disabled {
     #editPenjualanModal .modal-actions button,
     #tambahBarangModal .modal-actions button {
         transition: none;
+    }
+}
+
+
+/* =====================================================
+   SAFE SUBMIT FEEDBACK — REDESIGN TAHAP 16
+   Status proses untuk mencegah pengiriman data ganda
+===================================================== */
+
+.modal-actions button[aria-busy="true"] {
+    cursor: wait;
+    opacity: .88;
+    transform: none !important;
+}
+
+.button-loading-icon {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    animation: appButtonLoadingSpin .8s linear infinite;
+}
+
+@keyframes appButtonLoadingSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button-loading-icon {
+        animation: none;
     }
 }
