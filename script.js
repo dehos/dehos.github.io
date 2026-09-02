@@ -71,7 +71,15 @@ const UI_ICON_PATHS = {
         '<path d="m8 12 2.6 2.6L16.5 9"></path>',
     error:
         '<circle cx="12" cy="12" r="9"></circle>' +
-        '<path d="m9 9 6 6M15 9l-6 6"></path>'
+        '<path d="m9 9 6 6M15 9l-6 6"></path>',
+    info:
+        '<circle cx="12" cy="12" r="9"></circle>' +
+        '<path d="M12 11v5"></path>' +
+        '<path d="M12 8h.01"></path>',
+    warning:
+        '<path d="M10.3 4.2 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z"></path>' +
+        '<path d="M12 9v4"></path>' +
+        '<path d="M12 17h.01"></path>'
 };
 
 function getUiIconSvg(
@@ -91,6 +99,216 @@ function getUiIconSvg(
 }
 
 let toastTimer = null;
+
+let penyelesaiDialogAplikasi = null;
+
+function bukaDialogAplikasi({
+    title = "Perhatian",
+    message = "",
+    type = "info",
+    confirmLabel = "Mengerti",
+    cancelLabel = "Batal",
+    showCancel = false
+} = {}) {
+    const dialog =
+        document.getElementById(
+            "appMessageDialog"
+        );
+
+    if (!dialog) {
+        console.warn(message);
+        return Promise.resolve(
+            !showCancel
+        );
+    }
+
+    if (dialog.open) {
+        dialog.close();
+
+        if (penyelesaiDialogAplikasi) {
+            penyelesaiDialogAplikasi(false);
+            penyelesaiDialogAplikasi = null;
+        }
+    }
+
+    const titleElement =
+        document.getElementById(
+            "appMessageTitle"
+        );
+
+    const messageElement =
+        document.getElementById(
+            "appMessageText"
+        );
+
+    const iconElement =
+        document.getElementById(
+            "appMessageIcon"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "appMessageCancel"
+        );
+
+    const confirmButton =
+        document.getElementById(
+            "appMessageConfirm"
+        );
+
+    const cancelText =
+        document.getElementById(
+            "appMessageCancelText"
+        );
+
+    const confirmText =
+        document.getElementById(
+            "appMessageConfirmText"
+        );
+
+    if (titleElement) {
+        titleElement.textContent = title;
+    }
+
+    if (messageElement) {
+        messageElement.textContent = message;
+    }
+
+    dialog.dataset.type = type;
+
+    if (iconElement) {
+        iconElement.innerHTML =
+            getUiIconSvg(
+                type === "danger"
+                    ? "warning"
+                    : type === "error"
+                        ? "error"
+                        : "info",
+                "app-message-status-icon"
+            );
+    }
+
+    if (cancelButton) {
+        cancelButton.hidden =
+            !showCancel;
+    }
+
+    if (cancelText) {
+        cancelText.textContent =
+            cancelLabel;
+    }
+
+    if (confirmText) {
+        confirmText.textContent =
+            confirmLabel;
+    }
+
+    dialog.showModal();
+
+    requestAnimationFrame(function() {
+        confirmButton?.focus();
+    });
+
+    return new Promise(function(resolve) {
+        penyelesaiDialogAplikasi = resolve;
+    });
+}
+
+function showAppAlert(
+    message,
+    options = {}
+) {
+    const messageText =
+        String(message || "");
+
+    const inferredType =
+        /gagal|tidak valid|harus|tidak ditemukan|tidak mencukupi|melebihi|belum dimulai|tidak ada/i
+            .test(messageText)
+            ? "error"
+            : "info";
+
+    const alertType =
+        options.type ||
+        inferredType;
+
+    return bukaDialogAplikasi({
+        title:
+            options.title ||
+            (alertType === "error"
+                ? "Terjadi Kendala"
+                : "Perhatian"),
+        message: messageText,
+        type:
+            alertType,
+        confirmLabel:
+            options.confirmLabel ||
+            "Mengerti",
+        showCancel: false
+    });
+}
+
+function showAppConfirm(
+    message,
+    options = {}
+) {
+    return bukaDialogAplikasi({
+        title:
+            options.title ||
+            "Konfirmasi",
+        message,
+        type:
+            options.type ||
+            "danger",
+        confirmLabel:
+            options.confirmLabel ||
+            "Ya, Lanjutkan",
+        cancelLabel:
+            options.cancelLabel ||
+            "Batal",
+        showCancel: true
+    });
+}
+
+function selesaikanDialogAplikasi(
+    disetujui
+) {
+    const dialog =
+        document.getElementById(
+            "appMessageDialog"
+        );
+
+    if (dialog?.open) {
+        dialog.close();
+    }
+
+    if (penyelesaiDialogAplikasi) {
+        penyelesaiDialogAplikasi(
+            Boolean(disetujui)
+        );
+        penyelesaiDialogAplikasi = null;
+    }
+}
+
+document.getElementById(
+    "appMessageDialog"
+)?.addEventListener(
+    "cancel",
+    function(event) {
+        event.preventDefault();
+        selesaikanDialogAplikasi(false);
+    }
+);
+
+document.getElementById(
+    "appMessageDialog"
+)?.addEventListener(
+    "click",
+    function(event) {
+        if (event.target === this) {
+            selesaikanDialogAplikasi(false);
+        }
+    }
+);
 
 let lastModalTrigger = null;
 
@@ -272,6 +490,23 @@ function showToast(message, type = "success") {
 
     toast.className = "toast";
 
+    const toastDuration =
+        type === "error"
+            ? 4000
+            : 3000;
+
+    toast.style.setProperty(
+        "--toast-duration",
+        toastDuration + "ms"
+    );
+
+    toast.setAttribute(
+        "role",
+        type === "error"
+            ? "alert"
+            : "status"
+    );
+
     if (type) {
         toast.classList.add(type);
     }
@@ -282,7 +517,7 @@ function showToast(message, type = "success") {
 
     toastTimer = setTimeout(function() {
         toast.classList.remove("show");
-    }, 2500);
+    }, toastDuration);
 }
 
 
@@ -754,7 +989,7 @@ async function tambahBarang() {
 
     if (!nama) {
 
-        alert(
+        await showAppAlert(
             "Nama barang harus diisi."
         );
 
@@ -768,7 +1003,7 @@ async function tambahBarang() {
         stokAwal < 0
     ) {
 
-        alert(
+        await showAppAlert(
             "Stok awal tidak valid."
         );
 
@@ -782,7 +1017,7 @@ async function tambahBarang() {
         brandId < 1
     ) {
 
-        alert(
+        await showAppAlert(
             "Pilih brand barang."
         );
 
@@ -807,7 +1042,7 @@ async function tambahBarang() {
 
     if (barangSudahAda) {
 
-        alert(
+        await showAppAlert(
             "Barang dengan nama tersebut sudah ada."
         );
 
@@ -1871,7 +2106,7 @@ function openTransaction(
 
     if (!barang) {
 
-        alert(
+        showAppAlert(
             "Barang tidak ditemukan."
         );
 
@@ -1967,7 +2202,7 @@ async function confirmTransaction() {
         qty <= 0
     ) {
 
-        alert(
+        showAppAlert(
             "Jumlah harus lebih dari 0."
         );
 
@@ -1991,7 +2226,7 @@ async function confirmTransaction() {
 
     if (!barang) {
 
-        alert(
+        showAppAlert(
             "Barang tidak ditemukan."
         );
 
@@ -2013,7 +2248,7 @@ async function confirmTransaction() {
             qty > stok
         ) {
 
-            alert(
+            showAppAlert(
                 "Jumlah barang laku melebihi stok.\n\n" +
                 "Stok tersedia: " +
                 formatNumber(stok)
@@ -2064,7 +2299,7 @@ async function confirmTransaction() {
                 error
             );
 
-            alert(
+            showAppAlert(
                 "Gagal menyimpan transaksi:\n" +
                 error.message
             );
@@ -2492,9 +2727,13 @@ async function hapusTransaksi(id) {
     }
 
     const konfirmasi =
-        confirm(
+        await showAppConfirm(
             "Hapus transaksi ini?\n\n" +
-            "Data transaksi akan dihapus permanen."
+            "Data transaksi akan dihapus permanen.",
+            {
+                title: "Hapus Transaksi",
+                confirmLabel: "Ya, Hapus"
+            }
         );
 
     if (!konfirmasi) {
@@ -3627,21 +3866,21 @@ async function simpanPenjualan() {
 
     if (!barangId) {
 
-        return alert(
+        return showAppAlert(
             "Pilih barang dari daftar saran."
         );
     }
 
     if (!brand) {
 
-    return alert(
+    return showAppAlert(
         "Barang belum memiliki brand."
     );
 }
 
     if (!qty || qty < 1) {
 
-        return alert(
+        return showAppAlert(
             "Quantity harus diisi."
         );
     }
@@ -3651,14 +3890,14 @@ async function simpanPenjualan() {
         harga < 0
     ) {
 
-        return alert(
+        return showAppAlert(
             "Harga/Unit harus diisi."
         );
     }
 
     if (!tanggal) {
 
-        return alert(
+        return showAppAlert(
             "Pilih tanggal pembelian."
         );
     }
@@ -3677,7 +3916,7 @@ async function simpanPenjualan() {
 
     if (!barang) {
 
-        return alert(
+        return showAppAlert(
             "Barang tidak ditemukan."
         );
     }
@@ -3702,7 +3941,7 @@ async function simpanPenjualan() {
         qty > stokSekarang
     ) {
 
-        return alert(
+        return showAppAlert(
             "Stok tidak mencukupi.\n\n" +
             "Stok tersedia: " +
             formatNumber(stokSekarang) +
@@ -3714,12 +3953,17 @@ async function simpanPenjualan() {
 
 
     const dikonfirmasi =
-        window.confirm(
+        await showAppConfirm(
             "Catat penjualan ini?\n\n" +
             "Barang: " + barang.nama + "\n" +
             "Quantity: " + formatNumber(qty) + "\n" +
             "Total: Rp" +
-            formatNumber(qty * harga)
+            formatNumber(qty * harga),
+            {
+                title: "Konfirmasi Penjualan",
+                type: "info",
+                confirmLabel: "Ya, Catat"
+            }
         );
 
     if (!dikonfirmasi) {
@@ -3765,7 +4009,7 @@ async function simpanPenjualan() {
         setPenjualanSaving(false);
         updatePenjualanSummary();
 
-        return alert(
+        return showAppAlert(
             "Gagal menyimpan penjualan:\n" +
             errorPenjualan.message
         );
@@ -3814,7 +4058,7 @@ async function simpanPenjualan() {
         setPenjualanSaving(false);
         updatePenjualanSummary();
 
-        return alert(
+        return showAppAlert(
             "Penjualan gagal mengurangi stok.\n\n" +
             errorTransaksi.message
         );
@@ -4632,7 +4876,7 @@ function editPenjualan(id) {
     );
 
     if (!penjualan) {
-        alert("Data penjualan tidak ditemukan.");
+        showAppAlert("Data penjualan tidak ditemukan.");
         return;
     }
 
@@ -4792,8 +5036,13 @@ async function simpanEditPenjualan() {
         return;
     }
 
-    const konfirmasi = confirm(
-        "Simpan perubahan penjualan ini?"
+    const konfirmasi = await showAppConfirm(
+        "Simpan perubahan penjualan ini?",
+        {
+            title: "Simpan Perubahan",
+            type: "info",
+            confirmLabel: "Ya, Simpan"
+        }
     );
 
     if (!konfirmasi) {
@@ -4889,9 +5138,13 @@ async function hapusPenjualan(id) {
     window.sedangMenghapusPenjualan = true;
 
     try {
-        const konfirmasi = confirm(
+        const konfirmasi = await showAppConfirm(
             "Hapus penjualan ini?\n\n" +
-            "Data penjualan akan dihapus dan stok akan dikembalikan."
+            "Data penjualan akan dihapus dan stok akan dikembalikan.",
+            {
+                title: "Hapus Penjualan",
+                confirmLabel: "Ya, Hapus"
+            }
         );
 
         if (!konfirmasi) {
@@ -5632,8 +5885,13 @@ function mintaKonfirmasiExport(message) {
         document.getElementById("exportConfirmMessage");
 
     if (!dialog) {
-        return Promise.resolve(
-            window.confirm(message)
+        return showAppConfirm(
+            message,
+            {
+                title: "Konfirmasi Export",
+                type: "info",
+                confirmLabel: "Ya, Export"
+            }
         );
     }
 
@@ -6064,7 +6322,7 @@ function getStokTanggalSatuExport(
 
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
-        alert("Library Excel belum dimuat.");
+        showAppAlert("Library Excel belum dimuat.");
         return;
     }
 
@@ -6084,7 +6342,7 @@ async function exportExcel() {
         );
 
     if (hariTerakhirExport === 0) {
-        alert(
+        showAppAlert(
             "Bulan yang dipilih belum dimulai."
         );
         return;
@@ -6157,7 +6415,7 @@ const dataBarangExport =
     );
 
 if (dataBarangExport.length === 0) {
-    alert(
+    showAppAlert(
         "Tidak ada barang dengan stok pada tanggal 1."
     );
     return;
@@ -6768,7 +7026,7 @@ for (
             error
         );
 
-        alert(
+        showAppAlert(
             "Gagal membuat file Excel Landscape."
         );
         return;
@@ -6815,7 +7073,7 @@ async function exportPDF() {
         typeof window.jspdf.jsPDF ===
             "undefined"
     ) {
-        alert(
+        showAppAlert(
             "Library PDF belum dimuat."
         );
         return;
@@ -6834,7 +7092,7 @@ async function exportPDF() {
         typeof pdf.autoTable !==
         "function"
     ) {
-        alert(
+        showAppAlert(
             "Library tabel PDF belum dimuat."
         );
         return;
@@ -6857,7 +7115,7 @@ async function exportPDF() {
         );
 
     if (hariTerakhirExport === 0) {
-        alert(
+        showAppAlert(
             "Bulan yang dipilih belum dimulai."
         );
         return;
@@ -6934,7 +7192,7 @@ async function exportPDF() {
         );
 
     if (dataBarangPDF.length === 0) {
-        alert(
+        showAppAlert(
             "Tidak ada barang dengan stok pada tanggal 1."
         );
         return;
@@ -7569,7 +7827,7 @@ async function exportPDF() {
 
 async function exportPenjualanExcel() {
     if (typeof XLSX === "undefined") {
-        alert("Library Excel belum dimuat.");
+        showAppAlert("Library Excel belum dimuat.");
         return;
     }
 
@@ -7621,7 +7879,7 @@ async function exportPenjualanExcel() {
         );
 
     if (data.length === 0) {
-        alert(
+        showAppAlert(
             "Tidak ada data penjualan untuk diekspor."
         );
         return;
@@ -7857,7 +8115,7 @@ async function exportPenjualanExcel() {
     } catch (error) {
         console.error(error);
 
-        alert(
+        showAppAlert(
             "Gagal membuat file Excel Landscape."
         );
         return;
