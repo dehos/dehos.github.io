@@ -7798,3 +7798,66 @@ select:disabled {
     font-feature-settings: "tnum" 1;
     font-variant-numeric: tabular-nums;
 }
+
+
+/* =====================================================
+   INTERACTIVE TABLE CONTROLS — REDESIGN TAHAP 14
+   Sortir keyboard-friendly dan target sentuh pagination
+===================================================== */
+
+#stok-barang .table-sort-button {
+    width: 100%;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+#stok-barang .table-sort-button-center {
+    justify-content: center;
+}
+
+#stok-barang .table-sort-icon {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 13px;
+    color: var(--app-cyan);
+    transition: color .18s ease, transform .18s ease;
+}
+
+#stok-barang .table-sort-button:hover .table-sort-icon {
+    color: #d7f7ff;
+    transform: translateY(-1px);
+}
+
+#stok-barang .table-sort-button:focus-visible {
+    outline: 2px solid rgba(55, 215, 255, .86);
+    outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    #stok-barang .table-sort-button {
+        min-height: 32px;
+        gap: 3px;
+    }
+
+    #stok-barang .table-sort-icon {
+        width: 12px;
+        height: 12px;
+        flex-basis: 12px;
+    }
+
+    #stok-barang .stock-pagination button {
+        min-width: 36px;
+        height: 36px;
+    }
+}
