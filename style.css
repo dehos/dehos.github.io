@@ -953,7 +953,8 @@ footer small {
     margin-left: 8px;
 }
 
-.penjualan-wrapper tfoot th {
+.penjualan-wrapper tfoot th,
+.penjualan-wrapper tfoot td {
     font-size: 11px;
     font-weight: 700;
     white-space: nowrap;
@@ -1965,7 +1966,8 @@ table {
     border-bottom: 0;
 }
 
-.modern-sales-table tfoot th {
+.modern-sales-table tfoot th,
+.modern-sales-table tfoot td {
     padding: 10px 8px;
     border: 0;
     border-top: 1px solid #dbe4ee;
@@ -6700,7 +6702,8 @@ body > footer {
     --bs-table-color: var(--app-text-soft);
 }
 
-#catatan-penjualan .modern-sales-table tfoot th {
+#catatan-penjualan .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table tfoot td {
     padding: 11px 10px;
     border: 0;
     border-top: 1px solid rgba(123, 114, 255, .24);
@@ -6770,7 +6773,8 @@ body > footer {
 
     #catatan-penjualan .modern-sales-table thead th,
     #catatan-penjualan .modern-sales-table tbody td,
-    #catatan-penjualan .modern-sales-table tfoot th {
+    #catatan-penjualan .modern-sales-table tfoot th,
+    #catatan-penjualan .modern-sales-table tfoot td {
         padding: 9px 7px;
         font-size: 11px;
     }
@@ -8262,6 +8266,71 @@ select:disabled {
     .app-message-actions button,
     .export-confirm-actions button,
     #toast.toast {
+        transition: none;
+    }
+}
+
+
+/* =====================================================
+   FINAL QUALITY ASSURANCE — REDESIGN TAHAP 18
+   Semantik tabel, fokus scroll, dan konsistensi font tanggal
+===================================================== */
+
+#penjualan #penjualanTanggalTampilan,
+#stok-barang #tanggalTampilan {
+    font-family: "Courier New", Courier, monospace !important;
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .025em;
+}
+
+.modern-data-table-wrapper[tabindex="0"] {
+    scrollbar-gutter: stable;
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.modern-data-table-wrapper[tabindex="0"]:focus-visible {
+    border-color: rgba(55, 215, 255, .68);
+    outline: 2px solid rgba(55, 215, 255, .72);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(55, 215, 255, .08);
+}
+
+#penjualan .sales-stock-info {
+    gap: 7px;
+}
+
+#penjualan .sales-stock-status-icon {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+}
+
+#penjualan .sales-stock-info > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+    .modern-data-table-wrapper[tabindex="0"] {
+        overscroll-behavior-inline: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (forced-colors: active) {
+    .modern-data-table-wrapper[tabindex="0"]:focus-visible,
+    button:focus-visible,
+    summary:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+        outline: 2px solid CanvasText;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modern-data-table-wrapper[tabindex="0"] {
         transition: none;
     }
 }
