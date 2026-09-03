@@ -3581,16 +3581,32 @@ function updatePenjualanSummary() {
             stokTidakCukup
         );
 
-        stockElement.textContent =
+        const stockIconName =
+            stokTidakCukup
+                ? "warning"
+                : barang
+                    ? "success"
+                    : "info";
+
+        const stockMessage =
             barang
                 ? (
                     stokTidakCukup
-                        ? "⚠ Quantity melebihi stok. Tersedia: " +
+                        ? "Quantity melebihi stok. Tersedia: " +
                           formatNumber(stok)
                         : "Stok tersedia: " +
                           formatNumber(stok)
                   )
                 : "Pilih barang untuk melihat stok.";
+
+        stockElement.innerHTML =
+            getUiIconSvg(
+                stockIconName,
+                "sales-stock-status-icon"
+            ) +
+            "<span>" +
+            escapeHTML(stockMessage) +
+            "</span>";
     }
 
     if (simpanPenjualanButton) {
