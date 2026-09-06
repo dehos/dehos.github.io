@@ -858,12 +858,7 @@ async function loadBarang() {
     dataBarang =
         semuaBarang;
 
-    setDatabaseStatus(
-        "Database " +
-            formatNumber(
-                dataBarang.length
-            )
-    );
+    setDatabaseStatus(formatNumber(dataBarang.length));
 
     updateTable();
 }
