@@ -863,7 +863,6 @@ async function loadBarang() {
             formatNumber(
                 dataBarang.length
             )
-        "success"
     );
 
     updateTable();
