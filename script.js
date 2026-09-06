@@ -858,7 +858,7 @@ async function loadBarang() {
     dataBarang =
         semuaBarang;
 
-    setDatabaseStatus(formatNumber(dataBarang.length));
+   setDatabaseStatus(`Database ${formatNumber(dataBarang.length)} barang`);
 
     updateTable();
 }
