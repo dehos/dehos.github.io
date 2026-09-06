@@ -859,11 +859,10 @@ async function loadBarang() {
         semuaBarang;
 
     setDatabaseStatus(
-        "Database aktif · " +
+        "Database " +
             formatNumber(
                 dataBarang.length
-            ) +
-            " barang",
+            )
         "success"
     );
 
