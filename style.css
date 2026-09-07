@@ -4289,7 +4289,7 @@ footer small {
 .localized-date-display {
     width: 100%;
     padding-right: 40px;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: inherit;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
 }
@@ -5361,7 +5361,7 @@ body > footer {
 
 #penjualan .localized-date-display {
     padding-right: 42px;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: inherit;
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -5935,7 +5935,7 @@ body > footer {
 
 #stok-barang .localized-date-display {
     padding-right: 42px;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: inherit;
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -7108,7 +7108,7 @@ body > footer {
 }
 
 #editPenjualanModal #editPenjualanTanggal {
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: inherit;
     font-variant-numeric: tabular-nums;
     color-scheme: dark;
 }
@@ -8547,11 +8547,21 @@ select:disabled {
 ===================================================== */
 
 #penjualan #penjualanTanggalTampilan,
-#stok-barang #tanggalTampilan {
+#stok-barang #tanggalTampilan,
+input[type="date"] {
     font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
     font-feature-settings: "tnum" 1;
     font-variant-numeric: tabular-nums;
     letter-spacing: .025em;
+}
+
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+    font-family: inherit;
 }
 
 .modern-data-table-wrapper[tabindex="0"] {
@@ -8605,16 +8615,6 @@ select:disabled {
     }
 }
 
-/* Samakan font seluruh bagian input tanggal dengan font utama aplikasi. */
-input[type="date"]::-webkit-datetime-edit,
-input[type="date"]::-webkit-datetime-edit-fields-wrapper,
-input[type="date"]::-webkit-datetime-edit-text,
-input[type="date"]::-webkit-datetime-edit-day-field,
-input[type="date"]::-webkit-datetime-edit-month-field,
-input[type="date"]::-webkit-datetime-edit-year-field {
-    font-family: inherit;
-}
-
 
 /* =====================================================
    PERFORMANCE PROFILE — MODERN BALANCED
@@ -8666,6 +8666,7 @@ dialog::backdrop {
     box-shadow: none !important;
 }
 
+/* Nama panjang diam saat idle; animasi hanya berjalan ketika diperlukan. */
 .sales-name-track {
     animation: none;
     transform: none;
@@ -8687,6 +8688,7 @@ dialog::backdrop {
     }
 }
 
+/* Loading tetap informatif tanpa sapuan gradient yang terus dirender. */
 .dashboard-card .target-brand-loading::after {
     display: none;
     animation: none;
@@ -8720,5 +8722,144 @@ dialog::backdrop {
 
     .sales-name-marquee::-webkit-scrollbar {
         display: none;
+    }
+}
+
+
+/* =====================================================
+   PERFORMA BRAND — DONUT RING RINGKAS
+===================================================== */
+
+.dashboard-card .target-brand-list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 24px 14px;
+}
+
+.dashboard-card .target-brand-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 0;
+    border-bottom: 0;
+}
+
+.dashboard-card .target-progress-track {
+    position: relative;
+    display: grid;
+    width: 78px;
+    height: 78px;
+    flex: 0 0 78px;
+    place-items: center;
+    overflow: visible;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            var(--brand-color)
+                calc(var(--progress) * 1%),
+            rgba(169, 182, 211, .14) 0
+        );
+}
+
+.dashboard-card .target-progress-track::after {
+    position: absolute;
+    z-index: 1;
+    inset: 8px;
+    border-radius: 50%;
+    background: #0a1229;
+    content: "";
+}
+
+.dashboard-card .target-progress-fill {
+    display: none;
+}
+
+.dashboard-card .target-progress-label {
+    position: relative;
+    z-index: 2;
+    color: var(--app-text);
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-card .target-brand-name {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin-top: 9px;
+    overflow: hidden;
+    color: var(--app-text-soft);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-card .target-card-values {
+    display: grid;
+    justify-items: center;
+    gap: 1px;
+    margin-top: 3px;
+    text-align: center;
+}
+
+.dashboard-card .target-card-values strong,
+.dashboard-card .target-card-values span {
+    max-width: 100%;
+    text-align: center;
+}
+
+.dashboard-card .target-brand-no-target .target-progress-track {
+    background: rgba(169, 182, 211, .14);
+}
+
+.dashboard-card .target-brand-rainbow .target-progress-track {
+    background:
+        conic-gradient(
+            #ef6f91,
+            #f0bb4f,
+            #53e0ac,
+            #37d7ff,
+            #7b72ff,
+            #ef6f91
+        );
+}
+
+@media (max-width: 900px) {
+    .dashboard-card .target-brand-list {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-card .target-brand-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px 6px;
+    }
+
+    .dashboard-card .target-progress-track {
+        width: 70px;
+        height: 70px;
+        flex-basis: 70px;
+    }
+
+    .dashboard-card .target-progress-track::after {
+        inset: 7px;
+    }
+
+    .dashboard-card .target-progress-label {
+        font-size: 17px;
+    }
+
+    .dashboard-card .target-brand-name {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 340px) {
+    .dashboard-card .target-brand-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
