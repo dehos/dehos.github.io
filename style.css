@@ -8874,8 +8874,29 @@ dialog::backdrop {
 }
 
 @media (max-width: 700px) {
+    .app-topbar {
+        grid-template-columns: minmax(0, 1fr) 74px;
+    }
+
+    .app-topbar > div:first-child {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        column-gap: 10px;
+    }
+
+    .app-topbar > div:first-child .app-mobile-logo {
+        grid-row: 1 / 4;
+        align-self: start;
+    }
+
+    .app-topbar > div:first-child >
+        :not(.app-mobile-logo) {
+        grid-column: 2;
+    }
+
     .app-topbar-actions {
-        min-width: 114px;
+        min-width: 74px;
     }
 
     .app-topbar #databaseStatus.status {
