@@ -8614,3 +8614,111 @@ input[type="date"]::-webkit-datetime-edit-month-field,
 input[type="date"]::-webkit-datetime-edit-year-field {
     font-family: inherit;
 }
+
+
+/* =====================================================
+   PERFORMANCE PROFILE — MODERN BALANCED
+   Mengurangi efek GPU tanpa mengubah fungsi aplikasi
+===================================================== */
+
+:root {
+    --app-shadow-surface: 0 8px 24px rgba(0, 0, 0, .18);
+    --app-shadow-dialog: 0 16px 42px rgba(0, 0, 0, .38);
+}
+
+.app-topbar,
+.app-mobile-nav,
+.modal,
+#transactionModal,
+#tambahBarangModal,
+#editPenjualanModal,
+#toast.toast,
+dialog::backdrop {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+.app-shell,
+.card,
+.dashboard-card {
+    box-shadow: var(--app-shadow-surface) !important;
+}
+
+.modal-content,
+.export-confirm-card,
+.app-message-card {
+    box-shadow: var(--app-shadow-dialog) !important;
+}
+
+#toast.toast {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .28) !important;
+}
+
+.modern-secondary-button,
+.action-btn,
+.edit-history-btn,
+.delete-history-btn,
+.history-month-nav button,
+.localized-date-picker-button,
+.app-mobile-nav a,
+.dashboard-card .target-progress-fill,
+.dashboard-live-badge > span {
+    box-shadow: none !important;
+}
+
+.sales-name-track {
+    animation: none;
+    transform: none;
+}
+
+.sales-name-track > span[aria-hidden="true"] {
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sales-name-marquee:hover .sales-name-track,
+    .sales-name-marquee:focus-within .sales-name-track {
+        animation: salesNameScroll 11s linear infinite;
+    }
+
+    .sales-name-marquee:hover .sales-name-track > span[aria-hidden="true"],
+    .sales-name-marquee:focus-within .sales-name-track > span[aria-hidden="true"] {
+        display: inline;
+    }
+}
+
+.dashboard-card .target-brand-loading::after {
+    display: none;
+    animation: none;
+}
+
+@media (max-width: 768px) {
+    .app-topbar {
+        background: rgba(5, 8, 22, .97);
+    }
+
+    .app-mobile-nav {
+        background: rgba(8, 13, 30, .99);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .3) !important;
+    }
+
+    .card,
+    .dashboard-card {
+        box-shadow: none !important;
+    }
+
+    .dashboard-card .stat {
+        background: rgba(7, 13, 31, .76);
+    }
+
+    .sales-name-marquee {
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sales-name-marquee::-webkit-scrollbar {
+        display: none;
+    }
+}
