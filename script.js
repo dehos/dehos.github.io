@@ -1000,7 +1000,7 @@ async function loadBrandBarangBaru() {
         );
 
     if (!selectBrand && !editSelectBrand) {
-        return;
+        return true;
     }
 
     if (selectBrand) {
@@ -1045,7 +1045,7 @@ async function loadBrandBarangBaru() {
                 '<option value="">Gagal memuat brand</option>';
         }
 
-        return;
+        return false;
     }
 
     if (selectBrand) {
@@ -1094,6 +1094,8 @@ async function loadBrandBarangBaru() {
             }
         }
     );
+
+    return true;
 }
 /*/*==================================
    LOAD BARANG
@@ -1148,7 +1150,7 @@ async function loadBarang(render = true) {
                     error.message,
                 "error"
             );
-            return;
+            return false;
         }
 
         const hasil =
@@ -1184,6 +1186,8 @@ async function loadBarang(render = true) {
     if (render) {
         updateTable();
     }
+
+    return true;
 }
 
 
@@ -1237,7 +1241,7 @@ async function loadTransactions(render = true) {
                 "error"
             );
 
-            return;
+            return false;
         }
 
         const hasil =
@@ -1264,6 +1268,8 @@ async function loadTransactions(render = true) {
     if (render) {
         updateTable();
     }
+
+    return true;
 }
 
 
@@ -8690,11 +8696,24 @@ async function ensureCoreData() {
 
     appDataLoadState.corePromise =
         (async function() {
-            await Promise.all([
+            const hasilMuat =
+                await Promise.all([
                 loadBrandBarangBaru(),
                 loadBarang(false),
                 loadTransactions(false)
             ]);
+
+            if (
+                hasilMuat.some(
+                    function(berhasil) {
+                        return berhasil === false;
+                    }
+                )
+            ) {
+                throw new Error(
+                    "Sebagian data utama gagal dimuat."
+                );
+            }
 
             appDataLoadState.coreLoaded =
                 true;
