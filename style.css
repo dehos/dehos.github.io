@@ -8863,3 +8863,60 @@ dialog::backdrop {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+
+/* =====================================================
+   LOGO HEADER MOBILE
+===================================================== */
+
+.app-mobile-logo {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .app-topbar-actions {
+        min-width: 114px;
+    }
+
+    .app-topbar #databaseStatus.status {
+        width: 34px;
+        max-width: 34px;
+        flex: 0 0 34px;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .app-topbar #databaseStatus.status > span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .app-mobile-logo {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        place-items: center;
+        border: 1px solid rgba(123, 114, 255, .28);
+        border-radius: 10px;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(123, 114, 255, .22),
+                rgba(55, 215, 255, .1)
+            );
+    }
+
+    .app-mobile-logo img {
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        object-fit: contain;
+    }
+}
