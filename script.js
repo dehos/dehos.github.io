@@ -74,13 +74,17 @@ async function activateAdminSession(session) {
         "loading"
     );
 
-    const { error } =
+    const { data, error } =
         await supabaseClient
-            .from("brand")
-            .select("id")
+            .from("app_admins")
+            .select("email")
             .limit(1);
 
-    if (error) {
+    if (
+        error ||
+        !Array.isArray(data) ||
+        data.length === 0
+    ) {
         await supabaseClient.auth.signOut();
         showAuthGate(
             "Akun ini tidak memiliki izin admin."
