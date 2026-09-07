@@ -17,6 +17,14 @@ const supabaseClient =
 let authActionBusy = false;
 let appHasInitialized = false;
 
+const appDataLoadState = {
+    coreLoaded: false,
+    corePromise: null,
+    salesInitialized: false,
+    salesPromise: null,
+    dashboardPromise: null
+};
+
 function setAuthStatus(message, type = "") {
     const status =
         document.getElementById("authStatus");
@@ -1090,7 +1098,7 @@ async function loadBrandBarangBaru() {
 /*/*==================================
    LOAD BARANG
 ===================================================== */
-async function loadBarang() {
+async function loadBarang(render = true) {
     setDatabaseStatus(
         "Mengambil data barang..."
     );
@@ -1173,7 +1181,9 @@ async function loadBarang() {
         "success"
     );
 
-    updateTable();
+    if (render) {
+        updateTable();
+    }
 }
 
 
@@ -1181,7 +1191,7 @@ async function loadBarang() {
    LOAD TRANSAKSI
 ===================================================== */
 
-async function loadTransactions() {
+async function loadTransactions(render = true) {
 
     const batasPerHalaman = 1000;
     let posisiAwal = 0;
@@ -1251,7 +1261,9 @@ async function loadTransactions() {
     transactions =
         semuaTransaksi;
 
-    updateTable();
+    if (render) {
+        updateTable();
+    }
 }
 
 
@@ -4879,11 +4891,18 @@ async function loadPenjualan() {
     }
 
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+    const bulan =
+        document.getElementById(
+            "filterBulan"
+        )?.value || "";
+
+    const brand =
+        document.getElementById(
+            "filterBrand"
+        )?.value || "";
+
+    let query =
+        supabaseClient
             .from("penjualan")
             .select("*")
             .order(
@@ -4891,7 +4910,53 @@ async function loadPenjualan() {
                 {
                     ascending: false
                 }
+            )
+            .order(
+                "id",
+                {
+                    ascending: false
+                }
             );
+
+    if (/^\d{4}-\d{2}$/.test(bulan)) {
+        const bagianBulan =
+            bulan.split("-").map(Number);
+
+        const awalBulanBerikutnya =
+            new Date(
+                bagianBulan[0],
+                bagianBulan[1],
+                1
+            );
+
+        const batasBulan =
+            awalBulanBerikutnya.getFullYear() +
+            "-" +
+            String(
+                awalBulanBerikutnya.getMonth() + 1
+            ).padStart(2, "0") +
+            "-01";
+
+        query = query
+            .gte(
+                "tanggal_pembelian",
+                bulan + "-01"
+            )
+            .lt(
+                "tanggal_pembelian",
+                batasBulan
+            );
+    }
+
+    if (brand) {
+        query = query.eq(
+            "brand",
+            brand
+        );
+    }
+
+    const { data, error } =
+        await query;
 
 
     if (error) {
@@ -4950,16 +5015,6 @@ async function loadPenjualan() {
         return;
     }
 
-
-    const bulan =
-        document.getElementById(
-            "filterBulan"
-        )?.value || "";
-
-    const brand =
-        document.getElementById(
-            "filterBrand"
-        )?.value || "";
 
     updateNavigasiBulanPenjualan();
 
@@ -5742,56 +5797,54 @@ async function initFilterPenjualan() {
     const brandSaatIni =
         brand.value;
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+    const [
+        hasilTanggalTertua,
+        hasilBrand
+    ] = await Promise.all([
+        supabaseClient
             .from("penjualan")
-            .select(
-                "tanggal_pembelian, brand"
-            )
+            .select("tanggal_pembelian")
             .order(
                 "tanggal_pembelian",
                 {
-                    ascending: false
+                    ascending: true
                 }
-            );
+            )
+            .limit(1),
+        supabaseClient
+            .from("brand")
+            .select("nama")
+            .eq("aktif", true)
+            .order(
+                "nama",
+                {
+                    ascending: true
+                }
+            )
+    ]);
 
-    if (error) {
+    if (
+        hasilTanggalTertua.error ||
+        hasilBrand.error
+    ) {
 
         console.error(
             "ERROR FILTER PENJUALAN:",
-            error
+            hasilTanggalTertua.error ||
+                hasilBrand.error
         );
 
         return;
     }
 
-    const daftarBulan =
-        (data || [])
-            .map(
-                function(item) {
-
-                    return String(
-                        item.tanggal_pembelian ||
-                        ""
-                    ).substring(0, 7);
-                }
-            )
-            .filter(
-                function(value) {
-
-                    return /^\d{4}-\d{2}$/.test(
-                        value
-                    );
-                }
-            )
-            .sort();
+    const tanggalTertua =
+        hasilTanggalTertua.data?.[0]
+            ?.tanggal_pembelian || "";
 
     bulanPenjualanTertua =
-        daftarBulan.length > 0
-            ? daftarBulan[0]
+        /^\d{4}-\d{2}/.test(tanggalTertua)
+            ? String(tanggalTertua)
+                .substring(0, 7)
             : "";
 
     const bulanSekarang =
@@ -5824,35 +5877,14 @@ async function initFilterPenjualan() {
     bulan.value =
         bulanTerpilih;
 
-    const brandSet =
-        new Set();
-
-    (data || []).forEach(
-        function(item) {
-
-            const namaBrand =
-                String(
-                    item.brand || ""
-                ).trim();
-
-            if (namaBrand) {
-                brandSet.add(
-                    namaBrand
-                );
-            }
-        }
-    );
-
     const daftarBrand =
-        [...brandSet].sort(
-            function(a, b) {
-
-                return a.localeCompare(
-                    b,
-                    "id"
-                );
-            }
-        );
+        (hasilBrand.data || [])
+            .map(function(item) {
+                return String(
+                    item.nama || ""
+                ).trim();
+            })
+            .filter(Boolean);
 
     brand.innerHTML = "";
 
@@ -8511,6 +8543,239 @@ async function exportPenjualanExcel() {
    INIT
 ================================== */
 
+async function loadDashboardSummary() {
+    if (appDataLoadState.dashboardPromise) {
+        return appDataLoadState.dashboardPromise;
+    }
+
+    appDataLoadState.dashboardPromise =
+        (async function() {
+            const bulan =
+                getBulanPenjualanSekarang();
+
+            const bagianBulan =
+                bulan.split("-").map(Number);
+
+            const awalBulanBerikutnya =
+                new Date(
+                    bagianBulan[0],
+                    bagianBulan[1],
+                    1
+                );
+
+            const batasBulan =
+                awalBulanBerikutnya.getFullYear() +
+                "-" +
+                String(
+                    awalBulanBerikutnya.getMonth() + 1
+                ).padStart(2, "0") +
+                "-01";
+
+            const { data, error } =
+                await supabaseClient.rpc(
+                    "get_dashboard_summary",
+                    {
+                        p_today: getTodayDate(),
+                        p_month_start:
+                            bulan + "-01",
+                        p_month_end:
+                            batasBulan
+                    }
+                );
+
+            if (error) {
+                console.error(
+                    "ERROR DASHBOARD SUMMARY:",
+                    error
+                );
+
+                await ensureCoreData();
+                return;
+            }
+
+            const totalBarang =
+                Number(data?.total_barang) || 0;
+
+            const totalStok =
+                Number(data?.total_stok) || 0;
+
+            const transaksiHariIni =
+                Number(
+                    data?.transaksi_hari_ini
+                ) || 0;
+
+            const totalBarangElement =
+                document.getElementById(
+                    "totalBarang"
+                );
+
+            const totalStokElement =
+                document.getElementById(
+                    "totalStok"
+                );
+
+            const transaksiElement =
+                document.getElementById(
+                    "transaksiHariIni"
+                );
+
+            if (totalBarangElement) {
+                totalBarangElement.textContent =
+                    formatNumber(totalBarang);
+            }
+
+            if (totalStokElement) {
+                totalStokElement.textContent =
+                    formatNumber(totalStok);
+            }
+
+            if (transaksiElement) {
+                transaksiElement.textContent =
+                    formatNumber(
+                        transaksiHariIni
+                    );
+            }
+
+            const ringkasanBrand =
+                Array.isArray(data?.brand_sales)
+                    ? data.brand_sales.map(
+                        function(item) {
+                            return {
+                                brand:
+                                    item.brand,
+                                qty: 1,
+                                harga:
+                                    Number(
+                                        item.total
+                                    ) || 0,
+                                tanggal_pembelian:
+                                    bulan + "-01"
+                            };
+                        }
+                    )
+                    : [];
+
+            renderTargetPenjualan(
+                ringkasanBrand,
+                bulan
+            );
+
+            setDatabaseStatus(
+                "Database aktif · " +
+                    formatNumber(
+                        totalBarang
+                    ) +
+                    " barang",
+                "success"
+            );
+        })();
+
+    try {
+        await appDataLoadState
+            .dashboardPromise;
+    } finally {
+        appDataLoadState.dashboardPromise =
+            null;
+    }
+}
+
+async function ensureCoreData() {
+    if (appDataLoadState.coreLoaded) {
+        return;
+    }
+
+    if (appDataLoadState.corePromise) {
+        return appDataLoadState.corePromise;
+    }
+
+    appDataLoadState.corePromise =
+        (async function() {
+            await Promise.all([
+                loadBrandBarangBaru(),
+                loadBarang(false),
+                loadTransactions(false)
+            ]);
+
+            appDataLoadState.coreLoaded =
+                true;
+
+            updateTable();
+        })();
+
+    try {
+        await appDataLoadState.corePromise;
+    } finally {
+        appDataLoadState.corePromise =
+            null;
+    }
+}
+
+async function ensureSalesData() {
+    await ensureCoreData();
+
+    if (appDataLoadState.salesPromise) {
+        return appDataLoadState.salesPromise;
+    }
+
+    appDataLoadState.salesPromise =
+        (async function() {
+            if (
+                !appDataLoadState
+                    .salesInitialized
+            ) {
+                await initFilterPenjualan();
+                appDataLoadState
+                    .salesInitialized = true;
+                return;
+            }
+
+            await loadPenjualan();
+        })();
+
+    try {
+        await appDataLoadState.salesPromise;
+    } finally {
+        appDataLoadState.salesPromise = null;
+    }
+}
+
+async function loadSectionData(sectionId) {
+    try {
+        if (sectionId === "dashboard") {
+            await loadDashboardSummary();
+            return;
+        }
+
+        if (
+            sectionId ===
+                "catatan-penjualan"
+        ) {
+            await ensureSalesData();
+            return;
+        }
+
+        if (
+            [
+                "penjualan",
+                "stok-barang",
+                "riwayat-transaksi"
+            ].includes(sectionId)
+        ) {
+            await ensureCoreData();
+        }
+    } catch (error) {
+        console.error(
+            "ERROR LOAD SECTION:",
+            error
+        );
+
+        setDatabaseStatus(
+            "Gagal memuat data. Silakan coba lagi.",
+            "error"
+        );
+    }
+}
+
 async function init() {
     tanggalDipilih =
         getTodayDate();
@@ -8559,16 +8824,22 @@ async function init() {
     }
 
 
-    /* LOAD DATA UTAMA */
+    const hashAwal =
+        window.location.hash
+            .replace("#", "");
 
-await loadBrandBarangBaru();
-await loadBarang();
-await loadTransactions();
+    const sectionAwal =
+        [
+            "dashboard",
+            "penjualan",
+            "stok-barang",
+            "catatan-penjualan",
+            "riwayat-transaksi"
+        ].includes(hashAwal)
+            ? hashAwal
+            : "dashboard";
 
-
-    /* FILTER DAN DATA PENJUALAN */
-
-    await initFilterPenjualan();
+    await loadSectionData(sectionAwal);
 }
 
 
@@ -8628,7 +8899,10 @@ function initAppNavigation() {
             "appPageSubtitle"
         );
 
-    function setActiveSection(sectionId) {
+    function setActiveSection(
+        sectionId,
+        muatData = true
+    ) {
         const resolvedSectionId =
             sectionCopy[sectionId]
                 ? sectionId
@@ -8686,6 +8960,12 @@ function initAppNavigation() {
         document.title =
             copy[0] +
             " · Stock Barang";
+
+        if (muatData) {
+            void loadSectionData(
+                resolvedSectionId
+            );
+        }
     }
 
     function getSectionFromHash() {
@@ -8761,7 +9041,8 @@ function initAppNavigation() {
     );
 
     setActiveSection(
-        getSectionFromHash()
+        getSectionFromHash(),
+        false
     );
 }
 
