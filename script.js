@@ -986,12 +986,24 @@ async function loadBrandBarangBaru() {
             "brandBarangBaru"
         );
 
-    if (!selectBrand) {
+    const editSelectBrand =
+        document.getElementById(
+            "editPenjualanBrand"
+        );
+
+    if (!selectBrand && !editSelectBrand) {
         return;
     }
 
-    selectBrand.innerHTML =
-        '<option value="">Memuat daftar brand...</option>';
+    if (selectBrand) {
+        selectBrand.innerHTML =
+            '<option value="">Memuat daftar brand...</option>';
+    }
+
+    if (editSelectBrand) {
+        editSelectBrand.innerHTML =
+            '<option value="">Memuat daftar brand...</option>';
+    }
 
     const {
         data,
@@ -1015,14 +1027,28 @@ async function loadBrandBarangBaru() {
             error
         );
 
-        selectBrand.innerHTML =
-            '<option value="">Gagal memuat brand</option>';
+        if (selectBrand) {
+            selectBrand.innerHTML =
+                '<option value="">Gagal memuat brand</option>';
+        }
+
+        if (editSelectBrand) {
+            editSelectBrand.innerHTML =
+                '<option value="">Gagal memuat brand</option>';
+        }
 
         return;
     }
 
-    selectBrand.innerHTML =
-        '<option value="">Pilih Brand</option>';
+    if (selectBrand) {
+        selectBrand.innerHTML =
+            '<option value="">Pilih Brand</option>';
+    }
+
+    if (editSelectBrand) {
+        editSelectBrand.innerHTML =
+            '<option value="">Pilih Brand</option>';
+    }
 
     (data || []).forEach(
         function(item) {
@@ -1038,9 +1064,26 @@ async function loadBrandBarangBaru() {
             option.textContent =
                 item.nama;
 
-            selectBrand.appendChild(
+            selectBrand?.appendChild(
                 option
             );
+
+            if (editSelectBrand) {
+                const editOption =
+                    document.createElement(
+                        "option"
+                    );
+
+                editOption.value =
+                    item.nama;
+
+                editOption.textContent =
+                    item.nama;
+
+                editSelectBrand.appendChild(
+                    editOption
+                );
+            }
         }
     );
 }
@@ -4424,6 +4467,14 @@ const TARGET_PENJUALAN_BRAND =
         {
             nama: "Violet",
             target: 15000000
+        },
+        {
+            nama: "Hanata",
+            target: 15000000
+        },
+        {
+            nama: "Morgan",
+            target: 15000000
         }
     ]);
 
@@ -4436,7 +4487,9 @@ const TARGET_BRAND_COLORS =
         "Vapely/Wepe": "#8b5e3c",
         Tsunami: "#ef8354",
         Trisensa: "#176b45",
-        Rona: "#9ca3af"
+        Rona: "#9ca3af",
+        Hanata: "#22d3ee",
+        Morgan: "#f59e0b"
     });
 
 function getCanonicalTargetBrand(
@@ -6277,6 +6330,8 @@ function formatNamaBarangExport(namaBarang) {
         /^DEKKSON\b[\s:.-]*/i,
         /^RONA\b[\s:.-]*/i,
         /^TRISENSA\b[\s:.-]*/i,
+        /^HANATA\b[\s:.-]*/i,
+        /^MORGAN\b[\s:.-]*/i,
         /^VIOLET\s+PINTU\s+ALUMUNIUM\b[\s:.-]*/i
     ];
 
