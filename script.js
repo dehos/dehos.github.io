@@ -4488,11 +4488,11 @@ const TARGET_PENJUALAN_BRAND =
         },
         {
             nama: "Hanata",
-            target: 15000000
+            target: null
         },
         {
             nama: "Morgan",
-            target: 15000000
+            target: null
         }
     ]);
 
@@ -4714,17 +4714,6 @@ function renderTargetPenjualan(
               ) * 100
             : 0;
 
-    const highestPercentage =
-        targetedBrands.reduce(
-            function(highest, item) {
-                return Math.max(
-                    highest,
-                    item.percentage
-                );
-            },
-            0
-        );
-
     totalTargetElement.textContent =
         "Rp" +
         formatNumber(
@@ -4746,7 +4735,7 @@ function renderTargetPenjualan(
     list.innerHTML = "";
 
     targetedBrands.forEach(
-        function(item, index) {
+        function(item) {
             const percentageRounded =
                 Math.round(item.percentage);
 
@@ -4755,17 +4744,6 @@ function renderTargetPenjualan(
                     Math.max(item.percentage, 0),
                     100
                 );
-
-            const visualProgress =
-                highestPercentage > 0
-                    ? Math.min(
-                        (
-                            item.percentage /
-                            highestPercentage
-                        ) * 100,
-                        100
-                    )
-                    : 0;
 
             const brandColor =
                 TARGET_BRAND_COLORS[item.nama] ||
@@ -4784,21 +4762,11 @@ function renderTargetPenjualan(
 
             card.style.setProperty(
                 "--progress",
-                visualProgress
+                progressValue
             );
 
             card.innerHTML =
                 `
-                <div class="target-card-header">
-                    <span class="target-card-rank">
-                        ${String(index + 1).padStart(2, "0")}
-                    </span>
-                    <strong>${escapeHTML(item.nama)}</strong>
-                    <span class="target-card-percentage">
-                        ${formatNumber(percentageRounded)}%
-                    </span>
-                </div>
-
                 <div
                     class="target-progress-track"
                     role="progressbar"
@@ -4808,7 +4776,14 @@ function renderTargetPenjualan(
                     aria-valuenow="${Math.round(progressValue)}"
                 >
                     <span class="target-progress-fill"></span>
+                    <strong class="target-progress-label">
+                        ${formatNumber(percentageRounded)}%
+                    </strong>
                 </div>
+
+                <strong class="target-brand-name">
+                    ${escapeHTML(item.nama)}
+                </strong>
 
                 <div class="target-card-values">
                     <strong>
@@ -4824,48 +4799,61 @@ function renderTargetPenjualan(
         }
     );
 
-    const pjsTarget =
-        TARGET_PENJUALAN_BRAND.find(
-            function(item) {
-                return item.nama ===
-                    "PJS Handle";
-            }
-        );
+    const brandsWithoutTarget =
+        TARGET_PENJUALAN_BRAND
+            .filter(function(item) {
+                return item.target === null;
+            });
 
-    if (pjsTarget) {
-        const pjsCard =
-            document.createElement("article");
+    brandsWithoutTarget.forEach(
+        function(item) {
+            const noTargetCard =
+                document.createElement("article");
 
-        pjsCard.className =
-            "target-brand-card target-brand-rainbow";
+            noTargetCard.className =
+                "target-brand-card target-brand-no-target" +
+                (item.nama === "PJS Handle"
+                    ? " target-brand-rainbow"
+                    : "");
 
-        pjsCard.innerHTML =
-            `
-            <div class="target-card-header">
-                <span class="target-card-rank">—</span>
-                <strong>PJS Handle</strong>
-                <span class="target-card-percentage">Total</span>
-            </div>
+            noTargetCard.style.setProperty(
+                "--brand-color",
+                TARGET_BRAND_COLORS[item.nama] ||
+                    "#64748b"
+            );
 
-            <div
-                class="target-progress-track"
-                aria-label="PJS Handle tanpa target"
-            >
-                <span class="target-progress-fill target-progress-rainbow"></span>
-            </div>
+            noTargetCard.style.setProperty(
+                "--progress",
+                0
+            );
 
-            <div class="target-card-values">
-                <strong>
-                    Rp${formatNumber(
-                        totals["PJS Handle"] || 0
-                    )}
+            noTargetCard.innerHTML =
+                `
+                <div
+                    class="target-progress-track"
+                    aria-label="${escapeHTML(item.nama)} tanpa target"
+                >
+                    <span class="target-progress-fill"></span>
+                    <strong class="target-progress-label">—</strong>
+                </div>
+
+                <strong class="target-brand-name">
+                    ${escapeHTML(item.nama)}
                 </strong>
-                <span>Tanpa target</span>
-            </div>
-            `;
 
-        list.appendChild(pjsCard);
-    }
+                <div class="target-card-values">
+                    <strong>
+                        Rp${formatNumber(
+                            totals[item.nama] || 0
+                        )}
+                    </strong>
+                    <span>Tanpa target</span>
+                </div>
+                `;
+
+            list.appendChild(noTargetCard);
+        }
+    );
 
 }
 
