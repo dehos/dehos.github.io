@@ -14,6 +14,265 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
+let authActionBusy = false;
+let appHasInitialized = false;
+
+function setAuthStatus(message, type = "") {
+    const status =
+        document.getElementById("authStatus");
+
+    if (!status) return;
+
+    status.textContent = message || "";
+    status.className =
+        "auth-status" +
+        (type ? ` is-${type}` : "");
+}
+
+function setAuthBusy(isBusy) {
+    authActionBusy = isBusy;
+
+    [
+        "authSignInButton",
+        "authSignUpButton"
+    ].forEach(function(buttonId) {
+        const button =
+            document.getElementById(buttonId);
+
+        if (button) {
+            button.disabled = isBusy;
+            button.setAttribute(
+                "aria-busy",
+                String(isBusy)
+            );
+        }
+    });
+}
+
+function showAuthGate(
+    message = "",
+    type = ""
+) {
+    document.body.classList.add(
+        "auth-locked"
+    );
+    document.body.classList.remove(
+        "auth-ready"
+    );
+
+    setAuthStatus(message, type);
+}
+
+async function activateAdminSession(session) {
+    if (!session) {
+        showAuthGate();
+        return;
+    }
+
+    setAuthStatus(
+        "Memeriksa izin akun...",
+        "loading"
+    );
+
+    const { error } =
+        await supabaseClient
+            .from("brand")
+            .select("id")
+            .limit(1);
+
+    if (error) {
+        await supabaseClient.auth.signOut();
+        showAuthGate(
+            "Akun ini tidak memiliki izin admin."
+        );
+        return;
+    }
+
+    document.body.classList.remove(
+        "auth-locked"
+    );
+    document.body.classList.add(
+        "auth-ready"
+    );
+
+    setAuthStatus("");
+
+    const passwordInput =
+        document.getElementById(
+            "authPassword"
+        );
+
+    if (passwordInput) {
+        passwordInput.value = "";
+    }
+
+    if (appHasInitialized) {
+        window.location.reload();
+        return;
+    }
+
+    initAppNavigation();
+    await init();
+    appHasInitialized = true;
+}
+
+async function handleAdminSignIn(event) {
+    event?.preventDefault();
+
+    if (authActionBusy) return;
+
+    const email =
+        document.getElementById(
+            "authEmail"
+        )?.value.trim();
+
+    const password =
+        document.getElementById(
+            "authPassword"
+        )?.value || "";
+
+    if (!email || password.length < 8) {
+        setAuthStatus(
+            "Isi email dan password minimal 8 karakter.",
+            "error"
+        );
+        return;
+    }
+
+    setAuthBusy(true);
+    setAuthStatus("Sedang masuk...", "loading");
+
+    try {
+        const { data, error } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+        if (error) {
+            setAuthStatus(
+                "Gagal masuk: " + error.message,
+                "error"
+            );
+            return;
+        }
+
+        await activateAdminSession(
+            data.session
+        );
+    } finally {
+        setAuthBusy(false);
+    }
+}
+
+async function handleAdminSignUp() {
+    if (authActionBusy) return;
+
+    const email =
+        document.getElementById(
+            "authEmail"
+        )?.value.trim();
+
+    const password =
+        document.getElementById(
+            "authPassword"
+        )?.value || "";
+
+    if (!email || password.length < 8) {
+        setAuthStatus(
+            "Isi email dan password minimal 8 karakter.",
+            "error"
+        );
+        return;
+    }
+
+    setAuthBusy(true);
+    setAuthStatus(
+        "Membuat akun admin...",
+        "loading"
+    );
+
+    try {
+        const { data, error } =
+            await supabaseClient.auth.signUp({
+                email,
+                password
+            });
+
+        if (error) {
+            setAuthStatus(
+                "Gagal membuat akun: " +
+                    error.message,
+                "error"
+            );
+            return;
+        }
+
+        if (data.session) {
+            await activateAdminSession(
+                data.session
+            );
+            return;
+        }
+
+        setAuthStatus(
+            "Akun dibuat. Periksa email untuk konfirmasi, lalu masuk.",
+            "success"
+        );
+    } finally {
+        setAuthBusy(false);
+    }
+}
+
+async function signOutAdmin() {
+    const confirmed =
+        await showAppConfirm(
+            "Keluar dari aplikasi sekarang?",
+            {
+                title: "Keluar",
+                confirmLabel: "Ya, Keluar"
+            }
+        );
+
+    if (!confirmed) return;
+
+    await supabaseClient.auth.signOut();
+    showAuthGate(
+        "Anda telah keluar dari aplikasi.",
+        "success"
+    );
+}
+
+async function bootAuthenticatedApp() {
+    const { data, error } =
+        await supabaseClient.auth
+            .getSession();
+
+    if (error) {
+        showAuthGate(
+            "Sesi tidak dapat diperiksa. Silakan masuk kembali."
+        );
+        return;
+    }
+
+    if (data.session) {
+        await activateAdminSession(
+            data.session
+        );
+    } else {
+        showAuthGate();
+    }
+
+    supabaseClient.auth.onAuthStateChange(
+        function(event) {
+            if (event === "SIGNED_OUT") {
+                showAuthGate();
+            }
+        }
+    );
+}
+
 
 /*/*==================================
    DATA
@@ -857,7 +1116,16 @@ async function loadBarang() {
 
     dataBarang =
         semuaBarang;
-   setDatabaseStatus(`Database ${formatNumber(dataBarang.length)} barang`);
+
+    setDatabaseStatus(
+        "Database aktif · " +
+            formatNumber(
+                dataBarang.length
+            ) +
+            " barang",
+        "success"
+    );
+
     updateTable();
 }
 
@@ -8280,6 +8548,17 @@ function initAppNavigation() {
             )
         );
 
+    const sections =
+        Object.keys(sectionCopy)
+            .map(
+                function(sectionId) {
+                    return document.getElementById(
+                        sectionId
+                    );
+                }
+            )
+            .filter(Boolean);
+
     const title =
         document.getElementById(
             "appPageTitle"
@@ -8291,15 +8570,33 @@ function initAppNavigation() {
         );
 
     function setActiveSection(sectionId) {
+        const resolvedSectionId =
+            sectionCopy[sectionId]
+                ? sectionId
+                : "dashboard";
+
         const copy =
-            sectionCopy[sectionId] ||
-            sectionCopy.dashboard;
+            sectionCopy[resolvedSectionId];
+
+        sections.forEach(
+            function(section) {
+                const isActive =
+                    section.id ===
+                        resolvedSectionId;
+
+                section.hidden = !isActive;
+                section.classList.toggle(
+                    "app-page-active",
+                    isActive
+                );
+            }
+        );
 
         links.forEach(
             function(link) {
                 const isActive =
                     link.getAttribute("href") ===
-                        `#${sectionId}`;
+                        `#${resolvedSectionId}`;
 
                 link.classList.toggle(
                     "active",
@@ -8332,12 +8629,55 @@ function initAppNavigation() {
             " · Stock Barang";
     }
 
+    function getSectionFromHash() {
+        const sectionId =
+            window.location.hash
+                .replace("#", "");
+
+        return sectionCopy[sectionId]
+            ? sectionId
+            : "dashboard";
+    }
+
+    function openSection(sectionId) {
+        const resolvedSectionId =
+            sectionCopy[sectionId]
+                ? sectionId
+                : "dashboard";
+
+        const nextHash =
+            `#${resolvedSectionId}`;
+
+        if (
+            window.location.hash !==
+                nextHash
+        ) {
+            window.history.pushState(
+                null,
+                "",
+                nextHash
+            );
+        }
+
+        setActiveSection(
+            resolvedSectionId
+        );
+
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "auto"
+        });
+    }
+
     links.forEach(
         function(link) {
             link.addEventListener(
                 "click",
-                function() {
-                    setActiveSection(
+                function(event) {
+                    event.preventDefault();
+
+                    openSection(
                         link.getAttribute("href")
                             .replace("#", "")
                     );
@@ -8346,68 +8686,24 @@ function initAppNavigation() {
         }
     );
 
-    const sections =
-        Object.keys(sectionCopy)
-            .map(
-                function(sectionId) {
-                    return document.getElementById(
-                        sectionId
-                    );
-                }
-            )
-            .filter(Boolean);
-
-    if (
-        "IntersectionObserver" in window
-    ) {
-        const observer =
-            new IntersectionObserver(
-                function(entries) {
-                    const visibleEntry =
-                        entries
-                            .filter(
-                                function(entry) {
-                                    return entry.isIntersecting;
-                                }
-                            )
-                            .sort(
-                                function(a, b) {
-                                    return (
-                                        b.intersectionRatio -
-                                        a.intersectionRatio
-                                    );
-                                }
-                            )[0];
-
-                    if (visibleEntry) {
-                        setActiveSection(
-                            visibleEntry.target.id
-                        );
-                    }
-                },
-                {
-                    rootMargin: "-18% 0px -62% 0px",
-                    threshold: [0, 0.1, 0.35]
-                }
+    window.addEventListener(
+        "hashchange",
+        function() {
+            setActiveSection(
+                getSectionFromHash()
             );
 
-        sections.forEach(
-            function(section) {
-                observer.observe(section);
-            }
-        );
-    }
-
-    const initialSection =
-        window.location.hash
-            .replace("#", "");
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "auto"
+            });
+        }
+    );
 
     setActiveSection(
-        sectionCopy[initialSection]
-            ? initialSection
-            : "dashboard"
+        getSectionFromHash()
     );
 }
 
-init();
-initAppNavigation();
+bootAuthenticatedApp();
