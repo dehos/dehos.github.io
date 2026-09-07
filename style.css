@@ -4289,10 +4289,7 @@ footer small {
 .localized-date-display {
     width: 100%;
     padding-right: 40px;
-    font-family:
-        "Courier New",
-        Courier,
-        monospace;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
 }
@@ -5364,7 +5361,7 @@ body > footer {
 
 #penjualan .localized-date-display {
     padding-right: 42px;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -5938,7 +5935,7 @@ body > footer {
 
 #stok-barang .localized-date-display {
     padding-right: 42px;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
     font-variant-numeric: tabular-nums;
 }
@@ -7111,7 +7108,7 @@ body > footer {
 }
 
 #editPenjualanModal #editPenjualanTanggal {
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-variant-numeric: tabular-nums;
     color-scheme: dark;
 }
@@ -8551,7 +8548,7 @@ select:disabled {
 
 #penjualan #penjualanTanggalTampilan,
 #stok-barang #tanggalTampilan {
-    font-family: "Courier New", Courier, monospace !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
     font-feature-settings: "tnum" 1;
     font-variant-numeric: tabular-nums;
     letter-spacing: .025em;
@@ -8606,4 +8603,14 @@ select:disabled {
     .modern-data-table-wrapper[tabindex="0"] {
         transition: none;
     }
+}
+
+/* Samakan font seluruh bagian input tanggal dengan font utama aplikasi. */
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+    font-family: inherit;
 }
