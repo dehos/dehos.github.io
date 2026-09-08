@@ -1,9 +1,11 @@
-# Stock Barang Android
+# Dhouse Android
 
 Wrapper Android untuk website produksi `https://dehos.github.io/`.
 
 APK debug yang dapat langsung dipasang dibuat otomatis melalui workflow
 **Build Android APK** setiap kali source di folder ini berubah pada branch `main`.
+
+Nama aplikasi pada launcher adalah **Dhouse**, dengan logo resmi Dhouse.
 
 Fitur native yang disediakan:
 
