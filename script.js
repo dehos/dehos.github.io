@@ -4491,8 +4491,8 @@ const TARGET_PENJUALAN_BRAND =
             target: null
         },
         {
-            nama: "Morgan",
-            target: null
+            nama: "Morgan/Verano",
+            target: 20000000
         }
     ]);
 
@@ -4507,7 +4507,7 @@ const TARGET_BRAND_COLORS =
         Trisensa: "#176b45",
         Rona: "#9ca3af",
         Hanata: "#22d3ee",
-        Morgan: "#f59e0b"
+        "Morgan/Verano": "#f59e0b"
     });
 
 function getCanonicalTargetBrand(
@@ -4534,6 +4534,19 @@ function getCanonicalTargetBrand(
         )
     ) {
         return "Vapely/Wepe";
+    }
+
+    if (
+        [
+            "morgan",
+            "verano",
+            "morgan/verano",
+            "verano/morgan"
+        ].includes(
+            normalized
+        )
+    ) {
+        return "Morgan/Verano";
     }
 
     const match =
