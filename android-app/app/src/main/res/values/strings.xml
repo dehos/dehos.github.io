@@ -5,4 +5,5 @@
     <string name="no_app_for_link">Tidak ada aplikasi untuk membuka tautan ini.</string>
     <string name="download_saved">File tersimpan di Download/Stock Barang.</string>
     <string name="download_failed">File gagal diunduh. Silakan coba kembali.</string>
+    <string name="press_back_again">Klik 2x untuk keluar aplikasi</string>
 </resources>

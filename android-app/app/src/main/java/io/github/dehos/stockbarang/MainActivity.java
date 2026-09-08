@@ -26,9 +26,11 @@ public class MainActivity extends Activity {
     private static final String APP_URL = "https://dehos.github.io/";
     private static final String APP_HOST = "dehos.github.io";
     private static final int FILE_PICKER_REQUEST = 41;
+    private static final long EXIT_CONFIRMATION_WINDOW_MS = 2000L;
 
     private WebView webView;
     private ValueCallback<Uri[]> pendingFileCallback;
+    private long lastBackPressedAt = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,9 +160,17 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
-        } else {
-            super.onBackPressed();
+            return;
         }
+
+        long now = System.currentTimeMillis();
+        if (now - lastBackPressedAt <= EXIT_CONFIRMATION_WINDOW_MS) {
+            super.onBackPressed();
+            return;
+        }
+
+        lastBackPressedAt = now;
+        Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
     }
 
     @Override
