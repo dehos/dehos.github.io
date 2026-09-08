@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stock Barang</string>
+    <string name="file_picker_unavailable">Pemilih file tidak tersedia di perangkat ini.</string>
+    <string name="no_app_for_link">Tidak ada aplikasi untuk membuka tautan ini.</string>
+    <string name="download_saved">File tersimpan di Download/Stock Barang.</string>
+    <string name="download_failed">File gagal diunduh. Silakan coba kembali.</string>
+</resources>
