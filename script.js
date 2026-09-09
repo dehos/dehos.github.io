@@ -586,13 +586,15 @@ let lastModalTrigger = null;
 const APP_MODAL_IDS = [
     "transactionModal",
     "editPenjualanModal",
-    "tambahBarangModal"
+    "tambahBarangModal",
+    "importExcelModal"
 ];
 
 const modalSubmitState = {
     tambahBarang: false,
     transaksi: false,
-    editPenjualan: false
+    editPenjualan: false,
+    importExcel: false
 };
 
 function setModalSubmitBusy(
@@ -719,6 +721,10 @@ function closeVisibleAppModal() {
         modal.id === "tambahBarangModal"
     ) {
         closeTambahBarang();
+    } else if (
+        modal.id === "importExcelModal"
+    ) {
+        closeImportExcel();
     }
 }
 
@@ -1481,6 +1487,1052 @@ function closeTambahBarang() {
         );
 
     hideAppModal(modal);
+}
+
+
+/* =====================================================
+   IMPORT DATABASE BARANG DARI EXCEL
+===================================================== */
+
+const IMPORT_EXCEL_MAX_ROWS = 1000;
+const IMPORT_EXCEL_MAX_FILE_SIZE =
+    5 * 1024 * 1024;
+const IMPORT_EXCEL_PREVIEW_LIMIT = 100;
+
+let importExcelState = {
+    fileName: "",
+    rows: [],
+    validRows: [],
+    newBrandNames: [],
+    skippedCount: 0,
+    invalidCount: 0
+};
+
+function normalizeImportKey(value) {
+    return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLocaleLowerCase("id-ID")
+        .replace(/\s+/g, " ");
+}
+
+function normalizeImportHeader(value) {
+    return normalizeImportKey(value)
+        .replace(/[^a-z0-9]/g, "");
+}
+
+function getImportColumnIndexes(row) {
+    const aliases = {
+        nama: [
+            "nama",
+            "namabarang",
+            "barang",
+            "produk",
+            "product"
+        ],
+        stok: [
+            "stokawal",
+            "stockawal",
+            "stok",
+            "stock",
+            "qty",
+            "jumlah"
+        ],
+        brand: [
+            "brand",
+            "merk",
+            "merek"
+        ]
+    };
+
+    const indexes = {};
+
+    (row || []).forEach(
+        function(value, index) {
+            const header =
+                normalizeImportHeader(value);
+
+            Object.keys(aliases).forEach(
+                function(field) {
+                    if (
+                        indexes[field] === undefined &&
+                        aliases[field].includes(header)
+                    ) {
+                        indexes[field] = index;
+                    }
+                }
+            );
+        }
+    );
+
+    return [
+        indexes.nama,
+        indexes.stok,
+        indexes.brand
+    ].every(Number.isInteger)
+        ? indexes
+        : null;
+}
+
+function parseImportStock(value) {
+    if (
+        typeof value === "number" &&
+        Number.isFinite(value)
+    ) {
+        return Number.isInteger(value) &&
+            value >= 0
+            ? value
+            : null;
+    }
+
+    const text =
+        String(value ?? "")
+            .trim()
+            .replace(/\s+/g, "");
+
+    if (!text) {
+        return null;
+    }
+
+    const normalized =
+        /^\d{1,3}([.,]\d{3})+$/.test(text)
+            ? text.replace(/[.,]/g, "")
+            : text;
+
+    const numberValue =
+        Number(normalized);
+
+    return Number.isInteger(numberValue) &&
+        numberValue >= 0
+        ? numberValue
+        : null;
+}
+
+async function fetchImportBrands() {
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("brand")
+        .select("id, nama, aktif")
+        .order(
+            "nama",
+            {
+                ascending: true
+            }
+        );
+
+    if (error) {
+        throw error;
+    }
+
+    return data || [];
+}
+
+function parseImportWorkbook(
+    workbook,
+    existingBrands
+) {
+    const existingItemNames =
+        new Set(
+            dataBarang.map(function(item) {
+                return normalizeImportKey(
+                    item.nama
+                );
+            })
+        );
+
+    const existingBrandMap =
+        new Map(
+            (existingBrands || []).map(
+                function(item) {
+                    return [
+                        normalizeImportKey(
+                            item.nama
+                        ),
+                        item
+                    ];
+                }
+            )
+        );
+
+    const fileItemNames = new Set();
+    const rows = [];
+    const validRows = [];
+    const newBrandMap = new Map();
+    let foundHeader = false;
+    let candidateCount = 0;
+
+    workbook.SheetNames.forEach(
+        function(sheetName) {
+            const sheet =
+                workbook.Sheets[sheetName];
+
+            const matrix =
+                XLSX.utils.sheet_to_json(
+                    sheet,
+                    {
+                        header: 1,
+                        defval: "",
+                        raw: true
+                    }
+                );
+
+            const searchLimit =
+                Math.min(
+                    matrix.length,
+                    25
+                );
+
+            let headerIndex = -1;
+            let columns = null;
+
+            for (
+                let index = 0;
+                index < searchLimit;
+                index += 1
+            ) {
+                const found =
+                    getImportColumnIndexes(
+                        matrix[index]
+                    );
+
+                if (found) {
+                    headerIndex = index;
+                    columns = found;
+                    foundHeader = true;
+                    break;
+                }
+            }
+
+            if (!columns) {
+                return;
+            }
+
+            for (
+                let index = headerIndex + 1;
+                index < matrix.length;
+                index += 1
+            ) {
+                const sourceRow =
+                    matrix[index] || [];
+
+                const rawName =
+                    sourceRow[columns.nama];
+
+                const rawStock =
+                    sourceRow[columns.stok];
+
+                const rawBrand =
+                    sourceRow[columns.brand];
+
+                if (
+                    [
+                        rawName,
+                        rawStock,
+                        rawBrand
+                    ].every(function(value) {
+                        return String(
+                            value ?? ""
+                        ).trim() === "";
+                    })
+                ) {
+                    continue;
+                }
+
+                candidateCount += 1;
+
+                if (
+                    candidateCount >
+                    IMPORT_EXCEL_MAX_ROWS
+                ) {
+                    throw new Error(
+                        "Excel maksimal berisi " +
+                        formatNumber(
+                            IMPORT_EXCEL_MAX_ROWS
+                        ) +
+                        " baris data."
+                    );
+                }
+
+                const nama =
+                    String(rawName ?? "")
+                        .trim()
+                        .replace(/\s+/g, " ");
+
+                const brandInput =
+                    String(rawBrand ?? "")
+                        .trim()
+                        .replace(/\s+/g, " ");
+
+                const namaKey =
+                    normalizeImportKey(nama);
+
+                const brandKey =
+                    normalizeImportKey(
+                        brandInput
+                    );
+
+                const existingBrand =
+                    existingBrandMap.get(
+                        brandKey
+                    );
+
+                const brand =
+                    existingBrand?.nama ||
+                    brandInput;
+
+                const stok =
+                    parseImportStock(
+                        rawStock
+                    );
+
+                const row = {
+                    source:
+                        sheetName +
+                        " · " +
+                        String(index + 1),
+                    nama,
+                    brand,
+                    stok,
+                    stokTampilan:
+                        String(rawStock ?? ""),
+                    status: "ready",
+                    message: "Siap"
+                };
+
+                if (!nama) {
+                    row.status = "invalid";
+                    row.message = "Nama kosong";
+                } else if (nama.length > 200) {
+                    row.status = "invalid";
+                    row.message = "Nama terlalu panjang";
+                } else if (!brandInput) {
+                    row.status = "invalid";
+                    row.message = "Brand kosong";
+                } else if (brand.length > 100) {
+                    row.status = "invalid";
+                    row.message = "Brand terlalu panjang";
+                } else if (stok === null) {
+                    row.status = "invalid";
+                    row.message = "Stok tidak valid";
+                } else if (
+                    existingItemNames.has(
+                        namaKey
+                    )
+                ) {
+                    row.status = "skipped";
+                    row.message = "Sudah ada";
+                } else if (
+                    fileItemNames.has(
+                        namaKey
+                    )
+                ) {
+                    row.status = "skipped";
+                    row.message = "Duplikat di Excel";
+                } else {
+                    fileItemNames.add(namaKey);
+
+                    if (!existingBrand) {
+                        row.message =
+                            "Siap · brand baru";
+
+                        if (
+                            !newBrandMap.has(
+                                brandKey
+                            )
+                        ) {
+                            newBrandMap.set(
+                                brandKey,
+                                brand
+                            );
+                        }
+                    }
+
+                    validRows.push(row);
+                }
+
+                rows.push(row);
+            }
+        }
+    );
+
+    if (!foundHeader) {
+        throw new Error(
+            "Kolom nama, stock_awal, dan brand tidak ditemukan."
+        );
+    }
+
+    return {
+        rows,
+        validRows,
+        newBrandNames:
+            Array.from(
+                newBrandMap.values()
+            ),
+        skippedCount:
+            rows.filter(function(row) {
+                return row.status === "skipped";
+            }).length,
+        invalidCount:
+            rows.filter(function(row) {
+                return row.status === "invalid";
+            }).length
+    };
+}
+
+function renderImportExcelPreview() {
+    const body =
+        document.getElementById(
+            "importExcelPreviewBody"
+        );
+
+    const fileName =
+        document.getElementById(
+            "importExcelFileName"
+        );
+
+    const readyCount =
+        document.getElementById(
+            "importExcelReadyCount"
+        );
+
+    const brandCount =
+        document.getElementById(
+            "importExcelBrandCount"
+        );
+
+    const skippedCount =
+        document.getElementById(
+            "importExcelSkippedCount"
+        );
+
+    const invalidCount =
+        document.getElementById(
+            "importExcelInvalidCount"
+        );
+
+    const limitText =
+        document.getElementById(
+            "importExcelPreviewLimit"
+        );
+
+    const submitButton =
+        document.getElementById(
+            "importExcelSubmit"
+        );
+
+    if (
+        !body ||
+        !fileName ||
+        !submitButton
+    ) {
+        return;
+    }
+
+    fileName.textContent =
+        importExcelState.fileName;
+
+    if (readyCount) {
+        readyCount.textContent =
+            formatNumber(
+                importExcelState
+                    .validRows.length
+            );
+    }
+
+    if (brandCount) {
+        brandCount.textContent =
+            formatNumber(
+                importExcelState
+                    .newBrandNames.length
+            );
+    }
+
+    if (skippedCount) {
+        skippedCount.textContent =
+            formatNumber(
+                importExcelState
+                    .skippedCount
+            );
+    }
+
+    if (invalidCount) {
+        invalidCount.textContent =
+            formatNumber(
+                importExcelState
+                    .invalidCount
+            );
+    }
+
+    const previewRows =
+        importExcelState.rows.slice(
+            0,
+            IMPORT_EXCEL_PREVIEW_LIMIT
+        );
+
+    if (!previewRows.length) {
+        body.innerHTML =
+            '<tr><td colspan="5" class="import-excel-empty">Tidak ada baris data.</td></tr>';
+    } else {
+        body.innerHTML =
+            previewRows.map(
+                function(row) {
+                    const stockText =
+                        row.stok === null
+                            ? row.stokTampilan || "—"
+                            : formatNumber(
+                                row.stok
+                            );
+
+                    return `
+                        <tr>
+                            <td>${escapeHTML(row.source)}</td>
+                            <td>${escapeHTML(row.nama || "—")}</td>
+                            <td>${escapeHTML(row.brand || "—")}</td>
+                            <td>${escapeHTML(stockText)}</td>
+                            <td>
+                                <span class="import-row-status import-row-${row.status}">
+                                    ${escapeHTML(row.message)}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }
+            ).join("");
+    }
+
+    if (limitText) {
+        const hiddenCount =
+            importExcelState.rows.length -
+            previewRows.length;
+
+        limitText.hidden =
+            hiddenCount <= 0;
+
+        limitText.textContent =
+            hiddenCount > 0
+                ? formatNumber(hiddenCount) +
+                    " baris lainnya tetap akan diproses."
+                : "";
+    }
+
+    submitButton.disabled =
+        importExcelState.validRows.length === 0;
+
+    submitButton.textContent =
+        "Import " +
+        formatNumber(
+            importExcelState.validRows.length
+        ) +
+        " Barang";
+}
+
+function openImportExcel() {
+    if (modalSubmitState.importExcel) {
+        return;
+    }
+
+    const input =
+        document.getElementById(
+            "importExcelFile"
+        );
+
+    if (!input) {
+        return;
+    }
+
+    input.value = "";
+    input.click();
+}
+
+async function handleImportExcelFile(event) {
+    const input = event?.target;
+    const file = input?.files?.[0];
+
+    if (!file) {
+        return;
+    }
+
+    try {
+        if (typeof XLSX === "undefined") {
+            throw new Error(
+                "Library Excel belum dimuat. Coba lagi beberapa saat."
+            );
+        }
+
+        if (
+            !/\.(xlsx|xls)$/i.test(
+                file.name
+            )
+        ) {
+            throw new Error(
+                "Pilih file Excel berformat .xlsx atau .xls."
+            );
+        }
+
+        if (
+            file.size >
+            IMPORT_EXCEL_MAX_FILE_SIZE
+        ) {
+            throw new Error(
+                "Ukuran file Excel maksimal 5 MB."
+            );
+        }
+
+        setDatabaseStatus(
+            "Membaca file Excel..."
+        );
+
+        await ensureCoreData();
+
+        const [
+            buffer,
+            existingBrands
+        ] = await Promise.all([
+            file.arrayBuffer(),
+            fetchImportBrands()
+        ]);
+
+        const workbook =
+            XLSX.read(
+                buffer,
+                {
+                    type: "array"
+                }
+            );
+
+        const parsed =
+            parseImportWorkbook(
+                workbook,
+                existingBrands
+            );
+
+        importExcelState = {
+            fileName: file.name,
+            ...parsed
+        };
+
+        renderImportExcelPreview();
+
+        showAppModal(
+            document.getElementById(
+                "importExcelModal"
+            ),
+            document.getElementById(
+                "importExcelSubmit"
+            )
+        );
+
+        setDatabaseStatus(
+            formatNumber(
+                parsed.validRows.length
+            ) +
+            " barang siap diimport.",
+            "success"
+        );
+    } catch (error) {
+        console.error(
+            "ERROR BACA IMPORT EXCEL:",
+            error
+        );
+
+        input.value = "";
+
+        setDatabaseStatus(
+            "File Excel gagal dibaca.",
+            "error"
+        );
+
+        await showAppAlert(
+            error?.message ||
+                "File Excel gagal dibaca.",
+            {
+                title: "Import Excel"
+            }
+        );
+    }
+}
+
+function closeImportExcel() {
+    if (modalSubmitState.importExcel) {
+        return;
+    }
+
+    hideAppModal(
+        document.getElementById(
+            "importExcelModal"
+        )
+    );
+
+    const input =
+        document.getElementById(
+            "importExcelFile"
+        );
+
+    if (input) {
+        input.value = "";
+    }
+
+    importExcelState = {
+        fileName: "",
+        rows: [],
+        validRows: [],
+        newBrandNames: [],
+        skippedCount: 0,
+        invalidCount: 0
+    };
+}
+
+async function simpanImportExcel() {
+    if (
+        modalSubmitState.importExcel ||
+        !importExcelState.validRows.length
+    ) {
+        return;
+    }
+
+    const approved =
+        await showAppConfirm(
+            "Tambahkan " +
+            formatNumber(
+                importExcelState
+                    .validRows.length
+            ) +
+            " barang baru dan " +
+            formatNumber(
+                importExcelState
+                    .newBrandNames.length
+            ) +
+            " brand baru? Barang yang sudah ada tetap tidak diubah.",
+            {
+                title: "Konfirmasi Import Excel",
+                type: "info",
+                confirmLabel: "Ya, Import"
+            }
+        );
+
+    if (!approved) {
+        return;
+    }
+
+    modalSubmitState.importExcel = true;
+
+    setModalSubmitBusy(
+        "importExcelSubmit",
+        true,
+        "Mengimport..."
+    );
+
+    let importedCount = 0;
+    let newlySkippedCount = 0;
+    let importSucceeded = false;
+    let errorMessage = "";
+
+    try {
+        setDatabaseStatus(
+            "Memeriksa database terbaru..."
+        );
+
+        const loadSucceeded =
+            await loadBarang(false);
+
+        if (loadSucceeded === false) {
+            throw new Error(
+                "Data barang terbaru gagal dimuat."
+            );
+        }
+
+        let existingBrands =
+            await fetchImportBrands();
+
+        const existingItemNames =
+            new Set(
+                dataBarang.map(
+                    function(item) {
+                        return normalizeImportKey(
+                            item.nama
+                        );
+                    }
+                )
+            );
+
+        const rowsToImport =
+            importExcelState.validRows
+                .filter(function(row) {
+                    const isExisting =
+                        existingItemNames.has(
+                            normalizeImportKey(
+                                row.nama
+                            )
+                        );
+
+                    if (isExisting) {
+                        newlySkippedCount += 1;
+                    }
+
+                    return !isExisting;
+                });
+
+        if (!rowsToImport.length) {
+            throw new Error(
+                "Semua barang dalam Excel sudah ada di database."
+            );
+        }
+
+        let brandMap =
+            new Map(
+                existingBrands.map(
+                    function(item) {
+                        return [
+                            normalizeImportKey(
+                                item.nama
+                            ),
+                            item
+                        ];
+                    }
+                )
+            );
+
+        const requiredBrandNames =
+            new Map();
+
+        rowsToImport.forEach(
+            function(row) {
+                const key =
+                    normalizeImportKey(
+                        row.brand
+                    );
+
+                if (!requiredBrandNames.has(key)) {
+                    requiredBrandNames.set(
+                        key,
+                        row.brand
+                    );
+                }
+            }
+        );
+
+        const inactiveBrandIds =
+            Array.from(
+                requiredBrandNames.keys()
+            )
+                .map(function(key) {
+                    return brandMap.get(key);
+                })
+                .filter(function(item) {
+                    return item &&
+                        item.aktif === false;
+                })
+                .map(function(item) {
+                    return item.id;
+                });
+
+        if (inactiveBrandIds.length) {
+            const { error } =
+                await supabaseClient
+                    .from("brand")
+                    .update({
+                        aktif: true
+                    })
+                    .in(
+                        "id",
+                        inactiveBrandIds
+                    );
+
+            if (error) {
+                throw error;
+            }
+        }
+
+        const missingBrandNames =
+            Array.from(
+                requiredBrandNames.entries()
+            )
+                .filter(function(entry) {
+                    return !brandMap.has(
+                        entry[0]
+                    );
+                })
+                .map(function(entry) {
+                    return entry[1];
+                });
+
+        if (missingBrandNames.length) {
+            const {
+                error
+            } = await supabaseClient
+                .from("brand")
+                .insert(
+                    missingBrandNames.map(
+                        function(nama) {
+                            return {
+                                nama,
+                                aktif: true
+                            };
+                        }
+                    )
+                );
+
+            if (error) {
+                existingBrands =
+                    await fetchImportBrands();
+
+                const latestBrandKeys =
+                    new Set(
+                        existingBrands.map(
+                            function(item) {
+                                return normalizeImportKey(
+                                    item.nama
+                                );
+                            }
+                        )
+                    );
+
+                const unresolved =
+                    missingBrandNames.some(
+                        function(nama) {
+                            return !latestBrandKeys.has(
+                                normalizeImportKey(
+                                    nama
+                                )
+                            );
+                        }
+                    );
+
+                if (unresolved) {
+                    throw error;
+                }
+            }
+        }
+
+        existingBrands =
+            await fetchImportBrands();
+
+        brandMap =
+            new Map(
+                existingBrands.map(
+                    function(item) {
+                        return [
+                            normalizeImportKey(
+                                item.nama
+                            ),
+                            item
+                        ];
+                    }
+                )
+            );
+
+        const payload =
+            rowsToImport.map(
+                function(row) {
+                    const brand =
+                        brandMap.get(
+                            normalizeImportKey(
+                                row.brand
+                            )
+                        );
+
+                    if (!brand?.id) {
+                        throw new Error(
+                            "Brand " +
+                            row.brand +
+                            " gagal disiapkan."
+                        );
+                    }
+
+                    return {
+                        nama: row.nama,
+                        stok_awal: row.stok,
+                        brand_id: brand.id
+                    };
+                }
+            );
+
+        setDatabaseStatus(
+            "Mengimport barang ke database..."
+        );
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("barang")
+            .insert(payload)
+            .select("id");
+
+        if (error) {
+            throw error;
+        }
+
+        importedCount =
+            data?.length ||
+            payload.length;
+
+        await Promise.all([
+            loadBrandBarangBaru(),
+            loadBarang(false)
+        ]);
+
+        updateTable();
+
+        setDatabaseStatus(
+            formatNumber(importedCount) +
+            " barang berhasil diimport.",
+            "success"
+        );
+
+        importSucceeded = true;
+    } catch (error) {
+        console.error(
+            "ERROR SIMPAN IMPORT EXCEL:",
+            error
+        );
+
+        errorMessage =
+            error?.message ||
+            "Data Excel gagal diimport.";
+
+        setDatabaseStatus(
+            "Import Excel gagal.",
+            "error"
+        );
+    } finally {
+        modalSubmitState.importExcel = false;
+
+        setModalSubmitBusy(
+            "importExcelSubmit",
+            false
+        );
+    }
+
+    if (!importSucceeded) {
+        await showAppAlert(
+            errorMessage,
+            {
+                title: "Import Excel Gagal"
+            }
+        );
+        return;
+    }
+
+    const totalSkipped =
+        importExcelState.skippedCount +
+        newlySkippedCount;
+
+    closeImportExcel();
+
+    showToast(
+        formatNumber(importedCount) +
+        " barang ditambahkan" +
+        (totalSkipped > 0
+            ? " · " +
+                formatNumber(totalSkipped) +
+                " dilewati"
+            : ""),
+        "success"
+    );
 }
 
 
