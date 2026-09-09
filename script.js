@@ -4605,12 +4605,8 @@ function renderTargetPenjualan(
         bulan ||
         getBulanPenjualanSekarang();
 
-    monthLabel.textContent =
-        formatBulanPenjualan(
-            periode
-        );
-
     const totals = {};
+    let tanggalDataTerakhir = "";
 
     TARGET_PENJUALAN_BRAND.forEach(
         function(item) {
@@ -4632,6 +4628,22 @@ function renderTargetPenjualan(
                 return;
             }
 
+            const tanggalPembelian =
+                String(
+                    item.tanggal_pembelian || ""
+                ).slice(0, 10);
+
+            if (
+                /^\d{4}-\d{2}-\d{2}$/.test(
+                    tanggalPembelian
+                ) &&
+                tanggalPembelian >
+                    tanggalDataTerakhir
+            ) {
+                tanggalDataTerakhir =
+                    tanggalPembelian;
+            }
+
             const canonicalBrand =
                 getCanonicalTargetBrand(
                     item.brand
@@ -4651,6 +4663,39 @@ function renderTargetPenjualan(
                 qty * harga;
         }
     );
+
+    let statusPeriode =
+        "Belum ada data";
+
+    if (tanggalDataTerakhir) {
+        const bagianTanggal =
+            tanggalDataTerakhir
+                .split("-")
+                .map(Number);
+
+        const tanggalRingkas =
+            new Date(
+                bagianTanggal[0],
+                bagianTanggal[1] - 1,
+                bagianTanggal[2]
+            ).toLocaleDateString(
+                "id-ID",
+                {
+                    day: "numeric",
+                    month: "short"
+                }
+            );
+
+        statusPeriode =
+            "Data s.d. " + tanggalRingkas;
+    }
+
+    monthLabel.textContent =
+        formatBulanPenjualan(
+            periode
+        ) +
+        " · " +
+        statusPeriode;
 
     const targetedBrands =
         TARGET_PENJUALAN_BRAND
@@ -4752,6 +4797,27 @@ function renderTargetPenjualan(
             const percentageRounded =
                 Math.round(item.percentage);
 
+            const remaining =
+                Math.max(
+                    item.target - item.actual,
+                    0
+                );
+
+            const excess =
+                Math.max(
+                    item.actual - item.target,
+                    0
+                );
+
+            const targetStatus =
+                remaining > 0
+                    ? "Kurang Rp" +
+                        formatNumber(remaining)
+                    : excess > 0
+                        ? "Melebihi Rp" +
+                            formatNumber(excess)
+                        : "Target tercapai";
+
             const progressValue =
                 Math.min(
                     Math.max(item.percentage, 0),
@@ -4798,12 +4864,16 @@ function renderTargetPenjualan(
                     ${escapeHTML(item.nama)}
                 </strong>
 
+                ${item.nama === "Morgan/Verano"
+                    ? `<small class="target-brand-note">Gabungan penjualan</small>`
+                    : ""}
+
                 <div class="target-card-values">
                     <strong>
-                        Rp${formatNumber(item.actual)}
+                        Rp${formatNumber(item.actual)} dari Rp${formatNumber(item.target)}
                     </strong>
-                    <span>
-                        dari Rp${formatNumber(item.target)}
+                    <span class="target-card-gap">
+                        ${targetStatus}
                     </span>
                 </div>
                 `;
@@ -4817,6 +4887,19 @@ function renderTargetPenjualan(
             .filter(function(item) {
                 return item.target === null;
             });
+
+    if (brandsWithoutTarget.length) {
+        const groupLabel =
+            document.createElement("p");
+
+        groupLabel.className =
+            "target-brand-group-label";
+
+        groupLabel.textContent =
+            "Monitoring tanpa target";
+
+        list.appendChild(groupLabel);
+    }
 
     brandsWithoutTarget.forEach(
         function(item) {
