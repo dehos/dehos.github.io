@@ -15,3 +15,5 @@ Versi 2.5 menambahkan multi-lock untuk beberapa titik sentuh pada satu objek, Un
 Versi 2.6 memindahkan Undo/Redo ke toolbar ikon SVG di bawah kanvas, menampilkan referensi panjang/sudut/posisi saat objek dipilih, menambahkan meteran dua titik sambungan, dan menonaktifkan seleksi teks antarmuka yang mengganggu.
 
 Versi 2.7 menempatkan garis dan label pengukuran pada layer di atas objek agar angka jarak tidak lagi tertutup material.
+
+Versi 2.8 mengubah aplikasi menjadi editor kanvas luas dengan toolbar objek kontekstual, menghapus panel Objek Terpilih dan panduan kesamaan objek, serta mengganti meteran menjadi pembuat titik magnet berjarak manual dari ujung bahan.
