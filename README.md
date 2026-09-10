@@ -7,3 +7,5 @@ Mendukung pinch-to-zoom, pan pada area kosong, area kerja layar penuh, hit-area 
 Versi 2.2 menambahkan pengukur jarak dinamis saat objek diseret, pengaturan urutan layer, pemilihan objek di bawah, dan Undo Potong.
 
 Versi 2.3 memakai label potongan A1/B1, motif baja ringan seragam, rotasi tekan-tahan yang halus, dan penguncian ujung ke objek yang bertindihan.
+
+Versi 2.4 menampilkan profil C75 setinggi 7,5 cm dengan motif rusuk pengaku, label di dalam bahan, kontrol ikon ringkas, putaran 1° per ketukan, serta sambungan pada titik perpotongan mana pun. Sambungan terkunci ditandai empat kepala skrup dan dapat dibuka langsung dari titik sambungannya.

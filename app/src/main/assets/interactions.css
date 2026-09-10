@@ -34,3 +34,28 @@
 .lock-tools p{margin:6px 0 0;font-size:8px;color:#64748b}
 .lock-marker{fill:#10b981;stroke:#fff;stroke-width:3;pointer-events:none}
 @media(max-width:380px){.canvas-shell{height:58vh;min-height:410px}.topbar{align-items:flex-start}.scale{min-width:90px}}
+
+/* Profil C75 dan panel kontrol ringkas */
+.beam-body{stroke:#334155;stroke-width:.8}
+.beam.selected .beam-body{stroke:#0f172a;stroke-width:2.2}
+.beam-label{font-size:5.5px;stroke-width:1.8px}
+.beam-groove{stroke:#f8fafc;stroke-opacity:.8;stroke-width:.65}
+.beam-groove.lower{stroke:#475569;stroke-opacity:.5}
+.beam-edge{stroke-width:.75}
+.compact-panel{padding:10px 12px}
+.selection-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.selection-head>div:first-child span{display:block;font-size:7px;letter-spacing:.9px;color:#6b7280;font-weight:900}
+.selection-head>div:first-child b{font-size:13px}
+.compact-info{display:grid;grid-template-columns:auto auto;gap:1px 10px;text-align:right}
+.compact-info b{font-size:10px}.compact-info span{font-size:7px;color:#64748b}
+.compact-tools{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px}
+.compact-tools button{height:30px;border:1px solid #dbe1e8;border-radius:7px;background:#fff;color:#334155;font-size:12px;font-weight:900;padding:0}
+.compact-tools button:active{background:#e2e8f0}.compact-tools i{display:block}
+.angle-compact{grid-column:span 2;display:flex;height:30px}
+.angle-compact input{min-width:0;width:100%;border:1px solid #cbd5e1;border-radius:7px 0 0 7px;padding:4px 6px;font-size:10px}
+.angle-compact span{display:grid;place-items:center;width:24px;background:#f1f5f9;border:1px solid #cbd5e1;border-left:0;border-radius:0 7px 7px 0;font-size:9px}
+.joint{cursor:pointer;pointer-events:all}.joint-hit{fill:#fff;fill-opacity:.1;stroke:none}
+.locked-joint circle{fill:#cbd5e1;stroke:#475569;stroke-width:.7}.locked-joint path{stroke:#334155;stroke-width:.55;pointer-events:none}
+.unlock-joint rect{fill:#fff;stroke:#64748b;stroke-width:1.2}
+.unlock-joint text,.candidate-joint text{text-anchor:middle;dominant-baseline:middle;font-size:9px;pointer-events:none}
+.candidate-joint circle{fill:#fff;fill-opacity:.88;stroke:#64748b;stroke-width:1;stroke-dasharray:2 2}.candidate-joint text{font-size:7px}
