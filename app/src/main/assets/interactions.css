@@ -1,0 +1,15 @@
+.canvas-shell{height:min(66vh,620px);min-height:440px}
+.zoom{flex-wrap:wrap;justify-content:flex-end}
+.zoom button{touch-action:manipulation}
+#snapToggle{width:auto;padding:0 7px;color:#64748b}
+#snapToggle.on{color:#1d4ed8;background:#eff6ff;border-color:#93c5fd}
+#expand{font-size:15px}
+.workspace-card.expanded{position:fixed;z-index:15;inset:0;margin:0;border:0;border-radius:0;display:flex;flex-direction:column;background:#fff}
+.workspace-card.expanded .canvas-shell{height:auto;min-height:0;flex:1}
+.workspace-card.expanded .legend{padding-bottom:max(9px,env(safe-area-inset-bottom))}
+.beam-hit{fill:transparent;stroke:transparent;stroke-width:1;pointer-events:all}
+.beam{touch-action:none;-webkit-tap-highlight-color:transparent}
+.beam-body{pointer-events:none}
+.beam-rib{pointer-events:none}
+.snap-point{fill:#f59e0b;stroke:#fff;stroke-width:3;pointer-events:none}
+@media(max-width:380px){.canvas-shell{height:58vh;min-height:410px}.topbar{align-items:flex-start}.scale{min-width:90px}}
