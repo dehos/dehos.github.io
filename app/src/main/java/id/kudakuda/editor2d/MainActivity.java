@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     @JavascriptInterface public void printPdf(){runOnUiThread(()->{
       PrintManager manager=(PrintManager)getSystemService(Context.PRINT_SERVICE);
       PrintAttributes attrs=new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4.asLandscape()).setMinMargins(PrintAttributes.Margins.NO_MARGINS).build();
-      manager.print("Rencana Kuda-kuda 2D",webView.createPrintDocumentAdapter("Kuda-kuda-2D"),attrs);
+      manager.print("Rencana Aplikasi Meteran",webView.createPrintDocumentAdapter("Aplikasi-Meteran"),attrs);
     });}
   }
 }
