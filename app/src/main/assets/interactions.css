@@ -23,4 +23,14 @@
 .undo-button{grid-column:1/3;height:39px;border:1px solid #f6c453;border-radius:8px;background:#fff;color:#9a6700;font-size:10px;font-weight:900}
 .undo-button:disabled{opacity:.42}
 .panel.disabled{pointer-events:auto}
+.steel{background:linear-gradient(#f8fafc,#8492a6,#e2e8f0)!important;border:1px solid #64748b}
+.beam-label{font-size:11px;font-weight:900;fill:#111827;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.beam-groove{stroke:#ffffffa8;stroke-width:1.4;pointer-events:none}
+.beam-edge{stroke:#475569;stroke-width:1.5;fill:none;pointer-events:none}
+.hold-hint{font-size:8px;color:#64748b;text-align:center;margin:5px 0 0}
+.lock-tools{margin-top:11px;padding-top:10px;border-top:1px solid #e5e7eb}
+.lock-tools>div{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.lock-tools button{min-height:36px;border:1px solid #cbd5e1;border-radius:7px;background:#f8fafc;color:#334155;font-size:8px;font-weight:900}
+.lock-tools p{margin:6px 0 0;font-size:8px;color:#64748b}
+.lock-marker{fill:#10b981;stroke:#fff;stroke-width:3;pointer-events:none}
 @media(max-width:380px){.canvas-shell{height:58vh;min-height:410px}.topbar{align-items:flex-start}.scale{min-width:90px}}
