@@ -1,0 +1,22 @@
+name: Build Kuda-kuda 2D APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [kalkulator-kudakuda-2d]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.11.1" }
+      - run: gradle --no-daemon assembleDebug
+      - run: cp app/build/outputs/apk/debug/app-debug.apk Kuda-kuda-2D.apk
+      - uses: actions/upload-artifact@v4
+        with: { name: Kuda-kuda-2D-APK, path: Kuda-kuda-2D.apk, if-no-files-found: error, retention-days: 30 }

@@ -1,0 +1,45 @@
+const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
+let beams=[],sources=[],selectedId=null,nextId=1,drag=null,view={x:0,y:0,w:700,h:520},toastTimer;
+const canvas=$('canvas'),objects=$('objects'),guides=$('guides');
+
+function n(id,fallback=0){return Math.max(0,parseFloat($(id).value)||fallback)}
+function fmt(v){return new Intl.NumberFormat('id-ID',{maximumFractionDigits:1}).format(v)}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showToast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1800)}
+function selected(){return beams.find(b=>b.id===selectedId)}
+function vector(angle){const r=-angle*Math.PI/180;return{x:Math.cos(r),y:Math.sin(r)}}
+function ends(b){const v=vector(b.angle);return{start:{x:b.x-v.x*b.length/2,y:b.y-v.y*b.length/2},end:{x:b.x+v.x*b.length/2,y:b.y+v.y*b.length/2}}}
+
+function makeProject(qty,length){sources=Array.from({length:qty},(_,i)=>({id:i+1,length}));beams=sources.map((s,i)=>({id:nextId++,source:s.id,name:`Batang ${s.id}`,length:s.length,x:50+s.length/2,y:65+i*58,angle:0,kind:'whole',generation:0}));selectedId=null;view={x:0,y:0,w:700,h:Math.max(520,qty*58+80)};save();renderAll();$('projectModal').classList.add('hidden');showToast(`${qty} batang berhasil dibuat`)}
+$('projectForm').addEventListener('submit',e=>{e.preventDefault();const q=Math.min(30,Math.max(1,Math.round(n('startQty',4)))),l=n('startLength',600);if(!l)return;nextId=1;makeProject(q,l)});
+$('newProject').onclick=()=>{$('projectModal').classList.remove('hidden')};
+
+function beamColor(b){return b.kind==='whole'?'#2563EB':b.kind==='cut'?'#F59E0B':'#94A3B8'}
+function renderCanvas(){objects.innerHTML='';beams.forEach(b=>{const g=document.createElementNS(NS,'g');g.classList.add('beam');if(b.id===selectedId)g.classList.add('selected');g.dataset.id=b.id;g.setAttribute('transform',`translate(${b.x} ${b.y}) rotate(${-b.angle})`);const ribs=[];for(let p=-b.length/2+25;p<b.length/2;p+=25)ribs.push(`<line class="beam-rib" x1="${p}" y1="-6" x2="${p}" y2="6"/>`);g.innerHTML=`<rect class="beam-body" x="${-b.length/2}" y="-7" width="${b.length}" height="14" fill="${beamColor(b)}"/>${ribs.join('')}`;objects.appendChild(g)});canvas.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);$('canvasEmpty').style.display=beams.length?'none':'grid'}
+function renderSelection(){const b=selected(),card=$('selectionCard');card.classList.toggle('disabled',!b);if(!b){$('selectedTitle').textContent='Belum ada objek';['infoLength','infoAngle','infoSource','infoStatus'].forEach(id=>$(id).textContent='—');return}$('selectedTitle').textContent=b.name;$('infoLength').textContent=fmt(b.length)+' cm';$('infoAngle').textContent=fmt(normalAngle(b.angle))+'°';$('infoSource').textContent='Batang '+b.source;$('infoStatus').textContent=b.kind==='whole'?'Bahan utuh':b.kind==='cut'?'Hasil potong':'Sisa potongan';$('angleInput').value=normalAngle(b.angle);updateCutPreview()}
+function renderInventory(){if(!sources.length){$('inventory').innerHTML='<p class="empty-list">Belum ada bahan.</p>';return}$('totalStock').textContent=sources.length;$('inventory').innerHTML=sources.map(s=>{const pieces=beams.filter(b=>b.source===s.id).sort((a,b)=>a.id-b.id);return `<div class="source"><div class="source-head"><b>Batang ${s.id}</b><span>Awal ${fmt(s.length)} cm • ${pieces.length} objek</span></div><div class="piece-list">${pieces.map(b=>`<button class="piece-chip ${b.kind==='remainder'?'remainder':''} ${b.id===selectedId?'active':''}" data-select="${b.id}"><b>${fmt(b.length)} cm</b>${b.kind==='whole'?'Utuh':b.kind==='cut'?'Potongan':'Sisa'} • ${fmt(normalAngle(b.angle))}°</button>`).join('')}</div></div>`}).join('');document.querySelectorAll('[data-select]').forEach(x=>x.onclick=()=>selectBeam(+x.dataset.select))}
+function renderAll(){renderCanvas();renderSelection();renderInventory();updateZoomLabel()}
+function selectBeam(id){selectedId=id;renderAll();save()}
+
+canvas.addEventListener('pointerdown',e=>{const g=e.target.closest('.beam');if(!g){selectedId=null;renderAll();return}e.preventDefault();const id=+g.dataset.id,b=beams.find(x=>x.id===id),p=screenPoint(e);selectedId=id;drag={id,dx:p.x-b.x,dy:p.y-b.y};canvas.setPointerCapture(e.pointerId);renderAll()});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const b=beams.find(x=>x.id===drag.id),p=screenPoint(e),raw={x:p.x-drag.dx,y:p.y-drag.dy},snap=snapPosition(b,raw);b.x=snap.x;b.y=snap.y;drawGuides(snap);renderCanvas()});
+canvas.addEventListener('pointerup',()=>{if(!drag)return;drag=null;guides.innerHTML='';renderAll();save()});canvas.addEventListener('pointercancel',()=>{drag=null;guides.innerHTML='';renderAll()});
+function screenPoint(e){const r=canvas.getBoundingClientRect();return{x:view.x+(e.clientX-r.left)*view.w/r.width,y:view.y+(e.clientY-r.top)*view.h/r.height}}
+function snapPosition(b,p){const threshold=12*view.w/700,targetsX=[350],targetsY=[260],result={x:p.x,y:p.y,gx:false,gy:false};beams.filter(x=>x.id!==b.id).forEach(other=>{targetsX.push(other.x);targetsY.push(other.y);const oe=ends(other);targetsX.push(oe.start.x,oe.end.x);targetsY.push(oe.start.y,oe.end.y)});let dx=threshold,dy=threshold;targetsX.forEach(x=>{const d=Math.abs(p.x-x);if(d<dx){dx=d;result.x=x;result.gx=x===350?'TENGAH':'SEJAJAR'}});targetsY.forEach(y=>{const d=Math.abs(p.y-y);if(d<dy){dy=d;result.y=y;result.gy=y===260?'TENGAH':'SEJAJAR'}});return result}
+function drawGuides(p){let h='';if(p.gx)h+=`<line class="snap-guide ${p.gx==='TENGAH'?'center-guide':''}" x1="${p.x}" y1="${view.y}" x2="${p.x}" y2="${view.y+view.h}"/><text class="snap-text" x="${p.x+6}" y="${view.y+18}">${p.gx}</text>`;if(p.gy)h+=`<line class="snap-guide ${p.gy==='TENGAH'?'center-guide':''}" x1="${view.x}" y1="${p.y}" x2="${view.x+view.w}" y2="${p.y}"/><text class="snap-text" x="${view.x+7}" y="${p.y-6}">${p.gy}</text>`;guides.innerHTML=h}
+
+function normalAngle(a){a=((a%360)+360)%360;return Math.round(a*10)/10}
+function rotateTo(deg){const b=selected();if(!b)return;b.angle=normalAngle(deg);renderAll();save()}
+$('applyAngle').onclick=()=>rotateTo(parseFloat($('angleInput').value)||0);document.querySelectorAll('[data-angle]').forEach(x=>x.onclick=()=>rotateTo(+x.dataset.angle));document.querySelectorAll('[data-turn]').forEach(x=>x.onclick=()=>{const b=selected();if(b)rotateTo(b.angle+(+x.dataset.turn))});
+
+function updateCutPreview(){const b=selected(),cut=n('cutLength');if(!b){$('cutPreview').textContent='Pilih objek untuk melihat simulasi pemotongan.';return}if(!cut){$('cutPreview').textContent=`Masukkan panjang kurang dari ${fmt(b.length)} cm.`;return}const rest=b.length-cut;$('cutPreview').textContent=rest>0?`${fmt(b.length)} cm → potongan ${fmt(cut)} cm + sisa ${fmt(rest)} cm`:'Ukuran potongan harus lebih kecil dari panjang objek.'}
+$('cutLength').addEventListener('input',updateCutPreview);
+$('cutButton').onclick=()=>{const b=selected(),cut=n('cutLength');if(!b)return;if(cut<=0||cut>=b.length){showToast('Ukuran potongan tidak valid');return}const side=$('cutSide').value,v=vector(b.angle),oldLength=b.length,rest=oldLength-cut,e=ends(b),cutCenter=side==='start'?{x:e.start.x+v.x*cut/2,y:e.start.y+v.y*cut/2}:{x:e.end.x-v.x*cut/2,y:e.end.y-v.y*cut/2},restCenter=side==='start'?{x:e.end.x-v.x*rest/2,y:e.end.y-v.y*rest/2}:{x:e.start.x+v.x*rest/2,y:e.start.y+v.y*rest/2};b.length=cut;b.x=cutCenter.x;b.y=cutCenter.y;b.kind='cut';b.generation++;b.name=`Batang ${b.source} • P${b.generation}`;const remainder={id:nextId++,source:b.source,name:`Batang ${b.source} • S${b.generation}`,length:rest,x:restCenter.x,y:restCenter.y+24,angle:b.angle,kind:'remainder',generation:b.generation};beams.push(remainder);$('cutLength').value='';renderAll();save();showToast(`Sisa ${fmt(rest)} cm tetap di kanvas`)};
+
+function zoom(factor){const cx=view.x+view.w/2,cy=view.y+view.h/2,nw=Math.max(220,Math.min(1400,view.w*factor)),nh=nw*(520/700);view={x:cx-nw/2,y:cy-nh/2,w:nw,h:nh};renderCanvas();updateZoomLabel()}
+$('zoomIn').onclick=()=>zoom(.8);$('zoomOut').onclick=()=>zoom(1.25);$('fit').onclick=fitView;
+function fitView(){if(!beams.length){view={x:0,y:0,w:700,h:520};renderCanvas();return}let xs=[],ys=[];beams.forEach(b=>{const e=ends(b);xs.push(e.start.x,e.end.x);ys.push(e.start.y,e.end.y)});let minX=Math.min(...xs)-55,maxX=Math.max(...xs)+55,minY=Math.min(...ys)-70,maxY=Math.max(...ys)+70,w=Math.max(300,maxX-minX),h=Math.max(220,maxY-minY),ratio=700/520;if(w/h>ratio)h=w/ratio;else w=h*ratio;view={x:(minX+maxX-w)/2,y:(minY+maxY-h)/2,w,h};renderCanvas();updateZoomLabel()}
+function updateZoomLabel(){$('zoomLabel').textContent=Math.round(700/view.w*100)+'%'}
+function save(){localStorage.setItem('kudakuda2d',JSON.stringify({beams,sources,nextId,view}))}
+function load(){try{const d=JSON.parse(localStorage.getItem('kudakuda2d'));if(d&&d.beams&&d.sources){beams=d.beams;sources=d.sources;nextId=d.nextId||Math.max(0,...beams.map(b=>b.id))+1;view=d.view||view;$('projectModal').classList.add('hidden')}}catch(e){}renderAll()}
+load();
