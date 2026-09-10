@@ -1,7 +1,7 @@
 <!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Kuda-kuda 2D</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="interactions.css"></head>
 <body>
 <div id="projectModal" class="modal"><form id="projectForm" class="modal-card"><div class="modal-icon">△</div><span class="eyebrow">PROYEK BARU</span><h1>Siapkan bahan</h1><p>Aplikasi akan membuat bahan utuh dan menyusunnya berjajar pada bidang kerja.</p><label>Jumlah batang<input id="startQty" type="number" min="1" max="30" value="4"></label><label>Panjang setiap batang<div class="input-unit"><input id="startLength" type="number" min="1" value="600"><span>cm</span></div></label><button class="primary" type="submit">Buat proyek</button></form></div>
-<header><div><span class="eyebrow">EDITOR BAHAN</span><h1>Kuda-kuda 2D</h1></div><button id="newProject" class="head-button">Proyek baru</button></header>
+<header><div><span class="eyebrow">EDITOR BAHAN</span><h1>Kuda-kuda 2D</h1></div><div class="head-actions"><button id="undoAction" class="head-button" title="Undo">↶</button><button id="redoAction" class="head-button" title="Redo">↷</button><button id="exportPdf" class="head-button">PDF A4</button><button id="newProject" class="head-button" title="Proyek baru">＋ Baru</button></div></header>
 <main>
   <section class="workspace-card">
     <div class="topbar"><div class="scale"><b>Skala koordinat 1:1</b><span>1 unit = 1 cm</span></div><div class="zoom"><button id="snapToggle" class="on">Magnet</button><button id="zoomOut">−</button><b id="zoomLabel">100%</b><button id="zoomIn">＋</button><button id="fit">Pas</button><button id="expand">⛶</button></div></div>
@@ -17,4 +17,4 @@
 
   <section class="panel"><div class="panel-title row"><div><span>DAFTAR BAHAN</span><b>Jejak potongan proyek</b></div><div class="totals"><strong id="totalStock">0</strong><small>batang awal</small></div></div><div id="inventory" class="inventory"><p class="empty-list">Belum ada bahan.</p></div></section>
   <section class="tip"><b>Petunjuk</b><p>Sentuh objek untuk memilih dan seret untuk memindahkan. Cubit dua jari untuk zoom, seret ruang kosong untuk menggeser area, atau gunakan tombol +/−. Magnet hanya membantu saat objek sangat dekat dengan titik tengah atau sambungan.</p></section>
-</main><div id="toast" class="toast"></div><script src="app.js"></script></body></html>
+</main><section id="printReport" class="print-report"></section><div id="toast" class="toast"></div><script src="app.js"></script></body></html>
