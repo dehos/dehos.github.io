@@ -17,3 +17,5 @@ Versi 2.6 memindahkan Undo/Redo ke toolbar ikon SVG di bawah kanvas, menampilkan
 Versi 2.7 menempatkan garis dan label pengukuran pada layer di atas objek agar angka jarak tidak lagi tertutup material.
 
 Versi 2.8 mengubah aplikasi menjadi editor kanvas luas dengan toolbar objek kontekstual, menghapus panel Objek Terpilih dan panduan kesamaan objek, serta mengganti meteran menjadi pembuat titik magnet berjarak manual dari ujung bahan.
+
+Versi 2.9 mengaktifkan kembali rotasi halus dengan tekan-tahan pada toolbar kanvas. Ujung meteran dapat ditarik bebas dengan angka yang mengikuti jarak secara langsung, sedangkan titik magnet yang sudah dibuat dapat dipilih, digeser, atau diperbarui melalui input ukuran manual.
