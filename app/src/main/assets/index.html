@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Kalkulator Rangka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><div class="mark">⌂</div><div><h1>Kalkulator Rangka</h1><p>Hitung kebutuhan material dengan mudah</p></div></header>
+  <main>
+    <section class="card intro"><span class="tag">PROYEK BARU</span><h2>Susunan rangka tampak atas</h2><p>Masukkan ukuran bidang, jarak pemasangan, dan panjang satu batang.</p></section>
+    <section class="card">
+      <h3>1. Jenis dan bentuk</h3>
+      <label>Jenis rangka<select id="material"><option>Reng atap genteng</option><option>Usuk / kaso</option><option>Baja ringan</option><option>Rangka plafon</option><option>Rangka custom</option></select></label>
+      <div class="label">Bentuk bidang</div><div class="shape-grid" id="shapes">
+        <button data-shape="rect" class="active"><i class="rect"></i>Persegi panjang</button><button data-shape="square"><i class="square"></i>Persegi</button><button data-shape="l"><i class="lshape"></i>Bentuk L</button><button data-shape="t"><i class="tshape"></i>Bentuk T</button>
+      </div>
+    </section>
+    <section class="card"><h3>2. Ukuran bidang</h3><div id="dimensionFields" class="fields"></div><p class="hint" id="shapeHint"></p></section>
+    <section class="card">
+      <h3>3. Pengaturan rangka</h3>
+      <div class="fields two"><label>Jarak antar rangka<div class="input-unit"><input id="spacing" inputmode="decimal" value="40"><span>cm</span></div></label><label>Panjang per batang<div class="input-unit"><input id="stock" inputmode="decimal" value="6"><span>m</span></div></label></div>
+      <label>Arah pemasangan<select id="direction"><option value="horizontal">Mendatar ↔</option><option value="vertical">Tegak ↕</option></select></label>
+      <label>Cadangan pemotongan <b id="wasteValue">10%</b><input type="range" id="waste" min="0" max="25" value="10"></label>
+      <button class="calculate" id="calculate">Hitung Kebutuhan</button>
+    </section>
+    <section id="results" class="results hidden">
+      <div class="result-head"><span>HASIL PERHITUNGAN</span><strong id="areaResult">0 m²</strong></div>
+      <div class="stats"><div><small>JUMLAH GARIS</small><b id="lineResult">0</b><em>jalur rangka</em></div><div><small>TOTAL PANJANG</small><b id="lengthResult">0 m</b><em>sebelum cadangan</em></div><div class="primary"><small>KEBUTUHAN</small><b id="barResult">0</b><em>batang material</em></div></div>
+      <div class="card diagram"><div class="diagram-title"><h3>Tampak atas</h3><span id="scaleInfo">Ilustrasi proporsional</span></div><svg id="drawing" viewBox="0 0 360 260"></svg><div class="legend"><span><i class="outline"></i>Batas bidang</span><span><i class="frame"></i>Susunan rangka</span></div></div>
+      <div class="note"><b>Catatan perhitungan</b><p id="noteText"></p></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body></html>
