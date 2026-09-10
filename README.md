@@ -21,3 +21,5 @@ Versi 2.8 mengubah aplikasi menjadi editor kanvas luas dengan toolbar objek kont
 Versi 2.9 mengaktifkan kembali rotasi halus dengan tekan-tahan pada toolbar kanvas. Ujung meteran dapat ditarik bebas dengan angka yang mengikuti jarak secara langsung, sedangkan titik magnet yang sudah dibuat dapat dipilih, digeser, atau diperbarui melalui input ukuran manual.
 
 Versi 3.0 mengganti nama aplikasi menjadi Aplikasi Meteran dan menggunakan ikon vektor modern bertema meteran. Titik meteran kini dapat dihapus dari panel edit, sementara input jarak manual ditampilkan dengan label yang lebih jelas.
+
+Versi 3.1 menambahkan Undo Potong langsung pada objek terpilih untuk menyatukan pasangan potongannya tanpa membatalkan desain lain. Penanda meteran diperkecil mengikuti profil objek dan ujung pengukuran kini memakai tanda ×.
