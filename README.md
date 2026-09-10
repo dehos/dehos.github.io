@@ -1,12 +1,14 @@
 # Kalkulator Rangka
 
-Aplikasi Android offline untuk memperkirakan susunan, total panjang, dan jumlah batang rangka berdasarkan bentuk bidang, jarak pemasangan, dan panjang material.
+Aplikasi Android offline untuk menggambar kuda-kuda 2D, memberi ukuran pada setiap bagian, dan mengoptimalkan pemotongan batang material.
 
-## Bentuk bidang
+## Fitur
 
-- Persegi panjang
-- Persegi
-- Bentuk L
-- Bentuk T
+- Editor garis horizontal, vertikal, dan diagonal
+- Panjang, jumlah, nama bagian, dan sudut kemiringan
+- Template kuda-kuda segitiga
+- Daftar batang bahan dengan panjang default 600 cm
+- Susunan potongan otomatis dan manual
+- Informasi sisa setiap batang dan saran pemanfaatannya
 
 Hasil merupakan estimasi kebutuhan material, bukan pengganti perhitungan struktur oleh tenaga ahli.

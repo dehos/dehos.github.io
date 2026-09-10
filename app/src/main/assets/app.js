@@ -1,82 +1,32 @@
-const $ = id => document.getElementById(id);
-let shape = 'rect';
+const $=id=>document.getElementById(id), svgNS='http://www.w3.org/2000/svg';
+let members=[], selected=null, stocks=[], seq=1, dragging=null;
+const canvas=$('canvas'), layer=$('members');
 
-const presets = {
-  'Reng atap genteng': {spacing: 25, stock: 6},
-  'Usuk / kaso': {spacing: 50, stock: 4},
-  'Baja ringan': {spacing: 120, stock: 6},
-  'Rangka plafon': {spacing: 60, stock: 4},
-  'Rangka custom': {spacing: 40, stock: 6}
-};
+function grid(){let s='';for(let x=20;x<360;x+=20)s+=`<line class="gridline" x1="${x}" y1="0" x2="${x}" y2="280"/>`;for(let y=20;y<280;y+=20)s+=`<line class="gridline" x1="0" y1="${y}" x2="360" y2="${y}"/>`;$('grid').innerHTML=s}grid();
+function val(id,fallback=0){return Math.max(0,parseFloat($(id).value.replace(',','.'))||fallback)}
+function add(type){const id=seq++;let m={id,name:'Potongan '+id,length:200,qty:1,x1:80,y1:140,x2:280,y2:140};if(type==='vertical')Object.assign(m,{x1:180,y1:40,x2:180,y2:240});if(type==='diagonal')Object.assign(m,{x1:80,y1:220,x2:250,y2:70,length:227});members.push(m);select(m.id);render();syncPieces()}
+function angle(m){let a=Math.atan2(-(m.y2-m.y1),m.x2-m.x1)*180/Math.PI;if(a<0)a+=180;return Math.round(a*10)/10}
+function setGeometry(m,len,deg){const px=Math.min(250,Math.max(55,len*.55)),r=-deg*Math.PI/180,cx=(m.x1+m.x2)/2,cy=(m.y1+m.y2)/2;m.x1=cx-Math.cos(r)*px/2;m.y1=cy-Math.sin(r)*px/2;m.x2=cx+Math.cos(r)*px/2;m.y2=cy+Math.sin(r)*px/2;m.length=len}
+function render(){layer.innerHTML='';members.forEach(m=>{const g=document.createElementNS(svgNS,'g');g.dataset.id=m.id;const mx=(m.x1+m.x2)/2,my=(m.y1+m.y2)/2,a=angle(m);g.innerHTML=`<line class="member-hit" x1="${m.x1}" y1="${m.y1}" x2="${m.x2}" y2="${m.y2}"/><line class="member-line ${selected===m.id?'selected':''}" x1="${m.x1}" y1="${m.y1}" x2="${m.x2}" y2="${m.y2}"/><circle class="node" cx="${m.x1}" cy="${m.y1}" r="5"/><circle class="node" cx="${m.x2}" cy="${m.y2}" r="5"/><rect class="dim-bg" x="${mx-27}" y="${my-18}" rx="5" width="54" height="16"/><text class="dim-text" x="${mx}" y="${my-7}">${m.length} cm</text><text class="angle-text" x="${mx+30}" y="${my+10}">${a}°</text>`;layer.appendChild(g)});$('empty').classList.toggle('hidden',members.length>0)}
+function select(id){selected=id;const m=members.find(x=>x.id===id);if(!m){$('editor').classList.add('hidden');render();return}$('editor').classList.remove('hidden');$('memberName').textContent=m.name;$('editLength').value=m.length;$('editAngle').value=angle(m);$('editQty').value=m.qty;$('editName').value=m.name;render()}
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>add(b.dataset.tool));
+$('closeEditor').onclick=()=>select(null);$('delete').onclick=()=>{if(selected){members=members.filter(m=>m.id!==selected);selected=null;$('editor').classList.add('hidden');render();syncPieces()}};
+$('saveMember').onclick=()=>{const m=members.find(x=>x.id===selected);if(!m)return;m.name=$('editName').value.trim()||'Potongan '+m.id;m.qty=Math.max(1,Math.round(val('editQty',1)));setGeometry(m,val('editLength',1),Math.min(180,val('editAngle')));render();select(m.id);syncPieces()};
+$('template').onclick=()=>{members=[];seq=1;const list=[['Batang bawah',520,1,40,225,320,225],['Kaki kiri',330,1,40,225,180,55],['Kaki kanan',330,1,180,55,320,225],['Tiang tengah',170,1,180,55,180,225],['Diagonal kiri',220,1,40,225,180,140],['Diagonal kanan',220,1,180,140,320,225]];list.forEach(v=>members.push({id:seq++,name:v[0],length:v[1],qty:v[2],x1:v[3],y1:v[4],x2:v[5],y2:v[6]}));selected=null;render();syncPieces()};
 
-const dimensions = {
-  rect: [['panjang','Panjang',8],['lebar','Lebar',6]],
-  square: [['sisi','Panjang sisi',6]],
-  l: [['totalP','Panjang total',10],['totalL','Lebar total',8],['potongP','Panjang potongan',4],['potongL','Lebar potongan',3]],
-  t: [['kepalaP','Panjang kepala T',10],['kepalaL','Lebar kepala T',3],['batangP','Panjang batang T',5],['batangL','Lebar batang T',4]]
-};
+let move=null;canvas.addEventListener('pointerdown',e=>{const g=e.target.closest('g[data-id]');if(!g)return;e.preventDefault();const id=+g.dataset.id,m=members.find(x=>x.id===id),p=point(e);select(id);move={id,sx:p.x,sy:p.y,x1:m.x1,y1:m.y1,x2:m.x2,y2:m.y2};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!move)return;const p=point(e),m=members.find(x=>x.id===move.id),dx=p.x-move.sx,dy=p.y-move.sy;m.x1=clamp(move.x1+dx,8,352);m.x2=clamp(move.x2+dx,8,352);m.y1=clamp(move.y1+dy,8,265);m.y2=clamp(move.y2+dy,8,265);render()});canvas.addEventListener('pointerup',()=>move=null);function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*360/r.width,y:(e.clientY-r.top)*280/r.height}}function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
 
-const hints = {
-  rect:'Ukuran keseluruhan bidang persegi panjang.', square:'Satu ukuran digunakan untuk keempat sisinya.',
-  l:'Bentuk L dihitung dari bidang besar dikurangi potongan di sudut kanan bawah.',
-  t:'Batang T berada di tengah dan tersambung di bawah kepala T.'
-};
-
-function fields() {
-  $('dimensionFields').innerHTML = dimensions[shape].map(([id,label,value]) => `<label>${label}<div class="input-unit"><input id="${id}" inputmode="decimal" value="${value}"><span>m</span></div></label>`).join('');
-  $('shapeHint').textContent = hints[shape];
-}
-
-document.querySelectorAll('#shapes button').forEach(button => button.addEventListener('click', () => {
-  document.querySelector('#shapes .active').classList.remove('active'); button.classList.add('active'); shape = button.dataset.shape; fields();
-}));
-
-$('material').addEventListener('change', e => { const p=presets[e.target.value]; $('spacing').value=p.spacing; $('stock').value=p.stock; });
-$('waste').addEventListener('input', e => $('wasteValue').textContent=e.target.value+'%');
-
-function n(id) { return Math.max(0, parseFloat($(id).value.replace(',','.')) || 0); }
-function polygon() {
-  if(shape==='rect') return [[0,0],[n('panjang'),0],[n('panjang'),n('lebar')],[0,n('lebar')]];
-  if(shape==='square') { const s=n('sisi'); return [[0,0],[s,0],[s,s],[0,s]]; }
-  if(shape==='l') { const w=n('totalP'),h=n('totalL'),cw=Math.min(n('potongP'),w),ch=Math.min(n('potongL'),h); return [[0,0],[w,0],[w,h-ch],[w-cw,h-ch],[w-cw,h],[0,h]]; }
-  const hw=n('kepalaP'),hh=n('kepalaL'),sw=Math.min(n('batangL'),hw),sh=n('batangP'),x=(hw-sw)/2;
-  return [[0,0],[hw,0],[hw,hh],[x+sw,hh],[x+sw,hh+sh],[x,hh+sh],[x,hh],[0,hh]];
-}
-
-function bounds(poly) { return {w:Math.max(...poly.map(p=>p[0])),h:Math.max(...poly.map(p=>p[1]))}; }
-function inside(x,y,poly) { let c=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++) { const a=poly[i],b=poly[j]; if(((a[1]>y)!=(b[1]>y)) && x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]) c=!c; } return c; }
-function intersections(at,vertical,poly) {
-  const vals=[];
-  for(let i=0;i<poly.length;i++) { const a=poly[i],b=poly[(i+1)%poly.length]; const p=vertical?a[0]:a[1],q=vertical?b[0]:b[1]; if(p===q) continue; if(at>=Math.min(p,q) && at<Math.max(p,q)) { const t=(at-p)/(q-p); vals.push((vertical?a[1]:a[0])+t*((vertical?b[1]:b[0])-(vertical?a[1]:a[0]))); } }
-  return vals.sort((a,b)=>a-b);
-}
-
-function calculate() {
-  const poly=polygon(), {w,h}=bounds(poly), spacing=n('spacing')/100, stock=n('stock'), waste=n('waste')/100, vertical=$('direction').value==='vertical';
-  if(!w || !h || !spacing || !stock) { alert('Lengkapi semua ukuran dengan angka lebih dari nol.'); return; }
-  if(shape==='l' && (n('potongP')>=w || n('potongL')>=h)) { alert('Ukuran potongan L harus lebih kecil dari ukuran total.'); return; }
-  if(shape==='t' && n('batangL')>w) { alert('Lebar batang T tidak boleh melebihi panjang kepala T.'); return; }
-  const limit=vertical?w:h, eps=Math.min(.002,spacing/100), positions=[];
-  for(let p=0;p<=limit+eps;p+=spacing) positions.push(Math.min(p,limit-eps));
-  if(positions[positions.length-1]<limit-eps) positions.push(limit-eps);
-  let total=0, segments=0;
-  positions.forEach(p => { const vals=intersections(Math.max(eps,p),vertical,poly); for(let i=0;i+1<vals.length;i+=2){ total+=vals[i+1]-vals[i]; segments++; }});
-  let area=0; for(let i=0,j=poly.length-1;i<poly.length;j=i++) area+=(poly[j][0]*poly[i][1]-poly[i][0]*poly[j][1]); area=Math.abs(area/2);
-  const bars=Math.ceil(total*(1+waste)/stock);
-  $('areaResult').textContent=fmt(area)+' m²'; $('lineResult').textContent=positions.length; $('lengthResult').textContent=fmt(total)+' m'; $('barResult').textContent=bars;
-  $('noteText').textContent=`${fmt(total)} m total rangka + ${Math.round(waste*100)}% cadangan = ${fmt(total*(1+waste))} m. Dibagi panjang ${fmt(stock)} m per batang dan dibulatkan ke atas menjadi ${bars} batang. Sambungan/potongan aktual dapat menambah kebutuhan.`;
-  draw(poly,positions,vertical,w,h); $('results').classList.remove('hidden'); setTimeout(()=>$('results').scrollIntoView({behavior:'smooth'}),50);
-}
-
-function fmt(v) { return new Intl.NumberFormat('id-ID',{maximumFractionDigits:2}).format(v); }
-function draw(poly,positions,vertical,w,h) {
-  const svg=$('drawing'), pad=28, sw=304,sh=204,scale=Math.min(sw/w,sh/h), ox=(360-w*scale)/2,oy=(260-h*scale)/2;
-  const P=p=>[ox+p[0]*scale,oy+p[1]*scale], d=poly.map((p,i)=>(i?'L':'M')+P(p).join(' ')).join(' ')+' Z';
-  let html=`<defs><clipPath id="clip"><path d="${d}"/></clipPath></defs><path d="${d}" fill="#eaf5f1" stroke="#173b36" stroke-width="3"/>`;
-  html+='<g clip-path="url(#clip)" stroke="#15947e" stroke-width="1.5" opacity=".9">';
-  positions.forEach(p=>{ if(vertical){const x=ox+p*scale;html+=`<line x1="${x}" y1="${oy-5}" x2="${x}" y2="${oy+h*scale+5}"/>`;}else{const y=oy+p*scale;html+=`<line x1="${ox-5}" y1="${y}" x2="${ox+w*scale+5}" y2="${y}"/>`;}}); html+='</g>';
-  html+=`<path d="${d}" fill="none" stroke="#173b36" stroke-width="3"/><text x="180" y="248" text-anchor="middle" font-size="10" fill="#657672">${fmt(w)} m × ${fmt(h)} m • jarak ${fmt(n('spacing'))} cm</text>`;
-  svg.innerHTML=html;
-}
-
-$('calculate').addEventListener('click',calculate); fields();
+function allPieces(){const out=[];members.forEach(m=>{for(let i=1;i<=m.qty;i++)out.push({key:`${m.id}-${i}`,memberId:m.id,name:m.name,length:m.length})});return out}
+function resetStocks(){const qty=Math.max(1,Math.round(val('stockQty',1))),len=val('stockLength',600);stocks=Array.from({length:qty},(_,i)=>({id:i+1,length:len,pieces:[]}));renderStocks()}
+function assignedKeys(){return new Set(stocks.flatMap(s=>s.pieces.map(p=>p.key)))}
+function syncPieces(){const pieces=allPieces(),valid=new Set(pieces.map(p=>p.key));stocks.forEach(s=>s.pieces=s.pieces.filter(p=>valid.has(p.key)));updateSummary();renderUnassigned();renderStocks()}
+function updateSummary(){const p=allPieces(),total=p.reduce((n,x)=>n+x.length,0),stock=val('stockLength',600);$('totalPieces').textContent=p.length;$('totalLength').textContent=fmt(total)+' cm';$('minStocks').textContent=Math.ceil(total/stock)+' batang'}
+function renderUnassigned(){const used=assignedKeys(),p=allPieces().filter(x=>!used.has(x.key));$('unassigned').innerHTML=p.length?p.map(pieceHTML).join(''):'<span class="muted">Semua potongan sudah ditempatkan.</span>';bindPieces()}
+function pieceHTML(p){return `<button class="piece" data-key="${p.key}">${esc(p.name)}<br>${fmt(p.length)} cm</button>`}
+function renderStocks(){const available=allPieces().filter(p=>!assignedKeys().has(p.key));$('stocks').innerHTML=stocks.map(s=>{const used=s.pieces.reduce((n,p)=>n+p.length,0),left=s.length-used,over=left<0;const cuts=s.pieces.map(p=>`<button class="cut ${over?'over':''}" data-key="${p.key}" style="width:${Math.max(4,p.length/s.length*100)}%">${fmt(p.length)}</button>`).join('');const rem=Math.max(0,left);const fit=available.filter(p=>p.length<=rem).sort((a,b)=>b.length-a.length)[0];return `<div class="stock" data-stock="${s.id}"><div class="stock-head"><b>Batang ${s.id} • ${fmt(s.length)} cm</b><span style="color:${over?'#c94a4a':''}">${over?'Kurang '+fmt(-left):'Sisa '+fmt(left)} cm</span></div><div class="bar">${cuts}<div class="remainder" style="width:${Math.max(0,rem/s.length*100)}%">${rem?fmt(rem)+' cm':''}</div></div>${fit?`<div class="suggest">Sisa cukup untuk: ${esc(fit.name)} (${fmt(fit.length)} cm)</div>`:''}</div>`}).join('');bindPieces();document.querySelectorAll('.stock').forEach(el=>{el.ondragover=e=>e.preventDefault();el.ondrop=e=>{e.preventDefault();place(e.dataTransfer.getData('text/plain'),+el.dataset.stock)}})}
+function bindPieces(){document.querySelectorAll('.piece,.cut').forEach(el=>{el.draggable=true;el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.key);el.onclick=()=>{if(el.classList.contains('cut'))unassign(el.dataset.key);else{document.querySelectorAll('.piece').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');dragging=el.dataset.key}};el.onpointerdown=e=>{dragging=el.dataset.key;el.classList.add('selected')}});document.querySelectorAll('.stock').forEach(el=>el.onclick=e=>{if(dragging&&!e.target.classList.contains('cut')){place(dragging,+el.dataset.stock);dragging=null}})}
+function place(key,id){const p=allPieces().find(x=>x.key===key),s=stocks.find(x=>x.id===id);if(!p||!s)return;stocks.forEach(x=>x.pieces=x.pieces.filter(y=>y.key!==key));s.pieces.push(p);renderUnassigned();renderStocks()}
+function unassign(key){stocks.forEach(s=>s.pieces=s.pieces.filter(p=>p.key!==key));renderUnassigned();renderStocks()}
+function optimize(){resetStocks();const pieces=allPieces().sort((a,b)=>b.length-a.length);pieces.forEach(p=>{let target=stocks.find(s=>s.pieces.reduce((n,x)=>n+x.length,0)+p.length<=s.length);if(!target){target={id:stocks.length+1,length:val('stockLength',600),pieces:[]};stocks.push(target)}target.pieces.push(p)});$('stockQty').value=stocks.length;renderUnassigned();renderStocks()}
+function fmt(v){return new Intl.NumberFormat('id-ID',{maximumFractionDigits:1}).format(v)}function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('makeStocks').onclick=resetStocks;$('optimize').onclick=optimize;resetStocks();render();updateSummary();
