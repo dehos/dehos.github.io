@@ -2,6 +2,7 @@ const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
 let beams=[],sources=[],selectedId=null,nextId=1,drag=null,view={x:0,y:0,w:700,h:520},toastTimer,snapEnabled=true,gesture=null,cutHistory=[],activeJointKey=null,undoStack=[],redoStack=[],measureMode=false,measurePoints=[];
 const pointers=new Map();
 const canvas=$('canvas'),objects=$('objects'),guides=$('guides'),joints=$('joints'),PROFILE_H=7.5;
+objects.parentNode.insertBefore(guides,joints);
 
 function n(id,fallback=0){return Math.max(0,parseFloat($(id).value)||fallback)}
 function fmt(v){return new Intl.NumberFormat('id-ID',{maximumFractionDigits:1}).format(v)}

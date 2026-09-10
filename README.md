@@ -13,3 +13,5 @@ Versi 2.4 menampilkan profil C75 setinggi 7,5 cm dengan motif rusuk pengaku, lab
 Versi 2.5 menambahkan multi-lock untuk beberapa titik sentuh pada satu objek, Undo/Redo untuk proses desain, serta laporan lengkap dalam PDF A4 landscape melalui layanan cetak Android.
 
 Versi 2.6 memindahkan Undo/Redo ke toolbar ikon SVG di bawah kanvas, menampilkan referensi panjang/sudut/posisi saat objek dipilih, menambahkan meteran dua titik sambungan, dan menonaktifkan seleksi teks antarmuka yang mengganggu.
+
+Versi 2.7 menempatkan garis dan label pengukuran pada layer di atas objek agar angka jarak tidak lagi tertutup material.
