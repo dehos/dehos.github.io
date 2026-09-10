@@ -1,10 +1,10 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Kalkulator Kuda-kuda</title><link rel="stylesheet" href="style.css"></head>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Kalkulator Kuda-kuda</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="guides.css"></head>
 <body><header><div class="logo">△</div><div><h1>Kalkulator Kuda-kuda</h1><p>Gambar, ukur, dan susun potongan bahan</p></div></header>
 <main>
   <section class="card">
     <div class="section-title"><b>1</b><div><h2>Gambar rangka 2D</h2><p>Tambahkan garis lalu geser langsung pada kanvas.</p></div></div>
     <div class="toolbar"><button data-tool="horizontal"><i>━</i>Horizontal</button><button data-tool="vertical"><i>┃</i>Vertikal</button><button data-tool="diagonal"><i>╱</i>Diagonal</button><button id="delete" class="danger"><i>⌫</i>Hapus</button></div>
-    <div class="canvas-wrap"><svg id="canvas" viewBox="0 0 360 280"><g id="grid"></g><g id="members"></g></svg><span class="canvas-tip">Ketuk garis untuk edit • seret untuk pindahkan</span></div>
+    <div class="canvas-wrap"><svg id="canvas" viewBox="0 0 360 280"><g id="grid"></g><g id="guides"></g><g id="members"></g></svg><span class="canvas-tip">Seret ujung untuk ubah sudut • seret garis untuk pindahkan</span></div>
     <div id="empty" class="empty">Belum ada potongan. Pilih Horizontal, Vertikal, atau Diagonal.</div>
     <div id="editor" class="editor hidden"><div class="editor-head"><span id="memberName">Potongan</span><button id="closeEditor">×</button></div><div class="edit-grid"><label>Panjang<input id="editLength" inputmode="decimal"><small>cm</small></label><label>Sudut<input id="editAngle" inputmode="decimal"><small>°</small></label><label>Jumlah<input id="editQty" inputmode="numeric"><small>buah</small></label></div><label>Nama bagian<input id="editName" placeholder="Contoh: batang bawah"></label><button id="saveMember" class="secondary">Terapkan perubahan</button></div>
     <button id="template" class="text-button">＋ Gunakan template kuda-kuda segitiga</button>
