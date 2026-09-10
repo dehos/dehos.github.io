@@ -11,3 +11,5 @@ Versi 2.3 memakai label potongan A1/B1, motif baja ringan seragam, rotasi tekan-
 Versi 2.4 menampilkan profil C75 setinggi 7,5 cm dengan motif rusuk pengaku, label di dalam bahan, kontrol ikon ringkas, putaran 1° per ketukan, serta sambungan pada titik perpotongan mana pun. Sambungan terkunci ditandai empat kepala skrup dan dapat dibuka langsung dari titik sambungannya.
 
 Versi 2.5 menambahkan multi-lock untuk beberapa titik sentuh pada satu objek, Undo/Redo untuk proses desain, serta laporan lengkap dalam PDF A4 landscape melalui layanan cetak Android.
+
+Versi 2.6 memindahkan Undo/Redo ke toolbar ikon SVG di bawah kanvas, menampilkan referensi panjang/sudut/posisi saat objek dipilih, menambahkan meteran dua titik sambungan, dan menonaktifkan seleksi teks antarmuka yang mengganggu.
