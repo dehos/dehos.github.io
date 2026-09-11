@@ -39,3 +39,5 @@ Versi 3.7 memperbaiki perilaku sambungan baut agar bekerja sebagai poros tetap d
 Versi 3.8 merevisi Magic dengan pemilihan sumbu manual, pilihan simetri/sudut/pemusatan/jarak yang terpisah, preview sebelum diterapkan, perlindungan objek yang dibaut, serta rencana potong sesuai bahan yang benar-benar tersedia. Output PDF kini memakai halaman gambar A4 landscape khusus dengan objek dan label lebih besar, lalu halaman rincian bahan dan potongan yang lebih mudah dibaca.
 
 Versi 3.9 menambahkan pusat baut bersama untuk menyatukan tiga objek atau lebih pada satu koordinat presisi, tetap mendukung sambungan ujung-ke-ujung, ujung-ke-badan, dan badan-ke-badan. Meteran kini memiliki panduan langkah, input jarak dan sudut, tombol koreksi 1 cm/1°, serta titik magnet yang selalu dapat diketuk kembali meskipun sedang dipakai sebagai sambungan.
+
+Versi 3.10 memindahkan seluruh form bantuan dan edit titik meteran ke panel khusus di luar kanvas. Titik dan objek tetap terlihat penuh ketika jarak atau sudut dimasukkan, termasuk saat aplikasi digunakan dalam mode kanvas diperluas.
