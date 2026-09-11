@@ -41,3 +41,5 @@ Versi 3.8 merevisi Magic dengan pemilihan sumbu manual, pilihan simetri/sudut/pe
 Versi 3.9 menambahkan pusat baut bersama untuk menyatukan tiga objek atau lebih pada satu koordinat presisi, tetap mendukung sambungan ujung-ke-ujung, ujung-ke-badan, dan badan-ke-badan. Meteran kini memiliki panduan langkah, input jarak dan sudut, tombol koreksi 1 cm/1°, serta titik magnet yang selalu dapat diketuk kembali meskipun sedang dipakai sebagai sambungan.
 
 Versi 3.10 memindahkan seluruh form bantuan dan edit titik meteran ke panel khusus di luar kanvas. Titik dan objek tetap terlihat penuh ketika jarak atau sudut dimasukkan, termasuk saat aplikasi digunakan dalam mode kanvas diperluas.
+
+Versi 3.11 menggunakan orientasi landscape, memindahkan seluruh tombol dan panel alat ke luar kanvas, serta menghasilkan laporan A4 landscape satu halaman. Label PDF hanya memuat kode dan panjang di dalam objek, dengan posisi otomatis yang menghindari tumpang tindih sebisa mungkin.

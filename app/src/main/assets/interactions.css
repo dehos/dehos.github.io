@@ -108,3 +108,29 @@ body,header,main,.panel,.workspace-card,.legend,.tip,button,label,small,strong,s
 .measure-dock-content .measure-angle-row{grid-template-columns:minmax(0,1fr) auto auto}
 .workspace-card.expanded .measure-dock{flex:0 0 auto;padding-bottom:10px}
 @media(max-width:480px){.measure-dock{padding:9px 10px}.measure-dock-content .tool-row{grid-template-columns:minmax(0,1fr) auto}.measure-dock-content button{padding:0 10px}.measure-delete-row{gap:5px}}
+
+/* Editor landscape: seluruh kontrol berada di luar bidang gambar. */
+.canvas-actions{position:relative;z-index:6;left:auto;bottom:auto;transform:none;width:100%;max-width:none;border-radius:0;border-width:1px 0 0;box-shadow:none;backdrop-filter:none;justify-content:flex-start}
+.canvas-popover{position:relative;z-index:7;left:auto;bottom:auto;transform:none;width:100%;max-width:none;border-radius:0;border-width:1px 0 0;box-shadow:none}
+.workspace-card.expanded .canvas-actions,.workspace-card.expanded .canvas-popover{flex:0 0 auto}
+.canvas-shell{height:calc(100dvh - 178px);min-height:230px;max-height:620px}
+@media(orientation:landscape){
+  header{height:54px;padding:7px 12px}header h1{font-size:16px;margin:1px 0}.head-button{padding:7px 9px}
+  main{padding:6px;max-width:none}.workspace-card{margin-bottom:7px}.topbar{padding:6px 10px}.legend{display:none}
+  .canvas-shell{height:calc(100dvh - 148px);min-height:190px;max-height:none}
+  .canvas-actions{padding:4px 6px}.canvas-actions button{height:32px}
+  .workspace-card.expanded .canvas-shell{height:auto;min-height:120px;max-height:none}
+}
+
+@media print{
+  @page{size:A4 landscape;margin:7mm}
+  .print-page{height:196mm;min-height:0;overflow:hidden;break-after:auto;page-break-after:auto}
+  .print-head{padding-bottom:1.5mm;margin-bottom:1.5mm}.print-head h1{font-size:15pt}.print-head p{font-size:8pt;margin-top:.5mm}.print-head aside{font-size:7pt}
+  .print-summary{gap:2mm;margin-bottom:1.5mm}.print-summary div{padding:1.4mm 2mm}.print-summary b{font-size:10pt}.print-summary span{font-size:7pt}
+  .print-drawing{height:128mm;padding:2mm}
+  .print-stock-title{margin:1.5mm 0 1mm;font-size:7.5pt;font-weight:900;color:#334155}
+  .print-stock-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:1mm;margin:0;max-height:32mm;overflow:hidden}
+  .print-stock-grid>div{display:block;padding:1mm 1.3mm;font-size:6pt;line-height:1.22;overflow:hidden}
+  .print-stock-grid b,.print-stock-grid span,.print-stock-grid strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.print-stock-grid strong{margin-top:.4mm}
+  .print-note{font-size:6.5pt;margin-top:1mm}
+}
