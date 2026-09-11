@@ -33,3 +33,5 @@ Versi 3.4 membuat acuan Smart Move dapat dipilih sendiri melalui daftar yang diu
 Versi 3.5 menambahkan bahan baru ke proyek aktif berdasarkan jumlah dan panjang dalam sentimeter. Proyek lengkap kini dapat disimpan sebagai file `.meteran` melalui penyimpanan dokumen Android dan diimpor kembali beserta posisi, sudut, potongan, meteran, sambungan, layer, serta riwayat Undo/Redo.
 
 Versi 3.6 menambahkan tombol Magic untuk mengenali batang bawah sebagai sumbu, memasangkan objek kiri–kanan, memusatkan batang tengah, meratakan jarak pengaku, melindungi sambungan yang terkunci, dan menampilkan rencana pengelompokan potongan dengan perkiraan efisiensi serta sisa bahan. Penerapan Magic dapat dibatalkan melalui Undo.
+
+Versi 3.7 memperbaiki perilaku sambungan baut agar bekerja sebagai poros tetap dari kedua sisi. Saat salah satu objek pada sambungan ditarik, hanya objek tersebut yang berputar pada titik baut dan objek pasangannya tidak ikut bergeser; objek dengan dua sambungan atau lebih tetap tertahan.
