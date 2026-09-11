@@ -35,3 +35,5 @@ Versi 3.5 menambahkan bahan baru ke proyek aktif berdasarkan jumlah dan panjang 
 Versi 3.6 menambahkan tombol Magic untuk mengenali batang bawah sebagai sumbu, memasangkan objek kiri–kanan, memusatkan batang tengah, meratakan jarak pengaku, melindungi sambungan yang terkunci, dan menampilkan rencana pengelompokan potongan dengan perkiraan efisiensi serta sisa bahan. Penerapan Magic dapat dibatalkan melalui Undo.
 
 Versi 3.7 memperbaiki perilaku sambungan baut agar bekerja sebagai poros tetap dari kedua sisi. Saat salah satu objek pada sambungan ditarik, hanya objek tersebut yang berputar pada titik baut dan objek pasangannya tidak ikut bergeser; objek dengan dua sambungan atau lebih tetap tertahan.
+
+Versi 3.8 merevisi Magic dengan pemilihan sumbu manual, pilihan simetri/sudut/pemusatan/jarak yang terpisah, preview sebelum diterapkan, perlindungan objek yang dibaut, serta rencana potong sesuai bahan yang benar-benar tersedia. Output PDF kini memakai halaman gambar A4 landscape khusus dengan objek dan label lebih besar, lalu halaman rincian bahan dan potongan yang lebih mudah dibaca.
