@@ -25,3 +25,5 @@ Versi 3.0 mengganti nama aplikasi menjadi Aplikasi Meteran dan menggunakan ikon 
 Versi 3.1 menambahkan Undo Potong langsung pada objek terpilih untuk menyatukan pasangan potongannya tanpa membatalkan desain lain. Penanda meteran diperkecil mengikuti profil objek dan ujung pengukuran kini memakai tanda ×.
 
 Versi 3.2 menambahkan Smart Move untuk mendeteksi objek terdekat pada empat arah dan mengatur jarak tepi secara presisi melalui input sentimeter. Kunci Posisi mencegah objek terseret, diputar, dipotong, atau dipindahkan presisi hingga kunci dibuka, dan seluruh tindakan mendukung Undo/Redo.
+
+Versi 3.3 memperbaiki pemilihan acuan Smart Move menggunakan jarak geometris terpendek antar-batang, bukan jarak kotak pembungkus. Objek acuan disorot dan dihubungkan garis ukur, sedangkan pemindahan melakukan koreksi iteratif sampai jarak fisik sesuai input.
