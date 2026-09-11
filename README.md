@@ -31,3 +31,5 @@ Versi 3.3 memperbaiki pemilihan acuan Smart Move menggunakan jarak geometris ter
 Versi 3.4 membuat acuan Smart Move dapat dipilih sendiri melalui daftar yang diurutkan berdasarkan jarak nyata atau dengan mengetuk langsung objek pada kanvas. Empat tombol arah tetap tersedia sebagai saran cepat tanpa membatasi pilihan acuan pengguna.
 
 Versi 3.5 menambahkan bahan baru ke proyek aktif berdasarkan jumlah dan panjang dalam sentimeter. Proyek lengkap kini dapat disimpan sebagai file `.meteran` melalui penyimpanan dokumen Android dan diimpor kembali beserta posisi, sudut, potongan, meteran, sambungan, layer, serta riwayat Undo/Redo.
+
+Versi 3.6 menambahkan tombol Magic untuk mengenali batang bawah sebagai sumbu, memasangkan objek kiri–kanan, memusatkan batang tengah, meratakan jarak pengaku, melindungi sambungan yang terkunci, dan menampilkan rencana pengelompokan potongan dengan perkiraan efisiensi serta sisa bahan. Penerapan Magic dapat dibatalkan melalui Undo.
