@@ -27,3 +27,5 @@ Versi 3.1 menambahkan Undo Potong langsung pada objek terpilih untuk menyatukan 
 Versi 3.2 menambahkan Smart Move untuk mendeteksi objek terdekat pada empat arah dan mengatur jarak tepi secara presisi melalui input sentimeter. Kunci Posisi mencegah objek terseret, diputar, dipotong, atau dipindahkan presisi hingga kunci dibuka, dan seluruh tindakan mendukung Undo/Redo.
 
 Versi 3.3 memperbaiki pemilihan acuan Smart Move menggunakan jarak geometris terpendek antar-batang, bukan jarak kotak pembungkus. Objek acuan disorot dan dihubungkan garis ukur, sedangkan pemindahan melakukan koreksi iteratif sampai jarak fisik sesuai input.
+
+Versi 3.4 membuat acuan Smart Move dapat dipilih sendiri melalui daftar yang diurutkan berdasarkan jarak nyata atau dengan mengetuk langsung objek pada kanvas. Empat tombol arah tetap tersedia sebagai saran cepat tanpa membatasi pilihan acuan pengguna.
