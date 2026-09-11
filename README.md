@@ -23,3 +23,5 @@ Versi 2.9 mengaktifkan kembali rotasi halus dengan tekan-tahan pada toolbar kanv
 Versi 3.0 mengganti nama aplikasi menjadi Aplikasi Meteran dan menggunakan ikon vektor modern bertema meteran. Titik meteran kini dapat dihapus dari panel edit, sementara input jarak manual ditampilkan dengan label yang lebih jelas.
 
 Versi 3.1 menambahkan Undo Potong langsung pada objek terpilih untuk menyatukan pasangan potongannya tanpa membatalkan desain lain. Penanda meteran diperkecil mengikuti profil objek dan ujung pengukuran kini memakai tanda ×.
+
+Versi 3.2 menambahkan Smart Move untuk mendeteksi objek terdekat pada empat arah dan mengatur jarak tepi secara presisi melalui input sentimeter. Kunci Posisi mencegah objek terseret, diputar, dipotong, atau dipindahkan presisi hingga kunci dibuka, dan seluruh tindakan mendukung Undo/Redo.
