@@ -29,3 +29,5 @@ Versi 3.2 menambahkan Smart Move untuk mendeteksi objek terdekat pada empat arah
 Versi 3.3 memperbaiki pemilihan acuan Smart Move menggunakan jarak geometris terpendek antar-batang, bukan jarak kotak pembungkus. Objek acuan disorot dan dihubungkan garis ukur, sedangkan pemindahan melakukan koreksi iteratif sampai jarak fisik sesuai input.
 
 Versi 3.4 membuat acuan Smart Move dapat dipilih sendiri melalui daftar yang diurutkan berdasarkan jarak nyata atau dengan mengetuk langsung objek pada kanvas. Empat tombol arah tetap tersedia sebagai saran cepat tanpa membatasi pilihan acuan pengguna.
+
+Versi 3.5 menambahkan bahan baru ke proyek aktif berdasarkan jumlah dan panjang dalam sentimeter. Proyek lengkap kini dapat disimpan sebagai file `.meteran` melalui penyimpanan dokumen Android dan diimpor kembali beserta posisi, sudut, potongan, meteran, sambungan, layer, serta riwayat Undo/Redo.
