@@ -43,3 +43,5 @@ Versi 3.9 menambahkan pusat baut bersama untuk menyatukan tiga objek atau lebih 
 Versi 3.10 memindahkan seluruh form bantuan dan edit titik meteran ke panel khusus di luar kanvas. Titik dan objek tetap terlihat penuh ketika jarak atau sudut dimasukkan, termasuk saat aplikasi digunakan dalam mode kanvas diperluas.
 
 Versi 3.11 menggunakan orientasi landscape, memindahkan seluruh tombol dan panel alat ke luar kanvas, serta menghasilkan laporan A4 landscape satu halaman. Label PDF hanya memuat kode dan panjang di dalam objek, dengan posisi otomatis yang menghindari tumpang tindih sebisa mungkin.
+
+Versi 3.12 memperbaiki panduan tengah agar selalu mengikuti pusat viewport kanvas landscape saat ini. Garis tengah kembali muncul secara tepat setelah zoom, geser kanvas, Fit, maupun perubahan ukuran area kerja.
