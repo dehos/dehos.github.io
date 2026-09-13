@@ -8881,7 +8881,9 @@ async function exportPDF() {
     const pdf = new jsPDF({
         orientation: "landscape",
         unit: "mm",
-        format: "a4"
+        format: "a4",
+        compress: true,
+        putOnlyUsedFonts: true
     });
 
     if (
