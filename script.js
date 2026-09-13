@@ -7624,7 +7624,10 @@ function formatPerubahanSuperscriptExport(perubahan) {
 }
 
 
-function formatSaldoStokExport(stokMentah) {
+function formatSaldoStokExport(
+    stokMentah,
+    totalKeluar = 0
+) {
     const stok =
         Number(stokMentah) || 0;
 
@@ -7634,18 +7637,31 @@ function formatSaldoStokExport(stokMentah) {
     const preOrder =
         Math.max(0, -stok);
 
-    return preOrder > 0
-        ? String(stokTersedia) +
+    if (preOrder > 0) {
+        return (
             formatPerubahanSuperscriptExport(
                 -preOrder
+            ) + String(stokTersedia)
+        );
+    }
+
+    if (totalKeluar > 0) {
+        return (
+            String(stokTersedia) +
+            formatPerubahanSuperscriptExport(
+                -totalKeluar
             )
-        : stokTersedia;
+        );
+    }
+
+    return stokTersedia;
 }
 
 
 const KETERANGAN_EXPORT =
     "Keterangan: angka utama = stok tersedia | " +
-    "- pangkat = jumlah pre-order | " +
+    "pangkat sesudah stok = barang laku | " +
+    "pangkat sebelum stok = jumlah pre-order | " +
     "sel hitam = terdapat transaksi";
 
 
@@ -7772,9 +7788,9 @@ function getRentangTanggalExport() {
             date: new Date(cursor),
             iso: formatTanggalISOExport(cursor),
             label:
-                String(cursor.getDate()).padStart(2, "0") +
+                String(cursor.getDate()) +
                 "/" +
-                String(cursor.getMonth() + 1).padStart(2, "0")
+                String(cursor.getMonth() + 1)
         });
 
         cursor.setDate(
@@ -7959,19 +7975,6 @@ function barangPunyaDataDalamRentangExport(
         return false;
     }
 
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (
-        tanggalPembuatan &&
-        tanggalPembuatan >= rentang.tanggalMulaiISO &&
-        tanggalPembuatan <= rentang.tanggalAkhirISO
-    ) {
-        return true;
-    }
-
     if (
         getStokSebelumTanggalExport(
             barang,
@@ -8086,7 +8089,8 @@ function buatRekapStokBarangExport(
                 return {
                     value:
                         formatSaldoStokExport(
-                            stokMentah
+                            stokMentah,
+                            totalKeluar
                         ),
                     stokTersedia,
                     preOrder,
