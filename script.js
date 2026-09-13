@@ -7879,18 +7879,9 @@ function getStokSebelumTanggalExport(
     barang,
     tanggalMulai
 ) {
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (
-        tanggalPembuatan &&
-        tanggalPembuatan > tanggalMulai
-    ) {
-        return 0;
-    }
-
+    // Saldo awal juga dipakai untuk tanggal sebelum barang
+    // dimasukkan ke aplikasi. Dengan begitu kolom lama mengikuti
+    // stok pertama yang tersedia, bukan ditampilkan sebagai nol.
     let stok =
         Number(
             barang?.stok_awal
@@ -8015,11 +8006,6 @@ function buatRekapStokBarangExport(
             rentang.tanggalMulaiISO
         );
 
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
     const transaksiPerTanggal =
         new Map();
 
@@ -8058,19 +8044,6 @@ function buatRekapStokBarangExport(
     const cells =
         rentang.tanggalList.map(
             function(itemTanggal) {
-                if (
-                    tanggalPembuatan &&
-                    tanggalPembuatan ===
-                        itemTanggal.iso &&
-                    tanggalPembuatan >
-                        rentang.tanggalMulaiISO
-                ) {
-                    stokMentah =
-                        Number(
-                            barang?.stok_awal
-                        ) || 0;
-                }
-
                 const transaksiHari =
                     transaksiPerTanggal.get(
                         itemTanggal.iso
