@@ -2540,7 +2540,7 @@ async function simpanImportExcel() {
    HITUNG STOK
 ===================================================== */
 
-function getCurrentStock(barang) {
+function getRawCurrentStock(barang) {
 
     let stok =
         Number(
@@ -2595,6 +2595,14 @@ function getCurrentStock(barang) {
     );
 
     return stok;
+}
+
+
+function getCurrentStock(barang) {
+    return Math.max(
+        0,
+        getRawCurrentStock(barang)
+    );
 }
 
 
@@ -4869,6 +4877,57 @@ function getPenjualanStock(
     return stok;
 }
 
+function getPenjualanStockStatus(
+    barang,
+    tanggal,
+    qty = 0
+) {
+    if (!barang) {
+        return {
+            stokTersedia: 0,
+            preOrderSebelum: 0,
+            preOrderTambahan: 0,
+            preOrderSetelah: 0
+        };
+    }
+
+    const tanggalSebelumnya =
+        tanggalDipilih;
+
+    tanggalDipilih =
+        tanggal || tanggalSebelumnya;
+
+    const stokMentah =
+        getRawCurrentStock(barang);
+
+    tanggalDipilih =
+        tanggalSebelumnya;
+
+    const stokTersedia =
+        Math.max(0, stokMentah);
+
+    const preOrderSebelum =
+        Math.max(0, -stokMentah);
+
+    const jumlahJual =
+        Math.max(0, Number(qty) || 0);
+
+    const stokSetelah =
+        stokMentah - jumlahJual;
+
+    return {
+        stokTersedia,
+        preOrderSebelum,
+        preOrderTambahan:
+            Math.max(
+                0,
+                jumlahJual - stokTersedia
+            ),
+        preOrderSetelah:
+            Math.max(0, -stokSetelah)
+    };
+}
+
 function getSelectedPenjualanBarang() {
     const barangId =
         inputPenjualanBarang?.dataset.id;
@@ -4911,11 +4970,15 @@ function updatePenjualanSummary() {
                 .replace(/\./g, "")
         ) || 0;
 
-    const stok =
-        getPenjualanStock(
+    const statusStok =
+        getPenjualanStockStatus(
             barang,
-            inputPenjualanTanggal?.value
+            inputPenjualanTanggal?.value,
+            qty
         );
+
+    const stok =
+        statusStok.stokTersedia;
 
     const total =
         qty * harga;
@@ -4947,18 +5010,23 @@ function updatePenjualanSummary() {
             formatNumber(harga);
     }
 
-    const stokTidakCukup =
+    const menjadiPreOrder =
         Boolean(barang) &&
         qty > stok;
 
     if (stockElement) {
         stockElement.classList.toggle(
             "is-error",
-            stokTidakCukup
+            false
+        );
+
+        stockElement.classList.toggle(
+            "is-preorder",
+            menjadiPreOrder
         );
 
         const stockIconName =
-            stokTidakCukup
+            menjadiPreOrder
                 ? "warning"
                 : barang
                     ? "success"
@@ -4967,9 +5035,13 @@ function updatePenjualanSummary() {
         const stockMessage =
             barang
                 ? (
-                    stokTidakCukup
-                        ? "Quantity melebihi stok. Tersedia: " +
-                          formatNumber(stok)
+                    menjadiPreOrder
+                        ? "Stok tersedia: " +
+                          formatNumber(stok) +
+                          " · Pre-order setelah dicatat: " +
+                          formatNumber(
+                              statusStok.preOrderSetelah
+                          )
                         : "Stok tersedia: " +
                           formatNumber(stok)
                   )
@@ -4992,8 +5064,7 @@ function updatePenjualanSummary() {
             !inputPenjualanBrand?.value.trim() ||
             qty < 1 ||
             !inputPenjualanHarga?.value ||
-            !inputPenjualanTanggal?.value ||
-            stokTidakCukup;
+            !inputPenjualanTanggal?.value;
     }
 }
 
@@ -5314,34 +5385,15 @@ async function simpanPenjualan() {
     }
 
 
-    const tanggalSebelumnya =
-        tanggalDipilih;
-
-    tanggalDipilih =
-        tanggal;
-
-    const stokSekarang =
-        getCurrentStock(
-            barang
+    const statusStok =
+        getPenjualanStockStatus(
+            barang,
+            tanggal,
+            qty
         );
 
-    tanggalDipilih =
-        tanggalSebelumnya;
-
-
-    if (
-        qty > stokSekarang
-    ) {
-
-        return showAppAlert(
-            "Stok tidak mencukupi.\n\n" +
-            "Stok tersedia: " +
-            formatNumber(stokSekarang) +
-            "\n" +
-            "Jumlah penjualan: " +
-            formatNumber(qty)
-        );
-    }
+    const jumlahPreOrder =
+        statusStok.preOrderSetelah;
 
 
     const dikonfirmasi =
@@ -5349,6 +5401,11 @@ async function simpanPenjualan() {
             "Catat penjualan ini?\n\n" +
             "Barang: " + barang.nama + "\n" +
             "Quantity: " + formatNumber(qty) + "\n" +
+            (jumlahPreOrder > 0
+                ? "Pre-order setelah dicatat: " +
+                  formatNumber(jumlahPreOrder) +
+                  "\n"
+                : "") +
             "Total: Rp" +
             formatNumber(qty * harga),
             {
@@ -5489,8 +5546,12 @@ async function simpanPenjualan() {
     updatePenjualanSummary();
 
     showToast(
-        "Penjualan berhasil dicatat dan stok berkurang " +
-        formatNumber(qty),
+        jumlahPreOrder > 0
+            ? "Penjualan dicatat · " +
+              formatNumber(jumlahPreOrder) +
+              " barang pre-order"
+            : "Penjualan berhasil dicatat dan stok berkurang " +
+              formatNumber(qty),
         "success"
     );
 }
@@ -7563,42 +7624,92 @@ function formatPerubahanSuperscriptExport(perubahan) {
 }
 
 
-function formatStokTransaksiExport(
-    stokSebelum,
-    totalMasuk,
-    totalKeluar
-) {
+function formatSaldoStokExport(stokMentah) {
     const stok =
-        Number(stokSebelum) || 0;
+        Number(stokMentah) || 0;
 
-    let hasil =
-        `${stok}`;
+    const stokTersedia =
+        Math.max(0, stok);
 
-    if (Number(totalMasuk) > 0) {
-        hasil +=
+    const preOrder =
+        Math.max(0, -stok);
+
+    return preOrder > 0
+        ? String(stokTersedia) +
             formatPerubahanSuperscriptExport(
-                Number(totalMasuk)
-            );
-    }
-
-    if (Number(totalKeluar) > 0) {
-        hasil +=
-            formatPerubahanSuperscriptExport(
-                -Number(totalKeluar)
-            );
-    }
-
-    return hasil;
+                -preOrder
+            )
+        : stokTersedia;
 }
 
 
 const KETERANGAN_EXPORT =
-    "Keterangan: angka utama = stok sebelum transaksi | " +
-    "+ pangkat = barang masuk | - pangkat = barang keluar | " +
+    "Keterangan: angka utama = stok tersedia | " +
+    "- pangkat = jumlah pre-order | " +
     "sel hitam = terdapat transaksi";
 
 
-function getPeriodeExportTerpilih() {
+const NAMA_BULAN_EXPORT = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+];
+
+
+function parseTanggalISOExport(value) {
+    const cocok =
+        String(value || "").match(
+            /^(\d{4})-(\d{2})-(\d{2})$/
+        );
+
+    if (!cocok) {
+        return null;
+    }
+
+    const tanggal =
+        new Date(
+            Number(cocok[1]),
+            Number(cocok[2]) - 1,
+            Number(cocok[3])
+        );
+
+    if (
+        tanggal.getFullYear() !== Number(cocok[1]) ||
+        tanggal.getMonth() !== Number(cocok[2]) - 1 ||
+        tanggal.getDate() !== Number(cocok[3])
+    ) {
+        return null;
+    }
+
+    return tanggal;
+}
+
+
+function formatTanggalISOExport(tanggal) {
+    return (
+        tanggal.getFullYear() +
+        "-" +
+        String(
+            tanggal.getMonth() + 1
+        ).padStart(2, "0") +
+        "-" +
+        String(
+            tanggal.getDate()
+        ).padStart(2, "0")
+    );
+}
+
+
+function getRentangTanggalExport() {
     const nilaiTanggal =
         document.getElementById(
             "tanggal"
@@ -7606,68 +7717,131 @@ function getPeriodeExportTerpilih() {
         tanggalDipilih ||
         getTodayDate();
 
-    const cocok =
-        String(nilaiTanggal).match(
-            /^(\d{4})-(\d{2})/
+    const hariIni =
+        parseTanggalISOExport(
+            getTodayDate()
         );
 
-    if (!cocok) {
-        const hariIni =
-            new Date();
+    let tanggalAkhir =
+        parseTanggalISOExport(
+            nilaiTanggal
+        ) || hariIni;
 
-        return {
-            tahun:
-                hariIni.getFullYear(),
-
-            bulan:
-                hariIni.getMonth()
-        };
+    if (tanggalAkhir > hariIni) {
+        tanggalAkhir = hariIni;
     }
+
+    const tahunBulanSebelumnya =
+        tanggalAkhir.getMonth() === 0
+            ? tanggalAkhir.getFullYear() - 1
+            : tanggalAkhir.getFullYear();
+
+    const bulanSebelumnya =
+        (tanggalAkhir.getMonth() + 11) % 12;
+
+    const hariTerakhirBulanSebelumnya =
+        new Date(
+            tahunBulanSebelumnya,
+            bulanSebelumnya + 1,
+            0
+        ).getDate();
+
+    const tanggalBulanSebelumnya =
+        new Date(
+            tahunBulanSebelumnya,
+            bulanSebelumnya,
+            Math.min(
+                tanggalAkhir.getDate(),
+                hariTerakhirBulanSebelumnya
+            )
+        );
+
+    const tanggalMulai =
+        new Date(tanggalBulanSebelumnya);
+
+    tanggalMulai.setDate(
+        tanggalMulai.getDate() - 1
+    );
+
+    const tanggalList = [];
+    const cursor =
+        new Date(tanggalMulai);
+
+    while (cursor <= tanggalAkhir) {
+        tanggalList.push({
+            date: new Date(cursor),
+            iso: formatTanggalISOExport(cursor),
+            label:
+                String(cursor.getDate()).padStart(2, "0") +
+                "/" +
+                String(cursor.getMonth() + 1).padStart(2, "0")
+        });
+
+        cursor.setDate(
+            cursor.getDate() + 1
+        );
+    }
+
+    const bulanAwal =
+        NAMA_BULAN_EXPORT[
+            tanggalMulai.getMonth()
+        ];
+
+    const bulanAkhir =
+        NAMA_BULAN_EXPORT[
+            tanggalAkhir.getMonth()
+        ];
+
+    const tahunAwal =
+        tanggalMulai.getFullYear();
+
+    const tahunAkhir =
+        tanggalAkhir.getFullYear();
 
     return {
-        tahun:
-            Number(cocok[1]),
-
-        bulan:
-            Number(cocok[2]) - 1
+        tanggalMulai,
+        tanggalAkhir,
+        tanggalMulaiISO:
+            formatTanggalISOExport(
+                tanggalMulai
+            ),
+        tanggalAkhirISO:
+            formatTanggalISOExport(
+                tanggalAkhir
+            ),
+        tanggalList,
+        labelBulan:
+            tahunAwal === tahunAkhir
+                ? bulanAwal +
+                  "–" +
+                  bulanAkhir +
+                  " " +
+                  tahunAkhir
+                : bulanAwal +
+                  " " +
+                  tahunAwal +
+                  "–" +
+                  bulanAkhir +
+                  " " +
+                  tahunAkhir,
+        labelPeriode:
+            String(tanggalMulai.getDate()) +
+            " " +
+            bulanAwal +
+            (tahunAwal === tahunAkhir
+                ? ""
+                : " " + tahunAwal) +
+            "–" +
+            String(tanggalAkhir.getDate()) +
+            " " +
+            bulanAkhir +
+            " " +
+            tahunAkhir,
+        namaFile:
+            formatTanggalISOExport(tanggalMulai) +
+            "-sd-" +
+            formatTanggalISOExport(tanggalAkhir)
     };
-}
-
-
-function getHariTerakhirExport(
-    tahun,
-    bulan
-) {
-    const hariIni =
-        new Date();
-
-    const periodeSekarang =
-        hariIni.getFullYear() * 12 +
-        hariIni.getMonth();
-
-    const periodeDipilih =
-        tahun * 12 +
-        bulan;
-
-    if (
-        periodeDipilih >
-        periodeSekarang
-    ) {
-        return 0;
-    }
-
-    if (
-        periodeDipilih ===
-        periodeSekarang
-    ) {
-        return hariIni.getDate();
-    }
-
-    return new Date(
-        tahun,
-        bulan + 1,
-        0
-    ).getDate();
 }
 
 
@@ -7701,15 +7875,21 @@ function getTanggalPembuatanBarangExport(
 }
 
 
-function getStokAwalBulanExport(
+function getStokSebelumTanggalExport(
     barang,
-    tahun,
-    bulan
+    tanggalMulai
 ) {
-    const tanggalSatu =
-        `${tahun}-${String(
-            bulan + 1
-        ).padStart(2, "0")}-01`;
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    if (
+        tanggalPembuatan &&
+        tanggalPembuatan > tanggalMulai
+    ) {
+        return 0;
+    }
 
     let stok =
         Number(
@@ -7725,119 +7905,6 @@ function getStokAwalBulanExport(
                     Number(barang?.id) ||
                 !transaction.tanggal ||
                 transaction.tanggal >=
-                    tanggalSatu
-            ) {
-                return;
-            }
-
-            const qty =
-                Number(
-                    transaction.qty
-                ) || 0;
-
-            if (
-                transaction.type ===
-                "masuk"
-            ) {
-                stok += qty;
-            }
-
-            if (
-                transaction.type ===
-                "laku"
-            ) {
-                stok -= qty;
-            }
-        }
-    );
-
-    return stok;
-}
-
-
-function getTanggalMulaiBarangExport(
-    barang,
-    tahun,
-    bulan
-) {
-    const tanggalSatu =
-        `${tahun}-${String(
-            bulan + 1
-        ).padStart(2, "0")}-01`;
-
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (
-        tanggalPembuatan &&
-        tanggalPembuatan >
-            tanggalSatu
-    ) {
-        return tanggalPembuatan;
-    }
-
-    return tanggalSatu;
-}
-
-
-function barangAdaDalamPeriodeExport(
-    barang,
-    tahun,
-    bulan,
-    hariTerakhir
-) {
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (!tanggalPembuatan) {
-        return true;
-    }
-
-    const tanggalAkhir =
-        `${tahun}-${String(
-            bulan + 1
-        ).padStart(2, "0")}-${String(
-            hariTerakhir
-        ).padStart(2, "0")}`;
-
-    return (
-        tanggalPembuatan <=
-        tanggalAkhir
-    );
-}
-
-
-function getStokTanggalMulaiExport(
-    barang,
-    tahun,
-    bulan
-) {
-    let stok =
-        getStokAwalBulanExport(
-            barang,
-            tahun,
-            bulan
-        );
-
-    const tanggalMulai =
-        getTanggalMulaiBarangExport(
-            barang,
-            tahun,
-            bulan
-        );
-
-    transactions.forEach(
-        function(transaction) {
-            if (
-                Number(
-                    transaction.barang_id
-                ) !==
-                    Number(barang?.id) ||
-                transaction.tanggal !==
                     tanggalMulai
             ) {
                 return;
@@ -7868,55 +7935,219 @@ function getStokTanggalMulaiExport(
 }
 
 
+function barangAdaDalamRentangExport(
+    barang,
+    tanggalAkhir
+) {
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    if (!tanggalPembuatan) {
+        return true;
+    }
+
+    return (
+        tanggalPembuatan <=
+        tanggalAkhir
+    );
+}
+
+
+function barangPunyaDataDalamRentangExport(
+    barang,
+    rentang
+) {
+    if (
+        !barangAdaDalamRentangExport(
+            barang,
+            rentang.tanggalAkhirISO
+        )
+    ) {
+        return false;
+    }
+
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    if (
+        tanggalPembuatan &&
+        tanggalPembuatan >= rentang.tanggalMulaiISO &&
+        tanggalPembuatan <= rentang.tanggalAkhirISO
+    ) {
+        return true;
+    }
+
+    if (
+        getStokSebelumTanggalExport(
+            barang,
+            rentang.tanggalMulaiISO
+        ) !== 0
+    ) {
+        return true;
+    }
+
+    return transactions.some(
+        function(transaction) {
+            return (
+                Number(transaction.barang_id) ===
+                    Number(barang?.id) &&
+                transaction.tanggal >=
+                    rentang.tanggalMulaiISO &&
+                transaction.tanggal <=
+                    rentang.tanggalAkhirISO
+            );
+        }
+    );
+}
+
+
+function buatRekapStokBarangExport(
+    barang,
+    rentang
+) {
+    let stokMentah =
+        getStokSebelumTanggalExport(
+            barang,
+            rentang.tanggalMulaiISO
+        );
+
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    const transaksiPerTanggal =
+        new Map();
+
+    transactions.forEach(
+        function(transaction) {
+            if (
+                Number(
+                    transaction.barang_id
+                ) !==
+                    Number(barang?.id) ||
+                transaction.tanggal <
+                    rentang.tanggalMulaiISO ||
+                transaction.tanggal >
+                    rentang.tanggalAkhirISO
+            ) {
+                return;
+            }
+
+            if (
+                !transaksiPerTanggal.has(
+                    transaction.tanggal
+                )
+            ) {
+                transaksiPerTanggal.set(
+                    transaction.tanggal,
+                    []
+                );
+            }
+
+            transaksiPerTanggal
+                .get(transaction.tanggal)
+                .push(transaction);
+        }
+    );
+
+    const cells =
+        rentang.tanggalList.map(
+            function(itemTanggal) {
+                if (
+                    tanggalPembuatan &&
+                    tanggalPembuatan ===
+                        itemTanggal.iso &&
+                    tanggalPembuatan >
+                        rentang.tanggalMulaiISO
+                ) {
+                    stokMentah =
+                        Number(
+                            barang?.stok_awal
+                        ) || 0;
+                }
+
+                const transaksiHari =
+                    transaksiPerTanggal.get(
+                        itemTanggal.iso
+                    ) || [];
+
+                let totalMasuk = 0;
+                let totalKeluar = 0;
+
+                transaksiHari.forEach(
+                    function(transaction) {
+                        const qty =
+                            Number(
+                                transaction.qty
+                            ) || 0;
+
+                        if (
+                            transaction.type ===
+                            "masuk"
+                        ) {
+                            stokMentah += qty;
+                            totalMasuk += qty;
+                        }
+
+                        if (
+                            transaction.type ===
+                            "laku"
+                        ) {
+                            stokMentah -= qty;
+                            totalKeluar += qty;
+                        }
+                    }
+                );
+
+                const stokTersedia =
+                    Math.max(0, stokMentah);
+
+                const preOrder =
+                    Math.max(0, -stokMentah);
+
+                return {
+                    value:
+                        formatSaldoStokExport(
+                            stokMentah
+                        ),
+                    stokTersedia,
+                    preOrder,
+                    totalMasuk,
+                    totalKeluar,
+                    adaTransaksi:
+                        transaksiHari.length > 0
+                };
+            }
+        );
+
+    return {
+        cells,
+        stokAkhirMentah: stokMentah
+    };
+}
+
+
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
         showAppAlert("Library Excel belum dimuat.");
         return;
     }
 
-    const periodeExport =
-        getPeriodeExportTerpilih();
+    const rentangExport =
+        getRentangTanggalExport();
 
-    const tahun =
-        periodeExport.tahun;
-
-    const bulan =
-        periodeExport.bulan;
-
-    const hariTerakhirExport =
-        getHariTerakhirExport(
-            tahun,
-            bulan
-        );
-
-    if (hariTerakhirExport === 0) {
-        showAppAlert(
-            "Bulan yang dipilih belum dimulai."
-        );
-        return;
-    }
-
-    const namaBulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember"
-    ];
+    const jumlahHari =
+        rentangExport.tanggalList.length;
 
     const disetujui =
         await mintaKonfirmasiExport(
             "Export rekap stok " +
-            namaBulan[bulan] +
-            " " +
-            tahun +
+            rentangExport.labelPeriode +
             " ke Excel?"
         );
 
@@ -7924,46 +8155,30 @@ async function exportExcel() {
         return;
     }
 
-    const jumlahHari = new Date(
-        tahun,
-        bulan + 1,
-        0
-    ).getDate();
-
-
     /* HEADER EXCEL */
 
     const header = [];
 
     header.push(
-        `${namaBulan[bulan]}-${tahun}`
+        rentangExport.labelBulan
     );
 
-    for (
-        let hari = 1;
-        hari <= jumlahHari;
-        hari++
-    ) {
-        header.push(hari);
-    }
+    rentangExport.tanggalList.forEach(
+        function(itemTanggal) {
+            header.push(
+                itemTanggal.label
+            );
+        }
+    );
 
     const dataExcel = [header];
 
 const dataBarangExport =
     dataBarang.filter(
         function(barang) {
-            return (
-                barangAdaDalamPeriodeExport(
-                    barang,
-                    tahun,
-                    bulan,
-                    hariTerakhirExport
-                ) &&
-                getStokTanggalMulaiExport(
-                    barang,
-                    tahun,
-                    bulan
-                ) !== 0
+            return barangPunyaDataDalamRentangExport(
+                barang,
+                rentangExport
             );
         }
     );
@@ -8000,18 +8215,10 @@ kelompokBarangExport.forEach(
 
         kelompok.barang.forEach(
             function(barang) {
-                let stok =
-                    getStokAwalBulanExport(
+                const rekap =
+                    buatRekapStokBarangExport(
                         barang,
-                        tahun,
-                        bulan
-                    );
-
-                const tanggalMulaiBarang =
-                    getTanggalMulaiBarangExport(
-                        barang,
-                        tahun,
-                        bulan
+                        rentangExport
                     );
 
                 const row = [
@@ -8020,95 +8227,17 @@ kelompokBarangExport.forEach(
                         )
                     ];
 
-                for (
-                    let hari = 1;
-                    hari <= jumlahHari;
-                    hari++
-                ) {
-                    if (hari > hariTerakhirExport) {
-                        row.push("");
-                        continue;
+                rekap.cells.forEach(
+                    function(cell) {
+                        row.push(cell.value);
                     }
-
-                    const tanggal =
-                        `${tahun}-${String(
-                            bulan + 1
-                        ).padStart(2, "0")}-${String(
-                            hari
-                        ).padStart(2, "0")}`;
-
-                    if (
-                        tanggal <
-                        tanggalMulaiBarang
-                    ) {
-                        row.push("");
-                        continue;
-                    }
-
-                    const transaksiHari =
-                        transactions.filter(
-                            function(transaction) {
-                                return (
-                                    Number(
-                                        transaction.barang_id
-                                    ) ===
-                                        Number(barang.id) &&
-                                    transaction.tanggal ===
-                                        tanggal
-                                );
-                            }
-                        );
-
-                    let perubahan = 0;
-                    let totalMasuk = 0;
-                    let totalKeluar = 0;
-                    let adaTransaksi = false;
-
-                    transaksiHari.forEach(
-                        function(transaction) {
-                            const qty =
-                                Number(
-                                    transaction.qty
-                                ) || 0;
-
-                            if (
-                                transaction.type ===
-                                "masuk"
-                            ) {
-                                perubahan += qty;
-                                totalMasuk += qty;
-                                adaTransaksi = true;
-                            }
-
-                            if (
-                                transaction.type ===
-                                "laku"
-                            ) {
-                                perubahan -= qty;
-                                totalKeluar += qty;
-                                adaTransaksi = true;
-                            }
-                        }
-                    );
-
-                    if (adaTransaksi) {
-                        row.push(
-                            formatStokTransaksiExport(
-                                stok,
-                                totalMasuk,
-                                totalKeluar
-                            )
-                        );
-                        stok += perubahan;
-                    } else {
-                        row.push(stok);
-                    }
-                }
+                );
 
                 dataExcel.push(row);
                 metadataBarisExcel.push({
                     type: "barang",
-                    barang
+                    barang,
+                    rekap
                 });
             }
         );
@@ -8117,13 +8246,11 @@ kelompokBarangExport.forEach(
 
 
     const jumlahBarangExcel = [
-        "JUMLAH BARANG",
-        dataBarangExport.length
+        "JUMLAH BARANG: " +
+        formatNumber(
+            dataBarangExport.length
+        )
     ];
-
-    while (jumlahBarangExcel.length <= jumlahHari) {
-        jumlahBarangExcel.push("");
-    }
 
     dataExcel.push(jumlahBarangExcel);
     metadataBarisExcel.push({ type: "jumlah" });
@@ -8131,10 +8258,6 @@ kelompokBarangExport.forEach(
     const legendaExcel = [
         KETERANGAN_EXPORT
     ];
-
-    while (legendaExcel.length <= jumlahHari) {
-        legendaExcel.push("");
-    }
 
     dataExcel.push(legendaExcel);
     metadataBarisExcel.push({ type: "legenda" });
@@ -8147,11 +8270,38 @@ kelompokBarangExport.forEach(
             dataExcel
         );
 
+    const barisJumlahExcel =
+        dataExcel.length - 2;
+
     const barisLegendaExcel =
         dataExcel.length - 1;
 
     worksheet["!merges"] =
         worksheet["!merges"] || [];
+
+    metadataBarisExcel.forEach(
+        function(metadata, index) {
+            if (metadata?.type !== "brand") {
+                return;
+            }
+
+            worksheet["!merges"].push({
+                s: { r: index, c: 0 },
+                e: { r: index, c: jumlahHari }
+            });
+        }
+    );
+
+    worksheet["!merges"].push({
+        s: {
+            r: barisJumlahExcel,
+            c: 0
+        },
+        e: {
+            r: barisJumlahExcel,
+            c: jumlahHari
+        }
+    });
 
     worksheet["!merges"].push({
         s: {
@@ -8250,7 +8400,7 @@ for (
 ) {
     widths.push({
         // Kolom B sampai tanggal terakhir
-        wch: 3
+        wch: 6
     });
 }
 
@@ -8408,7 +8558,10 @@ for (
         const barang =
             metadata?.barang;
 
-        if (!barang) {
+        const rekap =
+            metadata?.rekap;
+
+        if (!barang || !rekap) {
             continue;
         }
 
@@ -8437,25 +8590,10 @@ for (
                 }
             };
 
-            const tanggal =
-                `${tahun}-${String(
-                    bulan + 1
-                ).padStart(2, "0")}-${String(
-                    c
-                ).padStart(2, "0")}`;
-
             const adaTransaksi =
-                transactions.some(
-                    function(transaction) {
-                        return (
-                            Number(
-                                transaction.barang_id
-                            ) ===
-                                Number(barang.id) &&
-                            transaction.tanggal ===
-                                tanggal
-                        );
-                    }
+                Boolean(
+                    rekap.cells[c - 1]
+                        ?.adaTransaksi
                 );
 
             if (adaTransaksi) {
@@ -8508,15 +8646,8 @@ for (
                 c: column
             });
 
-        /*
-         * Buat sel kosong agar border
-         * tetap muncul di seluruh area.
-         */
         if (!worksheet[alamatCell]) {
-            worksheet[alamatCell] = {
-                t: "s",
-                v: ""
-            };
+            continue;
         }
 
         const cell =
@@ -8615,7 +8746,7 @@ for (
         url;
 
     link.download =
-        `Rekap-Stok-${namaBulan[bulan]}-${tahun}.xlsx`;
+        `Rekap-Stok-${rentangExport.namaFile}.xlsx`;
 
     document.body.appendChild(
         link
@@ -8668,49 +8799,16 @@ async function exportPDF() {
     }
 
 
-    const periodeExport =
-        getPeriodeExportTerpilih();
+    const rentangExport =
+        getRentangTanggalExport();
 
-    const tahun =
-        periodeExport.tahun;
-
-    const bulan =
-        periodeExport.bulan;
-
-    const hariTerakhirExport =
-        getHariTerakhirExport(
-            tahun,
-            bulan
-        );
-
-    if (hariTerakhirExport === 0) {
-        showAppAlert(
-            "Bulan yang dipilih belum dimulai."
-        );
-        return;
-    }
-
-    const namaBulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember"
-    ];
+    const jumlahHari =
+        rentangExport.tanggalList.length;
 
     const disetujui =
         await mintaKonfirmasiExport(
             "Export rekap stok " +
-            namaBulan[bulan] +
-            " " +
-            tahun +
+            rentangExport.labelPeriode +
             " ke PDF?"
         );
 
@@ -8718,27 +8816,19 @@ async function exportPDF() {
         return;
     }
 
-    const jumlahHari =
-        new Date(
-            tahun,
-            bulan + 1,
-            0
-        ).getDate();
-
-
     /* HEADER PDF */
 
     const header = [
-        `${namaBulan[bulan]}-${tahun}`
+        rentangExport.labelBulan
     ];
 
-    for (
-        let hari = 1;
-        hari <= jumlahHari;
-        hari++
-    ) {
-        header.push(hari);
-    }
+    rentangExport.tanggalList.forEach(
+        function(itemTanggal) {
+            header.push(
+                itemTanggal.label
+            );
+        }
+    );
 
 
     /* DATA PDF */
@@ -8750,18 +8840,9 @@ async function exportPDF() {
     const dataBarangPDF =
         dataBarang.filter(
             function(barang) {
-                return (
-                    barangAdaDalamPeriodeExport(
-                        barang,
-                        tahun,
-                        bulan,
-                        hariTerakhirExport
-                    ) &&
-                    getStokTanggalMulaiExport(
-                        barang,
-                        tahun,
-                        bulan
-                    ) !== 0
+                return barangPunyaDataDalamRentangExport(
+                    barang,
+                    rentangExport
                 );
             }
         );
@@ -8782,14 +8863,15 @@ async function exportPDF() {
     kelompokBarangPDF.forEach(
         function(kelompok) {
             const brandRow = [
-                kelompok.brand.toLocaleUpperCase(
-                    "id-ID"
-                )
+                {
+                    content:
+                        kelompok.brand.toLocaleUpperCase(
+                            "id-ID"
+                        ),
+                    colSpan:
+                        jumlahHari + 1
+                }
             ];
-
-            for (let kolom = 1; kolom <= jumlahHari; kolom++) {
-                brandRow.push("");
-            }
 
             dataPDF.push(brandRow);
 
@@ -8803,18 +8885,10 @@ async function exportPDF() {
                     const indexBarisPDF =
                         dataPDF.length;
 
-                    let stok =
-                        getStokAwalBulanExport(
+                    const rekap =
+                        buatRekapStokBarangExport(
                             barang,
-                            tahun,
-                            bulan
-                        );
-
-                    const tanggalMulaiBarang =
-                        getTanggalMulaiBarangExport(
-                            barang,
-                            tahun,
-                            bulan
+                            rentangExport
                         );
 
                     const row = [
@@ -8823,98 +8897,27 @@ async function exportPDF() {
                         )
                     ];
 
-                    for (
-                        let hari = 1;
-                        hari <= jumlahHari;
-                        hari++
-                    ) {
-                        if (hari > hariTerakhirExport) {
-                            row.push("");
-                            continue;
-                        }
-
-                        const tanggal =
-                            `${tahun}-${String(
-                                bulan + 1
-                            ).padStart(2, "0")}-${String(
-                                hari
-                            ).padStart(2, "0")}`;
-
-                        if (
-                            tanggal <
-                            tanggalMulaiBarang
-                        ) {
-                            row.push("");
-                            continue;
-                        }
-
-                        const transaksiHari =
-                            transactions.filter(
-                                function(transaction) {
-                                    return (
-                                        Number(
-                                            transaction.barang_id
-                                        ) ===
-                                            Number(barang.id) &&
-                                        transaction.tanggal ===
-                                            tanggal
-                                    );
-                                }
-                            );
-
-                        let perubahan = 0;
-                        let totalMasuk = 0;
-                        let totalKeluar = 0;
-                        let adaTransaksi = false;
-
-                        transaksiHari.forEach(
-                            function(transaction) {
-                                const qty =
-                                    Number(
-                                        transaction.qty
-                                    ) || 0;
-
-                                if (
-                                    transaction.type ===
-                                    "masuk"
-                                ) {
-                                    perubahan += qty;
-                                    totalMasuk += qty;
-                                    adaTransaksi = true;
-                                }
-
-                                if (
-                                    transaction.type ===
-                                    "laku"
-                                ) {
-                                    perubahan -= qty;
-                                    totalKeluar += qty;
-                                    adaTransaksi = true;
-                                }
+                    rekap.cells.forEach(
+                        function(cell, index) {
+                            if (
+                                cell.adaTransaksi ||
+                                cell.preOrder > 0
+                            ) {
+                                transaksiCellPDF.set(
+                                    `${indexBarisPDF}:${index + 1}`,
+                                    cell
+                                );
                             }
-                        );
 
-                        if (adaTransaksi) {
-                            transaksiCellPDF.set(
-                                `${indexBarisPDF}:${hari}`,
-                                {
-                                    stokSebelum: stok,
-                                    totalMasuk,
-                                    totalKeluar
-                                }
-                            );
-
-                            row.push(stok);
-                            stok += perubahan;
-                        } else {
-                            row.push(stok);
+                            row.push(cell.value);
                         }
-                    }
+                    );
 
                     dataPDF.push(row);
                     metadataBarisPDF.push({
                         type: "barang",
-                        barang
+                        barang,
+                        rekap
                     });
                 }
             );
@@ -8923,13 +8926,16 @@ async function exportPDF() {
 
 
     const jumlahBarangPDF = [
-        "JUMLAH BARANG",
-        dataBarangPDF.length
+        {
+            content:
+                "JUMLAH BARANG: " +
+                formatNumber(
+                    dataBarangPDF.length
+                ),
+            colSpan:
+                jumlahHari + 1
+        }
     ];
-
-    while (jumlahBarangPDF.length <= jumlahHari) {
-        jumlahBarangPDF.push("");
-    }
 
     dataPDF.push(jumlahBarangPDF);
     metadataBarisPDF.push({ type: "jumlah" });
@@ -9094,7 +9100,7 @@ async function exportPDF() {
                 "helvetica",
 
             fontSize:
-                8,
+                6.5,
 
             fontStyle:
                 "bold",
@@ -9214,12 +9220,12 @@ async function exportPDF() {
                     return;
                 }
 
-                const detailTransaksi =
+                const detailStok =
                     transaksiCellPDF.get(
                         `${data.row.index}:${data.column.index}`
                     );
 
-                if (detailTransaksi) {
+                if (detailStok?.adaTransaksi) {
                     data.cell.styles.fillColor =
                         [0, 0, 0];
 
@@ -9229,11 +9235,9 @@ async function exportPDF() {
                     data.cell.styles.fontStyle =
                         "bold";
 
-                    /*
-                     * Teks digambar ulang pada
-                     * didDrawCell agar pangkat
-                     * selalu tampil dengan benar.
-                     */
+                }
+
+                if (detailStok?.preOrder > 0) {
                     data.cell.text = [""];
                 }
             },
@@ -9247,31 +9251,22 @@ async function exportPDF() {
                     return;
                 }
 
-                const detailTransaksi =
+                const detailStok =
                     transaksiCellPDF.get(
                         `${data.row.index}:${data.column.index}`
                     );
 
-                if (!detailTransaksi) {
+                if (!detailStok?.preOrder) {
                     return;
                 }
 
                 const stokText =
                     String(
-                        detailTransaksi.stokSebelum
+                        detailStok.stokTersedia
                     );
 
                 const perubahanText =
-                    (
-                        detailTransaksi.totalMasuk > 0
-                            ? `+${detailTransaksi.totalMasuk}`
-                            : ""
-                    ) +
-                    (
-                        detailTransaksi.totalKeluar > 0
-                            ? `-${detailTransaksi.totalKeluar}`
-                            : ""
-                    );
+                    `-${detailStok.preOrder}`;
 
                 let ukuranStok = 8;
                 let ukuranPangkat = 5;
@@ -9372,11 +9367,19 @@ async function exportPDF() {
                     data.cell.height / 2 +
                     0.9;
 
-                pdf.setTextColor(
-                    255,
-                    255,
-                    255
-                );
+                if (detailStok.adaTransaksi) {
+                    pdf.setTextColor(
+                        255,
+                        255,
+                        255
+                    );
+                } else {
+                    pdf.setTextColor(
+                        0,
+                        0,
+                        0
+                    );
+                }
 
                 pdf.setFontSize(
                     ukuranStok
@@ -9408,7 +9411,7 @@ async function exportPDF() {
     /* SIMPAN PDF */
 
     pdf.save(
-        `Rekap-Stok-${namaBulan[bulan]}-${tahun}.pdf`
+        `Rekap-Stok-${rentangExport.namaFile}.pdf`
     );
 }
 /* ==================================

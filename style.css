@@ -5484,6 +5484,12 @@ body > footer {
     color: #ffb3c3;
 }
 
+#penjualan .sales-stock-info.is-preorder {
+    border-color: rgba(240, 187, 79, .28);
+    background: rgba(240, 187, 79, .1);
+    color: #f7d99b;
+}
+
 #penjualan #simpanPenjualanButton {
     display: inline-flex;
     min-width: 160px;
