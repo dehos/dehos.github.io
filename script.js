@@ -7626,7 +7626,8 @@ function formatPerubahanSuperscriptExport(perubahan) {
 
 function formatSaldoStokExport(
     stokMentah,
-    totalKeluar = 0
+    totalKeluar = 0,
+    stokSebelumKeluar = stokMentah
 ) {
     const stok =
         Number(stokMentah) || 0;
@@ -7647,7 +7648,12 @@ function formatSaldoStokExport(
 
     if (totalKeluar > 0) {
         return (
-            String(stokTersedia) +
+            String(
+                Math.max(
+                    0,
+                    Number(stokSebelumKeluar) || 0
+                )
+            ) +
             formatPerubahanSuperscriptExport(
                 -totalKeluar
             )
@@ -8066,7 +8072,6 @@ function buatRekapStokBarangExport(
                             transaction.type ===
                             "masuk"
                         ) {
-                            stokMentah += qty;
                             totalMasuk += qty;
                         }
 
@@ -8074,11 +8079,17 @@ function buatRekapStokBarangExport(
                             transaction.type ===
                             "laku"
                         ) {
-                            stokMentah -= qty;
                             totalKeluar += qty;
                         }
                     }
                 );
+
+                const stokSebelumKeluar =
+                    stokMentah + totalMasuk;
+
+                stokMentah =
+                    stokSebelumKeluar -
+                    totalKeluar;
 
                 const stokTersedia =
                     Math.max(0, stokMentah);
@@ -8090,10 +8101,16 @@ function buatRekapStokBarangExport(
                     value:
                         formatSaldoStokExport(
                             stokMentah,
-                            totalKeluar
+                            totalKeluar,
+                            stokSebelumKeluar
                         ),
                     stokTersedia,
                     preOrder,
+                    stokSebelumKeluar:
+                        Math.max(
+                            0,
+                            stokSebelumKeluar
+                        ),
                     totalMasuk,
                     totalKeluar,
                     adaTransaksi:
@@ -8366,7 +8383,7 @@ workbook.Workbook.Names.push({
 const widths = [
     {
         // Kolom A
-        wch: 30
+        wch: 25
     }
 ];
 
@@ -8377,7 +8394,7 @@ for (
 ) {
     widths.push({
         // Kolom B sampai tanggal terakhir
-        wch: 6
+        wch: 4
     });
 }
 
@@ -9214,7 +9231,10 @@ async function exportPDF() {
 
                 }
 
-                if (detailStok?.preOrder > 0) {
+                if (
+                    detailStok?.preOrder > 0 ||
+                    detailStok?.totalKeluar > 0
+                ) {
                     data.cell.text = [""];
                 }
             },
@@ -9233,17 +9253,29 @@ async function exportPDF() {
                         `${data.row.index}:${data.column.index}`
                     );
 
-                if (!detailStok?.preOrder) {
+                if (
+                    !detailStok?.preOrder &&
+                    !detailStok?.totalKeluar
+                ) {
                     return;
                 }
 
+                const pangkatSebelum =
+                    detailStok.preOrder > 0;
+
                 const stokText =
                     String(
-                        detailStok.stokTersedia
+                        pangkatSebelum
+                            ? detailStok.stokTersedia
+                            : detailStok.stokSebelumKeluar
                     );
 
                 const perubahanText =
-                    `-${detailStok.preOrder}`;
+                    `-${
+                        pangkatSebelum
+                            ? detailStok.preOrder
+                            : detailStok.totalKeluar
+                    }`;
 
                 let ukuranStok = 8;
                 let ukuranPangkat = 5;
@@ -9358,6 +9390,32 @@ async function exportPDF() {
                     );
                 }
 
+                if (pangkatSebelum) {
+                    pdf.setFontSize(
+                        ukuranPangkat
+                    );
+
+                    pdf.text(
+                        perubahanText,
+                        posisiX,
+                        posisiY - 1.25
+                    );
+
+                    pdf.setFontSize(
+                        ukuranStok
+                    );
+
+                    pdf.text(
+                        stokText,
+                        posisiX +
+                            lebarPangkat +
+                            jarak,
+                        posisiY
+                    );
+
+                    return;
+                }
+
                 pdf.setFontSize(
                     ukuranStok
                 );
@@ -9368,19 +9426,17 @@ async function exportPDF() {
                     posisiY
                 );
 
-                if (perubahanText) {
-                    pdf.setFontSize(
-                        ukuranPangkat
-                    );
+                pdf.setFontSize(
+                    ukuranPangkat
+                );
 
-                    pdf.text(
-                        perubahanText,
-                        posisiX +
-                            lebarStok +
-                            jarak,
-                        posisiY - 1.25
-                    );
-                }
+                pdf.text(
+                    perubahanText,
+                    posisiX +
+                        lebarStok +
+                        jarak,
+                    posisiY - 1.25
+                );
             }
     });
 
