@@ -7375,6 +7375,74 @@ async function createLandscapeExcelBlob(
         }
     );
 }
+
+
+function simpanBlobExport(
+    blob,
+    namaFile
+) {
+    const namaFileAman =
+        String(namaFile || "Stock-Barang")
+            .replace(/[\\/:*?"<>|]/g, "-");
+
+    const mimeType =
+        blob?.type ||
+        "application/octet-stream";
+
+    if (
+        window.AndroidDownloads &&
+        typeof window.AndroidDownloads.save ===
+            "function"
+    ) {
+        const pembaca =
+            new FileReader();
+
+        pembaca.onloadend =
+            function() {
+                if (
+                    typeof pembaca.result !==
+                    "string"
+                ) {
+                    window.AndroidDownloads.failed?.();
+                    return;
+                }
+
+                window.AndroidDownloads.save(
+                    namaFileAman,
+                    mimeType,
+                    pembaca.result
+                );
+            };
+
+        pembaca.onerror =
+            function() {
+                window.AndroidDownloads.failed?.();
+            };
+
+        pembaca.readAsDataURL(blob);
+        return;
+    }
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+    link.download = namaFileAman;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.setTimeout(
+        function() {
+            URL.revokeObjectURL(url);
+        },
+        1000
+    );
+}
 /* ==================================
    STOK AKTUAL UNTUK EXPORT
 ================================== */
@@ -8726,34 +8794,9 @@ for (
         return;
     }
 
-    const url =
-        URL.createObjectURL(
-            blob
-        );
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-    link.href =
-        url;
-
-    link.download =
-        `Rekap-Stok-${rentangExport.namaFile}.xlsx`;
-
-    document.body.appendChild(
-        link
-    );
-
-    link.click();
-
-    document.body.removeChild(
-        link
-    );
-
-    URL.revokeObjectURL(
-        url
+    simpanBlobExport(
+        blob,
+        `Rekap-Stok-${rentangExport.namaFile}.xlsx`
     );
 }
 /* ==================================
@@ -9443,7 +9486,8 @@ async function exportPDF() {
 
     /* SIMPAN PDF */
 
-    pdf.save(
+    simpanBlobExport(
+        pdf.output("blob"),
         `Rekap-Stok-${rentangExport.namaFile}.pdf`
     );
 }
@@ -9747,14 +9791,6 @@ async function exportPenjualanExcel() {
         return;
     }
 
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
     let namaFile = "Penjualan";
 
     if (brand) {
@@ -9786,16 +9822,10 @@ async function exportPenjualanExcel() {
             tahun;
     }
 
-    link.download =
-        `${namaFile}.xlsx`;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
+    simpanBlobExport(
+        blob,
+        `${namaFile}.xlsx`
+    );
 }
 
 
