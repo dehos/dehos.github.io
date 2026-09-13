@@ -7736,6 +7736,7 @@ const KETERANGAN_EXPORT =
     "Keterangan: angka utama = stok tersedia | " +
     "pangkat sesudah stok = barang laku | " +
     "pangkat sebelum stok = jumlah pre-order | " +
+    "— = barang belum tercatat | " +
     "sel hitam = terdapat transaksi";
 
 
@@ -7969,9 +7970,18 @@ function getStokSebelumTanggalExport(
     barang,
     tanggalMulai
 ) {
-    // Saldo awal juga dipakai untuk tanggal sebelum barang
-    // dimasukkan ke aplikasi. Dengan begitu kolom lama mengikuti
-    // stok pertama yang tersedia, bukan ditampilkan sebagai nol.
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    if (
+        tanggalPembuatan &&
+        tanggalPembuatan > tanggalMulai
+    ) {
+        return 0;
+    }
+
     let stok =
         Number(
             barang?.stok_awal
@@ -8058,6 +8068,20 @@ function barangPunyaDataDalamRentangExport(
         return true;
     }
 
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
+        );
+
+    if (
+        tanggalPembuatan &&
+        tanggalPembuatan >= rentang.tanggalMulaiISO &&
+        tanggalPembuatan <= rentang.tanggalAkhirISO &&
+        Number(barang?.stok_awal) !== 0
+    ) {
+        return true;
+    }
+
     return transactions.some(
         function(transaction) {
             return (
@@ -8081,6 +8105,11 @@ function buatRekapStokBarangExport(
         getStokSebelumTanggalExport(
             barang,
             rentang.tanggalMulaiISO
+        );
+
+    const tanggalPembuatan =
+        getTanggalPembuatanBarangExport(
+            barang
         );
 
     const transaksiPerTanggal =
@@ -8121,6 +8150,36 @@ function buatRekapStokBarangExport(
     const cells =
         rentang.tanggalList.map(
             function(itemTanggal) {
+                if (
+                    tanggalPembuatan &&
+                    itemTanggal.iso <
+                        tanggalPembuatan
+                ) {
+                    return {
+                        value: "—",
+                        stokTersedia: 0,
+                        preOrder: 0,
+                        stokSebelumKeluar: 0,
+                        totalMasuk: 0,
+                        totalKeluar: 0,
+                        adaTransaksi: false,
+                        belumTercatat: true
+                    };
+                }
+
+                if (
+                    tanggalPembuatan &&
+                    itemTanggal.iso ===
+                        tanggalPembuatan &&
+                    tanggalPembuatan >
+                        rentang.tanggalMulaiISO
+                ) {
+                    stokMentah =
+                        Number(
+                            barang?.stok_awal
+                        ) || 0;
+                }
+
                 const transaksiHari =
                     transaksiPerTanggal.get(
                         itemTanggal.iso
