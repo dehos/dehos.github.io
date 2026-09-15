@@ -444,7 +444,20 @@
                             <path d="M9 12h6M9 16h5"/>
                         </svg>
                     </span>
-                    <span>Export PDF</span>
+                    <span>Export PDF Normal</span>
+                </button>
+                <button
+                    type="button"
+                    onclick="this.closest('details').removeAttribute('open'); exportPDF(true)"
+                >
+                    <span class="export-accent export-file-icon pdf-accent" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h9l3 3v15H6z"/>
+                            <path d="M15 3v4h4"/>
+                            <path d="M9 12h6M9 16h5"/>
+                        </svg>
+                    </span>
+                    <span>Export PDF Stok Penuh</span>
                 </button>
             </div>
         </details>

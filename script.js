@@ -7968,7 +7968,8 @@ function getTanggalPembuatanBarangExport(
 
 function getStokSebelumTanggalExport(
     barang,
-    tanggalMulai
+    tanggalMulai,
+    isiStokSebelumTercatat = false
 ) {
     const tanggalPembuatan =
         getTanggalPembuatanBarangExport(
@@ -7976,6 +7977,7 @@ function getStokSebelumTanggalExport(
         );
 
     if (
+        !isiStokSebelumTercatat &&
         tanggalPembuatan &&
         tanggalPembuatan > tanggalMulai
     ) {
@@ -8048,7 +8050,8 @@ function barangAdaDalamRentangExport(
 
 function barangPunyaDataDalamRentangExport(
     barang,
-    rentang
+    rentang,
+    isiStokSebelumTercatat = false
 ) {
     if (
         !barangAdaDalamRentangExport(
@@ -8062,7 +8065,8 @@ function barangPunyaDataDalamRentangExport(
     if (
         getStokSebelumTanggalExport(
             barang,
-            rentang.tanggalMulaiISO
+            rentang.tanggalMulaiISO,
+            isiStokSebelumTercatat
         ) !== 0
     ) {
         return true;
@@ -8099,12 +8103,14 @@ function barangPunyaDataDalamRentangExport(
 
 function buatRekapStokBarangExport(
     barang,
-    rentang
+    rentang,
+    isiStokSebelumTercatat = false
 ) {
     let stokMentah =
         getStokSebelumTanggalExport(
             barang,
-            rentang.tanggalMulaiISO
+            rentang.tanggalMulaiISO,
+            isiStokSebelumTercatat
         );
 
     const tanggalPembuatan =
@@ -8151,6 +8157,7 @@ function buatRekapStokBarangExport(
         rentang.tanggalList.map(
             function(itemTanggal) {
                 if (
+                    !isiStokSebelumTercatat &&
                     tanggalPembuatan &&
                     itemTanggal.iso <
                         tanggalPembuatan
@@ -8168,6 +8175,7 @@ function buatRekapStokBarangExport(
                 }
 
                 if (
+                    !isiStokSebelumTercatat &&
                     tanggalPembuatan &&
                     itemTanggal.iso ===
                         tanggalPembuatan &&
@@ -8862,7 +8870,9 @@ for (
    EXPORT PDF REKAP STOK
 ================================== */
 
-async function exportPDF() {
+async function exportPDF(
+    isiStokSebelumTercatat = false
+) {
     if (
         typeof window.jspdf ===
             "undefined" ||
@@ -8905,7 +8915,12 @@ async function exportPDF() {
 
     const disetujui =
         await mintaKonfirmasiExport(
-            "Export rekap stok " +
+            "Export " +
+            (
+                isiStokSebelumTercatat
+                    ? "rekap stok penuh "
+                    : "rekap stok normal "
+            ) +
             rentangExport.labelPeriode +
             " ke PDF?"
         );
@@ -8940,7 +8955,8 @@ async function exportPDF() {
             function(barang) {
                 return barangPunyaDataDalamRentangExport(
                     barang,
-                    rentangExport
+                    rentangExport,
+                    isiStokSebelumTercatat
                 );
             }
         );
@@ -8986,7 +9002,8 @@ async function exportPDF() {
                     const rekap =
                         buatRekapStokBarangExport(
                             barang,
-                            rentangExport
+                            rentangExport,
+                            isiStokSebelumTercatat
                         );
 
                     const row = [
@@ -9549,7 +9566,11 @@ async function exportPDF() {
 
     simpanBlobExport(
         pdf.output("blob"),
-        `Rekap-Stok-${rentangExport.namaFile}.pdf`
+        `Rekap-Stok-${
+            isiStokSebelumTercatat
+                ? "Penuh-"
+                : "Normal-"
+        }${rentangExport.namaFile}.pdf`
     );
 }
 /* ==================================
