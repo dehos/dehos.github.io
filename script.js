@@ -7391,6 +7391,23 @@ function simpanBlobExport(
 
     if (
         window.AndroidDownloads &&
+        typeof window.AndroidDownloads.begin ===
+            "function" &&
+        typeof window.AndroidDownloads.append ===
+            "function" &&
+        typeof window.AndroidDownloads.finish ===
+            "function"
+    ) {
+        simpanBlobAndroidBertahap(
+            blob,
+            namaFileAman,
+            mimeType
+        );
+        return;
+    }
+
+    if (
+        window.AndroidDownloads &&
         typeof window.AndroidDownloads.save ===
             "function"
     ) {
@@ -7442,6 +7459,103 @@ function simpanBlobExport(
         },
         1000
     );
+}
+
+
+async function simpanBlobAndroidBertahap(
+    blob,
+    namaFile,
+    mimeType
+) {
+    const ukuranPotongan =
+        48 * 1024;
+
+    let idDownload = "";
+
+    try {
+        idDownload =
+            window.AndroidDownloads.begin(
+                namaFile,
+                mimeType
+            );
+
+        if (!idDownload) {
+            throw new Error(
+                "Sesi download Android gagal dibuat."
+            );
+        }
+
+        const buffer =
+            await blob.arrayBuffer();
+
+        for (
+            let awal = 0;
+            awal < buffer.byteLength;
+            awal += ukuranPotongan
+        ) {
+            const bagian =
+                new Uint8Array(
+                    buffer,
+                    awal,
+                    Math.min(
+                        ukuranPotongan,
+                        buffer.byteLength - awal
+                    )
+                );
+
+            let biner = "";
+
+            for (
+                let posisi = 0;
+                posisi < bagian.length;
+                posisi += 8192
+            ) {
+                biner +=
+                    String.fromCharCode.apply(
+                        null,
+                        bagian.subarray(
+                            posisi,
+                            posisi + 8192
+                        )
+                    );
+            }
+
+            const tersimpan =
+                window.AndroidDownloads.append(
+                    idDownload,
+                    window.btoa(biner)
+                );
+
+            if (tersimpan === false) {
+                throw new Error(
+                    "Potongan download Android gagal disimpan."
+                );
+            }
+        }
+
+        const selesai =
+            window.AndroidDownloads.finish(
+                idDownload
+            );
+
+        idDownload = "";
+
+        if (selesai === false) {
+            return;
+        }
+    } catch (error) {
+        if (
+            idDownload &&
+            typeof window.AndroidDownloads.cancel ===
+                "function"
+        ) {
+            window.AndroidDownloads.cancel(
+                idDownload
+            );
+        }
+
+        window.AndroidDownloads.failed?.();
+    }
 }
 /* ==================================
    STOK AKTUAL UNTUK EXPORT

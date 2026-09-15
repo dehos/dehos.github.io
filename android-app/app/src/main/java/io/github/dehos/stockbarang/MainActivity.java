@@ -19,8 +19,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MainActivity extends Activity {
     private static final String APP_URL = "https://dehos.github.io/";
@@ -31,6 +37,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private ValueCallback<Uri[]> pendingFileCallback;
     private long lastBackPressedAt = 0L;
+    private final Map<String, DownloadSession> downloadSessions = new ConcurrentHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +188,9 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        for (String id : downloadSessions.keySet()) {
+            cleanupDownloadSession(id);
+        }
         if (webView != null) {
             webView.removeJavascriptInterface("AndroidDownloads");
             webView.destroy();
@@ -190,41 +200,209 @@ public class MainActivity extends Activity {
 
     private final class DownloadBridge {
         @JavascriptInterface
+        public String begin(String filename, String mimeType) {
+            String id = UUID.randomUUID().toString();
+            try {
+                File temporaryFile = File.createTempFile("stock-export-", ".part", getCacheDir());
+                DownloadSession session = new DownloadSession(
+                    sanitizeFilename(filename),
+                    sanitizeMimeType(mimeType),
+                    temporaryFile,
+                    new FileOutputStream(temporaryFile)
+                );
+                downloadSessions.put(id, session);
+                return id;
+            } catch (Exception error) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
+        public boolean append(String id, String base64Chunk) {
+            DownloadSession session = downloadSessions.get(id);
+            if (session == null) return false;
+
+            try {
+                byte[] bytes = Base64.decode(base64Chunk, Base64.NO_WRAP);
+                session.stream.write(bytes);
+                return true;
+            } catch (Exception error) {
+                cleanupDownloadSession(id);
+                return false;
+            }
+        }
+
+        @JavascriptInterface
+        public boolean finish(String id) {
+            DownloadSession session = downloadSessions.remove(id);
+            if (session == null) {
+                showDownloadResult(false);
+                return false;
+            }
+
+            boolean success = false;
+            try {
+                session.stream.close();
+                success = saveFileToDownloads(
+                    session.filename,
+                    session.mimeType,
+                    session.temporaryFile
+                );
+            } catch (Exception ignored) {
+                success = false;
+            } finally {
+                session.temporaryFile.delete();
+            }
+
+            showDownloadResult(success);
+            return success;
+        }
+
+        @JavascriptInterface
+        public void cancel(String id) {
+            cleanupDownloadSession(id);
+        }
+
+        @JavascriptInterface
         public void save(String filename, String mimeType, String dataUrl) {
-            runOnUiThread(() -> {
-                try {
-                    int comma = dataUrl.indexOf(',');
-                    if (comma < 0) throw new IllegalArgumentException("Invalid data URL");
-                    byte[] bytes = Base64.decode(
-                        dataUrl.substring(comma + 1).getBytes(StandardCharsets.UTF_8),
-                        Base64.DEFAULT
-                    );
-
-                    android.content.ContentValues values = new android.content.ContentValues();
-                    values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
-                    values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
-                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, "Download/Stock Barang");
-
-                    Uri outputUri = getContentResolver().insert(
-                        MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
-                    );
-                    if (outputUri == null) throw new IllegalStateException("Cannot create download");
-                    try (OutputStream stream = getContentResolver().openOutputStream(outputUri)) {
-                        if (stream == null) throw new IllegalStateException("Cannot open download");
-                        stream.write(bytes);
-                    }
-                    Toast.makeText(MainActivity.this, R.string.download_saved, Toast.LENGTH_LONG).show();
-                } catch (Exception error) {
-                    Toast.makeText(MainActivity.this, R.string.download_failed, Toast.LENGTH_LONG).show();
-                }
-            });
+            boolean success = false;
+            try {
+                int comma = dataUrl.indexOf(',');
+                if (comma < 0) throw new IllegalArgumentException("Invalid data URL");
+                byte[] bytes = Base64.decode(
+                    dataUrl.substring(comma + 1).getBytes(StandardCharsets.UTF_8),
+                    Base64.DEFAULT
+                );
+                success = saveBytesToDownloads(
+                    sanitizeFilename(filename),
+                    sanitizeMimeType(mimeType),
+                    bytes
+                );
+            } catch (Exception ignored) {
+                success = false;
+            }
+            showDownloadResult(success);
         }
 
         @JavascriptInterface
         public void failed() {
-            runOnUiThread(() -> Toast.makeText(
-                MainActivity.this, R.string.download_failed, Toast.LENGTH_LONG
-            ).show());
+            showDownloadResult(false);
+        }
+    }
+
+    private String sanitizeFilename(String filename) {
+        String safeName = filename == null ? "Stock-Barang" : filename.trim();
+        safeName = safeName.replaceAll("[\\\\/:*?\"<>|]", "-");
+        return safeName.isEmpty() ? "Stock-Barang" : safeName;
+    }
+
+    private String sanitizeMimeType(String mimeType) {
+        return mimeType == null || mimeType.trim().isEmpty()
+            ? "application/octet-stream"
+            : mimeType;
+    }
+
+    private boolean saveBytesToDownloads(String filename, String mimeType, byte[] bytes) {
+        Uri outputUri = createDownloadUri(filename, mimeType);
+        if (outputUri == null) return false;
+
+        try (OutputStream stream = getContentResolver().openOutputStream(outputUri)) {
+            if (stream == null) throw new IllegalStateException("Cannot open download");
+            stream.write(bytes);
+        } catch (Exception error) {
+            getContentResolver().delete(outputUri, null, null);
+            return false;
+        }
+
+        try {
+            publishDownload(outputUri);
+            return true;
+        } catch (Exception error) {
+            getContentResolver().delete(outputUri, null, null);
+            return false;
+        }
+    }
+
+    private boolean saveFileToDownloads(String filename, String mimeType, File source) {
+        Uri outputUri = createDownloadUri(filename, mimeType);
+        if (outputUri == null) return false;
+
+        try (
+            FileInputStream input = new FileInputStream(source);
+            OutputStream output = getContentResolver().openOutputStream(outputUri)
+        ) {
+            if (output == null) throw new IllegalStateException("Cannot open download");
+            byte[] buffer = new byte[32 * 1024];
+            int length;
+            while ((length = input.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+        } catch (Exception error) {
+            getContentResolver().delete(outputUri, null, null);
+            return false;
+        }
+
+        try {
+            publishDownload(outputUri);
+            return true;
+        } catch (Exception error) {
+            getContentResolver().delete(outputUri, null, null);
+            return false;
+        }
+    }
+
+    private Uri createDownloadUri(String filename, String mimeType) {
+        android.content.ContentValues values = new android.content.ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
+        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, "Download/Stock Barang");
+        values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+        return getContentResolver().insert(
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+            values
+        );
+    }
+
+    private void publishDownload(Uri outputUri) {
+        android.content.ContentValues values = new android.content.ContentValues();
+        values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+        getContentResolver().update(outputUri, values, null, null);
+    }
+
+    private void cleanupDownloadSession(String id) {
+        DownloadSession session = downloadSessions.remove(id);
+        if (session == null) return;
+        try {
+            session.stream.close();
+        } catch (Exception ignored) {
+        }
+        session.temporaryFile.delete();
+    }
+
+    private void showDownloadResult(boolean success) {
+        runOnUiThread(() -> Toast.makeText(
+            MainActivity.this,
+            success ? R.string.download_saved : R.string.download_failed,
+            Toast.LENGTH_LONG
+        ).show());
+    }
+
+    private static final class DownloadSession {
+        final String filename;
+        final String mimeType;
+        final File temporaryFile;
+        final OutputStream stream;
+
+        DownloadSession(
+            String filename,
+            String mimeType,
+            File temporaryFile,
+            OutputStream stream
+        ) {
+            this.filename = filename;
+            this.mimeType = mimeType;
+            this.temporaryFile = temporaryFile;
+            this.stream = stream;
         }
     }
 }
