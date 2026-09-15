@@ -7866,16 +7866,24 @@ function getRentangTanggalExport() {
         return null;
     }
 
-    if (tanggalAkhir > hariIni) {
-        if (rentangKustom) {
-            showAppAlert(
-                "Tanggal akhir export tidak boleh melewati hari ini."
-            );
-            return null;
-        }
-
+    if (
+        !rentangKustom &&
+        tanggalAkhir > hariIni
+    ) {
         tanggalAkhir = hariIni;
     }
+
+    const tanggalBesok =
+        new Date(hariIni);
+
+    tanggalBesok.setDate(
+        tanggalBesok.getDate() + 1
+    );
+
+    const tanggalIsiAkhir =
+        tanggalAkhir > tanggalBesok
+            ? tanggalBesok
+            : tanggalAkhir;
 
     let tanggalMulai;
 
@@ -7977,6 +7985,10 @@ function getRentangTanggalExport() {
         tanggalAkhirISO:
             formatTanggalISOExport(
                 tanggalAkhir
+            ),
+        tanggalIsiAkhirISO:
+            formatTanggalISOExport(
+                tanggalIsiAkhir
             ),
         rentangKustom,
         tanggalList,
@@ -8132,7 +8144,7 @@ function barangPunyaDataDalamRentangExport(
     if (
         !barangAdaDalamRentangExport(
             barang,
-            rentang.tanggalAkhirISO
+            rentang.tanggalIsiAkhirISO
         )
     ) {
         return false;
@@ -8155,7 +8167,7 @@ function barangPunyaDataDalamRentangExport(
     if (
         tanggalPembuatan &&
         tanggalPembuatan >= rentang.tanggalMulaiISO &&
-        tanggalPembuatan <= rentang.tanggalAkhirISO &&
+        tanggalPembuatan <= rentang.tanggalIsiAkhirISO &&
         Number(barang?.stok_awal) !== 0
     ) {
         return true;
@@ -8169,7 +8181,7 @@ function barangPunyaDataDalamRentangExport(
                 transaction.tanggal >=
                     rentang.tanggalMulaiISO &&
                 transaction.tanggal <=
-                    rentang.tanggalAkhirISO
+                    rentang.tanggalIsiAkhirISO
             );
         }
     );
@@ -8204,7 +8216,7 @@ function buatRekapStokBarangExport(
                 transaction.tanggal <
                     rentang.tanggalMulaiISO ||
                 transaction.tanggal >
-                    rentang.tanggalAkhirISO
+                    rentang.tanggalIsiAkhirISO
             ) {
                 return;
             }
@@ -8229,6 +8241,22 @@ function buatRekapStokBarangExport(
     const cells =
         rentang.tanggalList.map(
             function(itemTanggal) {
+                if (
+                    itemTanggal.iso >
+                        rentang.tanggalIsiAkhirISO
+                ) {
+                    return {
+                        value: "",
+                        stokTersedia: 0,
+                        preOrder: 0,
+                        stokSebelumKeluar: 0,
+                        totalMasuk: 0,
+                        totalKeluar: 0,
+                        adaTransaksi: false,
+                        belumTercatat: true
+                    };
+                }
+
                 if (
                     tanggalPembuatan &&
                     itemTanggal.iso <
