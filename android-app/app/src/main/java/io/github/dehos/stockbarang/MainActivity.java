@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> pendingFileCallback;
     private long lastBackPressedAt = 0L;
     private final Map<String, DownloadSession> downloadSessions = new ConcurrentHashMap<>();
+    private volatile String lastDownloadError = "UNKNOWN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +62,17 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setAllowFileAccess(false);
         settings.setAllowContentAccess(true);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         settings.setMediaPlaybackRequiresUserGesture(true);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
-        settings.setUserAgentString(settings.getUserAgentString() + " StockBarangAndroid/1.0");
+        settings.setUserAgentString(settings.getUserAgentString() + " StockBarangAndroid/1.0.4");
 
         webView.setBackgroundColor(Color.rgb(5, 8, 22));
+        webView.clearCache(true);
         webView.addJavascriptInterface(new DownloadBridge(), "AndroidDownloads");
 
         webView.setWebViewClient(new WebViewClient() {
@@ -203,6 +206,7 @@ public class MainActivity extends Activity {
         public String begin(String filename, String mimeType) {
             String id = UUID.randomUUID().toString();
             try {
+                lastDownloadError = "UNKNOWN";
                 File temporaryFile = File.createTempFile("stock-export-", ".part", getCacheDir());
                 DownloadSession session = new DownloadSession(
                     sanitizeFilename(filename),
@@ -213,6 +217,7 @@ public class MainActivity extends Activity {
                 downloadSessions.put(id, session);
                 return id;
             } catch (Exception error) {
+                recordDownloadError("BEGIN", error);
                 return "";
             }
         }
@@ -227,6 +232,7 @@ public class MainActivity extends Activity {
                 session.stream.write(bytes);
                 return true;
             } catch (Exception error) {
+                recordDownloadError("APPEND", error);
                 cleanupDownloadSession(id);
                 return false;
             }
@@ -236,6 +242,7 @@ public class MainActivity extends Activity {
         public boolean finish(String id) {
             DownloadSession session = downloadSessions.remove(id);
             if (session == null) {
+                lastDownloadError = "FINISH_SESSION";
                 showDownloadResult(false);
                 return false;
             }
@@ -248,7 +255,8 @@ public class MainActivity extends Activity {
                     session.mimeType,
                     session.temporaryFile
                 );
-            } catch (Exception ignored) {
+            } catch (Exception error) {
+                recordDownloadError("FINISH", error);
                 success = false;
             } finally {
                 session.temporaryFile.delete();
@@ -278,7 +286,8 @@ public class MainActivity extends Activity {
                     sanitizeMimeType(mimeType),
                     bytes
                 );
-            } catch (Exception ignored) {
+            } catch (Exception error) {
+                recordDownloadError("LEGACY", error);
                 success = false;
             }
             showDownloadResult(success);
@@ -286,6 +295,14 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void failed() {
+            showDownloadResult(false);
+        }
+
+        @JavascriptInterface
+        public void failedWithReason(String reason) {
+            lastDownloadError = reason == null || reason.trim().isEmpty()
+                ? "JS_UNKNOWN"
+                : reason.trim();
             showDownloadResult(false);
         }
     }
@@ -303,13 +320,23 @@ public class MainActivity extends Activity {
     }
 
     private boolean saveBytesToDownloads(String filename, String mimeType, byte[] bytes) {
-        Uri outputUri = createDownloadUri(filename, mimeType);
-        if (outputUri == null) return false;
+        Uri outputUri;
+        try {
+            outputUri = createDownloadUri(filename, mimeType);
+        } catch (Exception error) {
+            recordDownloadError("MEDIA_CREATE", error);
+            return false;
+        }
+        if (outputUri == null) {
+            lastDownloadError = "MEDIA_CREATE_NULL";
+            return false;
+        }
 
         try (OutputStream stream = getContentResolver().openOutputStream(outputUri)) {
             if (stream == null) throw new IllegalStateException("Cannot open download");
             stream.write(bytes);
         } catch (Exception error) {
+            recordDownloadError("MEDIA_WRITE", error);
             getContentResolver().delete(outputUri, null, null);
             return false;
         }
@@ -318,14 +345,24 @@ public class MainActivity extends Activity {
             publishDownload(outputUri);
             return true;
         } catch (Exception error) {
+            recordDownloadError("MEDIA_PUBLISH", error);
             getContentResolver().delete(outputUri, null, null);
             return false;
         }
     }
 
     private boolean saveFileToDownloads(String filename, String mimeType, File source) {
-        Uri outputUri = createDownloadUri(filename, mimeType);
-        if (outputUri == null) return false;
+        Uri outputUri;
+        try {
+            outputUri = createDownloadUri(filename, mimeType);
+        } catch (Exception error) {
+            recordDownloadError("MEDIA_CREATE", error);
+            return false;
+        }
+        if (outputUri == null) {
+            lastDownloadError = "MEDIA_CREATE_NULL";
+            return false;
+        }
 
         try (
             FileInputStream input = new FileInputStream(source);
@@ -338,6 +375,7 @@ public class MainActivity extends Activity {
                 output.write(buffer, 0, length);
             }
         } catch (Exception error) {
+            recordDownloadError("MEDIA_WRITE", error);
             getContentResolver().delete(outputUri, null, null);
             return false;
         }
@@ -346,6 +384,7 @@ public class MainActivity extends Activity {
             publishDownload(outputUri);
             return true;
         } catch (Exception error) {
+            recordDownloadError("MEDIA_PUBLISH", error);
             getContentResolver().delete(outputUri, null, null);
             return false;
         }
@@ -382,9 +421,18 @@ public class MainActivity extends Activity {
     private void showDownloadResult(boolean success) {
         runOnUiThread(() -> Toast.makeText(
             MainActivity.this,
-            success ? R.string.download_saved : R.string.download_failed,
+            success
+                ? getString(R.string.download_saved)
+                : getString(R.string.download_failed_detail, lastDownloadError),
             Toast.LENGTH_LONG
         ).show());
+    }
+
+    private void recordDownloadError(String stage, Exception error) {
+        String errorName = error == null
+            ? "UNKNOWN"
+            : error.getClass().getSimpleName();
+        lastDownloadError = stage + "_" + errorName;
     }
 
     private static final class DownloadSession {

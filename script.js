@@ -7468,7 +7468,7 @@ async function simpanBlobAndroidBertahap(
     mimeType
 ) {
     const ukuranPotongan =
-        48 * 1024;
+        16 * 1024;
 
     let idDownload = "";
 
@@ -7481,12 +7481,16 @@ async function simpanBlobAndroidBertahap(
 
         if (!idDownload) {
             throw new Error(
-                "Sesi download Android gagal dibuat."
+                "JS_BEGIN"
             );
         }
 
         const buffer =
-            await blob.arrayBuffer();
+            await bacaBlobAndroidSebagaiBuffer(
+                blob
+            );
+
+        let jumlahPotongan = 0;
 
         for (
             let awal = 0;
@@ -7528,7 +7532,20 @@ async function simpanBlobAndroidBertahap(
 
             if (tersimpan === false) {
                 throw new Error(
-                    "Potongan download Android gagal disimpan."
+                    "JS_APPEND"
+                );
+            }
+
+            jumlahPotongan += 1;
+
+            if (jumlahPotongan % 8 === 0) {
+                await new Promise(
+                    function(resolve) {
+                        window.setTimeout(
+                            resolve,
+                            0
+                        );
+                    }
                 );
             }
         }
@@ -7554,8 +7571,61 @@ async function simpanBlobAndroidBertahap(
             );
         }
 
+        const alasan =
+            error instanceof Error
+                ? error.message
+                : "JS_UNKNOWN";
+
+        if (
+            typeof window.AndroidDownloads.failedWithReason ===
+                "function"
+        ) {
+            window.AndroidDownloads.failedWithReason(
+                String(alasan).slice(0, 80)
+            );
+            return;
+        }
+
         window.AndroidDownloads.failed?.();
     }
+}
+
+
+function bacaBlobAndroidSebagaiBuffer(blob) {
+    return new Promise(
+        function(resolve, reject) {
+            const pembaca =
+                new FileReader();
+
+            pembaca.onload =
+                function() {
+                    if (
+                        pembaca.result instanceof
+                            ArrayBuffer
+                    ) {
+                        resolve(pembaca.result);
+                        return;
+                    }
+
+                    reject(
+                        new Error(
+                            "JS_FILE_READER_RESULT"
+                        )
+                    );
+                };
+
+            pembaca.onerror =
+                function() {
+                    reject(
+                        new Error(
+                            "JS_FILE_READER"
+                        )
+                    );
+                };
+
+            pembaca.readAsArrayBuffer(blob);
+        }
+    );
 }
 /* ==================================
    STOK AKTUAL UNTUK EXPORT
