@@ -8146,7 +8146,9 @@ function formatPerubahanSuperscriptExport(perubahan) {
 function formatSaldoStokExport(
     stokMentah,
     totalKeluar = 0,
-    stokSebelumKeluar = stokMentah
+    stokSebelumKeluar = stokMentah,
+    totalMasuk = 0,
+    stokAwalHari = stokSebelumKeluar - totalMasuk
 ) {
     const stok =
         Number(stokMentah) || 0;
@@ -8161,20 +8163,42 @@ function formatSaldoStokExport(
         return (
             formatPerubahanSuperscriptExport(
                 -preOrder
-            ) + String(stokTersedia)
+            ) +
+            String(stokTersedia) +
+            (
+                totalMasuk > 0
+                    ? formatPerubahanSuperscriptExport(
+                        totalMasuk
+                    )
+                    : ""
+            )
         );
     }
 
-    if (totalKeluar > 0) {
+    if (
+        totalMasuk > 0 ||
+        totalKeluar > 0
+    ) {
         return (
             String(
                 Math.max(
                     0,
-                    Number(stokSebelumKeluar) || 0
+                    Number(stokAwalHari) || 0
                 )
             ) +
-            formatPerubahanSuperscriptExport(
-                -totalKeluar
+            (
+                totalMasuk > 0
+                    ? formatPerubahanSuperscriptExport(
+                        totalMasuk
+                    )
+                    : ""
+            ) +
+            (
+                totalKeluar > 0
+                    ? formatPerubahanSuperscriptExport(
+                        -totalKeluar
+                    )
+                    : ""
             )
         );
     }
@@ -8184,9 +8208,9 @@ function formatSaldoStokExport(
 
 
 const KETERANGAN_EXPORT =
-    "Keterangan: angka utama = stok tersedia | " +
-    "pangkat sesudah stok = barang laku | " +
-    "pangkat sebelum stok = jumlah pre-order | " +
+    "Keterangan: angka utama = stok | " +
+    "+ kecil = masuk | - kecil sesudah stok = laku | " +
+    "- kecil sebelum stok = pre-order | " +
     "—/kosong = barang belum tercatat | " +
     "sel hitam = terdapat transaksi";
 
@@ -8748,6 +8772,8 @@ function buatRekapStokBarangExport(
 
                 let totalMasuk = 0;
                 let totalKeluar = 0;
+                const stokAwalHari =
+                    stokMentah;
 
                 transaksiHari.forEach(
                     function(transaction) {
@@ -8790,7 +8816,9 @@ function buatRekapStokBarangExport(
                         formatSaldoStokExport(
                             stokMentah,
                             totalKeluar,
-                            stokSebelumKeluar
+                            stokSebelumKeluar,
+                            totalMasuk,
+                            stokAwalHari
                         ),
                     stokTersedia,
                     preOrder,
@@ -8798,6 +8826,11 @@ function buatRekapStokBarangExport(
                         Math.max(
                             0,
                             stokSebelumKeluar
+                        ),
+                    stokAwalHari:
+                        Math.max(
+                            0,
+                            stokAwalHari
                         ),
                     totalMasuk,
                     totalKeluar,
@@ -9907,6 +9940,7 @@ async function exportPDF() {
 
                 if (
                     detailStok?.preOrder > 0 ||
+                    detailStok?.totalMasuk > 0 ||
                     detailStok?.totalKeluar > 0
                 ) {
                     data.cell.text = [""];
@@ -9929,27 +9963,36 @@ async function exportPDF() {
 
                 if (
                     !detailStok?.preOrder &&
+                    !detailStok?.totalMasuk &&
                     !detailStok?.totalKeluar
                 ) {
                     return;
                 }
 
-                const pangkatSebelum =
-                    detailStok.preOrder > 0;
+                const pangkatSebelumText =
+                    detailStok.preOrder > 0
+                        ? `-${detailStok.preOrder}`
+                        : "";
 
                 const stokText =
                     String(
-                        pangkatSebelum
+                        detailStok.preOrder > 0
                             ? detailStok.stokTersedia
-                            : detailStok.stokSebelumKeluar
+                            : detailStok.stokAwalHari
                     );
 
-                const perubahanText =
-                    `-${
-                        pangkatSebelum
-                            ? detailStok.preOrder
-                            : detailStok.totalKeluar
-                    }`;
+                const pangkatSesudahText =
+                    (
+                        detailStok.totalMasuk > 0
+                            ? `+${detailStok.totalMasuk}`
+                            : ""
+                    ) +
+                    (
+                        detailStok.preOrder <= 0 &&
+                        detailStok.totalKeluar > 0
+                            ? `-${detailStok.totalKeluar}`
+                            : ""
+                    );
 
                 let ukuranStok = 8;
                 let ukuranPangkat = 5;
@@ -9978,16 +10021,26 @@ async function exportPDF() {
                     ukuranPangkat
                 );
 
-                let lebarPangkat =
+                let lebarPangkatSebelum =
                     pdf.getTextWidth(
-                        perubahanText
+                        pangkatSebelumText
+                    );
+
+                let lebarPangkatSesudah =
+                    pdf.getTextWidth(
+                        pangkatSesudahText
                     );
 
                 let lebarGabungan =
+                    (
+                        pangkatSebelumText
+                            ? lebarPangkatSebelum + jarak
+                            : 0
+                    ) +
                     lebarStok +
                     (
-                        perubahanText
-                            ? jarak + lebarPangkat
+                        pangkatSesudahText
+                            ? jarak + lebarPangkatSesudah
                             : 0
                     );
 
@@ -10024,16 +10077,26 @@ async function exportPDF() {
                         ukuranPangkat
                     );
 
-                    lebarPangkat =
+                    lebarPangkatSebelum =
                         pdf.getTextWidth(
-                            perubahanText
+                            pangkatSebelumText
+                        );
+
+                    lebarPangkatSesudah =
+                        pdf.getTextWidth(
+                            pangkatSesudahText
                         );
 
                     lebarGabungan =
+                        (
+                            pangkatSebelumText
+                                ? lebarPangkatSebelum + jarak
+                                : 0
+                        ) +
                         lebarStok +
                         (
-                            perubahanText
-                                ? jarak + lebarPangkat
+                            pangkatSesudahText
+                                ? jarak + lebarPangkatSesudah
                                 : 0
                         );
                 }
@@ -10064,30 +10127,23 @@ async function exportPDF() {
                     );
                 }
 
-                if (pangkatSebelum) {
+                let posisiTeksX =
+                    posisiX;
+
+                if (pangkatSebelumText) {
                     pdf.setFontSize(
                         ukuranPangkat
                     );
 
                     pdf.text(
-                        perubahanText,
-                        posisiX,
+                        pangkatSebelumText,
+                        posisiTeksX,
                         posisiY - 1.25
                     );
 
-                    pdf.setFontSize(
-                        ukuranStok
-                    );
-
-                    pdf.text(
-                        stokText,
-                        posisiX +
-                            lebarPangkat +
-                            jarak,
-                        posisiY
-                    );
-
-                    return;
+                    posisiTeksX +=
+                        lebarPangkatSebelum +
+                        jarak;
                 }
 
                 pdf.setFontSize(
@@ -10096,21 +10152,24 @@ async function exportPDF() {
 
                 pdf.text(
                     stokText,
-                    posisiX,
+                    posisiTeksX,
                     posisiY
                 );
 
-                pdf.setFontSize(
-                    ukuranPangkat
-                );
+                posisiTeksX +=
+                    lebarStok;
 
-                pdf.text(
-                    perubahanText,
-                    posisiX +
-                        lebarStok +
-                        jarak,
-                    posisiY - 1.25
-                );
+                if (pangkatSesudahText) {
+                    pdf.setFontSize(
+                        ukuranPangkat
+                    );
+
+                    pdf.text(
+                        pangkatSesudahText,
+                        posisiTeksX + jarak,
+                        posisiY - 1.25
+                    );
+                }
             }
     });
 
