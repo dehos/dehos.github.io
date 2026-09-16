@@ -32,12 +32,14 @@ public class MainActivity extends Activity {
     private static final String APP_URL = "https://dehos.github.io/";
     private static final String APP_HOST = "dehos.github.io";
     private static final int FILE_PICKER_REQUEST = 41;
+    private static final int SAVE_FILE_REQUEST = 42;
     private static final long EXIT_CONFIRMATION_WINDOW_MS = 2000L;
 
     private WebView webView;
     private ValueCallback<Uri[]> pendingFileCallback;
     private long lastBackPressedAt = 0L;
     private final Map<String, DownloadSession> downloadSessions = new ConcurrentHashMap<>();
+    private volatile DownloadSession pendingSaveSession;
     private volatile String lastDownloadError = "UNKNOWN";
 
     @Override
@@ -69,7 +71,7 @@ public class MainActivity extends Activity {
         settings.setMediaPlaybackRequiresUserGesture(true);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
-        settings.setUserAgentString(settings.getUserAgentString() + " StockBarangAndroid/1.0.4");
+        settings.setUserAgentString(settings.getUserAgentString() + " StockBarangAndroid/1.0.5");
 
         webView.setBackgroundColor(Color.rgb(5, 8, 22));
         webView.clearCache(true);
@@ -160,10 +162,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != FILE_PICKER_REQUEST || pendingFileCallback == null) return;
-        Uri[] files = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
-        pendingFileCallback.onReceiveValue(files);
-        pendingFileCallback = null;
+
+        if (requestCode == FILE_PICKER_REQUEST) {
+            if (pendingFileCallback == null) return;
+            Uri[] files = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+            pendingFileCallback.onReceiveValue(files);
+            pendingFileCallback = null;
+            return;
+        }
+
+        if (requestCode == SAVE_FILE_REQUEST) {
+            finishSaveToSelectedLocation(resultCode, data);
+        }
     }
 
     @Override
@@ -194,6 +204,7 @@ public class MainActivity extends Activity {
         for (String id : downloadSessions.keySet()) {
             cleanupDownloadSession(id);
         }
+        cleanupPendingSave();
         if (webView != null) {
             webView.removeJavascriptInterface("AndroidDownloads");
             webView.destroy();
@@ -247,23 +258,16 @@ public class MainActivity extends Activity {
                 return false;
             }
 
-            boolean success = false;
             try {
                 session.stream.close();
-                success = saveFileToDownloads(
-                    session.filename,
-                    session.mimeType,
-                    session.temporaryFile
-                );
+                requestSaveLocation(session);
+                return true;
             } catch (Exception error) {
                 recordDownloadError("FINISH", error);
-                success = false;
-            } finally {
                 session.temporaryFile.delete();
+                showDownloadResult(false);
+                return false;
             }
-
-            showDownloadResult(success);
-            return success;
         }
 
         @JavascriptInterface
@@ -305,6 +309,112 @@ public class MainActivity extends Activity {
                 : reason.trim();
             showDownloadResult(false);
         }
+    }
+
+    private void requestSaveLocation(DownloadSession session) {
+        runOnUiThread(() -> {
+            if (isFinishing() || isDestroyed()) {
+                lastDownloadError = "SAVE_ACTIVITY_CLOSED";
+                session.temporaryFile.delete();
+                showDownloadResult(false);
+                return;
+            }
+
+            cleanupPendingSave();
+            pendingSaveSession = session;
+
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType(session.mimeType);
+            intent.putExtra(Intent.EXTRA_TITLE, session.filename);
+            intent.addFlags(
+                Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            );
+
+            try {
+                startActivityForResult(intent, SAVE_FILE_REQUEST);
+            } catch (ActivityNotFoundException error) {
+                pendingSaveSession = null;
+                new Thread(() -> {
+                    boolean success = saveFileToDownloads(
+                        session.filename,
+                        session.mimeType,
+                        session.temporaryFile
+                    );
+                    session.temporaryFile.delete();
+                    showDownloadResult(success);
+                }).start();
+            }
+        });
+    }
+
+    private void finishSaveToSelectedLocation(int resultCode, Intent data) {
+        DownloadSession session = pendingSaveSession;
+        pendingSaveSession = null;
+
+        if (session == null) {
+            lastDownloadError = "SAVE_SESSION";
+            showDownloadResult(false);
+            return;
+        }
+
+        Uri outputUri = data == null ? null : data.getData();
+
+        if (resultCode != RESULT_OK || outputUri == null) {
+            session.temporaryFile.delete();
+            Toast.makeText(
+                this,
+                R.string.download_cancelled,
+                Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        new Thread(() -> {
+            boolean success = saveFileToUri(
+                session.temporaryFile,
+                outputUri
+            );
+            session.temporaryFile.delete();
+            showDownloadResult(success);
+        }).start();
+    }
+
+    private boolean saveFileToUri(File source, Uri outputUri) {
+        try (
+            FileInputStream input = new FileInputStream(source);
+            OutputStream output = getContentResolver().openOutputStream(
+                outputUri,
+                "w"
+            )
+        ) {
+            if (output == null) {
+                throw new IllegalStateException("Cannot open selected file");
+            }
+
+            byte[] buffer = new byte[32 * 1024];
+            int length;
+            while ((length = input.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            return true;
+        } catch (Exception error) {
+            recordDownloadError("SAVE_DOCUMENT", error);
+            return false;
+        }
+    }
+
+    private void cleanupPendingSave() {
+        DownloadSession session = pendingSaveSession;
+        pendingSaveSession = null;
+        if (session == null) return;
+        try {
+            session.stream.close();
+        } catch (Exception ignored) {
+        }
+        session.temporaryFile.delete();
     }
 
     private String sanitizeFilename(String filename) {

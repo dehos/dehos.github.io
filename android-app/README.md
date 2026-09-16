@@ -12,6 +12,6 @@ Fitur native yang disediakan:
 - sesi login WebView tersimpan;
 - navigasi tombol kembali Android;
 - pemilihan file Excel/CSV;
-- penyimpanan ekspor ke folder `Download/Stock Barang`;
+- penyimpanan ekspor PDF/Excel melalui dialog penyimpanan bawaan Android;
 - tautan di luar domain aplikasi dibuka di browser;
 - hanya koneksi HTTPS yang diizinkan.
