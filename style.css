@@ -7365,7 +7365,7 @@ body > footer {
 
 #riwayat-transaksi .modern-history-table {
     width: 100%;
-    min-width: 680px;
+    min-width: 740px;
     margin: 0;
     table-layout: fixed;
     border-collapse: separate;
@@ -7451,6 +7451,40 @@ body > footer {
     width: 76px;
     text-align: center;
     font-variant-numeric: tabular-nums;
+}
+
+#riwayat-transaksi .modern-history-table th:nth-child(6),
+#riwayat-transaksi .modern-history-table td:nth-child(6) {
+    width: 58px;
+    text-align: center;
+}
+
+#riwayat-transaksi .history-edit-transaction-btn {
+    display: inline-grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    padding: 0 !important;
+    border: 1px solid rgba(55, 215, 255, .18);
+    border-radius: 8px;
+    background: rgba(55, 215, 255, .08) !important;
+    color: #8fe8ff !important;
+}
+
+#riwayat-transaksi .history-edit-transaction-btn:hover {
+    background: rgba(55, 215, 255, .15) !important;
+    color: #c4f5ff !important;
+}
+
+#riwayat-transaksi .history-edit-transaction-btn svg {
+    width: 15px;
+    height: 15px;
+    padding: 0 !important;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 #riwayat-transaksi .modern-history-table td.history-masuk,
@@ -7626,7 +7660,7 @@ body > footer {
     }
 
     #riwayat-transaksi .modern-history-table {
-        min-width: 650px;
+        min-width: 710px;
     }
 
     #riwayat-transaksi .modern-history-table thead th,

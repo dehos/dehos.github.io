@@ -585,6 +585,7 @@ let lastModalTrigger = null;
 
 const APP_MODAL_IDS = [
     "transactionModal",
+    "editTransaksiModal",
     "editPenjualanModal",
     "tambahBarangModal",
     "importExcelModal"
@@ -593,6 +594,7 @@ const APP_MODAL_IDS = [
 const modalSubmitState = {
     tambahBarang: false,
     transaksi: false,
+    editTransaksi: false,
     editPenjualan: false,
     importExcel: false
 };
@@ -713,6 +715,10 @@ function closeVisibleAppModal() {
 
     if (modal.id === "transactionModal") {
         closeModal();
+    } else if (
+        modal.id === "editTransaksiModal"
+    ) {
+        closeEditTransaksi();
     } else if (
         modal.id === "editPenjualanModal"
     ) {
@@ -3956,7 +3962,7 @@ function renderHistory() {
             `
             <tr>
                 <td
-                    colspan="5"
+                    colspan="6"
                     class="empty"
                 >
                     Tidak ada transaksi pada
@@ -4079,6 +4085,21 @@ function renderHistory() {
                         stokAkhir
                     )}
                 </td>
+
+                <td class="text-center">
+                    <button
+                        type="button"
+                        class="history-edit-transaction-btn"
+                        onclick="openEditTransaksi(${Number(transaction.id)})"
+                        title="Edit tanggal dan jumlah"
+                        aria-label="Edit tanggal dan jumlah transaksi ${escapeHTML(namaBarang)}"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                        </svg>
+                    </button>
+                </td>
                 `;
 
             tbody.appendChild(
@@ -4086,6 +4107,252 @@ function renderHistory() {
             );
         }
     );
+}
+
+
+/* ==================================
+   EDIT TRANSAKSI IN/OUT
+================================== */
+
+function openEditTransaksi(id) {
+    const transaction =
+        transactions.find(
+            function(item) {
+                return (
+                    Number(item.id) ===
+                    Number(id)
+                );
+            }
+        );
+
+    if (!transaction) {
+        showAppAlert(
+            "Transaksi tidak ditemukan."
+        );
+        return;
+    }
+
+    const barang =
+        dataBarang.find(
+            function(item) {
+                return (
+                    Number(item.id) ===
+                    Number(transaction.barang_id)
+                );
+            }
+        );
+
+    document.getElementById(
+        "editTransaksiId"
+    ).value = transaction.id;
+
+    document.getElementById(
+        "editTransaksiBarang"
+    ).value = barang
+        ? barang.nama
+        : "Barang tidak ditemukan";
+
+    document.getElementById(
+        "editTransaksiJenis"
+    ).value = transaction.type === "masuk"
+        ? "Masuk"
+        : "Keluar";
+
+    document.getElementById(
+        "editTransaksiQty"
+    ).value = Number(transaction.qty) || 1;
+
+    document.getElementById(
+        "editTransaksiTanggal"
+    ).value = transaction.tanggal || "";
+
+    showAppModal(
+        document.getElementById(
+            "editTransaksiModal"
+        ),
+        document.getElementById(
+            "editTransaksiQty"
+        )
+    );
+}
+
+
+function closeEditTransaksi() {
+    hideAppModal(
+        document.getElementById(
+            "editTransaksiModal"
+        )
+    );
+}
+
+
+async function simpanEditTransaksi() {
+    if (modalSubmitState.editTransaksi) {
+        return;
+    }
+
+    const id = Number(
+        document.getElementById(
+            "editTransaksiId"
+        ).value
+    );
+
+    const transaction =
+        transactions.find(
+            function(item) {
+                return Number(item.id) === id;
+            }
+        );
+
+    if (!transaction) {
+        showAppAlert(
+            "Transaksi tidak ditemukan."
+        );
+        return;
+    }
+
+    const qty = Number(
+        document.getElementById(
+            "editTransaksiQty"
+        ).value
+    );
+
+    const tanggal =
+        document.getElementById(
+            "editTransaksiTanggal"
+        ).value;
+
+    if (!Number.isFinite(qty) || qty <= 0) {
+        showAppAlert(
+            "Jumlah harus lebih dari 0."
+        );
+        return;
+    }
+
+    if (!parseTanggalISOExport(tanggal)) {
+        showAppAlert(
+            "Tanggal transaksi tidak valid."
+        );
+        return;
+    }
+
+    const disetujui =
+        await showAppConfirm(
+            "Simpan perubahan tanggal dan jumlah transaksi ini?",
+            {
+                title: "Edit Transaksi In/Out",
+                type: "info",
+                confirmLabel: "Ya, Simpan"
+            }
+        );
+
+    if (!disetujui) {
+        return;
+    }
+
+    modalSubmitState.editTransaksi = true;
+    setModalSubmitBusy(
+        "editTransaksiSubmit",
+        true
+    );
+
+    try {
+        if (transaction.penjualan_id) {
+            const {
+                data: penjualan,
+                error: errorPenjualan
+            } =
+                await supabaseClient
+                    .from("penjualan")
+                    .select("*")
+                    .eq(
+                        "id",
+                        transaction.penjualan_id
+                    )
+                    .single();
+
+            if (errorPenjualan || !penjualan) {
+                throw new Error(
+                    errorPenjualan?.message ||
+                    "Catatan penjualan terkait tidak ditemukan."
+                );
+            }
+
+            const { error } =
+                await supabaseClient.rpc(
+                    "edit_penjualan_atomic",
+                    {
+                        p_penjualan_id:
+                            Number(penjualan.id),
+                        p_barang_id:
+                            Number(penjualan.barang_id),
+                        p_brand:
+                            penjualan.brand,
+                        p_qty:
+                            qty,
+                        p_harga:
+                            Number(penjualan.harga) || 0,
+                        p_tanggal_pembelian:
+                            tanggal
+                    }
+                );
+
+            if (error) {
+                throw error;
+            }
+        } else {
+            const { data, error } =
+                await supabaseClient
+                    .from("transaksi")
+                    .update({
+                        qty,
+                        tanggal
+                    })
+                    .eq("id", id)
+                    .select("id")
+                    .single();
+
+            if (error || !data) {
+                throw (
+                    error ||
+                    new Error(
+                        "Transaksi tidak berhasil diperbarui."
+                    )
+                );
+            }
+        }
+
+        await loadTransactions(false);
+        updateTable();
+        updateStats();
+
+        if (transaction.penjualan_id) {
+            await loadPenjualan();
+        }
+
+        closeEditTransaksi();
+
+        showToast(
+            "Tanggal dan jumlah transaksi berhasil diperbarui",
+            "success"
+        );
+    } catch (error) {
+        console.error(
+            "ERROR EDIT TRANSAKSI:",
+            error
+        );
+
+        showAppAlert(
+            "Gagal mengubah transaksi:\n" +
+            (error?.message || "Kesalahan tidak diketahui.")
+        );
+    } finally {
+        modalSubmitState.editTransaksi = false;
+        setModalSubmitBusy(
+            "editTransaksiSubmit",
+            false
+        );
+    }
 }
 
 
