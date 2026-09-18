@@ -4757,6 +4757,27 @@ function formatTanggalTampilan(
 }
 
 
+function formatTanggalRingkasPenjualan(
+    nilaiTanggal
+) {
+    const cocok =
+        String(nilaiTanggal || "")
+            .match(
+                /^(\d{4})-(\d{2})-(\d{2})$/
+            );
+
+    if (!cocok) {
+        return "";
+    }
+
+    return (
+        Number(cocok[3]) +
+        "/" +
+        Number(cocok[2])
+    );
+}
+
+
 function parseTanggalTampilan(
     nilaiTanggal
 ) {
@@ -6637,6 +6658,13 @@ async function loadPenjualan() {
                     ) || "-"
                     : "-";
 
+            const tanggalRingkas =
+                tanggalISO
+                    ? formatTanggalRingkasPenjualan(
+                        tanggalISO
+                    ) || "-"
+                    : "-";
+
 
             tbody.innerHTML +=
                 `
@@ -6644,9 +6672,14 @@ async function loadPenjualan() {
                     <td class="text-center">
                         <time datetime="${escapeHTML(
                             tanggalISO
-                        )}">${escapeHTML(
-                            tanggal
-                        )}</time>
+                        )}">
+                            <span class="sales-date-desktop">${escapeHTML(
+                                tanggal
+                            )}</span>
+                            <span class="sales-date-mobile">${escapeHTML(
+                                tanggalRingkas
+                            )}</span>
+                        </time>
                     </td>
 
                     <td>
@@ -6658,6 +6691,9 @@ async function loadPenjualan() {
                                 <span>${escapeHTML(namaBarang)}</span>
                                 <span aria-hidden="true">${escapeHTML(namaBarang)}</span>
                             </span>
+                            <small class="sales-mobile-brand">
+                                ${escapeHTML(item.brand || "-")}
+                            </small>
                         </div>
                     </td>
 

@@ -6451,6 +6451,7 @@ body > footer {
     }
 }
 
+
 #transactionModal,
 #tambahBarangModal {
     padding: 18px;
@@ -9434,5 +9435,139 @@ dialog::backdrop {
     #stok-barang .modern-import-button {
         width: 38px;
         padding: 0;
+    }
+}
+
+
+/* =====================================================
+   CATATAN PENJUALAN — TABEL MOBILE PROPORSIONAL
+===================================================== */
+
+#catatan-penjualan .sales-table-label-mobile,
+#catatan-penjualan .sales-date-mobile,
+#catatan-penjualan .sales-mobile-brand {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    #catatan-penjualan .modern-sales-table-wrapper {
+        overflow-x: hidden;
+    }
+
+    #catatan-penjualan .modern-sales-table,
+    #catatan-penjualan #penjualanTable {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    #catatan-penjualan .modern-sales-table thead th,
+    #catatan-penjualan .modern-sales-table tbody td,
+    #catatan-penjualan .modern-sales-table tfoot th,
+    #catatan-penjualan .modern-sales-table tfoot td {
+        padding: 7px 3px;
+        font-size: 9px;
+    }
+
+    #catatan-penjualan .sales-table-label-desktop,
+    #catatan-penjualan .sales-date-desktop {
+        display: none;
+    }
+
+    #catatan-penjualan .sales-table-label-mobile,
+    #catatan-penjualan .sales-date-mobile,
+    #catatan-penjualan .sales-mobile-brand {
+        display: block;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(1),
+    #catatan-penjualan .modern-sales-table td:nth-child(1) {
+        width: 10%;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(2),
+    #catatan-penjualan .modern-sales-table td:nth-child(2) {
+        width: 30%;
+        min-width: 0;
+        max-width: none;
+        padding-right: 5px;
+        padding-left: 5px;
+        line-height: 1.25;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(3),
+    #catatan-penjualan .modern-sales-table td:nth-child(3) {
+        width: 7%;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(4),
+    #catatan-penjualan .modern-sales-table td:nth-child(4) {
+        width: 17%;
+        overflow: hidden;
+        font-size: 8.5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(5),
+    #catatan-penjualan .modern-sales-table td:nth-child(5) {
+        width: 20%;
+        overflow: hidden;
+        font-size: 8.5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(6),
+    #catatan-penjualan .modern-sales-table td:nth-child(6) {
+        display: none;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(7),
+    #catatan-penjualan .modern-sales-table td:nth-child(7) {
+        width: 16%;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table td[colspan] {
+        display: table-cell;
+        width: auto;
+    }
+
+    #catatan-penjualan .sales-name-marquee,
+    #catatan-penjualan .sales-name-track,
+    #catatan-penjualan .sales-name-track > span:first-child {
+        width: 100%;
+        overflow: visible;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    #catatan-penjualan .sales-mobile-brand {
+        max-width: 100%;
+        margin-top: 3px;
+        overflow: hidden;
+        color: var(--app-muted);
+        font-size: 7.5px;
+        font-weight: 500;
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table .edit-history-btn,
+    #catatan-penjualan .modern-sales-table .delete-history-btn {
+        width: 21px;
+        height: 21px;
+        margin: 0;
+        border-radius: 6px;
+    }
+
+    #catatan-penjualan .modern-sales-table .edit-history-btn svg,
+    #catatan-penjualan .modern-sales-table .delete-history-btn svg {
+        width: 11px;
+        height: 11px;
     }
 }
