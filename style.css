@@ -8813,164 +8813,227 @@ dialog::backdrop {
 
 
 /* =====================================================
-   PERFORMA BRAND — DONUT RING RINGKAS
+   PERFORMA BRAND — BARIS LINEAR RAPAT
 ===================================================== */
 
 .dashboard-card .target-brand-list {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 24px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .dashboard-card .target-brand-card {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns:
+        minmax(130px, .85fr)
+        minmax(220px, 1.8fr)
+        minmax(145px, .85fr);
     align-items: center;
+    gap: 14px;
     min-width: 0;
-    padding: 0;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--app-border-soft);
+}
+
+.dashboard-card .target-brand-card:last-child {
     border-bottom: 0;
 }
 
-.dashboard-card .target-progress-track {
-    position: relative;
+.dashboard-card .target-brand-identity {
     display: grid;
-    width: 78px;
-    height: 78px;
-    flex: 0 0 78px;
-    place-items: center;
-    overflow: visible;
-    border-radius: 50%;
-    background:
-        conic-gradient(
-            var(--brand-color)
-                calc(var(--progress) * 1%),
-            rgba(169, 182, 211, .14) 0
-        );
+    grid-template-columns: 7px minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
 }
 
-.dashboard-card .target-progress-track::after {
-    position: absolute;
-    z-index: 1;
-    inset: 8px;
-    border-radius: 50%;
-    background: #0a1229;
-    content: "";
-}
-
-.dashboard-card .target-progress-fill {
-    display: none;
-}
-
-.dashboard-card .target-progress-label {
-    position: relative;
-    z-index: 2;
-    color: var(--app-text);
-    font-size: 18px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
+.dashboard-card .target-brand-indicator {
+    width: 7px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--brand-color);
+    box-shadow: 0 0 10px rgba(55, 215, 255, .12);
 }
 
 .dashboard-card .target-brand-name {
     display: block;
-    width: 100%;
     min-width: 0;
-    min-height: 2.8em;
-    margin-top: 9px;
+    overflow: hidden;
     color: var(--app-text-soft);
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.4;
-    text-align: center;
-    white-space: normal;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dashboard-card .target-brand-note {
-    margin-top: -2px;
+    display: block;
+    margin-top: 2px;
     color: var(--app-muted);
-    font-size: 12px;
-    line-height: 1.3;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.dashboard-card .target-brand-progress {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+}
+
+.dashboard-card .target-progress-caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-card .target-progress-caption span {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--app-muted);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-card .target-progress-caption strong,
+.dashboard-card .target-progress-label {
+    flex: 0 0 auto;
+    color: var(--app-text);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.dashboard-card .target-progress-track {
+    position: relative;
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(169, 182, 211, .14);
+}
+
+.dashboard-card .target-progress-track::after {
+    display: none;
+}
+
+.dashboard-card .target-progress-fill {
+    display: block;
+    width: calc(var(--progress) * 1%);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--brand-color);
 }
 
 .dashboard-card .target-card-values {
     display: grid;
-    justify-items: center;
-    gap: 1px;
-    margin-top: 3px;
-    text-align: center;
+    justify-items: end;
+    gap: 2px;
+    min-width: 0;
+    margin: 0;
+    text-align: right;
+}
+
+.dashboard-card .target-card-values span {
+    color: var(--app-muted);
+    font-size: 9px;
+    line-height: 1.2;
 }
 
 .dashboard-card .target-card-values strong,
-.dashboard-card .target-card-values span {
-    max-width: 100%;
-    text-align: center;
-    white-space: normal;
-}
-
-.dashboard-card .target-card-values strong {
-    font-size: 12px;
-    line-height: 1.35;
-}
-
 .dashboard-card .target-card-values .target-card-gap {
-    color: var(--app-muted);
-    font-size: 12px;
-    line-height: 1.35;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--app-text-soft);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .dashboard-card .target-brand-group-label {
-    grid-column: 1 / -1;
-    margin: 2px 0 -8px;
-    padding-top: 14px;
+    margin: 7px 0 0;
+    padding: 9px 0 4px;
     border-top: 1px solid var(--app-border-soft);
     color: var(--app-muted);
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: .02em;
 }
 
-.dashboard-card .target-brand-no-target .target-progress-track {
-    background: rgba(169, 182, 211, .14);
+.dashboard-card .target-brand-no-target .target-progress-fill {
+    width: 100%;
+    opacity: .22;
 }
 
-.dashboard-card .target-brand-rainbow .target-progress-track {
-    background:
-        conic-gradient(
-            #ef6f91,
-            #f0bb4f,
-            #53e0ac,
-            #37d7ff,
-            #7b72ff,
-            #ef6f91
-        );
-}
-
-@media (max-width: 900px) {
-    .dashboard-card .target-brand-list {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+.dashboard-card .target-brand-rainbow .target-brand-indicator,
+.dashboard-card .target-brand-rainbow .target-progress-fill {
+    background: linear-gradient(
+        90deg,
+        #ef6f91,
+        #f0bb4f,
+        #53e0ac,
+        #37d7ff,
+        #7b72ff
+    );
 }
 
 @media (max-width: 600px) {
-    .dashboard-card .target-brand-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 22px 10px;
+    .dashboard-card .sales-target-section {
+        padding: 13px 12px;
     }
 
-    .dashboard-card .target-progress-track {
-        width: 70px;
-        height: 70px;
-        flex-basis: 70px;
+    .dashboard-card .sales-target-header {
+        margin-bottom: 9px;
     }
 
-    .dashboard-card .target-progress-track::after {
-        inset: 7px;
+    .dashboard-card .target-brand-card {
+        grid-template-columns:
+            minmax(68px, .7fr)
+            minmax(108px, 1.35fr)
+            minmax(76px, .8fr);
+        gap: 7px;
+        padding: 8px 0;
     }
 
-    .dashboard-card .target-progress-label {
-        font-size: 17px;
+    .dashboard-card .target-brand-identity {
+        grid-template-columns: 5px minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .dashboard-card .target-brand-indicator {
+        width: 5px;
+        height: 24px;
     }
 
     .dashboard-card .target-brand-name {
-        font-size: 13px;
+        font-size: 10px;
+        white-space: normal;
+    }
+
+    .dashboard-card .target-brand-note,
+    .dashboard-card .target-progress-caption span,
+    .dashboard-card .target-card-values span {
+        font-size: 8px;
+    }
+
+    .dashboard-card .target-progress-caption {
+        gap: 5px;
+    }
+
+    .dashboard-card .target-progress-caption strong,
+    .dashboard-card .target-progress-label,
+    .dashboard-card .target-card-values strong,
+    .dashboard-card .target-card-values .target-card-gap {
+        font-size: 9px;
+    }
+
+    .dashboard-card .target-progress-track {
+        height: 6px;
     }
 }
 

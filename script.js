@@ -6191,12 +6191,12 @@ function renderTargetPenjualan(
 
             const targetStatus =
                 remaining > 0
-                    ? "Kurang Rp" +
+                    ? "Rp" +
                         formatNumber(remaining)
                     : excess > 0
-                        ? "Melebihi Rp" +
+                        ? "Rp" +
                             formatNumber(excess)
-                        : "Target tercapai";
+                        : "Tercapai";
 
             const progressValue =
                 Math.min(
@@ -6226,35 +6226,52 @@ function renderTargetPenjualan(
 
             card.innerHTML =
                 `
-                <div
-                    class="target-progress-track"
-                    role="progressbar"
-                    aria-label="Pencapaian ${escapeHTML(item.nama)}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    aria-valuenow="${Math.round(progressValue)}"
-                >
-                    <span class="target-progress-fill"></span>
-                    <strong class="target-progress-label">
-                        ${formatNumber(percentageRounded)}%
-                    </strong>
+                <div class="target-brand-identity">
+                    <span class="target-brand-indicator" aria-hidden="true"></span>
+                    <div>
+                        <strong class="target-brand-name">
+                            ${escapeHTML(item.nama)}
+                        </strong>
+
+                        ${item.nama === "Morgan/Verano"
+                            ? `<small class="target-brand-note">Gabungan penjualan</small>`
+                            : ""}
+                    </div>
                 </div>
 
-                <strong class="target-brand-name">
-                    ${escapeHTML(item.nama)}
-                </strong>
+                <div class="target-brand-progress">
+                    <div class="target-progress-caption">
+                        <span>
+                            Rp${formatNumber(item.actual)} / Rp${formatNumber(item.target)}
+                        </span>
+                        <strong class="target-progress-label">
+                            ${formatNumber(percentageRounded)}%
+                        </strong>
+                    </div>
 
-                ${item.nama === "Morgan/Verano"
-                    ? `<small class="target-brand-note">Gabungan penjualan</small>`
-                    : ""}
+                    <div
+                        class="target-progress-track"
+                        role="progressbar"
+                        aria-label="Pencapaian ${escapeHTML(item.nama)}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="${Math.round(progressValue)}"
+                    >
+                        <span class="target-progress-fill"></span>
+                    </div>
+                </div>
 
                 <div class="target-card-values">
-                    <strong>
-                        Rp${formatNumber(item.actual)} dari Rp${formatNumber(item.target)}
-                    </strong>
-                    <span class="target-card-gap">
-                        ${targetStatus}
+                    <span>
+                        ${remaining > 0
+                            ? "Sisa target"
+                            : excess > 0
+                                ? "Di atas target"
+                                : "Status"}
                     </span>
+                    <strong class="target-card-gap">
+                        ${targetStatus}
+                    </strong>
                 </div>
                 `;
 
@@ -6305,25 +6322,36 @@ function renderTargetPenjualan(
 
             noTargetCard.innerHTML =
                 `
-                <div
-                    class="target-progress-track"
-                    aria-label="${escapeHTML(item.nama)} tanpa target"
-                >
-                    <span class="target-progress-fill"></span>
-                    <strong class="target-progress-label">—</strong>
+                <div class="target-brand-identity">
+                    <span class="target-brand-indicator" aria-hidden="true"></span>
+                    <div>
+                        <strong class="target-brand-name">
+                            ${escapeHTML(item.nama)}
+                        </strong>
+                    </div>
                 </div>
 
-                <strong class="target-brand-name">
-                    ${escapeHTML(item.nama)}
-                </strong>
+                <div class="target-brand-progress">
+                    <div class="target-progress-caption">
+                        <span>Penjualan</span>
+                        <strong>
+                            Rp${formatNumber(
+                                totals[item.nama] || 0
+                            )}
+                        </strong>
+                    </div>
+
+                    <div
+                        class="target-progress-track"
+                        aria-label="${escapeHTML(item.nama)} tanpa target"
+                    >
+                        <span class="target-progress-fill"></span>
+                    </div>
+                </div>
 
                 <div class="target-card-values">
-                    <strong>
-                        Rp${formatNumber(
-                            totals[item.nama] || 0
-                        )}
-                    </strong>
-                    <span>Tanpa target</span>
+                    <span>Status</span>
+                    <strong>Tanpa target</strong>
                 </div>
                 `;
 
