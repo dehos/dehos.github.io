@@ -4009,6 +4009,12 @@ function renderHistory() {
                     ? "Masuk"
                     : "Keluar";
 
+            const typeTextMobile =
+                transaction.type ===
+                "masuk"
+                    ? "In"
+                    : "Out";
+
             const qtyText =
                 transaction.type ===
                 "masuk"
@@ -4045,6 +4051,13 @@ function renderHistory() {
                     ) || "-"
                     : "-";
 
+            const waktuRingkas =
+                tanggalISO
+                    ? formatTanggalRingkasTabel(
+                        tanggalISO
+                    ) || "-"
+                    : "-";
+
             const tr =
                 document.createElement(
                     "tr"
@@ -4055,9 +4068,14 @@ function renderHistory() {
                 <td>
                     <time datetime="${escapeHTML(
                         tanggalISO
-                    )}">${escapeHTML(
-                        waktu
-                    )}</time>
+                    )}">
+                        <span class="history-date-desktop">${escapeHTML(
+                            waktu
+                        )}</span>
+                        <span class="history-date-mobile">${escapeHTML(
+                            waktuRingkas
+                        )}</span>
+                    </time>
                 </td>
 
                 <td>
@@ -4073,7 +4091,12 @@ function renderHistory() {
                             : "history-laku"
                     }"
                 >
-                    ${typeText}
+                    <span class="history-type-desktop">
+                        ${typeText}
+                    </span>
+                    <span class="history-type-mobile">
+                        ${typeTextMobile}
+                    </span>
                 </td>
 
                 <td>
@@ -4757,7 +4780,7 @@ function formatTanggalTampilan(
 }
 
 
-function formatTanggalRingkasPenjualan(
+function formatTanggalRingkasTabel(
     nilaiTanggal
 ) {
     const cocok =
@@ -6660,7 +6683,7 @@ async function loadPenjualan() {
 
             const tanggalRingkas =
                 tanggalISO
-                    ? formatTanggalRingkasPenjualan(
+                    ? formatTanggalRingkasTabel(
                         tanggalISO
                     ) || "-"
                     : "-";

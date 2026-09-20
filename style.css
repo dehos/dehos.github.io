@@ -9571,3 +9571,120 @@ dialog::backdrop {
         height: 11px;
     }
 }
+
+
+/* =====================================================
+   RIWAYAT IN/OUT — TABEL MOBILE PROPORSIONAL
+===================================================== */
+
+#riwayat-transaksi .history-table-label-mobile,
+#riwayat-transaksi .history-date-mobile,
+#riwayat-transaksi .history-type-mobile {
+    display: none;
+}
+
+#riwayat-transaksi .modern-history-table td.history-masuk .history-type-desktop,
+#riwayat-transaksi .modern-history-table td.history-masuk .history-type-mobile,
+#riwayat-transaksi .modern-history-table td.history-laku .history-type-desktop,
+#riwayat-transaksi .modern-history-table td.history-laku .history-type-mobile,
+#riwayat-transaksi .modern-history-table td.history-keluar .history-type-desktop,
+#riwayat-transaksi .modern-history-table td.history-keluar .history-type-mobile {
+    color: inherit;
+}
+
+@media (max-width: 760px) {
+    #riwayat-transaksi .modern-history-table-wrapper {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    #riwayat-transaksi .modern-history-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    #riwayat-transaksi .modern-history-table thead th,
+    #riwayat-transaksi .modern-history-table tbody td,
+    #riwayat-transaksi .modern-history-table tbody td * {
+        padding: 7px 3px;
+        font-size: 9px;
+    }
+
+    #riwayat-transaksi .modern-history-table tbody td * {
+        padding: 0;
+    }
+
+    #riwayat-transaksi .history-table-label-desktop,
+    #riwayat-transaksi .history-date-desktop,
+    #riwayat-transaksi .history-type-desktop {
+        display: none;
+    }
+
+    #riwayat-transaksi .history-table-label-mobile,
+    #riwayat-transaksi .history-date-mobile,
+    #riwayat-transaksi .history-type-mobile {
+        display: inline;
+    }
+
+    #riwayat-transaksi .modern-history-table th:nth-child(1),
+    #riwayat-transaksi .modern-history-table td:nth-child(1) {
+        width: 11%;
+        white-space: nowrap;
+    }
+
+    #riwayat-transaksi .modern-history-table th:nth-child(2),
+    #riwayat-transaksi .modern-history-table td:nth-child(2) {
+        width: 39%;
+        min-width: 0;
+        padding-right: 5px;
+        padding-left: 5px;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        white-space: normal;
+    }
+
+    #riwayat-transaksi .modern-history-table th:nth-child(3),
+    #riwayat-transaksi .modern-history-table td:nth-child(3) {
+        width: 16%;
+        white-space: nowrap;
+    }
+
+    #riwayat-transaksi .modern-history-table th:nth-child(4),
+    #riwayat-transaksi .modern-history-table td:nth-child(4),
+    #riwayat-transaksi .modern-history-table th:nth-child(5),
+    #riwayat-transaksi .modern-history-table td:nth-child(5) {
+        width: 11%;
+        white-space: nowrap;
+    }
+
+    #riwayat-transaksi .modern-history-table th:nth-child(6),
+    #riwayat-transaksi .modern-history-table td:nth-child(6) {
+        width: 12%;
+        white-space: nowrap;
+    }
+
+    #riwayat-transaksi .modern-history-table td[colspan] {
+        width: auto;
+    }
+
+    #riwayat-transaksi .modern-history-table td.history-masuk::before,
+    #riwayat-transaksi .modern-history-table td.history-laku::before,
+    #riwayat-transaksi .modern-history-table td.history-keluar::before {
+        width: 4px;
+        height: 4px;
+        margin-right: 3px;
+        vertical-align: 1px;
+    }
+
+    #riwayat-transaksi .history-edit-transaction-btn {
+        width: 23px;
+        height: 23px;
+        border-radius: 6px;
+    }
+
+    #riwayat-transaksi .history-edit-transaction-btn svg {
+        width: 11px;
+        height: 11px;
+    }
+}
