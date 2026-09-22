@@ -10342,7 +10342,6 @@ async function exportPenjualanExcel() {
 
     const excelData = [
         [
-            "No",
             "Tanggal",
             "Nama Barang",
             "Brand",
@@ -10352,11 +10351,10 @@ async function exportPenjualanExcel() {
         ]
     ];
 
-    let totalQty = 0;
     let totalPenjualan = 0;
 
     data.forEach(
-        function(item, index) {
+        function(item) {
             const barang =
                 dataBarang.find(
                     function(barangItem) {
@@ -10385,7 +10383,6 @@ async function exportPenjualanExcel() {
             const total =
                 qty * harga;
 
-            totalQty += qty;
             totalPenjualan += total;
 
             const tanggal =
@@ -10404,7 +10401,6 @@ async function exportPenjualanExcel() {
                     : "-";
 
             excelData.push([
-                index + 1,
                 tanggal,
                 namaBarang,
                 item.brand || "-",
@@ -10419,9 +10415,8 @@ async function exportPenjualanExcel() {
         "",
         "",
         "",
-        "TOTAL",
-        totalQty,
         "",
+        "TOTAL",
         totalPenjualan
     ]);
 
@@ -10445,22 +10440,51 @@ async function exportPenjualanExcel() {
 
     /* LEBAR KOLOM */
 
-    worksheet["!cols"] = [
-        { wch: 6 },
-        { wch: 12 },
-        { wch: 35 },
-        { wch: 15 },
-        { wch: 10 },
-        { wch: 16 },
-        { wch: 18 }
-    ];
+    const formatLebarCell =
+        function(value, columnIndex) {
+            if (
+                typeof value === "number" &&
+                (columnIndex === 4 ||
+                    columnIndex === 5)
+            ) {
+                return (
+                    "Rp " +
+                    value.toLocaleString("id-ID")
+                );
+            }
+
+            return String(value ?? "");
+        };
+
+    worksheet["!cols"] =
+        excelData[0].map(
+            function(_, columnIndex) {
+                const panjangTerbesar =
+                    excelData.reduce(
+                        function(maximum, row) {
+                            return Math.max(
+                                maximum,
+                                formatLebarCell(
+                                    row[columnIndex],
+                                    columnIndex
+                                ).length
+                            );
+                        },
+                        0
+                    );
+
+                return {
+                    wch: panjangTerbesar + 2
+                };
+            }
+        );
 
 
     /* STYLE HEADER */
 
     for (
         let c = 0;
-        c < 7;
+        c < 6;
         c++
     ) {
         const cell =
@@ -10497,7 +10521,7 @@ async function exportPenjualanExcel() {
             worksheet[
                 XLSX.utils.encode_cell({
                     r: r,
-                    c: 5
+                    c: 4
                 })
             ];
 
@@ -10505,7 +10529,7 @@ async function exportPenjualanExcel() {
             worksheet[
                 XLSX.utils.encode_cell({
                     r: r,
-                    c: 6
+                    c: 5
                 })
             ];
 
@@ -10521,31 +10545,79 @@ async function exportPenjualanExcel() {
     }
 
 
-    /* STYLE BARIS TOTAL */
+    /* BRAND DAN QTY RATA TENGAH */
 
     const totalRow =
         excelData.length - 1;
 
     for (
-        let c = 0;
-        c < 7;
-        c++
+        let r = 1;
+        r < totalRow;
+        r++
     ) {
-        const cell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: totalRow,
-                    c: c
-                })
-            ];
+        [2, 3].forEach(
+            function(columnIndex) {
+                const cell =
+                    worksheet[
+                        XLSX.utils.encode_cell({
+                            r: r,
+                            c: columnIndex
+                        })
+                    ];
 
-        if (cell) {
-            cell.s = {
-                font: {
-                    bold: true
+                if (cell) {
+                    cell.s = {
+                        alignment: {
+                            horizontal: "center",
+                            vertical: "center"
+                        }
+                    };
                 }
-            };
-        }
+            }
+        );
+    }
+
+
+    /* STYLE BARIS TOTAL */
+
+    const totalLabelCell =
+        worksheet[
+            XLSX.utils.encode_cell({
+                r: totalRow,
+                c: 4
+            })
+        ];
+
+    const totalValueCell =
+        worksheet[
+            XLSX.utils.encode_cell({
+                r: totalRow,
+                c: 5
+            })
+        ];
+
+    if (totalLabelCell) {
+        totalLabelCell.s = {
+            font: {
+                bold: true
+            },
+            alignment: {
+                horizontal: "right",
+                vertical: "center"
+            }
+        };
+    }
+
+    if (totalValueCell) {
+        totalValueCell.s = {
+            font: {
+                bold: true
+            },
+            alignment: {
+                horizontal: "left",
+                vertical: "center"
+            }
+        };
     }
 
 
