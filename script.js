@@ -10555,6 +10555,30 @@ async function exportPenjualanExcel() {
         r < totalRow;
         r++
     ) {
+        const totalCell =
+            worksheet[
+                XLSX.utils.encode_cell({
+                    r: r,
+                    c: 5
+                })
+            ];
+
+        if (totalCell) {
+            const nomorBarisExcel =
+                r + 1;
+
+            totalCell.t = "n";
+            totalCell.f =
+                `D${nomorBarisExcel}` +
+                `*E${nomorBarisExcel}`;
+        }
+    }
+
+    for (
+        let r = 1;
+        r < totalRow;
+        r++
+    ) {
         [2, 3].forEach(
             function(columnIndex) {
                 const cell =
@@ -10595,6 +10619,12 @@ async function exportPenjualanExcel() {
                 c: 5
             })
         ];
+
+    if (totalValueCell) {
+        totalValueCell.t = "n";
+        totalValueCell.f =
+            `SUM(F2:F${totalRow})`;
+    }
 
     if (totalLabelCell) {
         totalLabelCell.s = {
