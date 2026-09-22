@@ -5922,16 +5922,16 @@ const TARGET_PENJUALAN_BRAND =
 
 const TARGET_BRAND_COLORS =
     Object.freeze({
-        Belleza: "#86cfa5",
-        Solid: "#b58a16",
-        Dekkson: "#7cb8d8",
-        Violet: "#a78bca",
-        "Vapely/Wepe": "#8b5e3c",
-        Tsunami: "#ef8354",
-        Trisensa: "#176b45",
-        Rona: "#9ca3af",
-        Hanata: "#22d3ee",
-        "Morgan/Verano": "#f59e0b"
+        Belleza: "#ffd45d",
+        Solid: "#d8a62c",
+        Dekkson: "#edc34f",
+        Violet: "#bd8d22",
+        "Vapely/Wepe": "#e2b33a",
+        Tsunami: "#9a3345",
+        Trisensa: "#a97718",
+        Rona: "#c59529",
+        Hanata: "#f4d878",
+        "Morgan/Verano": "#b9851c"
     });
 
 function getCanonicalTargetBrand(
