@@ -10621,6 +10621,121 @@ async function exportPenjualanExcel() {
     }
 
 
+    /* FORMAT TABEL, BORDER, DAN FILTER */
+
+    const borderTabel = {
+        top: {
+            style: "thin",
+            color: { rgb: "B7B7B7" }
+        },
+        bottom: {
+            style: "thin",
+            color: { rgb: "B7B7B7" }
+        },
+        left: {
+            style: "thin",
+            color: { rgb: "B7B7B7" }
+        },
+        right: {
+            style: "thin",
+            color: { rgb: "B7B7B7" }
+        }
+    };
+
+    for (
+        let r = 0;
+        r <= totalRow;
+        r++
+    ) {
+        for (
+            let c = 0;
+            c < 6;
+            c++
+        ) {
+            const alamatCell =
+                XLSX.utils.encode_cell({
+                    r: r,
+                    c: c
+                });
+
+            if (!worksheet[alamatCell]) {
+                worksheet[alamatCell] = {
+                    t: "s",
+                    v: ""
+                };
+            }
+
+            const cell =
+                worksheet[alamatCell];
+
+            const styleCell =
+                Object.assign(
+                    {},
+                    cell.s || {}
+                );
+
+            styleCell.border =
+                borderTabel;
+
+            styleCell.alignment =
+                Object.assign(
+                    {
+                        vertical: "center"
+                    },
+                    styleCell.alignment || {}
+                );
+
+            if (r === 0) {
+                styleCell.font =
+                    Object.assign(
+                        {},
+                        styleCell.font || {},
+                        {
+                            bold: true,
+                            color: {
+                                rgb: "FFF4C7"
+                            }
+                        }
+                    );
+
+                styleCell.fill = {
+                    patternType: "solid",
+                    fgColor: {
+                        rgb: "4A3A12"
+                    }
+                };
+            }
+
+            cell.s = styleCell;
+        }
+    }
+
+    worksheet["!autofilter"] = {
+        ref: XLSX.utils.encode_range({
+            s: {
+                r: 0,
+                c: 0
+            },
+            e: {
+                r: totalRow - 1,
+                c: 5
+            }
+        })
+    };
+
+    worksheet["!rows"] =
+        excelData.map(
+            function(_, rowIndex) {
+                return {
+                    hpt:
+                        rowIndex === 0
+                            ? 22
+                            : 19
+                };
+            }
+        );
+
+
     /* EXPORT XLSX LANDSCAPE */
 
     const excelDataArray =
