@@ -11501,3 +11501,16 @@ select:focus-visible {
         grid-column: 1 / -1;
     }
 }
+
+
+/* =====================================================
+   STRICT FLAT MODE — NO SHADOW OR GLOW
+===================================================== */
+
+*,
+*::before,
+*::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+}
