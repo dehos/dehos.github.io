@@ -10647,3 +10647,857 @@ select:focus-visible {
     border-color: #0d0e12;
     background: #60636e;
 }
+
+
+/* =====================================================
+   EDITORIAL LIGHT THEME — APPROVED REDESIGN
+   Flat, informatif, dan memakai warna sesuai fungsi
+===================================================== */
+
+:root {
+    --app-bg: #f4f6fb;
+    --app-sidebar: #ffffff;
+    --app-surface: #ffffff;
+    --app-surface-raised: #f8faff;
+    --app-border: #dfe5ef;
+    --app-border-soft: #e9edf4;
+    --app-text: #0b1b3d;
+    --app-text-soft: #2b3954;
+    --app-muted: #6f7b90;
+    --app-accent: #2f67f6;
+    --app-accent-soft: rgba(47, 103, 246, .1);
+    --app-cyan: #159fbd;
+    --app-green: #16ad73;
+    --app-red: #e6535d;
+    --app-yellow: #eea600;
+    --editorial-blue-soft: #eef4ff;
+    --editorial-green-soft: #ecfaf4;
+    --editorial-red-soft: #fff0f1;
+    --editorial-amber-soft: #fff7e3;
+    --editorial-purple: #8a48df;
+    --editorial-purple-soft: #f4edff;
+    --dhouse-gold: var(--app-accent);
+    --dhouse-gold-bright: #4c7cff;
+    --dhouse-gold-dark: #234fc7;
+    --app-shadow: none;
+    --app-shadow-soft: none;
+    --app-shadow-card: none;
+    --app-shadow-dialog: none;
+}
+
+html {
+    background: var(--app-bg);
+}
+
+body,
+body.auth-locked,
+body.auth-locked .auth-gate {
+    background: var(--app-bg) !important;
+    color: var(--app-text);
+    color-scheme: light;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+.app-shell,
+.app-workspace,
+.container {
+    background: transparent !important;
+}
+
+.app-sidebar {
+    border-right-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+}
+
+.header {
+    border-bottom-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+    color: var(--app-text) !important;
+}
+
+.header h1,
+.app-topbar h2,
+.modern-title-copy h2,
+.dashboard-section-heading h2,
+.auth-heading h1,
+.modal-title,
+.sales-target-header h3 {
+    color: var(--app-text) !important;
+    font-weight: 800;
+    letter-spacing: -.035em;
+}
+
+.header p,
+.app-topbar p,
+.modern-title-copy p,
+.dashboard-section-heading p,
+.auth-heading p,
+.sales-target-header p,
+.app-footer small {
+    color: var(--app-muted) !important;
+}
+
+.company-logo-shell,
+.app-mobile-logo {
+    border-color: var(--app-border) !important;
+    background: #ffffff !important;
+}
+
+.app-nav::before {
+    color: #9aa5b8 !important;
+}
+
+.app-nav a {
+    border-color: transparent !important;
+    color: #647086 !important;
+}
+
+.app-nav a:hover,
+.app-nav a:focus-visible {
+    border-color: #dfe8ff !important;
+    background: #f4f7ff !important;
+    color: #204fc7 !important;
+}
+
+.app-nav a.active {
+    border-color: #dbe5ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.app-nav a.active::before {
+    background: var(--app-accent) !important;
+}
+
+.app-sidebar-note,
+.app-topbar #databaseStatus.status,
+.dashboard-live-badge {
+    border-color: #ccebdd !important;
+    background: var(--editorial-green-soft) !important;
+    color: #12805a !important;
+}
+
+.app-sidebar-note .ui-svg-icon,
+.database-status-icon,
+.dashboard-live-badge > span {
+    color: var(--app-green) !important;
+}
+
+.app-topbar {
+    border-bottom-color: var(--app-border-soft) !important;
+    background: rgba(244, 246, 251, .96) !important;
+    backdrop-filter: blur(14px);
+}
+
+.app-topbar-eyebrow,
+.dashboard-kicker,
+.auth-heading > span {
+    color: var(--app-accent) !important;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.app-topbar h2 {
+    font-size: clamp(25px, 3vw, 38px);
+    line-height: 1.05;
+}
+
+.app-logout-button {
+    border-color: #f0cbd0 !important;
+    background: #fff5f6 !important;
+    color: #c73e4b !important;
+}
+
+.app-logout-button:hover {
+    border-color: #e899a2 !important;
+    background: #ffecef !important;
+    color: #a72e3b !important;
+}
+
+.card,
+.dashboard-card,
+.container > .card,
+.auth-card,
+.modal-content,
+.export-confirm-card,
+.app-message-card,
+#transactionModal .modal-content,
+#tambahBarangModal .modal-content,
+#editPenjualanModal .modal-content,
+#importExcelModal .import-excel-content {
+    border-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+.container > .card,
+.dashboard-card {
+    border-radius: 20px !important;
+}
+
+.container > .card:hover {
+    border-color: #d9e0eb !important;
+}
+
+.modern-title-icon,
+#penjualan .modern-title-icon {
+    border-color: #d9e4ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+#stok-barang .modern-title-icon,
+#stok-barang .modern-export-leading-icon,
+#stok-barang .search-label-icon,
+#tambahBarangModal .modal-title-icon {
+    border-color: #cfeee1 !important;
+    background: var(--editorial-green-soft) !important;
+    color: var(--app-green) !important;
+}
+
+#catatan-penjualan .modern-title-icon,
+#catatan-penjualan .modern-secondary-button .modern-export-leading-icon,
+#catatan-penjualan .sales-filter-control label .ui-svg-icon,
+#editPenjualanModal .modal-title-icon {
+    border-color: #e4d4f8 !important;
+    background: var(--editorial-purple-soft) !important;
+    color: var(--editorial-purple) !important;
+}
+
+#riwayat-transaksi .modern-title-icon {
+    border-color: #f8dcc1 !important;
+    background: var(--editorial-amber-soft) !important;
+    color: #c98200 !important;
+}
+
+.dashboard-card .dashboard-section-heading {
+    border-bottom-color: var(--app-border-soft) !important;
+}
+
+.dashboard-card .stats {
+    gap: 12px;
+}
+
+.dashboard-card .stat {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent !important;
+    border-left-width: 5px !important;
+    border-radius: 14px !important;
+    text-align: left;
+}
+
+.dashboard-card .stat::after {
+    display: none !important;
+}
+
+.dashboard-card .stat small {
+    color: var(--app-muted) !important;
+    font-weight: 650;
+}
+
+.dashboard-card .stat strong {
+    color: var(--app-text) !important;
+    font-weight: 800;
+}
+
+.dashboard-card .stat-primary {
+    border-color: #dce7ff !important;
+    border-left-color: var(--app-accent) !important;
+    background: var(--editorial-blue-soft) !important;
+}
+
+.dashboard-card .stat-success {
+    border-color: #d5f0e5 !important;
+    border-left-color: var(--app-green) !important;
+    background: var(--editorial-green-soft) !important;
+}
+
+.dashboard-card .stat-warning {
+    border-color: #f6d9dc !important;
+    border-left-color: var(--app-red) !important;
+    background: var(--editorial-red-soft) !important;
+}
+
+.dashboard-card .sales-target-section {
+    border-color: var(--app-border-soft) !important;
+    border-left: 5px solid var(--editorial-purple) !important;
+    border-radius: 16px !important;
+    background: #fbfaff !important;
+}
+
+.dashboard-card .sales-target-header {
+    border-bottom-color: #e9e2f3 !important;
+}
+
+.dashboard-card .sales-target-header h3 .ui-svg-icon {
+    color: var(--editorial-purple) !important;
+}
+
+.dashboard-card .sales-target-summary {
+    border-color: #e5d8f5 !important;
+    background: var(--editorial-purple-soft) !important;
+}
+
+.dashboard-card .sales-target-summary span,
+.dashboard-card .sales-target-summary small {
+    color: #796989 !important;
+}
+
+.dashboard-card .sales-target-summary strong {
+    color: #58269a !important;
+}
+
+.dashboard-card .target-brand-loading {
+    border-color: var(--app-border-soft) !important;
+    background: #f7f9fd !important;
+    color: var(--app-muted) !important;
+}
+
+.dashboard-card .target-brand-card {
+    border-bottom-color: var(--app-border-soft) !important;
+}
+
+.dashboard-card .target-brand-indicator {
+    background: var(--brand-color) !important;
+}
+
+.dashboard-card .target-brand-name,
+.dashboard-card .target-progress-caption strong,
+.dashboard-card .target-progress-label,
+.dashboard-card .target-card-values strong,
+.dashboard-card .target-card-values .target-card-gap {
+    color: var(--app-text-soft) !important;
+}
+
+.dashboard-card .target-brand-note,
+.dashboard-card .target-progress-caption span,
+.dashboard-card .target-card-values span,
+.dashboard-card .target-brand-group-label {
+    color: var(--app-muted) !important;
+}
+
+.dashboard-card .target-progress-track {
+    background: #e4e9f1 !important;
+}
+
+.dashboard-card .target-progress-fill {
+    background: var(--brand-color) !important;
+}
+
+.dashboard-card .target-brand-rainbow .target-brand-indicator,
+.dashboard-card .target-brand-rainbow .target-progress-fill,
+.dashboard-card .target-progress-rainbow {
+    background: linear-gradient(90deg, #e6535d, #eea600, #16ad73, #159fbd, #8a48df) !important;
+}
+
+.auth-brand-mark,
+.export-confirm-icon {
+    border-color: #d9e4ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.auth-form label,
+.container label,
+.modal-content label {
+    color: var(--app-text-soft) !important;
+}
+
+.auth-form input,
+.container .form-control,
+.container .form-select,
+.container input[type="text"],
+.container input[type="number"],
+.container input[type="date"],
+.container select,
+.modal-content input,
+.modal-content select {
+    border-color: #d9e0ea !important;
+    background-color: #ffffff !important;
+    color: var(--app-text) !important;
+    color-scheme: light;
+}
+
+.auth-form input::placeholder,
+.container .form-control::placeholder,
+.container input::placeholder,
+.modal-content input::placeholder {
+    color: #9aa4b5 !important;
+}
+
+.auth-form input:focus,
+.container .form-control:focus,
+.container .form-select:focus,
+.container input:focus,
+.container select:focus,
+.modal-content input:focus,
+.modal-content select:focus {
+    border-color: var(--app-accent) !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(47, 103, 246, .11) !important;
+}
+
+.auth-primary-button,
+.modern-primary-button,
+#simpanPenjualanButton,
+.modal-actions .btn-primary,
+#editPenjualanModal .modal-actions .btn-primary,
+#importExcelModal .modal-actions .btn-primary,
+.export-confirm-yes {
+    border-color: var(--app-accent) !important;
+    background: var(--app-accent) !important;
+    color: #ffffff !important;
+}
+
+.auth-primary-button:hover:not(:disabled),
+.modern-primary-button:hover,
+#simpanPenjualanButton:hover,
+.modal-actions .btn-primary:hover,
+.export-confirm-yes:hover {
+    border-color: #2558dd !important;
+    background: #2558dd !important;
+}
+
+.auth-secondary-button,
+.modern-secondary-button,
+.modern-export-menu > summary,
+.modal-actions .btn-secondary,
+#importExcelModal .modal-actions .btn-secondary,
+.export-confirm-no,
+#stok-barang .modern-import-button {
+    border-color: #d9e0ea !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+.auth-secondary-button:hover:not(:disabled),
+.modern-secondary-button:hover,
+.modern-export-menu > summary:hover,
+.modal-actions .btn-secondary:hover,
+.export-confirm-no:hover,
+#stok-barang .modern-import-button:hover {
+    border-color: #b9c9ee !important;
+    background: var(--editorial-blue-soft) !important;
+    color: #244fb9 !important;
+}
+
+#penjualan .sales-entry-indicator {
+    border-color: #d9e4ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: #2857c7 !important;
+}
+
+#penjualan .sales-total-card {
+    border-color: #dce7ff !important;
+    border-left: 5px solid var(--app-accent) !important;
+    background: var(--editorial-blue-soft) !important;
+}
+
+#penjualan .sales-total-card::after {
+    display: none !important;
+}
+
+#penjualan .sales-total-card > span {
+    color: var(--app-muted) !important;
+}
+
+#penjualan .sales-total-card strong {
+    color: var(--app-text) !important;
+}
+
+.modern-data-table-wrapper,
+.modern-sales-table-wrapper,
+#stok-barang .modern-stock-table-wrapper,
+#catatan-penjualan .modern-sales-table-wrapper,
+#riwayat-transaksi .modern-history-table-wrapper,
+#importExcelModal .import-excel-table-wrapper {
+    border-color: var(--app-border) !important;
+    background: #ffffff !important;
+}
+
+.container .table {
+    --bs-table-bg: #ffffff;
+    --bs-table-color: var(--app-text-soft);
+    --bs-table-border-color: var(--app-border-soft);
+    --bs-table-hover-bg: #f5f8ff;
+    --bs-table-hover-color: var(--app-text);
+    color: var(--app-text-soft) !important;
+}
+
+.container .table-light,
+.container .table > thead,
+.modern-sales-table thead,
+.modern-data-table thead,
+#importExcelModal .import-excel-table th {
+    --bs-table-bg: #f3f6fb;
+    --bs-table-color: #69758a;
+}
+
+.modern-data-table thead th,
+.modern-sales-table thead th,
+#riwayat-transaksi .modern-history-table thead th,
+#importExcelModal .import-excel-table th {
+    border-bottom-color: var(--app-border) !important;
+    background: #f3f6fb !important;
+    color: #657187 !important;
+}
+
+.modern-data-table tbody td,
+.modern-sales-table tbody td,
+#riwayat-transaksi .modern-history-table tbody td,
+#importExcelModal .import-excel-table td {
+    border-bottom-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+.modern-data-table tbody tr:hover > td,
+.modern-sales-table tbody tr:hover > td,
+#stok-barang .modern-stock-table tbody tr:hover > td,
+#catatan-penjualan .modern-sales-table tbody tr:hover > td,
+#riwayat-transaksi .modern-history-table tbody tr:hover > td {
+    background: #f6f8fd !important;
+    color: var(--app-text) !important;
+}
+
+.modern-sales-table tfoot,
+.modern-sales-table tfoot.table-light,
+#catatan-penjualan .modern-sales-table tfoot,
+#catatan-penjualan .modern-sales-table tfoot.table-light {
+    --bs-table-bg: var(--editorial-purple-soft);
+    --bs-table-color: var(--app-text);
+}
+
+.modern-sales-table tfoot th,
+.modern-sales-table tfoot td,
+#catatan-penjualan .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table tfoot td {
+    border-top-color: #e2d4f4 !important;
+    background: var(--editorial-purple-soft) !important;
+    color: var(--app-text) !important;
+}
+
+.modern-export-options,
+#saranBarang:not(:empty),
+.sales-suggestions:not(:empty) {
+    border-color: var(--app-border) !important;
+    background: #ffffff !important;
+}
+
+.modern-export-options button,
+.sales-suggestions .saran-item,
+#saranBarang .saran-item {
+    border-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+.modern-export-options button:hover,
+.sales-suggestions .saran-item:hover,
+#saranBarang .saran-item:hover {
+    background: var(--editorial-blue-soft) !important;
+    color: #244fb9 !important;
+}
+
+.modern-month-nav,
+#riwayat-transaksi .modern-history-month-nav {
+    border-color: var(--app-border-soft) !important;
+    background: #f7f9fd !important;
+}
+
+.modern-month-nav button,
+#riwayat-transaksi .modern-history-month-nav button {
+    background: transparent !important;
+    color: var(--app-muted) !important;
+}
+
+.modern-month-nav button:hover:not(:disabled),
+#riwayat-transaksi .modern-history-month-nav button:hover:not(:disabled) {
+    border-color: #d8e3ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.modern-stock-table #stockTable .stock-action-group {
+    border-color: var(--app-border-soft) !important;
+    background: #f7f9fc !important;
+}
+
+.modern-stock-table #stockTable .stock-in-btn,
+#riwayat-transaksi .modern-history-table td.history-masuk {
+    color: #10875e !important;
+}
+
+.modern-stock-table #stockTable .stock-out-btn,
+#riwayat-transaksi .modern-history-table td.history-laku,
+#riwayat-transaksi .modern-history-table td.history-keluar {
+    color: #ce4652 !important;
+}
+
+.modern-stock-table #stockTable .stock-in-btn:hover {
+    background: var(--editorial-green-soft) !important;
+    color: #0d7652 !important;
+}
+
+.modern-stock-table #stockTable .stock-out-btn:hover {
+    background: var(--editorial-red-soft) !important;
+    color: #b83945 !important;
+}
+
+#stockTable .stock-badge.stock-aman {
+    border-color: #c8ebdc !important;
+    background: var(--editorial-green-soft) !important;
+    color: #0e8059 !important;
+}
+
+#stockTable .stock-badge.stock-menipis {
+    border-color: #f2dfad !important;
+    background: var(--editorial-amber-soft) !important;
+    color: #a96d00 !important;
+}
+
+#stockTable .stock-badge.stock-habis {
+    border-color: #f1cdd1 !important;
+    background: var(--editorial-red-soft) !important;
+    color: #bd3945 !important;
+}
+
+.modern-sales-table .edit-history-btn,
+#riwayat-transaksi .history-edit-transaction-btn {
+    border-color: #d9e4ff !important;
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.modern-sales-table .delete-history-btn {
+    color: var(--app-red) !important;
+}
+
+#transactionModal,
+#tambahBarangModal,
+#editPenjualanModal,
+#importExcelModal,
+.modal {
+    background: rgba(11, 27, 61, .46) !important;
+}
+
+#transactionModal .modal-product,
+#importExcelModal .import-excel-file,
+#importExcelModal .import-excel-summary > div {
+    border-color: var(--app-border-soft) !important;
+    background: #f6f8fc !important;
+    color: var(--app-text-soft) !important;
+}
+
+#importExcelModal .import-excel-summary strong,
+#importExcelModal .modal-title,
+#importExcelModal .import-excel-help strong {
+    color: var(--app-text) !important;
+}
+
+#importExcelModal .import-excel-help,
+#importExcelModal .import-excel-summary span,
+#importExcelModal .import-excel-limit {
+    color: var(--app-muted) !important;
+}
+
+#importExcelModal .import-row-ready {
+    border-color: #c8ebdc !important;
+    background: var(--editorial-green-soft) !important;
+    color: #0e8059 !important;
+}
+
+#importExcelModal .import-row-skipped {
+    border-color: #f2dfad !important;
+    background: var(--editorial-amber-soft) !important;
+    color: #a96d00 !important;
+}
+
+#importExcelModal .import-row-invalid {
+    border-color: #f1cdd1 !important;
+    background: var(--editorial-red-soft) !important;
+    color: #bd3945 !important;
+}
+
+#toast.toast,
+#toast.toast.success {
+    border-color: #243553 !important;
+    border-left-color: var(--app-green) !important;
+    background: #102140 !important;
+    color: #ffffff !important;
+}
+
+#toast.toast.error {
+    border-left-color: #ff6975 !important;
+    background: #102140 !important;
+}
+
+.app-message-icon {
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.app-mobile-nav {
+    border-color: var(--app-border) !important;
+    background: rgba(255, 255, 255, .98) !important;
+}
+
+.app-mobile-nav a {
+    color: #748095 !important;
+}
+
+.app-mobile-nav a.active {
+    background: var(--editorial-blue-soft) !important;
+    color: var(--app-accent) !important;
+}
+
+.app-footer {
+    border-top-color: var(--app-border-soft) !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+    text-align: center;
+}
+
+.app-footer-brand {
+    justify-content: center;
+}
+
+.app-footer-brand strong {
+    color: var(--app-text) !important;
+}
+
+.table-wrapper,
+.history-wrapper,
+.penjualan-wrapper,
+#stok-barang .modern-stock-table-wrapper,
+#catatan-penjualan .modern-sales-table-wrapper,
+#riwayat-transaksi .modern-history-table-wrapper {
+    scrollbar-color: #b8c2d2 #edf1f6 !important;
+}
+
+.table-wrapper::-webkit-scrollbar-track,
+.history-wrapper::-webkit-scrollbar-track,
+.penjualan-wrapper::-webkit-scrollbar-track,
+#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-track,
+#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-track,
+#riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar-track {
+    background: #edf1f6 !important;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb,
+.history-wrapper::-webkit-scrollbar-thumb,
+.penjualan-wrapper::-webkit-scrollbar-thumb,
+#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-thumb,
+#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-thumb,
+#riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar-thumb {
+    border-color: #edf1f6 !important;
+    background: #b8c2d2 !important;
+}
+
+::selection {
+    background: #cbd9ff;
+    color: #112b67;
+}
+
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline-color: rgba(47, 103, 246, .72) !important;
+}
+
+.app-shell,
+.header,
+.app-sidebar,
+.app-topbar,
+.card,
+.dashboard-card,
+.container > .card,
+.container > .card:hover,
+.auth-card,
+.auth-brand-mark,
+.company-logo-shell,
+.modern-title-icon,
+.modern-primary-button,
+.auth-primary-button,
+#simpanPenjualanButton,
+.modern-export-options,
+#saranBarang:not(:empty),
+.sales-suggestions:not(:empty),
+.stock-pagination button,
+.app-logout-button,
+.app-mobile-nav,
+.modal-content,
+.export-confirm-card,
+.app-message-card,
+#toast.toast,
+#transactionModal .modal-content,
+#tambahBarangModal .modal-content,
+#editPenjualanModal .modal-content,
+#importExcelModal .import-excel-content,
+#penjualan .sales-total-card,
+.dashboard-card .target-progress-fill,
+.dashboard-card .target-brand-indicator,
+.dashboard-live-badge > span {
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+@media (max-width: 700px) {
+    .app-topbar {
+        background: rgba(255, 255, 255, .98) !important;
+    }
+
+    .app-topbar h2 {
+        font-size: 25px;
+    }
+
+    .app-mobile-logo {
+        background: var(--editorial-blue-soft) !important;
+    }
+
+    .container > .card,
+    .dashboard-card {
+        border-radius: 16px !important;
+    }
+
+    .dashboard-card .stat {
+        min-height: 96px;
+        padding: 14px 12px;
+    }
+
+    .dashboard-card .stat strong {
+        font-size: clamp(20px, 6vw, 27px);
+    }
+
+    .dashboard-card .sales-target-section {
+        border-left-width: 4px !important;
+    }
+
+    .app-mobile-nav a.active {
+        border-top-color: var(--app-accent) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-card .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-card .stat {
+        min-height: 78px;
+    }
+
+    .dashboard-card .stat-warning {
+        grid-column: 1 / -1;
+    }
+}
