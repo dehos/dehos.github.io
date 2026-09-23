@@ -11514,3 +11514,332 @@ select:focus-visible {
     text-shadow: none !important;
     filter: none !important;
 }
+
+
+/* =====================================================
+   EDITORIAL REFINEMENT — COHESIVE NEUTRAL SURFACES
+===================================================== */
+
+.dashboard-card .stat-primary,
+.dashboard-card .stat-success,
+.dashboard-card .stat-warning {
+    background: #ffffff !important;
+}
+
+.dashboard-card .sales-target-section {
+    border-color: var(--app-border) !important;
+    border-left-color: var(--editorial-purple) !important;
+    background: #ffffff !important;
+}
+
+.dashboard-card .sales-target-header {
+    align-items: center;
+}
+
+.dashboard-card .sales-target-summary {
+    min-width: 220px;
+    padding: 0 0 0 16px;
+    border: 0 !important;
+    border-left: 1px solid var(--app-border) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+.dashboard-card .sales-target-summary span,
+.dashboard-card .sales-target-summary small {
+    color: var(--app-muted) !important;
+}
+
+.dashboard-card .sales-target-summary strong {
+    color: var(--app-text) !important;
+}
+
+#stok-barang .modern-header-actions {
+    gap: 0;
+    padding: 3px;
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    background: #f6f8fc;
+}
+
+#stok-barang .modern-header-actions > button,
+#stok-barang .modern-header-actions > details > summary {
+    min-height: 36px;
+    border: 0 !important;
+    border-radius: 8px !important;
+}
+
+#stok-barang .modern-header-actions > button + button,
+#stok-barang .modern-header-actions > button + details,
+#stok-barang .modern-header-actions > details + button {
+    margin-left: 2px;
+}
+
+#stok-barang .modern-import-button,
+#stok-barang .modern-export-menu > summary {
+    background: transparent !important;
+    color: var(--app-text-soft) !important;
+}
+
+#stok-barang .modern-import-button:hover,
+#stok-barang .modern-export-menu > summary:hover {
+    background: #eaf0fb !important;
+    color: #244a9d !important;
+}
+
+#stok-barang .modern-primary-button {
+    background: #244fbe !important;
+}
+
+#stok-barang .modern-export-leading-icon,
+#stok-barang .search-label-icon {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+#stok-barang .modern-export-leading-icon {
+    color: #49617f !important;
+}
+
+#stok-barang .search-label-icon {
+    color: #168565 !important;
+}
+
+#stok-barang .stock-filter-toolbar {
+    border-color: var(--app-border) !important;
+    background: #f6f8fc !important;
+}
+
+#stok-barang .stock-filter-field label {
+    color: #536178 !important;
+    font-weight: 650;
+}
+
+#stok-barang .form-control,
+#stok-barang input[type="text"] {
+    border-color: #d5dce7 !important;
+    background: #ffffff !important;
+    color: var(--app-text) !important;
+}
+
+#stok-barang .localized-date-picker-button {
+    color: #647086 !important;
+}
+
+#stok-barang .modern-stock-table-wrapper {
+    margin-bottom: 0;
+    border-color: var(--app-border) !important;
+    border-radius: 13px 13px 0 0 !important;
+}
+
+#stok-barang .stock-pagination-area {
+    min-height: 50px;
+    margin-top: -1px;
+    padding: 8px 12px;
+    border: 1px solid var(--app-border) !important;
+    border-top-color: var(--app-border-soft) !important;
+    border-radius: 0 0 13px 13px;
+    background: #f7f9fc;
+}
+
+#stok-barang .stock-pagination button,
+#catatan-penjualan .sales-pagination button {
+    border-color: #d8dfeb !important;
+    background: #ffffff !important;
+    color: #526078 !important;
+}
+
+#stok-barang .stock-pagination button:hover:not(:disabled):not(.active),
+#catatan-penjualan .sales-pagination button:hover:not(:disabled) {
+    border-color: #aebbd0 !important;
+    background: #edf2fa !important;
+    color: var(--app-text) !important;
+    transform: none !important;
+}
+
+#stok-barang .stock-pagination button.active {
+    border-color: #244fbe !important;
+    background: #244fbe !important;
+    color: #ffffff !important;
+}
+
+#stok-barang .stock-pagination button:disabled,
+#catatan-penjualan .sales-pagination button:disabled {
+    border-color: #e5e9f0 !important;
+    background: #f1f3f7 !important;
+    color: #a8b1c0 !important;
+}
+
+#catatan-penjualan .modern-sales-filter {
+    padding: 10px 12px;
+    border: 1px solid var(--app-border);
+    border-radius: 12px;
+    background: #f6f8fc;
+}
+
+#catatan-penjualan .sales-filter-control label .ui-svg-icon {
+    border: 0 !important;
+    background: transparent !important;
+    color: #596b86 !important;
+}
+
+#catatan-penjualan .modern-sales-filter .form-select {
+    border-color: #d5dce7 !important;
+    background-color: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper {
+    max-height: 390px;
+    margin-bottom: 0;
+    overflow: auto;
+    border-color: var(--app-border) !important;
+    border-radius: 13px 13px 0 0 !important;
+}
+
+#catatan-penjualan .modern-sales-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+#catatan-penjualan .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table tfoot td {
+    background: #f3f6fa !important;
+    color: var(--app-text) !important;
+    white-space: nowrap;
+}
+
+#catatan-penjualan #totalQtyPenjualan,
+#catatan-penjualan #totalPenjualan {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+#catatan-penjualan .sales-pagination-area {
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: -1px;
+    padding: 8px 12px;
+    border: 1px solid var(--app-border);
+    border-top-color: var(--app-border-soft);
+    border-radius: 0 0 13px 13px;
+    background: #f7f9fc;
+}
+
+#catatan-penjualan .sales-pagination-info {
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+#catatan-penjualan .sales-pagination {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#catatan-penjualan .sales-pagination button {
+    display: inline-grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid;
+    border-radius: 8px;
+}
+
+#catatan-penjualan .sales-pagination-position {
+    min-width: 48px;
+    color: var(--app-text-soft);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 700px) {
+    .dashboard-card .sales-target-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-card .sales-target-summary {
+        min-width: 0;
+        padding-left: 10px;
+    }
+
+    #stok-barang .modern-header-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    #stok-barang .modern-header-actions > button,
+    #stok-barang .modern-header-actions > details,
+    #stok-barang .modern-header-actions > details > summary {
+        width: 100%;
+    }
+
+    #stok-barang .modern-header-actions > button + button,
+    #stok-barang .modern-header-actions > button + details,
+    #stok-barang .modern-header-actions > details + button {
+        margin-left: 0;
+    }
+
+    #stok-barang .stock-pagination-area,
+    #catatan-penjualan .sales-pagination-area {
+        min-height: 46px;
+        align-items: center;
+        flex-direction: row;
+        padding: 7px 9px;
+    }
+
+    #stok-barang .stock-pagination-info,
+    #catatan-penjualan .sales-pagination-info {
+        width: auto;
+        font-size: 9px;
+        text-align: left;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper {
+        max-height: 350px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    #catatan-penjualan .modern-sales-table tfoot th,
+    #catatan-penjualan .modern-sales-table tfoot td {
+        font-size: 8px;
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(2),
+    #catatan-penjualan .modern-sales-table td:nth-child(2) {
+        width: 28%;
+    }
+
+    #catatan-penjualan .modern-sales-table th:nth-child(3),
+    #catatan-penjualan .modern-sales-table td:nth-child(3) {
+        width: 9%;
+    }
+}
+
+@media (max-width: 420px) {
+    #stok-barang .stock-pagination-area {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    #stok-barang .stock-pagination-info {
+        width: 100%;
+        text-align: center;
+    }
+
+    #stok-barang .stock-pagination {
+        justify-content: center;
+    }
+}
