@@ -3011,6 +3011,135 @@ label {
 }
 
 
+/* =====================================================
+   DASHBOARD DOCUMENT TOOLS
+===================================================== */
+
+.dashboard-tools-section {
+    display: grid;
+    gap: 11px;
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid var(--app-border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .88);
+}
+
+.dashboard-tools-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.dashboard-tools-heading > div {
+    display: grid;
+    gap: 2px;
+}
+
+.dashboard-tools-heading span {
+    color: var(--app-accent);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .11em;
+}
+
+.dashboard-tools-heading h3 {
+    margin: 0;
+    color: var(--app-text);
+    font-size: 15px;
+    font-weight: 750;
+    letter-spacing: -.02em;
+}
+
+.dashboard-tools-heading > small {
+    color: var(--app-muted);
+    font-size: 9px;
+}
+
+.dashboard-tool-link {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 26px;
+    min-width: 0;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 12px;
+    border: 1px solid #dbe5f5;
+    border-radius: 11px;
+    background: #f4f7fd;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .18s ease, background-color .18s ease;
+}
+
+.dashboard-tool-link:hover,
+.dashboard-tool-link:focus-visible {
+    border-color: #b9ccef;
+    background: #eef4ff;
+}
+
+.dashboard-tool-icon {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid #cbdcf8;
+    border-radius: 10px;
+    background: #eaf2ff;
+    color: var(--app-accent);
+}
+
+.dashboard-tool-icon .ui-svg-icon {
+    width: 19px;
+    height: 19px;
+}
+
+.dashboard-tool-copy {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+}
+
+.dashboard-tool-copy strong {
+    color: var(--app-text);
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.dashboard-tool-copy small {
+    overflow: hidden;
+    color: var(--app-muted);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-tool-arrow {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    color: #71809a;
+}
+
+.dashboard-tool-arrow .ui-svg-icon {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 600px) {
+    .dashboard-tools-section {
+        margin-top: 14px;
+        padding: 13px;
+    }
+
+    .dashboard-tools-heading > small {
+        display: none;
+    }
+}
+
+
 @media (max-width: 600px) {
     input[type="text"],
     input[type="number"],
