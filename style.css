@@ -10254,3 +10254,396 @@ select:focus-visible {
 #transactionModal .modal-product {
     background: #0d0d0f;
 }
+
+
+/* =====================================================
+   DARK FUNCTIONAL COLOR THEME
+   Warna mengikuti fungsi; permukaan tetap netral dan gelap
+===================================================== */
+
+:root {
+    --app-bg: #07080a;
+    --app-sidebar: #0b0c10;
+    --app-surface: #111217;
+    --app-surface-raised: #17191f;
+    --app-border: #30323b;
+    --app-border-soft: rgba(255, 255, 255, .085);
+    --app-text: #f1f3f6;
+    --app-text-soft: #d5d8df;
+    --app-muted: #9297a3;
+    --app-accent: #7180f3;
+    --app-accent-soft: rgba(113, 128, 243, .13);
+    --app-cyan: #43c3df;
+    --app-green: #48c997;
+    --app-red: #df687e;
+    --app-yellow: #d7aa47;
+    --dhouse-gold: var(--app-accent);
+    --dhouse-gold-bright: #98a3ff;
+    --dhouse-gold-dark: #5864bd;
+}
+
+body,
+body.auth-locked .auth-gate {
+    background: var(--app-bg);
+}
+
+.auth-card,
+.container > .card,
+.dashboard-card .stat,
+.modal-content,
+.export-confirm-card,
+#transactionModal .modal-content,
+#tambahBarangModal .modal-content,
+#editPenjualanModal .modal-content {
+    border-color: var(--app-border-soft);
+    background: var(--app-surface);
+}
+
+.auth-brand-mark,
+.company-logo-shell,
+.export-confirm-icon {
+    border-color: rgba(113, 128, 243, .24) !important;
+    background: rgba(113, 128, 243, .1) !important;
+    color: #98a3ff !important;
+}
+
+.modern-title-icon,
+#penjualan .modern-title-icon {
+    border-color: rgba(139, 133, 255, .25) !important;
+    background: rgba(139, 133, 255, .1) !important;
+    color: #aaa5ff !important;
+}
+
+#stok-barang .modern-title-icon {
+    border-color: rgba(67, 195, 223, .25) !important;
+    background: rgba(67, 195, 223, .1) !important;
+    color: #68d7ee !important;
+}
+
+#catatan-penjualan .modern-title-icon {
+    border-color: rgba(98, 162, 255, .25) !important;
+    background: rgba(98, 162, 255, .1) !important;
+    color: #8fbcff !important;
+}
+
+#riwayat-transaksi .modern-title-icon {
+    border-color: rgba(72, 201, 151, .25) !important;
+    background: rgba(72, 201, 151, .1) !important;
+    color: #73ddb5 !important;
+}
+
+.auth-heading > span,
+.app-topbar-eyebrow,
+.dashboard-kicker,
+.container .loading-svg-icon {
+    color: var(--app-cyan);
+}
+
+.dashboard-card .sales-target-header h3 .ui-svg-icon {
+    color: #aaa5ff;
+}
+
+.auth-form input,
+.container .form-control,
+.container .form-select,
+.container input[type="text"],
+.container input[type="number"],
+.container input[type="date"],
+.container select,
+.modal-content input,
+.modal-content select {
+    border-color: var(--app-border);
+    background-color: #0d0e12;
+    color: var(--app-text);
+}
+
+.auth-form input:focus,
+.container .form-control:focus,
+.container .form-select:focus,
+.container input:focus,
+.container select:focus,
+.modal-content input:focus,
+.modal-content select:focus {
+    border-color: var(--app-accent);
+    background-color: #101116;
+    box-shadow: none;
+}
+
+.auth-primary-button,
+.modern-primary-button,
+#simpanPenjualanButton,
+.modal-actions .btn-primary,
+#editPenjualanModal .modal-actions .btn-primary,
+.export-confirm-yes {
+    border-color: #7180f3 !important;
+    background: #6675df !important;
+    color: #ffffff !important;
+}
+
+.auth-primary-button:hover:not(:disabled),
+.modern-primary-button:hover,
+#simpanPenjualanButton:hover,
+.modal-actions .btn-primary:hover,
+.export-confirm-yes:hover {
+    border-color: #8f9aff !important;
+    background: #7785eb !important;
+}
+
+.auth-secondary-button:hover:not(:disabled),
+.modern-secondary-button:hover,
+.modern-export-menu > summary:hover,
+.modal-actions .btn-secondary:hover,
+.export-confirm-no:hover {
+    border-color: #4a4d59 !important;
+    background: #191b22 !important;
+}
+
+.app-nav::before {
+    color: var(--app-muted);
+}
+
+.app-nav a:hover,
+.app-nav a:focus-visible {
+    border-color: rgba(113, 128, 243, .2);
+    background: rgba(113, 128, 243, .07);
+}
+
+.app-nav a.active {
+    border-color: rgba(113, 128, 243, .27);
+    background: rgba(113, 128, 243, .13);
+    color: #aeb7ff;
+}
+
+.app-nav a.active::before {
+    background: var(--app-accent);
+}
+
+.app-sidebar-note,
+.app-topbar #databaseStatus.status,
+.dashboard-live-badge {
+    border-color: rgba(72, 201, 151, .24);
+    background: rgba(72, 201, 151, .08);
+    color: #79ddb8;
+}
+
+#penjualan .sales-entry-indicator {
+    border-color: rgba(113, 128, 243, .24);
+    background: rgba(113, 128, 243, .09);
+    color: #aeb7ff;
+}
+
+.dashboard-card .stat-primary {
+    border-top-color: rgba(113, 128, 243, .7);
+}
+
+.dashboard-card .stat-success {
+    border-top-color: rgba(72, 201, 151, .7);
+}
+
+.dashboard-card .stat-warning {
+    border-top-color: rgba(215, 170, 71, .72);
+}
+
+.dashboard-card .target-card-rank {
+    border-color: rgba(113, 128, 243, .22);
+    background: rgba(113, 128, 243, .09);
+}
+
+.dashboard-card .target-progress-rainbow {
+    background: linear-gradient(90deg, #df687e, #d7aa47, #48c997, #43c3df, #8b85ff);
+}
+
+.container .table {
+    --bs-table-hover-bg: rgba(113, 128, 243, .055);
+}
+
+.modern-data-table tbody tr:hover,
+.modern-sales-table tbody tr:hover,
+#riwayat-transaksi .modern-history-table tbody tr:hover td,
+#stok-barang .modern-stock-table tbody tr:hover > td,
+#catatan-penjualan .modern-sales-table tbody tr:hover > td,
+#riwayat-transaksi .modern-history-table tbody tr:hover > td {
+    background: rgba(113, 128, 243, .055) !important;
+}
+
+.modern-sales-table tfoot th,
+.modern-sales-table tfoot td,
+#catatan-penjualan .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table tfoot td {
+    border-top-color: rgba(113, 128, 243, .24);
+    background: rgba(113, 128, 243, .075);
+}
+
+.modern-export-options button:hover,
+.sales-suggestions .saran-item:hover,
+#saranBarang .saran-item:hover,
+.modern-month-nav button:hover:not(:disabled),
+#riwayat-transaksi .modern-history-month-nav button:hover:not(:disabled) {
+    border-color: rgba(113, 128, 243, .22);
+    background: rgba(113, 128, 243, .08);
+    color: #b7bfff;
+}
+
+.modern-stock-table #stockTable .stock-in-btn,
+#riwayat-transaksi .modern-history-table td.history-masuk {
+    color: var(--app-green);
+}
+
+.modern-stock-table #stockTable .stock-out-btn,
+#riwayat-transaksi .modern-history-table td.history-laku,
+#riwayat-transaksi .modern-history-table td.history-keluar {
+    color: var(--app-red);
+}
+
+.modern-stock-table #stockTable .stock-in-btn:hover {
+    background: rgba(72, 201, 151, .12);
+    color: #75ddb7;
+}
+
+.modern-stock-table #stockTable .stock-out-btn:hover {
+    background: rgba(223, 104, 126, .13);
+    color: #ef8ca0;
+}
+
+#stockTable .stock-badge.stock-aman {
+    border-color: rgba(72, 201, 151, .2);
+    background: rgba(72, 201, 151, .12);
+    color: #75ddb7;
+}
+
+#stockTable .stock-badge.stock-menipis {
+    border-color: rgba(215, 170, 71, .22);
+    background: rgba(215, 170, 71, .12);
+    color: #e6c06d;
+}
+
+#stockTable .stock-badge.stock-habis {
+    border-color: rgba(223, 104, 126, .22);
+    background: rgba(223, 104, 126, .13);
+    color: #ef8ca0;
+}
+
+.modern-sales-table .edit-history-btn,
+#riwayat-transaksi .history-edit-transaction-btn {
+    border-color: rgba(67, 195, 223, .22) !important;
+    background: rgba(67, 195, 223, .08) !important;
+    color: #68d7ee !important;
+}
+
+.modern-sales-table .delete-history-btn {
+    color: var(--app-red);
+}
+
+#toast.toast,
+#toast.toast.success {
+    border-color: var(--app-border);
+    border-left-color: var(--app-green);
+}
+
+#toast.toast.error {
+    border-left-color: var(--app-red);
+}
+
+.app-mobile-nav a.active {
+    background: rgba(113, 128, 243, .13);
+    color: #b7bfff;
+}
+
+#stok-barang .modern-export-leading-icon,
+#stok-barang .search-label-icon {
+    background: rgba(67, 195, 223, .09);
+    color: #68d7ee;
+}
+
+#catatan-penjualan .modern-secondary-button .modern-export-leading-icon,
+#catatan-penjualan .sales-filter-control label .ui-svg-icon {
+    background: rgba(98, 162, 255, .09);
+    color: #8fbcff;
+}
+
+#tambahBarangModal .modal-title-icon,
+#editPenjualanModal .modal-title-icon {
+    color: #8fbcff;
+}
+
+::selection {
+    background: rgba(113, 128, 243, .34);
+    color: #ffffff;
+}
+
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline-color: rgba(113, 128, 243, .78);
+}
+
+/* Hilangkan bayangan dekoratif, termasuk garis kuning pada Total Penjualan. */
+.app-shell,
+.header,
+.app-sidebar,
+.app-topbar,
+.card,
+.dashboard-card,
+.container > .card,
+.container > .card:hover,
+.auth-card,
+.auth-brand-mark,
+.company-logo-shell,
+.modern-title-icon,
+.modern-primary-button,
+.auth-primary-button,
+#simpanPenjualanButton,
+.modern-export-options,
+#saranBarang:not(:empty),
+.sales-suggestions:not(:empty),
+.stock-pagination button,
+.app-logout-button,
+.app-mobile-nav,
+.modal-content,
+.export-confirm-card,
+.app-message-card,
+#toast.toast,
+#transactionModal .modal-content,
+#tambahBarangModal .modal-content,
+#editPenjualanModal .modal-content,
+#penjualan .sales-total-card,
+.dashboard-card .target-progress-fill {
+    box-shadow: none !important;
+}
+
+#penjualan .sales-total-card {
+    border-color: var(--app-border-soft);
+    background: #15171c;
+}
+
+#penjualan .sales-total-card::after {
+    display: none !important;
+}
+
+.dashboard-live-badge > span,
+#riwayat-transaksi .modern-history-table td.history-masuk::before,
+#riwayat-transaksi .modern-history-table td.history-laku::before,
+#riwayat-transaksi .modern-history-table td.history-keluar::before {
+    box-shadow: none !important;
+}
+
+.table-wrapper,
+.history-wrapper,
+.penjualan-wrapper,
+#stok-barang .modern-stock-table-wrapper,
+#catatan-penjualan .modern-sales-table-wrapper,
+#riwayat-transaksi .modern-history-table-wrapper {
+    scrollbar-color: #60636e #0d0e12;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb,
+.history-wrapper::-webkit-scrollbar-thumb,
+.penjualan-wrapper::-webkit-scrollbar-thumb,
+#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-thumb,
+#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-thumb,
+#riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar-thumb {
+    border-color: #0d0e12;
+    background: #60636e;
+}
