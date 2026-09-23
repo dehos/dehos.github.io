@@ -11843,3 +11843,122 @@ select:focus-visible {
         justify-content: center;
     }
 }
+
+
+/* =====================================================
+   CALM HEADER & TABLE CONSISTENCY
+===================================================== */
+
+.app-topbar {
+    border-bottom-color: #dce5f2 !important;
+    background: #f2f6fd !important;
+    backdrop-filter: none !important;
+}
+
+.app-topbar-eyebrow {
+    color: #41679f !important;
+}
+
+.app-mobile-logo,
+.app-topbar #databaseStatus.status,
+.app-logout-button {
+    background-color: rgba(255, 255, 255, .72) !important;
+}
+
+/* Hilangkan seluruh aksen vertikal tebal pada sisi kiri. */
+.dashboard-card .stat,
+.dashboard-card .stat-primary,
+.dashboard-card .stat-success,
+.dashboard-card .stat-warning,
+.dashboard-card .sales-target-section,
+#penjualan .sales-total-card {
+    border-left-width: 1px !important;
+    border-left-color: var(--app-border) !important;
+}
+
+.app-nav a.active::before {
+    display: none !important;
+}
+
+.dashboard-card .target-brand-identity {
+    grid-template-columns: 8px minmax(0, 1fr);
+}
+
+.dashboard-card .target-brand-indicator {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+}
+
+/* Catatan Penjualan mengikuti pola tabel In/Out: area tetap dan scroll internal. */
+#catatan-penjualan .modern-sales-table-wrapper {
+    max-height: 360px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-radius: 13px !important;
+}
+
+#catatan-penjualan .modern-sales-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+
+#catatan-penjualan .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table tfoot td {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+}
+
+/* Toast terang dan netral; status cukup melalui ikon dan border lembut. */
+#toast.toast,
+#toast.toast.success,
+#toast.toast.error {
+    border: 1px solid #d7dfeb !important;
+    border-left-width: 1px !important;
+    background: #ffffff !important;
+    color: var(--app-text-soft) !important;
+}
+
+#toast.toast.success {
+    border-color: #c9e4d8 !important;
+}
+
+#toast.toast.error {
+    border-color: #edcfd3 !important;
+}
+
+#toast.toast::after {
+    height: 2px;
+    background: #b9c7dc !important;
+}
+
+#toast.toast.success .toast-status-icon {
+    color: #16815d !important;
+}
+
+#toast.toast.error .toast-status-icon {
+    color: #c14a54 !important;
+}
+
+@media (max-width: 700px) {
+    .app-topbar {
+        background: #f2f6fd !important;
+    }
+
+    .dashboard-card .target-brand-identity {
+        grid-template-columns: 7px minmax(0, 1fr);
+    }
+
+    .dashboard-card .target-brand-indicator {
+        width: 7px !important;
+        height: 7px !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper {
+        max-height: 360px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}

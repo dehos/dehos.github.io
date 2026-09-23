@@ -813,8 +813,6 @@ let stockSortAsc = false;
 let halamanStok = 1;
 const jumlahPerHalamanStok = 6;
 const jumlahTombolHalaman = 5;
-let halamanPenjualan = 1;
-const jumlahPerHalamanPenjualan = 6;
 
 /*/*==================================
    FORMAT ANGKA
@@ -6530,8 +6528,6 @@ async function loadPenjualan() {
 
         window.dataPenjualan = [];
 
-        renderPaginationPenjualan(0);
-
         renderTargetPenjualan(
             [],
             document.getElementById(
@@ -6612,44 +6608,9 @@ async function loadPenjualan() {
 
     tbody.innerHTML = "";
 
-    const totalQty = hasil.reduce(
-        function(total, item) {
-            return total + (Number(item.qty) || 0);
-        },
-        0
-    );
+    let totalQty = 0;
 
-    const totalPenjualan = hasil.reduce(
-        function(total, item) {
-            return total +
-                (Number(item.qty) || 0) *
-                (Number(item.harga) || 0);
-        },
-        0
-    );
-
-    const totalHalamanPenjualan = Math.max(
-        1,
-        Math.ceil(
-            hasil.length /
-            jumlahPerHalamanPenjualan
-        )
-    );
-
-    halamanPenjualan = Math.min(
-        Math.max(halamanPenjualan, 1),
-        totalHalamanPenjualan
-    );
-
-    const indeksAwalPenjualan =
-        (halamanPenjualan - 1) *
-        jumlahPerHalamanPenjualan;
-
-    const dataHalamanPenjualan = hasil.slice(
-        indeksAwalPenjualan,
-        indeksAwalPenjualan +
-            jumlahPerHalamanPenjualan
-    );
+    let totalPenjualan = 0;
 
     if (hasil.length === 0) {
 
@@ -6672,7 +6633,7 @@ async function loadPenjualan() {
     }
 
 
-    dataHalamanPenjualan.forEach(
+    hasil.forEach(
         function(item) {
 
             const barang =
@@ -6701,6 +6662,11 @@ async function loadPenjualan() {
 
             const total =
                 qty * harga;
+
+
+            totalQty += qty;
+
+            totalPenjualan += total;
 
 
             const tanggalISO =
@@ -6842,92 +6808,6 @@ async function loadPenjualan() {
             );
     }
 
-    renderPaginationPenjualan(
-        hasil.length
-    );
-}
-
-function renderPaginationPenjualan(totalData) {
-    const pagination = document.getElementById(
-        "salesPagination"
-    );
-    const informasi = document.getElementById(
-        "salesPaginationInfo"
-    );
-
-    if (!pagination || !informasi) {
-        return;
-    }
-
-    pagination.innerHTML = "";
-
-    if (totalData === 0) {
-        informasi.textContent = "";
-        return;
-    }
-
-    const totalHalaman = Math.ceil(
-        totalData /
-        jumlahPerHalamanPenjualan
-    );
-    const dataPertama =
-        (halamanPenjualan - 1) *
-        jumlahPerHalamanPenjualan + 1;
-    const dataTerakhir = Math.min(
-        halamanPenjualan *
-            jumlahPerHalamanPenjualan,
-        totalData
-    );
-
-    informasi.textContent =
-        "Menampilkan " +
-        dataPertama +
-        "–" +
-        dataTerakhir +
-        " dari " +
-        formatNumber(totalData) +
-        " transaksi";
-
-    const buatTombol = function(arah, label, disabled) {
-        const tombol = document.createElement("button");
-        tombol.type = "button";
-        tombol.disabled = disabled;
-        tombol.setAttribute("aria-label", label);
-        tombol.innerHTML = getUiIconSvg(
-            arah < 0 ? "chevronLeft" : "chevronRight",
-            "pagination-icon"
-        );
-        tombol.addEventListener("click", function() {
-            halamanPenjualan = Math.min(
-                Math.max(halamanPenjualan + arah, 1),
-                totalHalaman
-            );
-            loadPenjualan();
-        });
-        return tombol;
-    };
-
-    pagination.appendChild(
-        buatTombol(
-            -1,
-            "Halaman penjualan sebelumnya",
-            halamanPenjualan === 1
-        )
-    );
-
-    const posisi = document.createElement("span");
-    posisi.className = "sales-pagination-position";
-    posisi.textContent =
-        halamanPenjualan + " / " + totalHalaman;
-    pagination.appendChild(posisi);
-
-    pagination.appendChild(
-        buatTombol(
-            1,
-            "Halaman penjualan berikutnya",
-            halamanPenjualan === totalHalaman
-        )
-    );
 }
 /* ==================================
    EDIT PENJUALAN
@@ -7443,8 +7323,6 @@ async function ubahBulanPenjualan(
     bulanInput.value =
         bulanTujuan;
 
-    halamanPenjualan = 1;
-
     updateNavigasiBulanPenjualan();
 
     await loadPenjualan();
@@ -7609,8 +7487,6 @@ async function initFilterPenjualan() {
             ? brandSaatIni
             : "";
 
-    halamanPenjualan = 1;
-
     updateNavigasiBulanPenjualan();
 
     await loadPenjualan();
@@ -7635,7 +7511,6 @@ if (filterBulanElement) {
     filterBulanElement.addEventListener(
         "change",
         function() {
-            halamanPenjualan = 1;
             loadPenjualan();
         }
     );
@@ -7645,7 +7520,6 @@ if (filterBrandElement) {
     filterBrandElement.addEventListener(
         "change",
         function() {
-            halamanPenjualan = 1;
             loadPenjualan();
         }
     );
