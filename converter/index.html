@@ -15,7 +15,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
-    <script defer src="script.js?v=20260923-1"></script>
+    <script defer src="script.js?v=20260923-2"></script>
 </head>
 <body>
     <header class="converter-header">
@@ -100,7 +100,7 @@
                 <span>JPG, PNG, atau WEBP · maksimal 10 foto</span>
             </label>
             <div id="scanFileInfo" class="file-info" hidden></div>
-            <div class="scan-tips"><strong>Agar hasil lebih akurat:</strong> foto lurus, terang, fokus, dan seluruh tabel terlihat.</div>
+            <div class="scan-tips"><strong>Deteksi tabel aktif:</strong> border dan perpotongan garis akan digunakan untuk menyusun baris serta kolom. Pastikan foto lurus, terang, fokus, dan seluruh tabel terlihat.</div>
             <button id="scanConvertButton" class="primary-action" type="button" disabled>Mulai OCR</button>
             <div id="scanStatus" class="process-status" role="status" aria-live="polite" hidden></div>
             <div id="scanResult" class="result-card" hidden>

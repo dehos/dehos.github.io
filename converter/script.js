@@ -199,18 +199,22 @@ async function convertPdfToExcel() {
         const pdf = await pdfjs.getDocument({ data: await readBlobAsArrayBuffer(file) }).promise;
         const workbook = window.XLSX.utils.book_new();
         let ocrPageCount = 0;
+        let detectedTableCount = 0;
         let extractedRows = 0;
 
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
             setStatus("pdfStatus", `Membaca halaman ${pageNumber} dari ${pdf.numPages}...`);
             const page = await pdf.getPage(pageNumber);
             let rows = await extractRowsFromPdfPage(page);
+            let gridDetected = false;
 
             if (!rows.length && useOcr) {
                 if (!ocrWorker) ocrWorker = await createOcrWorker((message) => updateOcrProgress("pdfStatus", `OCR halaman ${pageNumber}`, message));
                 const canvas = await renderPdfPage(page);
-                const result = await ocrWorker.recognize(canvas);
-                rows = textToRows(result.data?.text || "");
+                const structured = await recognizeStructuredTable(canvas, ocrWorker);
+                rows = structured.rows;
+                gridDetected = structured.gridDetected;
+                if (gridDetected) detectedTableCount += 1;
                 ocrPageCount += 1;
                 canvas.width = 1;
                 canvas.height = 1;
@@ -220,11 +224,12 @@ async function convertPdfToExcel() {
             extractedRows += rows.length;
             const sheet = window.XLSX.utils.aoa_to_sheet(safeRows);
             applyWorksheetWidths(sheet, safeRows);
+            if (gridDetected) applyTableWorksheetStyle(sheet, safeRows);
             window.XLSX.utils.book_append_sheet(workbook, sheet, safeSheetName(`Halaman ${pageNumber}`, workbook.SheetNames));
         }
 
         converterState.pdfWorkbookBlob = workbookToBlob(workbook);
-        document.getElementById("pdfResultSummary").textContent = `${pdf.numPages} halaman · ${extractedRows} baris${ocrPageCount ? ` · ${ocrPageCount} halaman memakai OCR` : ""}`;
+        document.getElementById("pdfResultSummary").textContent = `${pdf.numPages} halaman · ${extractedRows} baris${ocrPageCount ? ` · ${ocrPageCount} halaman memakai OCR` : ""}${detectedTableCount ? ` · ${detectedTableCount} tabel terdeteksi` : ""}`;
         hideElement("pdfStatus");
         showElement("pdfResult");
     } catch (error) {
@@ -250,22 +255,30 @@ async function convertScansToExcel() {
         worker = await createOcrWorker((message) => updateOcrProgress("scanStatus", `Foto ${activeIndex + 1}`, message));
         const workbook = window.XLSX.utils.book_new();
         let totalRows = 0;
+        let detectedTableCount = 0;
 
         for (let index = 0; index < converterState.scanFiles.length; index += 1) {
             activeIndex = index;
             const file = converterState.scanFiles[index];
             setStatus("scanStatus", `Membaca foto ${index + 1} dari ${converterState.scanFiles.length}: ${file.name}`);
-            const result = await worker.recognize(file);
-            const rows = textToRows(result.data?.text || "");
+            const canvas = await imageFileToCanvas(file);
+            const structured = await recognizeStructuredTable(canvas, worker);
+            const rows = structured.rows;
             const safeRows = rows.length ? rows : [["Tidak ada teks yang dapat dibaca"]];
             totalRows += rows.length;
             const sheet = window.XLSX.utils.aoa_to_sheet(safeRows);
             applyWorksheetWidths(sheet, safeRows);
+            if (structured.gridDetected) {
+                applyTableWorksheetStyle(sheet, safeRows);
+                detectedTableCount += 1;
+            }
             window.XLSX.utils.book_append_sheet(workbook, sheet, safeSheetName(`Foto ${index + 1}`, workbook.SheetNames));
+            canvas.width = 1;
+            canvas.height = 1;
         }
 
         converterState.scanWorkbookBlob = workbookToBlob(workbook);
-        document.getElementById("scanResultSummary").textContent = `${converterState.scanFiles.length} foto · ${totalRows} baris terbaca`;
+        document.getElementById("scanResultSummary").textContent = `${converterState.scanFiles.length} foto · ${totalRows} baris/cell terbaca${detectedTableCount ? ` · ${detectedTableCount} tabel terdeteksi` : " · border tabel tidak terdeteksi"}`;
         hideElement("scanStatus");
         showElement("scanResult");
     } catch (error) {
@@ -445,6 +458,288 @@ async function renderPdfPage(page) {
     return canvas;
 }
 
+async function imageFileToCanvas(file) {
+    const objectUrl = URL.createObjectURL(file);
+
+    try {
+        const image = await new Promise((resolve, reject) => {
+            const element = new Image();
+            element.onload = () => resolve(element);
+            element.onerror = () => reject(new Error("Foto tidak dapat dibuka."));
+            element.src = objectUrl;
+        });
+
+        const longestSide = Math.max(image.naturalWidth, image.naturalHeight);
+        const scale = longestSide > 2400
+            ? 2400 / longestSide
+            : longestSide < 1400
+                ? Math.min(2, 1400 / Math.max(longestSide, 1))
+                : 1;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        const context = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
+        if (!context) throw new Error("Canvas tidak dapat digunakan pada perangkat ini.");
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        return canvas;
+    } finally {
+        URL.revokeObjectURL(objectUrl);
+    }
+}
+
+async function recognizeStructuredTable(canvas, worker) {
+    const grid = detectTableGrid(canvas);
+    const ocrCanvas = grid ? removeGridLines(canvas, grid) : canvas;
+    const result = await worker.recognize(ocrCanvas, {}, { tsv: true });
+    const fallbackRows = textToRows(result.data?.text || "");
+
+    if (ocrCanvas !== canvas) {
+        ocrCanvas.width = 1;
+        ocrCanvas.height = 1;
+    }
+
+    if (!grid || !result.data?.tsv) {
+        return { rows: fallbackRows, gridDetected: false };
+    }
+
+    const words = parseTsvWords(result.data.tsv);
+    const rows = mapWordsToGrid(words, grid);
+    const hasText = rows.some((row) => row.some((cell) => String(cell).trim()));
+
+    return {
+        rows: hasText ? rows : fallbackRows,
+        gridDetected: hasText
+    };
+}
+
+function detectTableGrid(canvas) {
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) return null;
+
+    const { width, height } = canvas;
+    if (width < 80 || height < 80 || width * height > 7_000_000) return null;
+
+    const pixels = context.getImageData(0, 0, width, height).data;
+    const gray = new Uint8Array(width * height);
+    const histogram = new Uint32Array(256);
+
+    for (let index = 0, pixel = 0; index < pixels.length; index += 4, pixel += 1) {
+        const value = Math.round(pixels[index] * .299 + pixels[index + 1] * .587 + pixels[index + 2] * .114);
+        gray[pixel] = value;
+        histogram[value] += 1;
+    }
+
+    const threshold = Math.max(70, Math.min(210, calculateOtsuThreshold(histogram, gray.length)));
+    const dark = new Uint8Array(gray.length);
+    for (let index = 0; index < gray.length; index += 1) dark[index] = gray[index] < threshold ? 1 : 0;
+
+    const rowCandidates = [];
+    const columnCandidates = [];
+    const minimumHorizontalRun = Math.max(45, Math.round(width * .24));
+    const minimumVerticalRun = Math.max(45, Math.round(height * .24));
+
+    for (let y = 0; y < height; y += 1) {
+        if (longestRunInRow(dark, width, y, 2) >= minimumHorizontalRun) rowCandidates.push(y);
+    }
+
+    for (let x = 0; x < width; x += 1) {
+        if (longestRunInColumn(dark, width, height, x, 2) >= minimumVerticalRun) columnCandidates.push(x);
+    }
+
+    let horizontal = groupLinePositions(rowCandidates);
+    let vertical = groupLinePositions(columnCandidates);
+    if (horizontal.length < 2 || vertical.length < 2) return null;
+
+    horizontal = horizontal.filter((y) => intersectionRatio(dark, width, height, vertical, y, false) >= .55);
+    vertical = vertical.filter((x) => intersectionRatio(dark, width, height, horizontal, x, true) >= .55);
+    horizontal = removeCrowdedLines(horizontal, 8);
+    vertical = removeCrowdedLines(vertical, 8);
+
+    if (horizontal.length < 2 || vertical.length < 2) return null;
+    if ((horizontal.length - 1) * (vertical.length - 1) > 500) return null;
+
+    return { horizontal, vertical, width, height };
+}
+
+function calculateOtsuThreshold(histogram, total) {
+    let sum = 0;
+    for (let value = 0; value < 256; value += 1) sum += value * histogram[value];
+
+    let backgroundWeight = 0;
+    let backgroundSum = 0;
+    let bestVariance = -1;
+    let bestThreshold = 160;
+
+    for (let value = 0; value < 256; value += 1) {
+        backgroundWeight += histogram[value];
+        if (!backgroundWeight) continue;
+        const foregroundWeight = total - backgroundWeight;
+        if (!foregroundWeight) break;
+        backgroundSum += value * histogram[value];
+        const backgroundMean = backgroundSum / backgroundWeight;
+        const foregroundMean = (sum - backgroundSum) / foregroundWeight;
+        const variance = backgroundWeight * foregroundWeight * Math.pow(backgroundMean - foregroundMean, 2);
+        if (variance > bestVariance) {
+            bestVariance = variance;
+            bestThreshold = value;
+        }
+    }
+
+    return bestThreshold;
+}
+
+function longestRunInRow(binary, width, y, allowedGap) {
+    let longest = 0;
+    let run = 0;
+    let gap = 0;
+    const offset = y * width;
+    for (let x = 0; x < width; x += 1) {
+        if (binary[offset + x]) {
+            run += gap + 1;
+            gap = 0;
+            if (run > longest) longest = run;
+        } else if (run && gap < allowedGap) {
+            gap += 1;
+        } else {
+            run = 0;
+            gap = 0;
+        }
+    }
+    return longest;
+}
+
+function longestRunInColumn(binary, width, height, x, allowedGap) {
+    let longest = 0;
+    let run = 0;
+    let gap = 0;
+    for (let y = 0; y < height; y += 1) {
+        if (binary[y * width + x]) {
+            run += gap + 1;
+            gap = 0;
+            if (run > longest) longest = run;
+        } else if (run && gap < allowedGap) {
+            gap += 1;
+        } else {
+            run = 0;
+            gap = 0;
+        }
+    }
+    return longest;
+}
+
+function groupLinePositions(positions) {
+    if (!positions.length) return [];
+    const groups = [[positions[0]]];
+    for (let index = 1; index < positions.length; index += 1) {
+        const group = groups[groups.length - 1];
+        if (positions[index] - group[group.length - 1] <= 3) group.push(positions[index]);
+        else groups.push([positions[index]]);
+    }
+    return groups.map((group) => Math.round(group.reduce((sum, value) => sum + value, 0) / group.length));
+}
+
+function intersectionRatio(binary, width, height, otherLines, position, verticalLine) {
+    let matches = 0;
+    otherLines.forEach((other) => {
+        const centerX = verticalLine ? position : other;
+        const centerY = verticalLine ? other : position;
+        let found = false;
+        for (let y = Math.max(0, centerY - 2); y <= Math.min(height - 1, centerY + 2) && !found; y += 1) {
+            for (let x = Math.max(0, centerX - 2); x <= Math.min(width - 1, centerX + 2); x += 1) {
+                if (binary[y * width + x]) { found = true; break; }
+            }
+        }
+        if (found) matches += 1;
+    });
+    return otherLines.length ? matches / otherLines.length : 0;
+}
+
+function removeCrowdedLines(lines, minimumGap) {
+    const result = [];
+    lines.forEach((line) => {
+        if (!result.length || line - result[result.length - 1] >= minimumGap) result.push(line);
+    });
+    return result;
+}
+
+function removeGridLines(canvas, grid) {
+    const cleaned = document.createElement("canvas");
+    cleaned.width = canvas.width;
+    cleaned.height = canvas.height;
+    const context = cleaned.getContext("2d", { alpha: false });
+    if (!context) return canvas;
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, cleaned.width, cleaned.height);
+    context.drawImage(canvas, 0, 0);
+    context.fillStyle = "#ffffff";
+    grid.horizontal.forEach((y) => context.fillRect(0, Math.max(0, y - 2), cleaned.width, 5));
+    grid.vertical.forEach((x) => context.fillRect(Math.max(0, x - 2), 0, 5, cleaned.height));
+    return cleaned;
+}
+
+function parseTsvWords(tsv) {
+    return String(tsv || "")
+        .split(/\r?\n/)
+        .slice(1)
+        .map((line) => line.split("\t"))
+        .filter((columns) => columns.length >= 12 && columns[0] === "5" && columns.slice(11).join("\t").trim())
+        .map((columns) => ({
+            left: Number(columns[6]),
+            top: Number(columns[7]),
+            width: Number(columns[8]),
+            height: Number(columns[9]),
+            confidence: Number(columns[10]),
+            text: columns.slice(11).join("\t").trim()
+        }))
+        .filter((word) => Number.isFinite(word.left) && Number.isFinite(word.top) && word.confidence > -1);
+}
+
+function mapWordsToGrid(words, grid) {
+    const rowCount = grid.horizontal.length - 1;
+    const columnCount = grid.vertical.length - 1;
+    const cells = Array.from({ length: rowCount }, () => Array.from({ length: columnCount }, () => []));
+
+    words.forEach((word) => {
+        const centerX = word.left + word.width / 2;
+        const centerY = word.top + word.height / 2;
+        const row = findGridInterval(grid.horizontal, centerY);
+        const column = findGridInterval(grid.vertical, centerX);
+        if (row >= 0 && column >= 0) cells[row][column].push(word);
+    });
+
+    return cells.map((row) => row.map((cellWords) => joinCellWords(cellWords)));
+}
+
+function findGridInterval(lines, coordinate) {
+    for (let index = 0; index < lines.length - 1; index += 1) {
+        if (coordinate > lines[index] && coordinate < lines[index + 1]) return index;
+    }
+    return -1;
+}
+
+function joinCellWords(words) {
+    if (!words.length) return "";
+    const sorted = words.slice().sort((a, b) => Math.abs(a.top - b.top) > Math.max(4, Math.min(a.height, b.height) * .45) ? a.top - b.top : a.left - b.left);
+    const lines = [];
+
+    sorted.forEach((word) => {
+        let line = lines.find((candidate) => Math.abs(candidate.top - word.top) <= Math.max(4, word.height * .45));
+        if (!line) {
+            line = { top: word.top, words: [] };
+            lines.push(line);
+        }
+        line.words.push(word);
+    });
+
+    return lines
+        .sort((a, b) => a.top - b.top)
+        .map((line) => line.words.sort((a, b) => a.left - b.left).map((word) => word.text).join(" "))
+        .join("\n")
+        .trim();
+}
+
 function textToRows(text) {
     return String(text || "")
         .replace(/\r/g, "")
@@ -468,6 +763,30 @@ function applyWorksheetWidths(sheet, rows) {
         const width = Math.max(10, ...rows.map((row) => String(row[columnIndex] ?? "").length + 2));
         return { wch: Math.min(width, 45) };
     });
+}
+
+function applyTableWorksheetStyle(sheet, rows) {
+    const range = window.XLSX.utils.decode_range(sheet["!ref"] || "A1:A1");
+    const thinBorder = {
+        top: { style: "thin", color: { rgb: "BFC8D6" } },
+        bottom: { style: "thin", color: { rgb: "BFC8D6" } },
+        left: { style: "thin", color: { rgb: "BFC8D6" } },
+        right: { style: "thin", color: { rgb: "BFC8D6" } }
+    };
+
+    for (let row = range.s.r; row <= range.e.r; row += 1) {
+        for (let column = range.s.c; column <= range.e.c; column += 1) {
+            const address = window.XLSX.utils.encode_cell({ r: row, c: column });
+            if (!sheet[address]) sheet[address] = { t: "s", v: "" };
+            sheet[address].s = {
+                border: thinBorder,
+                alignment: { vertical: "center", wrapText: true },
+                ...(row === 0 ? { font: { bold: true }, fill: { fgColor: { rgb: "EAF1FA" } } } : {})
+            };
+        }
+    }
+
+    sheet["!rows"] = rows.map(() => ({ hpt: 24 }));
 }
 
 function populateSheetOptions(sheetNames) {
