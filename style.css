@@ -2252,6 +2252,52 @@ table {
 }
 
 
+/* Tombol hapus pilihan barang pada form jual. */
+#penjualan .sales-product-input-wrapper {
+    position: relative;
+}
+
+#penjualan .sales-product-input-wrapper #penjualanBarang {
+    padding-right: 42px;
+}
+
+#penjualan .sales-product-clear {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    display: inline-grid;
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid #d5dce7;
+    border-radius: 50%;
+    background: #f3f5f8;
+    color: #68758a;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+#penjualan .sales-product-clear[hidden] {
+    display: none !important;
+}
+
+#penjualan .sales-product-clear:hover {
+    border-color: #b8c3d2;
+    background: #e9edf3;
+    color: #233650;
+}
+
+#penjualan .sales-product-clear:focus-visible {
+    outline: 2px solid rgba(64, 112, 175, .42);
+    outline-offset: 2px;
+}
+
+#penjualan .sales-product-clear .ui-svg-icon {
+    width: 13px;
+    height: 13px;
+}
+
 /* =====================================================
    TABEL STOK DAN RIWAYAT MODERN
 ===================================================== */
@@ -11960,5 +12006,135 @@ select:focus-visible {
         max-height: 360px;
         overflow-x: hidden;
         overflow-y: auto;
+    }
+}
+
+
+/* Final header and action overrides; kept last to supersede legacy themes. */
+.header,
+.app-topbar {
+    border-color: rgba(155, 194, 222, .18) !important;
+    background-color: #062b47 !important;
+    background-image:
+        radial-gradient(circle at 24% 18%, rgba(19, 126, 179, .28), transparent 42%),
+        repeating-linear-gradient(118deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 34px) !important;
+    color: #f7fbff !important;
+    backdrop-filter: none !important;
+}
+
+.header h1,
+.app-topbar h2 {
+    color: #f8fbff !important;
+}
+
+.header p,
+.app-topbar p {
+    color: #b9ccdc !important;
+}
+
+.app-topbar-eyebrow {
+    color: #8fc9e9 !important;
+    font-size: 10px;
+    letter-spacing: .08em;
+}
+
+.company-logo-shell,
+.app-mobile-logo {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.company-logo-shell {
+    width: 60px;
+    height: 60px;
+    border-radius: 0;
+}
+
+.company-logo-shell .company-logo {
+    width: 39px;
+    height: 39px;
+    border-radius: 0;
+}
+
+.app-topbar #databaseStatus.status {
+    border-color: rgba(137, 226, 193, .28) !important;
+    background: rgba(255, 255, 255, .09) !important;
+    color: #b7eed9 !important;
+}
+
+.app-topbar #databaseStatus.status .database-status-icon {
+    color: #80d8b6 !important;
+}
+
+.app-logout-button {
+    border-color: rgba(255, 183, 193, .3) !important;
+    background: rgba(255, 255, 255, .09) !important;
+    color: #ffc4cc !important;
+}
+
+.app-logout-button:hover {
+    border-color: rgba(255, 202, 209, .48) !important;
+    background: rgba(255, 255, 255, .15) !important;
+    color: #ffe4e8 !important;
+}
+
+.modal-actions .btn-secondary,
+#transactionModal .modal-actions .btn-secondary,
+#tambahBarangModal .modal-actions .btn-secondary,
+#editPenjualanModal .modal-actions .btn-secondary,
+#importExcelModal .modal-actions .btn-secondary,
+.app-message-cancel,
+.export-confirm-no {
+    border: 1px solid #d4dce8 !important;
+    background: #ffffff !important;
+    color: #34445e !important;
+}
+
+.modal-actions .btn-secondary:hover,
+#transactionModal .modal-actions .btn-secondary:hover,
+#tambahBarangModal .modal-actions .btn-secondary:hover,
+#editPenjualanModal .modal-actions .btn-secondary:hover,
+#importExcelModal .modal-actions .btn-secondary:hover,
+.app-message-cancel:hover,
+.export-confirm-no:hover {
+    border-color: #aebbd0 !important;
+    background: #eef2f7 !important;
+    color: #13233e !important;
+}
+
+@media (max-width: 700px) {
+    .app-topbar {
+        grid-template-columns: minmax(0, 1fr) 74px;
+        background-color: #062b47 !important;
+    }
+
+    .app-topbar > div:first-child {
+        grid-template-columns: 44px minmax(0, 1fr);
+        column-gap: 10px;
+    }
+
+    .app-mobile-logo {
+        width: 44px;
+        height: 44px;
+        flex-basis: 44px;
+        border-radius: 0;
+    }
+
+    .app-mobile-logo img {
+        width: 31px;
+        height: 31px;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .company-logo-shell {
+        width: 53px;
+        height: 53px;
+    }
+
+    .company-logo-shell .company-logo {
+        width: 35px;
+        height: 35px;
     }
 }

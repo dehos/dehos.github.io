@@ -5018,6 +5018,11 @@ const inputPenjualanBarang =
         "penjualanBarang"
     );
 
+const penjualanBarangClear =
+    document.getElementById(
+        "penjualanBarangClear"
+    );
+
 const saranBarang =
     document.getElementById(
         "saranBarang"
@@ -5050,6 +5055,48 @@ const simpanPenjualanButton =
     document.getElementById("simpanPenjualanButton");
 
 let penjualanSedangDisimpan = false;
+
+
+function updatePenjualanBarangClear() {
+    if (!penjualanBarangClear) {
+        return;
+    }
+
+    penjualanBarangClear.hidden =
+        !inputPenjualanBarang?.value;
+}
+
+
+function clearPenjualanBarang() {
+    if (!inputPenjualanBarang) {
+        return;
+    }
+
+    inputPenjualanBarang.value = "";
+    inputPenjualanBarang.dataset.id = "";
+
+    if (inputPenjualanBrand) {
+        inputPenjualanBrand.value = "";
+    }
+
+    if (saranBarang) {
+        saranBarang.innerHTML = "";
+    }
+
+    updatePenjualanBarangClear();
+    updatePenjualanSummary();
+    inputPenjualanBarang.focus();
+}
+
+
+if (penjualanBarangClear) {
+    penjualanBarangClear.addEventListener(
+        "click",
+        clearPenjualanBarang
+    );
+}
+
+updatePenjualanBarangClear();
 
 
 function sinkronkanTanggalPenjualanTampilan() {
@@ -5393,6 +5440,7 @@ if (
 if (inputPenjualanBrand) {
     inputPenjualanBrand.value = "";
 }
+            updatePenjualanBarangClear();
             updatePenjualanSummary();
 
             const keyword =
@@ -5475,6 +5523,7 @@ if (inputPenjualanBrand) {
     inputPenjualanBrand.value =
         item.brand?.nama || "";
 }
+                                updatePenjualanBarangClear();
                                 saranBarang.innerHTML =
                                     "";
 
@@ -5851,6 +5900,8 @@ async function simpanPenjualan() {
     document.getElementById(
         "saranBarang"
     ).innerHTML = "";
+
+    updatePenjualanBarangClear();
 
 
     setPenjualanSaving(false);
