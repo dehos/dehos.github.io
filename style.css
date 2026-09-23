@@ -12290,23 +12290,14 @@ select:focus-visible {
     width: auto;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-}
-
-.app-footer-logo {
-    display: block;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
-    object-fit: contain;
 }
 
 .app-footer-identity {
     display: grid;
-    justify-items: start;
+    justify-items: center;
     gap: 2px;
     min-width: 0;
-    text-align: left;
+    text-align: center;
 }
 
 .app-footer-brand strong {
@@ -12345,12 +12336,6 @@ select:focus-visible {
 
     .app-footer-brand {
         width: auto;
-    }
-
-    .app-footer-logo {
-        width: 28px;
-        height: 28px;
-        flex-basis: 28px;
     }
 
     .app-footer-identity {
