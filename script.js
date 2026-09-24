@@ -321,6 +321,9 @@ const UI_ICON_PATHS = {
         '<path d="M12 5v14M5 12h14"></path>',
     minus:
         '<path d="M5 12h14"></path>',
+    edit:
+        '<path d="M12 20h9"></path>' +
+        '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path>',
     chevronLeft:
         '<path d="m15 18-6-6 6-6"></path>',
     chevronRight:
@@ -2546,6 +2549,16 @@ async function simpanImportExcel() {
    HITUNG STOK
 ===================================================== */
 
+function isStockIn(transaction) {
+    return transaction.type === "masuk" ||
+        transaction.type === "adjust_masuk";
+}
+
+function isStockOut(transaction) {
+    return transaction.type === "laku" ||
+        transaction.type === "adjust_keluar";
+}
+
 function getRawCurrentStock(barang) {
 
     let stok =
@@ -2577,8 +2590,7 @@ function getRawCurrentStock(barang) {
             }
 
             if (
-                transaction.type ===
-                "masuk"
+                isStockIn(transaction)
             ) {
 
                 stok +=
@@ -2588,8 +2600,7 @@ function getRawCurrentStock(barang) {
             }
 
             if (
-                transaction.type ===
-                "laku"
+                isStockOut(transaction)
             ) {
 
                 stok -=
@@ -2981,6 +2992,16 @@ dataHalaman.forEach(
                     >
                         ${getUiIconSvg("minus", "stock-action-icon")}
                         <span>Keluar</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="action-btn stock-adjust-btn"
+                        onclick="openTransaction(${Number(barang.id)}, 'adjust')"
+                        aria-label="Adjust stok ${escapeHTML(barang.nama)}"
+                        title="Sesuaikan stok fisik"
+                    >
+                        ${getUiIconSvg("edit", "stock-action-icon")}
+                        <span>Adjust</span>
                     </button>
                 </div>
             </td>
@@ -3529,9 +3550,11 @@ function openTransaction(
     }
 
     title.textContent =
-        type === "masuk"
-            ? "Barang Masuk"
-            : "Barang Keluar";
+        type === "adjust"
+            ? "Adjust Stok Barang"
+            : type === "masuk"
+                ? "Barang Masuk"
+                : "Barang Keluar";
 
     product.textContent =
         barang.nama;
@@ -3542,7 +3565,24 @@ function openTransaction(
         );
 
     if (qtyInput) {
-        qtyInput.value = 1;
+        qtyInput.value = type === "adjust"
+            ? getCurrentStock(barang)
+            : 1;
+        qtyInput.min = type === "adjust" ? "0" : "1";
+    }
+
+    const label = modal.querySelector('label[for="transactionQty"]');
+    if (label) label.textContent = type === "adjust"
+        ? "Stok fisik yang benar"
+        : "Jumlah";
+
+    const hint = document.getElementById("transactionHint");
+    if (hint) {
+        hint.hidden = type !== "adjust";
+        hint.textContent = type === "adjust"
+            ? "Stok tercatat: " + formatNumber(getCurrentStock(barang)) +
+              ". Selisih akan dicatat sebagai Adjust di riwayat."
+            : "";
     }
 
     showAppModal(
@@ -3587,13 +3627,18 @@ async function confirmTransaction() {
             input.value
         );
 
+    const isAdjust = selectedTransactionType === "adjust";
     if (
+        input.value.trim() === "" ||
         !Number.isFinite(qty) ||
-        qty <= 0
+        (isAdjust && !Number.isSafeInteger(qty)) ||
+        qty < (isAdjust ? 0 : 1)
     ) {
 
         showAppAlert(
-            "Jumlah harus lebih dari 0."
+            isAdjust
+                ? "Stok fisik harus berupa bilangan bulat 0 atau lebih."
+                : "Jumlah harus lebih dari 0."
         );
 
         return;
@@ -3622,6 +3667,17 @@ async function confirmTransaction() {
 
         return;
     }
+
+    const stokSekarang = getRawCurrentStock(barang);
+    const selisih = isAdjust ? qty - stokSekarang : qty;
+    if (isAdjust && selisih === 0) {
+        showAppAlert("Stok sudah sesuai. Tidak ada perubahan yang dicatat.");
+        return;
+    }
+    const typeSimpan = isAdjust
+        ? (selisih > 0 ? "adjust_masuk" : "adjust_keluar")
+        : selectedTransactionType;
+    const qtySimpan = Math.abs(selisih);
 
 
     if (
@@ -3675,10 +3731,10 @@ async function confirmTransaction() {
                         tanggal,
 
                     type:
-                        selectedTransactionType,
+                        typeSimpan,
 
                     qty:
-                        qty
+                        qtySimpan
 
                 });
 
@@ -3706,13 +3762,17 @@ async function confirmTransaction() {
 
 
         const namaTransaksi =
-            selectedTransactionType ===
+            isAdjust
+                ? "Adjust stok"
+                : selectedTransactionType ===
             "masuk"
                 ? "Barang masuk"
                 : "Barang keluar";
 
         showToast(
-            `${namaTransaksi} ${formatNumber(qty)}`,
+            isAdjust
+                ? `${namaTransaksi}: ${formatNumber(stokSekarang)} → ${formatNumber(qty)}`
+                : `${namaTransaksi} ${formatNumber(qty)}`,
             "success"
         );
     } catch (error) {
@@ -4003,21 +4063,17 @@ function renderHistory() {
                     ? barang.nama
                     : "Barang dihapus";
 
-            const typeText =
-                transaction.type ===
-                "masuk"
-                    ? "Masuk"
-                    : "Keluar";
+            const isAdjustment = String(transaction.type).startsWith("adjust_");
+            const typeText = isAdjustment
+                ? "Adjust"
+                : isStockIn(transaction) ? "Masuk" : "Keluar";
 
-            const typeTextMobile =
-                transaction.type ===
-                "masuk"
-                    ? "In"
-                    : "Out";
+            const typeTextMobile = isAdjustment
+                ? "Adjust"
+                : isStockIn(transaction) ? "In" : "Out";
 
             const qtyText =
-                transaction.type ===
-                "masuk"
+                isStockIn(transaction)
                     ? "+" +
                       formatNumber(
                           transaction.qty
@@ -4086,9 +4142,11 @@ function renderHistory() {
 
                 <td
                     class="${
-                        transaction.type === "masuk"
-                            ? "history-masuk"
-                            : "history-laku"
+                        isAdjustment
+                            ? "history-adjust"
+                            : isStockIn(transaction)
+                                ? "history-masuk"
+                                : "history-laku"
                     }"
                 >
                     <span class="history-type-desktop">
@@ -4177,9 +4235,9 @@ function openEditTransaksi(id) {
 
     document.getElementById(
         "editTransaksiJenis"
-    ).value = transaction.type === "masuk"
-        ? "Masuk"
-        : "Keluar";
+    ).value = transaction.type.startsWith("adjust_")
+        ? "Adjust " + (isStockIn(transaction) ? "(+)" : "(-)")
+        : isStockIn(transaction) ? "Masuk" : "Keluar";
 
     document.getElementById(
         "editTransaksiQty"
@@ -4509,8 +4567,7 @@ function getStockAfterTransaction(
 
 
             if (
-                transaction.type ===
-                "masuk"
+                isStockIn(transaction)
             ) {
 
                 stok +=
@@ -4521,8 +4578,7 @@ function getStockAfterTransaction(
 
 
             if (
-                transaction.type ===
-                "laku"
+                isStockOut(transaction)
             ) {
 
                 stok -=
@@ -8118,15 +8174,13 @@ function getStockAktualUntukExport(
                 ) || 0;
 
             if (
-                transaction.type ===
-                "masuk"
+                isStockIn(transaction)
             ) {
                 stok += qty;
             }
 
             if (
-                transaction.type ===
-                "laku"
+                isStockOut(transaction)
             ) {
                 stok -= qty;
             }
@@ -8751,15 +8805,13 @@ function getStokSebelumTanggalExport(
                 ) || 0;
 
             if (
-                transaction.type ===
-                "masuk"
+                isStockIn(transaction)
             ) {
                 stok += qty;
             }
 
             if (
-                transaction.type ===
-                "laku"
+                isStockOut(transaction)
             ) {
                 stok -= qty;
             }
@@ -8961,15 +9013,13 @@ function buatRekapStokBarangExport(
                             ) || 0;
 
                         if (
-                            transaction.type ===
-                            "masuk"
+                            isStockIn(transaction)
                         ) {
                             totalMasuk += qty;
                         }
 
                         if (
-                            transaction.type ===
-                            "laku"
+                            isStockOut(transaction)
                         ) {
                             totalKeluar += qty;
                         }

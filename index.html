@@ -858,7 +858,7 @@
         <table class="history-table table table-sm table-hover align-middle mb-0 modern-data-table modern-history-table">
 
             <caption class="visually-hidden">
-                Riwayat stok masuk dan keluar pada bulan yang dipilih
+                Riwayat stok masuk, keluar, dan adjust pada bulan yang dipilih
             </caption>
 
             <thead class="table-light">
@@ -872,7 +872,7 @@
                     </th>
                     <th scope="col">
                         <span class="history-table-label-desktop">Transaksi</span>
-                        <span class="history-table-label-mobile">In/Out</span>
+                        <span class="history-table-label-mobile">Jenis</span>
                     </th>
 
                     <th scope="col" class="text-center">
@@ -1114,6 +1114,7 @@
     min="1"
     value="1"
 >
+        <small id="transactionHint" class="transaction-hint" hidden></small>
         <div class="modal-actions">
 
             <button

@@ -12407,3 +12407,41 @@ select:focus-visible {
         backdrop-filter: none !important;
     }
 }
+/* Adjust stok dan penanda pada riwayat. */
+#stok-barang #stockTable .stock-adjust-btn,
+.modern-stock-table #stockTable .stock-adjust-btn,
+#riwayat-transaksi .modern-history-table td.history-adjust {
+    color: #7c62c5 !important;
+}
+
+#stok-barang #stockTable .stock-adjust-btn:hover,
+.modern-stock-table #stockTable .stock-adjust-btn:hover {
+    background: rgba(124, 98, 197, .12) !important;
+}
+
+#stockTable .stock-actions-cell,
+.stock-actions-header {
+    min-width: 205px;
+}
+
+#transactionModal .transaction-hint {
+    display: block;
+    margin-top: 8px;
+    color: var(--app-muted);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+#transactionModal .transaction-hint[hidden] {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    #stok-barang #stockTable .stock-action-group {
+        width: auto;
+    }
+    #stok-barang #stockTable .action-btn {
+        min-width: 0;
+        padding-inline: 4px;
+    }
+}
