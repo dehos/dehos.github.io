@@ -6656,6 +6656,45 @@ async function loadPenjualan() {
             }
         );
 
+    hasil.sort(
+        function(a, b) {
+            const perbandinganTanggal =
+                String(
+                    b.tanggal_pembelian || ""
+                ).localeCompare(
+                    String(
+                        a.tanggal_pembelian || ""
+                    )
+                );
+
+            if (perbandinganTanggal !== 0) {
+                return perbandinganTanggal;
+            }
+
+            const perbandinganBrand =
+                String(a.brand || "")
+                    .trim()
+                    .localeCompare(
+                        String(b.brand || "")
+                            .trim(),
+                        "id",
+                        {
+                            sensitivity: "base"
+                        }
+                    );
+
+            if (perbandinganBrand !== 0) {
+                return perbandinganBrand;
+            }
+
+            return (
+                Number(b.id) || 0
+            ) - (
+                Number(a.id) || 0
+            );
+        }
+    );
+
 
     tbody.innerHTML = "";
 
