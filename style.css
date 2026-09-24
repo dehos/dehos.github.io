@@ -12445,3 +12445,33 @@ select:focus-visible {
         padding-inline: 4px;
     }
 }
+
+/* Tiga aksi tetap terlihat dalam kolom tabel pada layar ponsel. */
+@media (max-width: 700px) {
+    #stok-barang .modern-stock-table th:nth-child(4),
+    #stok-barang .modern-stock-table td:nth-child(4),
+    #stockTable .stock-actions-cell,
+    .stock-actions-header {
+        width: 130px;
+        min-width: 0;
+    }
+
+    #stok-barang #stockTable .stock-action-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: 2px;
+    }
+
+    #stok-barang #stockTable .action-btn {
+        width: 100%;
+        min-width: 0;
+        height: 26px;
+        padding: 3px 2px;
+        font-size: 9px;
+    }
+
+    #stok-barang #stockTable .stock-adjust-btn {
+        grid-column: 1 / -1;
+    }
+}
