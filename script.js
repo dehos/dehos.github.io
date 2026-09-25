@@ -298,6 +298,8 @@ let tanggalDipilih = "";
 let selectedProduct = null;
 let selectedTransactionType = "";
 
+let historyTypeFilter = "semua";
+
 let bulanRiwayat =
     new Date();
 
@@ -3949,6 +3951,39 @@ function ubahBulanRiwayat(perubahan) {
 }
 
 
+function setHistoryTypeFilter(type) {
+    const labels = {
+        semua: "Semua",
+        masuk: "Masuk",
+        keluar: "Keluar",
+        adjust: "Adjust"
+    };
+
+    if (!Object.prototype.hasOwnProperty.call(labels, type)) {
+        return;
+    }
+
+    historyTypeFilter = type;
+
+    const label = document.getElementById("historyFilterLabel");
+    if (label) label.textContent = labels[type];
+
+    document.querySelectorAll("[data-history-filter]").forEach(function(button) {
+        button.setAttribute("aria-pressed", String(button.dataset.historyFilter === type));
+    });
+
+    const menu = document.getElementById("historyTypeMenu");
+    if (menu) {
+        menu.open = false;
+        menu.querySelector("summary")?.setAttribute(
+            "aria-label",
+            "Filter jenis transaksi: " + labels[type]
+        );
+    }
+
+    renderHistory();
+}
+
 function renderHistory() {
 
     const tbody =
@@ -3978,12 +4013,24 @@ function renderHistory() {
             .filter(
                 function(transaction) {
 
-                    return String(
+                    const cocokBulan = String(
                         transaction.tanggal ||
                         ""
                     ).startsWith(
                         awalanTanggal
                     );
+
+                    if (!cocokBulan || historyTypeFilter === "semua") {
+                        return cocokBulan;
+                    }
+
+                    if (historyTypeFilter === "adjust") {
+                        return String(transaction.type).startsWith("adjust_");
+                    }
+
+                    return historyTypeFilter === "masuk"
+                        ? transaction.type === "masuk"
+                        : transaction.type === "laku";
                 }
             )
             .sort(
@@ -4025,7 +4072,9 @@ function renderHistory() {
                     colspan="6"
                     class="empty"
                 >
-                    Tidak ada transaksi pada
+                    Tidak ada ${historyTypeFilter === "semua" ? "transaksi" :
+                        historyTypeFilter === "adjust" ? "adjust" :
+                        "transaksi " + historyTypeFilter} pada
                     ${escapeHTML(
                         formatBulanRiwayat(
                             bulanRiwayat
