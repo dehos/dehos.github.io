@@ -299,6 +299,7 @@ let selectedProduct = null;
 let selectedTransactionType = "";
 
 let historyTypeFilter = "semua";
+let historyBrandFilter = "";
 
 let bulanRiwayat =
     new Date();
@@ -3984,6 +3985,46 @@ function setHistoryTypeFilter(type) {
     renderHistory();
 }
 
+function setHistoryBrandFilter(brandId) {
+    historyBrandFilter = String(brandId || "");
+    renderHistory();
+}
+
+function updateHistoryBrandOptions() {
+    const select = document.getElementById("historyBrandFilter");
+    if (!select) return;
+
+    const brands = new Map();
+    dataBarang.forEach(function(item) {
+        if (item.brand_id != null && item.brand?.nama) {
+            brands.set(String(item.brand_id), String(item.brand.nama));
+        }
+    });
+
+    const options = Array.from(brands, function([id, name]) {
+        return { id, name };
+    }).sort(function(a, b) {
+        return a.name.localeCompare(b.name, "id");
+    });
+
+    const key = options.map(function(item) {
+        return item.id + ":" + item.name;
+    }).join("|");
+
+    if (select.dataset.brandOptions !== key) {
+        select.replaceChildren(new Option("Semua Brand", ""));
+        options.forEach(function(item) {
+            select.add(new Option(item.name, item.id));
+        });
+        select.dataset.brandOptions = key;
+    }
+
+    if (historyBrandFilter && !brands.has(historyBrandFilter)) {
+        historyBrandFilter = "";
+    }
+    select.value = historyBrandFilter;
+}
+
 function renderHistory() {
 
     const tbody =
@@ -3996,6 +4037,11 @@ function renderHistory() {
     }
 
     updateNavigasiBulanRiwayat();
+    updateHistoryBrandOptions();
+
+    const barangById = new Map(dataBarang.map(function(item) {
+        return [String(item.id), item];
+    }));
 
     const tahun =
         bulanRiwayat.getFullYear();
@@ -4020,8 +4066,19 @@ function renderHistory() {
                         awalanTanggal
                     );
 
-                    if (!cocokBulan || historyTypeFilter === "semua") {
-                        return cocokBulan;
+                    if (!cocokBulan) {
+                        return false;
+                    }
+
+                    if (historyBrandFilter) {
+                        const barang = barangById.get(String(transaction.barang_id));
+                        if (String(barang?.brand_id ?? "") !== historyBrandFilter) {
+                            return false;
+                        }
+                    }
+
+                    if (historyTypeFilter === "semua") {
+                        return true;
                     }
 
                     if (historyTypeFilter === "adjust") {
@@ -4080,6 +4137,7 @@ function renderHistory() {
                             bulanRiwayat
                         )
                     )}
+                    ${historyBrandFilter ? "untuk brand " + escapeHTML(document.getElementById("historyBrandFilter")?.selectedOptions[0]?.textContent || "") : ""}
                 </td>
             </tr>
             `;
@@ -4092,20 +4150,7 @@ function renderHistory() {
     history.forEach(
         function(transaction) {
 
-            const barang =
-                dataBarang.find(
-                    function(item) {
-
-                        return (
-                            Number(
-                                item.id
-                            ) ===
-                            Number(
-                                transaction.barang_id
-                            )
-                        );
-                    }
-                );
+            const barang = barangById.get(String(transaction.barang_id));
 
             const namaBarang =
                 barang
