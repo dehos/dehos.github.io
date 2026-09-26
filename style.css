@@ -12936,6 +12936,17 @@ body.auth-locked .auth-gate {
     color: #fff !important;
 }
 
+#stok-barang .modern-header-actions .modern-export-leading-icon,
+#stok-barang .modern-header-actions .modern-chevron,
+#stok-barang .modern-header-actions svg {
+    color: #fff !important;
+}
+
+#stok-barang .modern-header-actions svg {
+    fill: none;
+    stroke: #fff !important;
+}
+
 @media (max-width: 700px) {
     #stok-barang .modern-header-actions {
         width: 100%;
