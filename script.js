@@ -20,6 +20,7 @@ let appHasInitialized = false;
 const appDataLoadState = {
     coreLoaded: false,
     corePromise: null,
+    refreshPromise: null,
     salesInitialized: false,
     salesPromise: null,
     dashboardPromise: null
@@ -3671,43 +3672,6 @@ async function confirmTransaction() {
         return;
     }
 
-    const stokSekarang = getRawCurrentStock(barang);
-    const selisih = isAdjust ? qty - stokSekarang : qty;
-    if (isAdjust && selisih === 0) {
-        showAppAlert("Stok sudah sesuai. Tidak ada perubahan yang dicatat.");
-        return;
-    }
-    const typeSimpan = isAdjust
-        ? (selisih > 0 ? "adjust_masuk" : "adjust_keluar")
-        : selectedTransactionType;
-    const qtySimpan = Math.abs(selisih);
-
-
-    if (
-        selectedTransactionType ===
-        "laku"
-    ) {
-
-        const stok =
-            getCurrentStock(
-                barang
-            );
-
-        if (
-            qty > stok
-        ) {
-
-            showAppAlert(
-                "Jumlah barang laku melebihi stok.\n\n" +
-                "Stok tersedia: " +
-                formatNumber(stok)
-            );
-
-            return;
-        }
-    }
-
-
     const tanggal =
         tanggalDipilih ||
         getTodayDate();
@@ -3720,26 +3684,43 @@ async function confirmTransaction() {
     );
 
     try {
-        const {
-            error
-        } =
-            await supabaseClient
-                .from("transaksi")
-                .insert({
+        const stokSebelum = getRawCurrentStock(barang);
+        await refreshCoreData();
+        const barangTerbaru = dataBarang.find(
+            item => Number(item.id) === Number(barang.id)
+        );
+        if (!barangTerbaru) {
+            throw new Error("Barang tidak ditemukan lagi di database.");
+        }
+        const stokSekarang = getRawCurrentStock(barangTerbaru);
+        if (stokSekarang !== stokSebelum) {
+            await showAppAlert(
+                "Stok berubah menjadi " + formatNumber(Math.max(0, stokSekarang)) +
+                ". Periksa jumlah dan simpan lagi."
+            );
+            if (isAdjust) {
+                const hint = document.getElementById("transactionHint");
+                if (hint) hint.textContent =
+                    "Stok tercatat: " + formatNumber(Math.max(0, stokSekarang)) +
+                    ". Selisih akan dicatat sebagai Adjust di riwayat.";
+            }
+            return;
+        }
+        if (isAdjust && qty === stokSekarang) {
+            await showAppAlert("Stok sudah sesuai. Tidak ada perubahan yang dicatat.");
+            return;
+        }
 
-                    barang_id:
-                        barang.id,
-
-                    tanggal:
-                        tanggal,
-
-                    type:
-                        typeSimpan,
-
-                    qty:
-                        qtySimpan
-
-                });
+        const { error } = await supabaseClient.rpc(
+            "catat_transaksi_stok_atomic",
+            {
+                p_barang_id: Number(barang.id),
+                p_tanggal: tanggal,
+                p_type: selectedTransactionType,
+                p_qty: qty,
+                p_expected_stock: stokSekarang
+            }
+        );
 
 
         if (error) {
@@ -3759,7 +3740,15 @@ async function confirmTransaction() {
 
         closeModal();
 
-        await loadTransactions();
+        try {
+            await refreshCoreData();
+        } catch (refreshError) {
+            console.error("ERROR REFRESH STOK:", refreshError);
+            setDatabaseStatus(
+                "Transaksi tersimpan, tetapi stok terbaru gagal dimuat. Buka ulang halaman stok.",
+                "error"
+            );
+        }
 
         updateTable();
 
@@ -5898,16 +5887,18 @@ async function simpanPenjualan() {
     }
 
 
-    const statusStok =
-        getPenjualanStockStatus(
-            barang,
-            tanggal,
-            qty
-        );
-
-    const jumlahPreOrder =
-        statusStok.preOrderSetelah;
-
+    setPenjualanSaving(true);
+    try {
+    await refreshCoreData();
+    const barangTerbaru = dataBarang.find(
+        item => String(item.id) === String(barangId)
+    );
+    if (!barangTerbaru) {
+        throw new Error("Barang tidak ditemukan lagi di database.");
+    }
+    const jumlahPreOrder = getPenjualanStockStatus(
+        barangTerbaru, tanggal, qty
+    ).preOrderSetelah;
 
     const dikonfirmasi =
         await showAppConfirm(
@@ -5928,110 +5919,32 @@ async function simpanPenjualan() {
             }
         );
 
-    if (!dikonfirmasi) {
-        return;
-    }
+    if (!dikonfirmasi) return;
 
-    setPenjualanSaving(true);
+    const { data: hasil, error } = await supabaseClient.rpc(
+        "catat_penjualan_atomic",
+        {
+            p_barang_id: Number(barangId),
+            p_brand: brand,
+            p_qty: qty,
+            p_harga: harga,
+            p_tanggal_pembelian: tanggal
+        }
+    );
+    if (error) throw error;
 
-    const {
-        data: penjualanBaru,
-        error: errorPenjualan
-    } =
-        await supabaseClient
-            .from("penjualan")
-            .insert({
-
-                barang_id:
-                    barangId,
-
-                brand:
-                    brand,
-
-                qty:
-                    qty,
-
-                harga:
-                    harga,
-
-                tanggal_pembelian:
-                    tanggal
-            })
-            .select()
-            .single();
-
-
-    if (errorPenjualan) {
-
-        console.error(
-            "ERROR PENJUALAN:",
-            errorPenjualan
-        );
-
-        setPenjualanSaving(false);
-        updatePenjualanSummary();
-
-        return showAppAlert(
-            "Gagal menyimpan penjualan:\n" +
-            errorPenjualan.message
+    try {
+        await refreshCoreData();
+        await initFilterPenjualan();
+    } catch (refreshError) {
+        console.error("ERROR REFRESH SETELAH PENJUALAN:", refreshError);
+        setDatabaseStatus(
+            "Penjualan tersimpan, tetapi daftar terbaru gagal dimuat. Buka ulang halaman.",
+            "error"
         );
     }
-
-
-    const {
-        error: errorTransaksi
-    } =
-        await supabaseClient
-            .from("transaksi")
-            .insert({
-
-                barang_id:
-                    barangId,
-
-                tanggal:
-                    tanggal,
-
-                type:
-                    "laku",
-
-                qty:
-                    qty,
-
-                penjualan_id:
-                    penjualanBaru.id
-            });
-
-
-    if (errorTransaksi) {
-
-        console.error(
-            "ERROR TRANSAKSI STOK:",
-            errorTransaksi
-        );
-
-        await supabaseClient
-            .from("penjualan")
-            .delete()
-            .eq(
-                "id",
-                penjualanBaru.id
-            );
-
-        setPenjualanSaving(false);
-        updatePenjualanSummary();
-
-        return showAppAlert(
-            "Penjualan gagal mengurangi stok.\n\n" +
-            errorTransaksi.message
-        );
-    }
-
-
-    await loadTransactions();
 
     updateTable();
-
-    await initFilterPenjualan();
 
 
     inputPenjualanBarang.value = "";
@@ -6057,18 +5970,23 @@ async function simpanPenjualan() {
     updatePenjualanBarangClear();
 
 
-    setPenjualanSaving(false);
-    updatePenjualanSummary();
-
     showToast(
-        jumlahPreOrder > 0
+        Number(hasil?.preorder_setelah) > 0
             ? "Penjualan dicatat · " +
-              formatNumber(jumlahPreOrder) +
+              formatNumber(Number(hasil.preorder_setelah)) +
               " barang pre-order"
             : "Penjualan berhasil dicatat dan stok berkurang " +
               formatNumber(qty),
         "success"
     );
+    } catch (error) {
+        console.error("ERROR SIMPAN PENJUALAN:", error);
+        await showAppAlert("Gagal menyimpan penjualan:\n" +
+            (error?.message || "Silakan coba lagi."));
+    } finally {
+        setPenjualanSaving(false);
+        updatePenjualanSummary();
+    }
 }
 
 
@@ -11253,6 +11171,33 @@ async function ensureCoreData() {
     }
 }
 
+async function refreshCoreData() {
+    if (!appDataLoadState.coreLoaded) {
+        return ensureCoreData();
+    }
+    if (appDataLoadState.refreshPromise) {
+        return appDataLoadState.refreshPromise;
+    }
+
+    appDataLoadState.refreshPromise = (async function() {
+        const loaded = await Promise.all([
+            loadBarang(false),
+            loadTransactions(false)
+        ]);
+        if (loaded.some(result => result === false)) {
+            throw new Error("Data stok terbaru gagal dimuat. Coba lagi.");
+        }
+        updateTable();
+        updatePenjualanSummary();
+    })();
+
+    try {
+        await appDataLoadState.refreshPromise;
+    } finally {
+        appDataLoadState.refreshPromise = null;
+    }
+}
+
 async function ensureSalesData() {
     await ensureCoreData();
 
@@ -11293,6 +11238,7 @@ async function loadSectionData(sectionId) {
             sectionId ===
                 "catatan-penjualan"
         ) {
+            await refreshCoreData();
             await ensureSalesData();
             return;
         }
@@ -11304,7 +11250,7 @@ async function loadSectionData(sectionId) {
                 "riwayat-transaksi"
             ].includes(sectionId)
         ) {
-            await ensureCoreData();
+            await refreshCoreData();
         }
     } catch (error) {
         console.error(
@@ -11590,3 +11536,11 @@ function initAppNavigation() {
 }
 
 bootAuthenticatedApp();
+
+document.addEventListener("visibilitychange", function() {
+    if (document.hidden || !document.body.classList.contains("auth-ready")) {
+        return;
+    }
+    const sectionId = window.location.hash.replace("#", "") || "dashboard";
+    void loadSectionData(sectionId);
+});
