@@ -12784,3 +12784,95 @@ body.auth-locked .auth-gate {
     border-top-color: #dfe3da !important;
     background: #f6f5ef !important;
 }
+
+/* Header keeps the content light; the charcoal brand tile anchors navigation. */
+.app-topbar {
+    min-height: 86px;
+    padding: 15px 25px;
+    border: 0 !important;
+    border-bottom: 1px solid #dfe3da !important;
+    background: #f8f8f2 !important;
+    box-shadow: none !important;
+}
+
+.app-topbar h2 {
+    color: #25312f !important;
+    font-size: clamp(22px, 2.4vw, 29px);
+    line-height: 1.13;
+}
+
+.app-topbar p {
+    color: #687673 !important;
+}
+
+.app-topbar-eyebrow {
+    color: #168587 !important;
+    letter-spacing: .07em;
+}
+
+.app-topbar #databaseStatus.status {
+    border-color: #c8e7d8 !important;
+    background: #eaf6ee !important;
+    color: #267454 !important;
+}
+
+.app-topbar #databaseStatus.status .database-status-icon {
+    color: #2a9971 !important;
+}
+
+.app-logout-button {
+    border-color: #d9ddd5 !important;
+    background: #fffef8 !important;
+    color: #53605c !important;
+}
+
+.app-logout-button:hover {
+    border-color: #b9d6cd !important;
+    background: #eaf6f1 !important;
+    color: #176f71 !important;
+}
+
+@media (min-width: 701px) and (max-width: 980px) {
+    .app-sidebar .header {
+        margin: 0 0 14px;
+        padding: 0 0 13px;
+        border: 0 !important;
+        background: transparent !important;
+    }
+
+    .app-sidebar .company-logo-shell {
+        width: 54px;
+        height: 54px;
+        border: 0 !important;
+        border-radius: 15px;
+        background: #303b39 !important;
+        box-shadow: 0 4px 10px rgba(48, 59, 57, .14) !important;
+    }
+
+    .app-sidebar .company-logo-shell .company-logo {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 700px) {
+    .app-topbar {
+        min-height: 92px;
+        padding: 15px 14px;
+        background: #f8f8f2 !important;
+    }
+
+    .app-topbar h2 {
+        font-size: 20px;
+    }
+
+    .app-mobile-logo {
+        border-radius: 12px;
+        background: #303b39 !important;
+    }
+
+    .app-mobile-logo img {
+        width: 31px;
+        height: 31px;
+    }
+}
