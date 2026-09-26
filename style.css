@@ -9173,7 +9173,6 @@ dialog::backdrop {
     }
 }
 
-
 /* =====================================================
    IMPORT EXCEL DATABASE BARANG
 ===================================================== */
@@ -12874,5 +12873,80 @@ body.auth-locked .auth-gate {
     .app-mobile-logo img {
         width: 31px;
         height: 31px;
+    }
+}
+
+/* Stock actions share one continuous segmented control. */
+#stok-barang .modern-header-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0;
+    min-height: 44px;
+    padding: 0;
+    border: 1px solid #d5dcd3;
+    border-radius: 14px;
+    background: #f5f7f2;
+}
+
+#stok-barang .modern-header-actions > button,
+#stok-barang .modern-header-actions > details,
+#stok-barang .modern-header-actions > details > summary {
+    width: 100% !important;
+    min-width: 0;
+    height: 100%;
+    min-height: 44px;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+#stok-barang .modern-header-actions > button,
+#stok-barang .modern-header-actions > details > summary {
+    padding: 8px 11px;
+    white-space: nowrap;
+}
+
+#stok-barang .modern-import-button {
+    border-right: 1px solid #d5dcd3 !important;
+    border-radius: 13px 0 0 13px !important;
+    background: transparent !important;
+    color: #3b4946 !important;
+}
+
+#stok-barang .modern-import-button:hover,
+#stok-barang .modern-export-menu > summary:hover {
+    background: #e8f3ee !important;
+    color: #087d7f !important;
+}
+
+#stok-barang .modern-header-actions > .modern-primary-button {
+    border-radius: 0 !important;
+    background: #118f91 !important;
+    color: #fff !important;
+}
+
+#stok-barang .modern-header-actions > .modern-primary-button:hover {
+    background: #0d7d80 !important;
+}
+
+#stok-barang .modern-export-menu > summary {
+    border-radius: 0 13px 13px 0 !important;
+    background: transparent !important;
+    color: #3b4946 !important;
+}
+
+@media (max-width: 700px) {
+    #stok-barang .modern-header-actions {
+        width: 100%;
+    }
+
+    #stok-barang .modern-header-actions > button,
+    #stok-barang .modern-header-actions > details > summary {
+        gap: 5px;
+        padding-inline: 5px;
+        font-size: 10px;
     }
 }
