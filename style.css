@@ -12584,3 +12584,203 @@ select:focus-visible {
         justify-self: end;
     }
 }
+
+/* Warm soft UI: cream surfaces, charcoal header, and teal actions. */
+:root {
+    --app-bg: #f1f0e9;
+    --app-sidebar: #f6f5ee;
+    --app-surface: #fffef8;
+    --app-surface-raised: #fbfaf4;
+    --app-border: #d9ddd5;
+    --app-border-soft: #e8eae3;
+    --app-text: #25312f;
+    --app-text-soft: #3b4946;
+    --app-muted: #687673;
+    --app-accent: #118f91;
+    --app-accent-soft: #e3f4f0;
+    --app-cyan: #118f91;
+    --editorial-blue-soft: #e3f4f0;
+    --editorial-green-soft: #eaf6ee;
+    --editorial-amber-soft: #fff3d9;
+    --dhouse-gold: #d6a738;
+    --dhouse-gold-bright: #e8bd55;
+    --dhouse-gold-dark: #ad8123;
+}
+
+body,
+body.auth-locked,
+body.auth-locked .auth-gate {
+    background: var(--app-bg) !important;
+}
+
+.app-sidebar {
+    border-right-color: #d5dad1 !important;
+    background: var(--app-sidebar) !important;
+}
+
+.header,
+.app-topbar {
+    border-color: #3c4845 !important;
+    background-color: #303b39 !important;
+    background-image: none !important;
+    color: #f8f8f2 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+.header h1,
+.app-topbar h2 {
+    color: #f8f8f2 !important;
+}
+
+.header p,
+.app-topbar p,
+.app-topbar-eyebrow {
+    color: #c6d9d5 !important;
+}
+
+@media (min-width: 981px) {
+    .app-sidebar .header {
+        margin: 10px 10px 16px;
+        padding: 13px 10px;
+        border: 0 !important;
+        border-radius: 17px;
+        background: #303b39 !important;
+    }
+
+    .app-sidebar .header-text h1 {
+        color: #f8f8f2 !important;
+    }
+
+    .app-sidebar .header-text p {
+        color: #c6d9d5 !important;
+    }
+}
+
+.app-nav a {
+    margin: 3px 8px;
+    border: 1px solid transparent !important;
+    border-radius: 13px;
+    color: #50605b !important;
+}
+
+.app-nav a:hover,
+.app-nav a:focus-visible {
+    border-color: #d7e2dc !important;
+    background: #fffef8 !important;
+    color: #146f72 !important;
+}
+
+.app-nav a.active {
+    border-color: #087f82 !important;
+    background: #119b9d !important;
+    color: #ffffff !important;
+    box-shadow: 0 5px 11px rgba(12, 108, 109, .18) !important;
+}
+
+.container > .card,
+.dashboard-card,
+.auth-card,
+.modal-content,
+.export-confirm-card,
+.app-message-card {
+    border-color: #e1e5db !important;
+    background: var(--app-surface) !important;
+    box-shadow: 0 5px 16px rgba(57, 67, 54, .09) !important;
+}
+
+.container > .card,
+.dashboard-card {
+    border-radius: 22px !important;
+}
+
+.dashboard-card .stat,
+.dashboard-card .sales-target-section,
+#penjualan .sales-total-card {
+    border-color: #e2e6dd !important;
+    background: #f8f9f2 !important;
+    box-shadow: 0 3px 9px rgba(57, 67, 54, .055) !important;
+}
+
+.modern-title-icon,
+#penjualan .modern-title-icon,
+#riwayat-transaksi .modern-title-icon {
+    border-color: #d5e9e2 !important;
+    background: #e7f4ee !important;
+    color: #12898a !important;
+}
+
+.auth-primary-button,
+.modern-primary-button,
+#stok-barang .modern-primary-button,
+#simpanPenjualanButton,
+.modal-actions .btn-primary,
+.export-confirm-yes {
+    border-color: #118f91 !important;
+    background: #118f91 !important;
+    color: #ffffff !important;
+}
+
+.modern-month-nav,
+#riwayat-transaksi .modern-history-month-nav,
+#riwayat-transaksi .history-filter-menu summary,
+#stok-barang .stock-filter-toolbar,
+#catatan-penjualan .modern-sales-filter {
+    border-color: var(--app-border) !important;
+    background: #f7f8f1 !important;
+}
+
+#riwayat-transaksi .history-filter-options {
+    border-color: var(--app-border);
+    background: #fffef8;
+    box-shadow: 0 10px 22px rgba(52, 64, 52, .15);
+}
+
+#riwayat-transaksi .history-filter-options button[aria-pressed="true"] {
+    background: #e2f3ef;
+    color: #087d7f;
+}
+
+.modern-data-table-wrapper,
+.modern-sales-table-wrapper,
+#stok-barang .modern-stock-table-wrapper,
+#catatan-penjualan .modern-sales-table-wrapper,
+#riwayat-transaksi .modern-history-table-wrapper {
+    border-color: var(--app-border) !important;
+    background: #fffef8 !important;
+}
+
+.modern-data-table thead th,
+.modern-sales-table thead th,
+#riwayat-transaksi .modern-history-table thead th {
+    background: #eceee7 !important;
+    color: #596963 !important;
+}
+
+.modern-data-table tbody td,
+.modern-sales-table tbody td,
+#riwayat-transaksi .modern-history-table tbody td {
+    background: #fffef8 !important;
+}
+
+.app-mobile-nav {
+    border-color: #d8ddd4 !important;
+    background: #fffef8 !important;
+    box-shadow: 0 5px 17px rgba(48, 60, 50, .13) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+.app-mobile-nav a.active {
+    background: #119b9d !important;
+    color: #ffffff !important;
+}
+
+.app-mobile-nav a.active::after {
+    background: #ffffff !important;
+}
+
+.app-footer {
+    border-top-color: #dfe3da !important;
+    background: #f6f5ef !important;
+}
