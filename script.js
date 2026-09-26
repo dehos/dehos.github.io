@@ -3953,41 +3953,43 @@ function ubahBulanRiwayat(perubahan) {
 
 
 function setHistoryTypeFilter(type) {
-    const labels = {
-        semua: "Semua",
-        masuk: "Masuk",
-        keluar: "Keluar",
-        adjust: "Adjust"
-    };
-
-    if (!Object.prototype.hasOwnProperty.call(labels, type)) {
+    if (!["semua", "masuk", "keluar", "adjust"].includes(type)) {
         return;
     }
 
     historyTypeFilter = type;
 
-    const label = document.getElementById("historyFilterLabel");
-    if (label) label.textContent = labels[type];
-
     document.querySelectorAll("[data-history-filter]").forEach(function(button) {
         button.setAttribute("aria-pressed", String(button.dataset.historyFilter === type));
     });
 
-    const menu = document.getElementById("historyTypeMenu");
-    if (menu) {
-        menu.open = false;
-        menu.querySelector("summary")?.setAttribute(
-            "aria-label",
-            "Filter jenis transaksi: " + labels[type]
-        );
-    }
-
+    updateHistoryFilterSummary();
     renderHistory();
 }
 
 function setHistoryBrandFilter(brandId) {
     historyBrandFilter = String(brandId || "");
+    updateHistoryFilterSummary();
     renderHistory();
+}
+
+function updateHistoryFilterSummary() {
+    const menu = document.getElementById("historyTypeMenu");
+    const count = document.getElementById("historyFilterCount");
+    const brand = document.getElementById("historyBrandFilter");
+    const typeNames = { semua: "Semua", masuk: "Masuk", keluar: "Keluar", adjust: "Adjust" };
+    const activeCount = Number(Boolean(historyBrandFilter)) + Number(historyTypeFilter !== "semua");
+
+    if (count) {
+        count.hidden = activeCount === 0;
+        count.textContent = String(activeCount);
+    }
+
+    menu?.querySelector("summary")?.setAttribute(
+        "aria-label",
+        "Filter riwayat: " + (brand?.selectedOptions[0]?.textContent || "Semua Brand") +
+        ", jenis " + typeNames[historyTypeFilter]
+    );
 }
 
 function updateHistoryBrandOptions() {
@@ -4023,6 +4025,7 @@ function updateHistoryBrandOptions() {
         historyBrandFilter = "";
     }
     select.value = historyBrandFilter;
+    updateHistoryFilterSummary();
 }
 
 function renderHistory() {
