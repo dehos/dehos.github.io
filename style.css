@@ -12421,7 +12421,7 @@ select:focus-visible {
 }
 
 #riwayat-transaksi .history-brand-filter {
-    width: 132px;
+    width: 100%;
     min-width: 0;
     min-height: 39px;
     padding: 7px 24px 7px 10px;
@@ -12472,6 +12472,22 @@ select:focus-visible {
     height: 15px;
 }
 
+#riwayat-transaksi .history-filter-count {
+    display: inline-grid;
+    min-width: 17px;
+    height: 17px;
+    place-items: center;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--app-accent);
+    color: #fff;
+    font-size: 10px;
+}
+
+#riwayat-transaksi .history-filter-count[hidden] {
+    display: none;
+}
+
 #riwayat-transaksi .history-filter-menu[open] summary {
     border-color: #b9ccef;
     color: var(--app-accent);
@@ -12483,12 +12499,30 @@ select:focus-visible {
     top: calc(100% + 6px);
     right: 0;
     display: grid;
-    width: 134px;
-    padding: 5px;
+    width: 218px;
+    gap: 7px;
+    padding: 12px;
     border: 1px solid var(--app-border);
     border-radius: 11px;
     background: #ffffff;
     box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+}
+
+#riwayat-transaksi .history-filter-options label,
+#riwayat-transaksi .history-filter-group-label {
+    color: var(--app-text-soft);
+    font-size: 11px;
+    font-weight: 650;
+}
+
+#riwayat-transaksi .history-filter-group-label {
+    margin-top: 5px;
+}
+
+#riwayat-transaksi .history-type-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
 }
 
 #riwayat-transaksi .history-filter-options button {
@@ -12519,7 +12553,7 @@ select:focus-visible {
 @media (max-width: 700px) {
     #riwayat-transaksi .history-toolbar {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(92px, 38%);
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
         gap: 8px;
         width: 100%;
@@ -12541,12 +12575,7 @@ select:focus-visible {
         text-overflow: ellipsis;
     }
 
-    #riwayat-transaksi .history-brand-filter {
-        width: 100%;
-    }
-
     #riwayat-transaksi .history-filter-menu {
-        grid-column: 2;
         justify-self: end;
     }
 }
