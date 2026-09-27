@@ -11535,6 +11535,31 @@ function initAppNavigation() {
     );
 }
 
+function updateThemeToggle() {
+    const isNavy = document.documentElement.dataset.theme === "navy";
+    const button = document.getElementById("themeToggle");
+    const label = document.getElementById("themeToggleLabel");
+    if (!button) return;
+    button.setAttribute("aria-pressed", String(isNavy));
+    button.setAttribute("aria-label", isNavy ? "Aktifkan tema terang" : "Aktifkan tema gelap");
+    if (label) label.textContent = isNavy ? "Tema terang" : "Tema gelap";
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", isNavy ? "#101a2a" : "#f1f0e9");
+}
+
+function toggleAppTheme() {
+    const nextTheme = document.documentElement.dataset.theme === "navy"
+        ? "cream" : "navy";
+    document.documentElement.dataset.theme = nextTheme;
+    try {
+        localStorage.setItem("stockBarangTheme", nextTheme);
+    } catch (_) {
+        // The current session still gets the selected theme.
+    }
+    updateThemeToggle();
+}
+
+updateThemeToggle();
 bootAuthenticatedApp();
 
 document.addEventListener("visibilitychange", function() {
