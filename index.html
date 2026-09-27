@@ -45,12 +45,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20260927-3"></script>
+    <script defer src="script.js?v=20260928-2"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260928-1">
+    <link rel="stylesheet" href="style.css?v=20260928-2">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -275,6 +275,14 @@
             </div>
             <div id="saranBarang"
                 class="sales-suggestions position-absolute w-100 bg-white border rounded shadow-sm"></div>
+            <span id="penjualanBrandDisplay" class="sales-brand-chip" hidden></span>
+            <div id="penjualanStockInfo" class="sales-stock-info is-empty" aria-live="polite">
+                <svg class="ui-svg-icon sales-stock-status-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 11v5M12 8h.01"/>
+                </svg>
+                <span>Pilih barang untuk melihat stok.</span>
+            </div>
         </div>
 
         <div class="sales-field sales-brand-field">
@@ -285,7 +293,10 @@
         </div>
 
         <div class="sales-field sales-date-field">
-            <label for="penjualanTanggalTampilan">Tanggal Pembelian</label>
+            <div class="sales-date-heading">
+                <label for="penjualanTanggalTampilan">Tanggal Pembelian</label>
+                <button type="button" id="penjualanTodayButton" class="sales-today-button" aria-pressed="true">Hari ini</button>
+            </div>
             <div class="localized-date-control">
                 <input
                     type="text"
@@ -322,7 +333,7 @@
         <div class="sales-field sales-qty-field">
             <label for="penjualanQty">Quantity</label>
             <input type="number" id="penjualanQty" class="form-control form-control-sm"
-                min="1" value="1">
+                min="1" step="1" inputmode="numeric" value="1">
         </div>
 
         <div class="sales-field sales-price-field">
@@ -342,13 +353,6 @@
     </div>
 
     <div class="sales-entry-footer">
-        <div id="penjualanStockInfo" class="sales-stock-info" aria-live="polite">
-            <svg class="ui-svg-icon sales-stock-status-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 11v5M12 8h.01"/>
-            </svg>
-            <span>Pilih barang untuk melihat stok.</span>
-        </div>
         <button type="button" id="simpanPenjualanButton"
             class="btn btn-primary btn-sm" onclick="simpanPenjualan()" disabled>
             <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
