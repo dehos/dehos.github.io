@@ -7,7 +7,15 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    <meta name="theme-color" content="#303b39">
+    <meta name="theme-color" content="#f1f0e9">
+    <script>
+        try {
+            document.documentElement.dataset.theme =
+                localStorage.getItem('stockBarangTheme') === 'navy' ? 'navy' : 'cream';
+        } catch (_) {
+            document.documentElement.dataset.theme = 'cream';
+        }
+    </script>
     <meta
         name="description"
         content="Aplikasi rekap stok barang dan transaksi penjualan."
@@ -46,12 +54,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20260926-4"></script>
+    <script defer src="script.js?v=20260927-1"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20260926-10">
+    <link rel="stylesheet" href="style.css?v=20260927-1">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -200,6 +208,16 @@
         <p id="appPageSubtitle">Ringkasan stok dan aktivitas penjualan</p>
     </div>
     <div class="app-topbar-actions">
+        <button type="button" id="themeToggle" class="app-theme-button" onclick="toggleAppTheme()" aria-label="Aktifkan tema gelap" aria-pressed="false" title="Ganti tema">
+            <svg class="ui-svg-icon theme-moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.3 15.3A8.5 8.5 0 0 1 8.7 3.7 8.5 8.5 0 1 0 20.3 15.3z"/>
+            </svg>
+            <svg class="ui-svg-icon theme-sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+            </svg>
+            <span id="themeToggleLabel">Tema gelap</span>
+        </button>
         <div
             id="databaseStatus"
             class="status"
