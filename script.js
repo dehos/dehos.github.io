@@ -11535,31 +11535,6 @@ function initAppNavigation() {
     );
 }
 
-function updateThemeToggle() {
-    const isShopee = document.documentElement.dataset.theme === "shopee";
-    const button = document.getElementById("themeToggle");
-    const label = document.getElementById("themeToggleLabel");
-    if (!button) return;
-    button.setAttribute("aria-pressed", String(isShopee));
-    button.setAttribute("aria-label", isShopee ? "Aktifkan tema krem" : "Aktifkan tema oranye");
-    if (label) label.textContent = isShopee ? "Tema krem" : "Tema oranye";
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", isShopee ? "#ee4d2d" : "#f1f0e9");
-}
-
-function toggleAppTheme() {
-    const nextTheme = document.documentElement.dataset.theme === "shopee"
-        ? "cream" : "shopee";
-    document.documentElement.dataset.theme = nextTheme;
-    try {
-        localStorage.setItem("stockBarangTheme", nextTheme);
-    } catch (_) {
-        // The current session still gets the selected theme.
-    }
-    updateThemeToggle();
-}
-
-updateThemeToggle();
 bootAuthenticatedApp();
 
 document.addEventListener("visibilitychange", function() {
