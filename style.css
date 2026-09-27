@@ -13238,3 +13238,138 @@ body.auth-locked .auth-gate {
         font-size: 13px;
     }
 }
+
+/* Keep product context together while entering a sale. */
+#penjualan .sales-brand-chip,
+#penjualan .sales-stock-info {
+    margin-top: 8px;
+    vertical-align: middle;
+}
+
+#penjualan .sales-brand-chip {
+    display: none;
+    width: fit-content;
+    max-width: 100%;
+    padding: 5px 9px;
+    border: 1px solid var(--app-border-soft);
+    border-radius: 999px;
+    background: #f8f9f2;
+    color: var(--app-text-soft);
+    font-size: 11px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+#penjualan .sales-brand-chip[hidden],
+#penjualan .sales-stock-info.is-empty {
+    display: none !important;
+}
+
+#penjualan .sales-suggestion-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+
+#penjualan #saranBarang .sales-suggestion-meta small {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--app-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#penjualan .sales-suggestion-stock {
+    flex: 0 0 auto;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: #eaf6ee;
+    color: #267454;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#penjualan .sales-suggestion-stock.is-preorder {
+    background: #fff3d9;
+    color: #8b611b;
+}
+
+#penjualan .sales-date-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#penjualan .sales-today-button {
+    display: none;
+}
+
+#penjualan .sales-entry-footer {
+    justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+    #penjualan .sales-entry-grid {
+        grid-template-areas:
+            "product product"
+            "date date"
+            "qty price"
+            "total total";
+    }
+
+    #penjualan .sales-brand-field {
+        display: none;
+    }
+
+    #penjualan .sales-brand-chip {
+        display: inline-flex;
+    }
+
+    #penjualan .sales-stock-info {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        min-height: 28px;
+        justify-content: flex-start;
+        margin-left: 5px;
+        padding: 5px 8px;
+        text-align: left;
+    }
+
+    #penjualan .sales-date-heading label {
+        margin-bottom: 5px;
+    }
+
+    #penjualan .sales-today-button {
+        display: inline-flex;
+        min-height: 28px;
+        align-items: center;
+        margin: -3px 0 4px;
+        padding: 3px 9px;
+        border: 1px solid #d5e9e2;
+        border-radius: 999px;
+        background: #fffef8;
+        color: #12898a;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    #penjualan .sales-today-button[aria-pressed="true"] {
+        background: #e7f4ee;
+    }
+
+    #penjualan .sales-today-button:focus-visible {
+        outline: 2px solid #118f91;
+        outline-offset: 2px;
+    }
+
+    #penjualan .sales-entry-footer {
+        margin-top: 8px;
+        padding-top: 0;
+        border-top: 0;
+    }
+}
