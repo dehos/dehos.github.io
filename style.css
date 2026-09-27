@@ -13034,11 +13034,11 @@ body.auth-locked .auth-gate {
 }
 
 .app-theme-button .theme-sun-icon,
-html[data-theme="navy"] .app-theme-button .theme-moon-icon {
+html[data-theme="shopee"] .app-theme-button .theme-moon-icon {
     display: none;
 }
 
-html[data-theme="navy"] .app-theme-button .theme-sun-icon {
+html[data-theme="shopee"] .app-theme-button .theme-sun-icon {
     display: inline-block;
 }
 
@@ -13063,278 +13063,348 @@ html[data-theme="navy"] .app-theme-button .theme-sun-icon {
     }
 }
 
-html[data-theme="navy"] {
-    --app-bg: #101a2a;
-    --app-sidebar: #122033;
-    --app-surface: #192638;
-    --app-surface-raised: #203149;
-    --app-border: #35485e;
-    --app-border-soft: #2b3d52;
-    --app-text: #eff6f8;
-    --app-text-soft: #d5e2ea;
-    --app-muted: #a8bac8;
-    --app-accent: #48c2bd;
-    --app-accent-soft: #173f46;
-    --editorial-blue-soft: #203849;
-    --editorial-green-soft: #1b3c3c;
-    --editorial-amber-soft: #473a27;
-    color-scheme: dark;
+html[data-theme="shopee"] {
+    --app-bg: #fff6f1;
+    --app-sidebar: #ffffff;
+    --app-surface: #ffffff;
+    --app-surface-raised: #fff1e9;
+    --app-border: #f1dcd3;
+    --app-border-soft: #f7e8e1;
+    --app-text: #242b2b;
+    --app-text-soft: #3e4a49;
+    --app-muted: #747e7b;
+    --app-accent: #ee4d2d;
+    --app-accent-soft: #fff0e8;
+    --editorial-blue-soft: #fff1e9;
+    --editorial-green-soft: #eaf6ee;
+    --editorial-amber-soft: #fff3d9;
+    color-scheme: light;
     background: var(--app-bg);
 }
 
-html[data-theme="navy"] body,
-html[data-theme="navy"] body.auth-locked,
-html[data-theme="navy"] body.auth-locked .auth-gate {
+html[data-theme="shopee"] body,
+html[data-theme="shopee"] body.auth-locked,
+html[data-theme="shopee"] body.auth-locked .auth-gate {
     background: var(--app-bg) !important;
     color: var(--app-text-soft);
-    color-scheme: dark;
+    color-scheme: light;
 }
 
-html[data-theme="navy"] .app-sidebar,
-html[data-theme="navy"] .app-footer {
+html[data-theme="shopee"] .app-sidebar,
+html[data-theme="shopee"] .app-footer {
     border-color: var(--app-border-soft) !important;
     background: var(--app-sidebar) !important;
 }
 
-html[data-theme="navy"] .app-topbar {
-    border-bottom-color: var(--app-border-soft) !important;
-    background: #162438 !important;
+html[data-theme="shopee"] .app-topbar {
+    border-bottom-color: #dc4526 !important;
+    background: #ee4d2d !important;
 }
 
-html[data-theme="navy"] .app-topbar h2,
-html[data-theme="navy"] .header h1,
-html[data-theme="navy"] .modern-title-copy h2,
-html[data-theme="navy"] .dashboard-section-heading h2,
-html[data-theme="navy"] .auth-heading h1,
-html[data-theme="navy"] .modal-title,
-html[data-theme="navy"] .sales-target-header h3 {
+html[data-theme="shopee"] .header,
+html[data-theme="shopee"] .app-sidebar .header {
+    border-color: #dc4526 !important;
+    background: #ee4d2d !important;
+    background-image: none !important;
+}
+
+html[data-theme="shopee"] .modern-title-copy h2,
+html[data-theme="shopee"] .dashboard-section-heading h2,
+html[data-theme="shopee"] .auth-heading h1,
+html[data-theme="shopee"] .modal-title,
+html[data-theme="shopee"] .sales-target-header h3 {
     color: var(--app-text) !important;
 }
 
-html[data-theme="navy"] .app-topbar p,
-html[data-theme="navy"] .header p,
-html[data-theme="navy"] .modern-title-copy p,
-html[data-theme="navy"] .dashboard-section-heading p,
-html[data-theme="navy"] .auth-heading p,
-html[data-theme="navy"] .app-footer small {
+html[data-theme="shopee"] .modern-title-copy p,
+html[data-theme="shopee"] .dashboard-section-heading p,
+html[data-theme="shopee"] .auth-heading p,
+html[data-theme="shopee"] .app-footer small {
     color: var(--app-muted) !important;
 }
 
-html[data-theme="navy"] .app-topbar-eyebrow {
-    color: #72d8d2 !important;
+html[data-theme="shopee"] .app-topbar h2,
+html[data-theme="shopee"] .header h1,
+html[data-theme="shopee"] .app-sidebar .header h1 {
+    color: #ffffff !important;
 }
 
-html[data-theme="navy"] .app-theme-button,
-html[data-theme="navy"] .app-logout-button {
+html[data-theme="shopee"] .app-topbar p,
+html[data-theme="shopee"] .header p,
+html[data-theme="shopee"] .app-topbar-eyebrow {
+    color: #ffe7dc !important;
+}
+
+html[data-theme="shopee"] .app-theme-button,
+html[data-theme="shopee"] .app-logout-button {
+    border-color: rgba(255, 255, 255, .5) !important;
+    background: rgba(255, 255, 255, .16) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="shopee"] .app-sidebar-note,
+html[data-theme="shopee"] .dashboard-live-badge {
+    border-color: #cae9d6 !important;
+    background: #eaf8ef !important;
+    color: #177047 !important;
+}
+
+html[data-theme="shopee"] .app-topbar #databaseStatus.status {
+    border-color: rgba(255, 255, 255, .5) !important;
+    background: rgba(255, 255, 255, .16) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="shopee"] .app-nav a {
+    color: #596562 !important;
+}
+
+html[data-theme="shopee"] .app-nav a:hover,
+html[data-theme="shopee"] .app-nav a:focus-visible {
     border-color: var(--app-border) !important;
-    background: #203149 !important;
-    color: var(--app-text-soft) !important;
+    background: #fff1e9 !important;
+    color: #ee4d2d !important;
 }
 
-html[data-theme="navy"] .app-topbar #databaseStatus.status,
-html[data-theme="navy"] .app-sidebar-note,
-html[data-theme="navy"] .dashboard-live-badge {
-    border-color: #2d615e !important;
-    background: #1c4244 !important;
-    color: #9ce2d3 !important;
-}
-
-html[data-theme="navy"] .app-nav a {
-    color: #b7c8d3 !important;
-}
-
-html[data-theme="navy"] .app-nav a:hover,
-html[data-theme="navy"] .app-nav a:focus-visible {
-    border-color: var(--app-border) !important;
-    background: #203149 !important;
-    color: #d9f5f1 !important;
-}
-
-html[data-theme="navy"] .app-nav a.active,
-html[data-theme="navy"] .app-mobile-nav a.active {
-    border-color: #238e8e !important;
-    background: #137f84 !important;
+html[data-theme="shopee"] .app-nav a.active,
+html[data-theme="shopee"] .app-mobile-nav a.active {
+    border-color: #dc4526 !important;
+    background: #ee4d2d !important;
     color: #fff !important;
 }
 
-html[data-theme="navy"] .app-mobile-nav {
+html[data-theme="shopee"] .app-mobile-nav {
     border-color: var(--app-border) !important;
-    background: #192638 !important;
+    background: #ffffff !important;
 }
 
-html[data-theme="navy"] .container > .card,
-html[data-theme="navy"] .dashboard-card,
-html[data-theme="navy"] .auth-card,
-html[data-theme="navy"] .modal-content,
-html[data-theme="navy"] .export-confirm-card,
-html[data-theme="navy"] .app-message-card,
-html[data-theme="navy"] #importExcelModal .import-excel-content {
+html[data-theme="shopee"] .app-mobile-nav a.active::after {
+    background: #ee4d2d !important;
+}
+
+html[data-theme="shopee"] .auth-primary-button,
+html[data-theme="shopee"] .modern-primary-button,
+html[data-theme="shopee"] #simpanPenjualanButton,
+html[data-theme="shopee"] .modal-actions .btn-primary,
+html[data-theme="shopee"] .export-confirm-yes,
+html[data-theme="shopee"] #stok-barang .modern-import-button,
+html[data-theme="shopee"] #stok-barang .modern-header-actions > .modern-primary-button,
+html[data-theme="shopee"] #stok-barang .modern-export-menu > summary {
+    border-color: #ee4d2d !important;
+    background: #ee4d2d !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="shopee"] .auth-primary-button:hover,
+html[data-theme="shopee"] .modern-primary-button:hover,
+html[data-theme="shopee"] #stok-barang .modern-import-button:hover,
+html[data-theme="shopee"] #stok-barang .modern-export-menu > summary:hover {
+    border-color: #d94325 !important;
+    background: #d94325 !important;
+}
+
+html[data-theme="shopee"] .container > .card,
+html[data-theme="shopee"] .dashboard-card,
+html[data-theme="shopee"] .auth-card,
+html[data-theme="shopee"] .modal-content,
+html[data-theme="shopee"] .export-confirm-card,
+html[data-theme="shopee"] .app-message-card,
+html[data-theme="shopee"] #importExcelModal .import-excel-content {
     border-color: var(--app-border) !important;
     background: var(--app-surface) !important;
     color: var(--app-text-soft) !important;
-    box-shadow: 0 8px 22px rgba(3, 8, 18, .18) !important;
+    box-shadow: 0 8px 22px rgba(130, 65, 40, .09) !important;
 }
 
-html[data-theme="navy"] .dashboard-card .stat,
-html[data-theme="navy"] .dashboard-card .stat-primary,
-html[data-theme="navy"] .dashboard-card .stat-success,
-html[data-theme="navy"] .dashboard-card .stat-warning,
-html[data-theme="navy"] .dashboard-card .sales-target-section,
-html[data-theme="navy"] #penjualan .sales-total-card,
-html[data-theme="navy"] .dashboard-card .sales-target-summary {
+html[data-theme="shopee"] .dashboard-card .stat,
+html[data-theme="shopee"] .dashboard-card .stat-primary,
+html[data-theme="shopee"] .dashboard-card .stat-success,
+html[data-theme="shopee"] .dashboard-card .stat-warning,
+html[data-theme="shopee"] .dashboard-card .sales-target-section,
+html[data-theme="shopee"] #penjualan .sales-total-card,
+html[data-theme="shopee"] .dashboard-card .sales-target-summary {
     border-color: var(--app-border) !important;
     background: var(--app-surface-raised) !important;
 }
 
-html[data-theme="navy"] .dashboard-card .sales-target-summary strong,
-html[data-theme="navy"] #penjualan .sales-total-card strong,
-html[data-theme="navy"] .dashboard-card .stat strong {
+html[data-theme="shopee"] .dashboard-card .sales-target-summary strong,
+html[data-theme="shopee"] #penjualan .sales-total-card strong,
+html[data-theme="shopee"] .dashboard-card .stat strong {
     color: var(--app-text) !important;
 }
 
-html[data-theme="navy"] .dashboard-card .sales-target-summary span,
-html[data-theme="navy"] .dashboard-card .sales-target-summary small {
+html[data-theme="shopee"] .dashboard-card .sales-target-summary span,
+html[data-theme="shopee"] .dashboard-card .sales-target-summary small {
     color: var(--app-muted) !important;
 }
 
-html[data-theme="navy"] .container > .card h2,
-html[data-theme="navy"] .container > .card h3,
-html[data-theme="navy"] .container > .card strong,
-html[data-theme="navy"] .container > .card label,
-html[data-theme="navy"] #stok-barang .stock-filter-field label {
+html[data-theme="shopee"] .container > .card h2,
+html[data-theme="shopee"] .container > .card h3,
+html[data-theme="shopee"] .container > .card strong,
+html[data-theme="shopee"] .container > .card label,
+html[data-theme="shopee"] #stok-barang .stock-filter-field label {
     color: var(--app-text) !important;
 }
 
-html[data-theme="navy"] .container > .card p,
-html[data-theme="navy"] .container > .card small,
-html[data-theme="navy"] .app-mobile-nav a {
+html[data-theme="shopee"] .container > .card p,
+html[data-theme="shopee"] .container > .card small,
+html[data-theme="shopee"] .app-mobile-nav a {
     color: var(--app-muted) !important;
 }
 
-html[data-theme="navy"] .modern-title-icon,
-html[data-theme="navy"] #penjualan .modern-title-icon,
-html[data-theme="navy"] #stok-barang .modern-title-icon,
-html[data-theme="navy"] #catatan-penjualan .modern-title-icon,
-html[data-theme="navy"] #riwayat-transaksi .modern-title-icon {
+html[data-theme="shopee"] .modern-title-icon,
+html[data-theme="shopee"] #penjualan .modern-title-icon,
+html[data-theme="shopee"] #stok-barang .modern-title-icon,
+html[data-theme="shopee"] #catatan-penjualan .modern-title-icon,
+html[data-theme="shopee"] #riwayat-transaksi .modern-title-icon {
     border-color: var(--app-border) !important;
-    background: #25414d !important;
-    color: #77d5ca !important;
+    background: #fff0e8 !important;
+    color: #ee4d2d !important;
 }
 
-html[data-theme="navy"] .auth-form input,
-html[data-theme="navy"] .container .form-control,
-html[data-theme="navy"] .container .form-select,
-html[data-theme="navy"] .container input[type="text"],
-html[data-theme="navy"] .container input[type="number"],
-html[data-theme="navy"] .container input[type="date"],
-html[data-theme="navy"] .container select,
-html[data-theme="navy"] .modal-content input,
-html[data-theme="navy"] .modal-content select {
+html[data-theme="shopee"] .auth-form input,
+html[data-theme="shopee"] .container .form-control,
+html[data-theme="shopee"] .container .form-select,
+html[data-theme="shopee"] .container input[type="text"],
+html[data-theme="shopee"] .container input[type="number"],
+html[data-theme="shopee"] .container input[type="date"],
+html[data-theme="shopee"] .container select,
+html[data-theme="shopee"] .modal-content input,
+html[data-theme="shopee"] .modal-content select {
     border-color: var(--app-border) !important;
-    background-color: #142237 !important;
+    background-color: #ffffff !important;
     color: var(--app-text) !important;
-    color-scheme: dark;
+    color-scheme: light;
 }
 
-html[data-theme="navy"] .auth-form input:focus,
-html[data-theme="navy"] .container input:focus,
-html[data-theme="navy"] .container select:focus,
-html[data-theme="navy"] .modal-content input:focus,
-html[data-theme="navy"] .modal-content select:focus {
-    border-color: #48c2bd !important;
-    background-color: #192d43 !important;
+html[data-theme="shopee"] .auth-form input:focus,
+html[data-theme="shopee"] .container input:focus,
+html[data-theme="shopee"] .container select:focus,
+html[data-theme="shopee"] .modal-content input:focus,
+html[data-theme="shopee"] .modal-content select:focus {
+    border-color: #ee4d2d !important;
+    background-color: #fffaf7 !important;
 }
 
-html[data-theme="navy"] .modern-month-nav,
-html[data-theme="navy"] #riwayat-transaksi .modern-history-month-nav,
-html[data-theme="navy"] #riwayat-transaksi .history-filter-menu summary,
-html[data-theme="navy"] #riwayat-transaksi .history-filter-options,
-html[data-theme="navy"] #stok-barang .stock-filter-toolbar,
-html[data-theme="navy"] #catatan-penjualan .modern-sales-filter,
-html[data-theme="navy"] .modern-export-options,
-html[data-theme="navy"] #saranBarang:not(:empty),
-html[data-theme="navy"] .sales-suggestions:not(:empty) {
+html[data-theme="shopee"] .modern-month-nav,
+html[data-theme="shopee"] #riwayat-transaksi .modern-history-month-nav,
+html[data-theme="shopee"] #riwayat-transaksi .history-filter-menu summary,
+html[data-theme="shopee"] #riwayat-transaksi .history-filter-options,
+html[data-theme="shopee"] #stok-barang .stock-filter-toolbar,
+html[data-theme="shopee"] #catatan-penjualan .modern-sales-filter,
+html[data-theme="shopee"] .modern-export-options,
+html[data-theme="shopee"] #saranBarang:not(:empty),
+html[data-theme="shopee"] .sales-suggestions:not(:empty) {
     border-color: var(--app-border) !important;
     background: var(--app-surface-raised) !important;
     color: var(--app-text-soft) !important;
 }
 
-html[data-theme="navy"] .modern-data-table-wrapper,
-html[data-theme="navy"] .modern-sales-table-wrapper,
-html[data-theme="navy"] #stok-barang .modern-stock-table-wrapper,
-html[data-theme="navy"] #catatan-penjualan .modern-sales-table-wrapper,
-html[data-theme="navy"] #riwayat-transaksi .modern-history-table-wrapper,
-html[data-theme="navy"] #importExcelModal .import-excel-table-wrapper {
+html[data-theme="shopee"] .modern-data-table-wrapper,
+html[data-theme="shopee"] .modern-sales-table-wrapper,
+html[data-theme="shopee"] #stok-barang .modern-stock-table-wrapper,
+html[data-theme="shopee"] #catatan-penjualan .modern-sales-table-wrapper,
+html[data-theme="shopee"] #riwayat-transaksi .modern-history-table-wrapper,
+html[data-theme="shopee"] #importExcelModal .import-excel-table-wrapper {
     border-color: var(--app-border) !important;
     background: var(--app-surface) !important;
 }
 
-html[data-theme="navy"] .container .table {
-    --bs-table-bg: #192638;
-    --bs-table-color: #d5e2ea;
-    --bs-table-border-color: #35485e;
-    --bs-table-hover-bg: #263951;
-    --bs-table-hover-color: #eff6f8;
+html[data-theme="shopee"] .container .table {
+    --bs-table-bg: #ffffff;
+    --bs-table-color: #3e4a49;
+    --bs-table-border-color: #f1dcd3;
+    --bs-table-hover-bg: #fff4ee;
+    --bs-table-hover-color: #242b2b;
     color: var(--app-text-soft) !important;
 }
 
-html[data-theme="navy"] .modern-data-table thead th,
-html[data-theme="navy"] .modern-sales-table thead th,
-html[data-theme="navy"] #riwayat-transaksi .modern-history-table thead th,
-html[data-theme="navy"] #importExcelModal .import-excel-table th {
-    background: #26374c !important;
-    color: #c5d5df !important;
+html[data-theme="shopee"] .modern-data-table thead th,
+html[data-theme="shopee"] .modern-sales-table thead th,
+html[data-theme="shopee"] #riwayat-transaksi .modern-history-table thead th,
+html[data-theme="shopee"] #importExcelModal .import-excel-table th {
+    background: #fff0e8 !important;
+    color: #745f56 !important;
 }
 
-html[data-theme="navy"] .modern-data-table tbody td,
-html[data-theme="navy"] .modern-sales-table tbody td,
-html[data-theme="navy"] #riwayat-transaksi .modern-history-table tbody td,
-html[data-theme="navy"] #importExcelModal .import-excel-table td {
+html[data-theme="shopee"] .modern-data-table tbody td,
+html[data-theme="shopee"] .modern-sales-table tbody td,
+html[data-theme="shopee"] #riwayat-transaksi .modern-history-table tbody td,
+html[data-theme="shopee"] #importExcelModal .import-excel-table td {
     border-color: var(--app-border-soft) !important;
     background: var(--app-surface) !important;
     color: var(--app-text-soft) !important;
 }
 
-html[data-theme="navy"] .modern-data-table tbody tr:hover > td,
-html[data-theme="navy"] .modern-sales-table tbody tr:hover > td,
-html[data-theme="navy"] #riwayat-transaksi .modern-history-table tbody tr:hover > td {
-    background: #263951 !important;
+html[data-theme="shopee"] .modern-data-table tbody tr:hover > td,
+html[data-theme="shopee"] .modern-sales-table tbody tr:hover > td,
+html[data-theme="shopee"] #riwayat-transaksi .modern-history-table tbody tr:hover > td {
+    background: #fff4ee !important;
 }
 
-html[data-theme="navy"] #catatan-penjualan .modern-sales-table tfoot th,
-html[data-theme="navy"] #catatan-penjualan .modern-sales-table tfoot td {
-    background: #26374c !important;
+html[data-theme="shopee"] #catatan-penjualan .modern-sales-table tfoot th,
+html[data-theme="shopee"] #catatan-penjualan .modern-sales-table tfoot td {
+    background: #fff0e8 !important;
     color: var(--app-text) !important;
 }
 
-html[data-theme="navy"] #stok-barang .stock-pagination-area {
-    background: #203149 !important;
+html[data-theme="shopee"] #stok-barang .stock-pagination-area {
+    background: #fff1e9 !important;
 }
 
-html[data-theme="navy"] #stok-barang .stock-pagination button,
-html[data-theme="navy"] #catatan-penjualan .sales-pagination button {
+html[data-theme="shopee"] #stok-barang .stock-pagination button,
+html[data-theme="shopee"] #catatan-penjualan .sales-pagination button {
     border-color: var(--app-border) !important;
-    background: #192638 !important;
+    background: #ffffff !important;
     color: var(--app-text-soft) !important;
 }
 
-html[data-theme="navy"] #stok-barang .stock-pagination button.active {
-    border-color: #118f91 !important;
-    background: #118f91 !important;
+html[data-theme="shopee"] #stok-barang .stock-pagination button.active {
+    border-color: #ee4d2d !important;
+    background: #ee4d2d !important;
     color: #fff !important;
 }
 
-html[data-theme="navy"] #riwayat-transaksi .history-filter-options button[aria-pressed="true"],
-html[data-theme="navy"] #catatan-penjualan .sales-pagination button.active {
-    border-color: #238e8e !important;
-    background: #137f84 !important;
+html[data-theme="shopee"] #riwayat-transaksi .history-filter-options button[aria-pressed="true"],
+html[data-theme="shopee"] #catatan-penjualan .sales-pagination button.active {
+    border-color: #dc4526 !important;
+    background: #ee4d2d !important;
     color: #fff !important;
 }
 
-html[data-theme="navy"] .modal-actions .btn-secondary,
-html[data-theme="navy"] .app-message-cancel,
-html[data-theme="navy"] .export-confirm-no {
+html[data-theme="shopee"] .modal-actions .btn-secondary,
+html[data-theme="shopee"] .app-message-cancel,
+html[data-theme="shopee"] .export-confirm-no {
     border-color: var(--app-border) !important;
-    background: #26374c !important;
+    background: #fff0e8 !important;
     color: var(--app-text) !important;
+}
+
+/* Color changes are brief and do not animate layout or table rows. */
+body,
+.app-topbar,
+.app-sidebar,
+.app-mobile-nav,
+.container > .card,
+.dashboard-card,
+.auth-card,
+.app-theme-button,
+.app-nav a,
+.app-mobile-nav a {
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body,
+    .app-topbar,
+    .app-sidebar,
+    .app-mobile-nav,
+    .container > .card,
+    .dashboard-card,
+    .auth-card,
+    .app-theme-button,
+    .app-nav a,
+    .app-mobile-nav a {
+        transition: none;
+    }
 }
