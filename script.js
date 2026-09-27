@@ -5173,6 +5173,8 @@ const inputPenjualanBrand =
     document.getElementById(
         "penjualanBrand"
     );
+const penjualanBrandDisplay =
+    document.getElementById("penjualanBrandDisplay");
 
 const inputPenjualanQty =
     document.getElementById("penjualanQty");
@@ -5192,6 +5194,8 @@ const penjualanTanggalPickerButton =
     document.getElementById(
         "penjualanTanggalPickerButton"
     );
+const penjualanTodayButton =
+    document.getElementById("penjualanTodayButton");
 
 const simpanPenjualanButton =
     document.getElementById("simpanPenjualanButton");
@@ -5250,6 +5254,13 @@ function sinkronkanTanggalPenjualanTampilan() {
         formatTanggalTampilan(
             inputPenjualanTanggal?.value
         );
+
+    if (penjualanTodayButton) {
+        penjualanTodayButton.setAttribute(
+            "aria-pressed",
+            String(inputPenjualanTanggal?.value === getTodayDate())
+        );
+    }
 }
 
 
@@ -5356,6 +5367,14 @@ if (
     );
 }
 
+if (penjualanTodayButton && inputPenjualanTanggal) {
+    penjualanTodayButton.addEventListener("click", function() {
+        inputPenjualanTanggal.value = getTodayDate();
+        sinkronkanTanggalPenjualanTampilan();
+        updatePenjualanSummary();
+    });
+}
+
 function getPenjualanStock(
     barang,
     tanggal
@@ -5445,10 +5464,10 @@ function setPenjualanSaving(saving) {
 
     if (!simpanPenjualanButton) return;
 
-    simpanPenjualanButton.textContent =
-        saving
-            ? "Menyimpan..."
-            : "Catat Penjualan";
+    const label = simpanPenjualanButton.querySelector("span");
+    if (label) {
+        label.textContent = saving ? "Menyimpan..." : "Catat Penjualan";
+    }
 
     simpanPenjualanButton.disabled =
         saving;
@@ -5498,6 +5517,13 @@ function updatePenjualanSummary() {
             "penjualanStockInfo"
         );
 
+    if (penjualanBrandDisplay) {
+        penjualanBrandDisplay.hidden = !barang;
+        penjualanBrandDisplay.textContent = barang
+            ? "Brand · " + (barang.brand?.nama || inputPenjualanBrand?.value || "Tanpa brand")
+            : "";
+    }
+
     if (totalElement) {
         totalElement.textContent =
             "Rp" + formatNumber(total);
@@ -5515,6 +5541,7 @@ function updatePenjualanSummary() {
         qty > stok;
 
     if (stockElement) {
+        stockElement.classList.toggle("is-empty", !barang);
         stockElement.classList.toggle(
             "is-error",
             false
@@ -5644,14 +5671,15 @@ if (inputPenjualanBrand) {
                         div.innerHTML =
                             "<strong>" +
                             escapeHTML(item.nama) +
-                            "</strong><small>" +
-                            escapeHTML(
-                                item.brand?.nama ||
-                                "Tanpa brand"
-                            ) +
-                            " · Stok " +
-                            formatNumber(stokSaran) +
-                            "</small>";
+                            "</strong><span class=\"sales-suggestion-meta\"><small>" +
+                            escapeHTML(item.brand?.nama || "Tanpa brand") +
+                            "</small><span class=\"sales-suggestion-stock" +
+                            (stokSaran < 1 ? " is-preorder" : "") +
+                            "\">" +
+                            (stokSaran < 1
+                                ? "Pre-order · stok 0"
+                                : "Stok " + formatNumber(stokSaran)) +
+                            "</span></span>";
 
                         div.onclick =
                             function() {
