@@ -11536,20 +11536,20 @@ function initAppNavigation() {
 }
 
 function updateThemeToggle() {
-    const isNavy = document.documentElement.dataset.theme === "navy";
+    const isShopee = document.documentElement.dataset.theme === "shopee";
     const button = document.getElementById("themeToggle");
     const label = document.getElementById("themeToggleLabel");
     if (!button) return;
-    button.setAttribute("aria-pressed", String(isNavy));
-    button.setAttribute("aria-label", isNavy ? "Aktifkan tema terang" : "Aktifkan tema gelap");
-    if (label) label.textContent = isNavy ? "Tema terang" : "Tema gelap";
+    button.setAttribute("aria-pressed", String(isShopee));
+    button.setAttribute("aria-label", isShopee ? "Aktifkan tema krem" : "Aktifkan tema oranye");
+    if (label) label.textContent = isShopee ? "Tema krem" : "Tema oranye";
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", isNavy ? "#101a2a" : "#f1f0e9");
+    if (meta) meta.setAttribute("content", isShopee ? "#ee4d2d" : "#f1f0e9");
 }
 
 function toggleAppTheme() {
-    const nextTheme = document.documentElement.dataset.theme === "navy"
-        ? "cream" : "navy";
+    const nextTheme = document.documentElement.dataset.theme === "shopee"
+        ? "cream" : "shopee";
     document.documentElement.dataset.theme = nextTheme;
     try {
         localStorage.setItem("stockBarangTheme", nextTheme);
