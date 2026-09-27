@@ -13000,3 +13000,241 @@ body.auth-locked .auth-gate {
 #stok-barang .pagination-dots {
     color: #687673;
 }
+
+/* Sales history controls stay in one aligned toolbar. */
+#catatan-penjualan .modern-sales-tools {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+#catatan-penjualan .modern-sales-tools .modern-sales-filter {
+    width: 166px;
+    min-width: 0;
+    height: 39px;
+    flex: 0 1 166px;
+    margin: 0;
+    padding: 0;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+#catatan-penjualan .modern-sales-tools .form-select {
+    width: 100%;
+    height: 39px;
+    min-height: 39px;
+    border-color: var(--app-border) !important;
+    background-color: var(--app-surface) !important;
+    color: var(--app-text-soft) !important;
+    font-size: 11px;
+}
+
+#catatan-penjualan .modern-sales-tools .modern-month-nav {
+    flex: 0 1 auto;
+}
+
+#catatan-penjualan .modern-sales-tools .modern-secondary-button {
+    white-space: nowrap;
+}
+
+/* Icons use the same teal accent across the app. */
+#catatan-penjualan .modern-title-icon,
+#catatan-penjualan .modern-secondary-button .modern-export-leading-icon,
+#editPenjualanModal .modal-title-icon {
+    border-color: #d5e9e2 !important;
+    background: #e7f4ee !important;
+    color: #12898a !important;
+}
+
+#catatan-penjualan .modern-secondary-button .modern-export-leading-icon {
+    border: 0 !important;
+}
+
+/* The gold logo has its own transparent image; no dark tile is needed. */
+.company-logo-shell,
+.app-sidebar .company-logo-shell,
+.app-mobile-logo {
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 1150px) {
+    #catatan-penjualan .modern-sales-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #catatan-penjualan .modern-sales-tools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 38px;
+        gap: 6px;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-month-nav {
+        min-width: 0;
+        height: 38px;
+        padding: 2px;
+        gap: 0;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-month-nav button {
+        width: 24px;
+        height: 32px;
+        flex: 0 0 24px;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-month-nav strong {
+        min-width: 0;
+        overflow: hidden;
+        font-size: 10px;
+        text-overflow: ellipsis;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-sales-filter,
+    #catatan-penjualan .modern-sales-tools .form-select {
+        width: 100%;
+        height: 38px;
+        min-height: 38px;
+        font-size: 10px;
+    }
+
+    #catatan-penjualan .modern-sales-tools .form-select {
+        padding-left: 7px;
+        padding-right: 20px;
+        background-position: right 5px center;
+        background-size: 11px;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-secondary-button {
+        width: 38px;
+        height: 38px;
+        min-height: 38px;
+        padding: 0;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-secondary-button > span:last-child {
+        display: none;
+    }
+
+    #penjualan {
+        padding: 16px 14px 18px;
+    }
+
+    #penjualan .sales-entry-header {
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    #penjualan .modern-title-group small,
+    #penjualan .sales-entry-indicator {
+        display: none;
+    }
+
+    #penjualan .sales-entry-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "product product"
+            "brand brand"
+            "date date"
+            "qty price"
+            "total total";
+        gap: 12px 10px;
+    }
+
+    #penjualan .sales-product-field { grid-area: product; }
+    #penjualan .sales-brand-field { grid-area: brand; }
+    #penjualan .sales-date-field { grid-area: date; }
+    #penjualan .sales-qty-field { grid-area: qty; }
+    #penjualan .sales-price-field { grid-area: price; }
+    #penjualan .sales-total-card { grid-area: total; }
+
+    #penjualan .sales-field label {
+        margin-bottom: 5px;
+        color: var(--app-text-soft);
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    #penjualan .form-control,
+    #penjualan input[type="text"],
+    #penjualan input[type="number"] {
+        min-height: 44px;
+        border-color: var(--app-border) !important;
+        border-radius: 11px;
+        background: #fffef8 !important;
+        color: var(--app-text) !important;
+        font-size: 13px;
+    }
+
+    #penjualan .sales-brand-field {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 9px;
+        min-height: 34px;
+        padding: 5px 10px;
+        border: 1px solid var(--app-border-soft);
+        border-radius: 10px;
+        background: #f8f9f2;
+    }
+
+    #penjualan .sales-brand-field label {
+        margin: 0;
+        color: var(--app-muted);
+    }
+
+    #penjualan .sales-brand-field .sales-readonly {
+        width: 100%;
+        min-height: 22px;
+        padding: 0;
+        border: 0 !important;
+        background: transparent !important;
+        color: var(--app-text-soft) !important;
+        font-size: 11px;
+        text-overflow: ellipsis;
+    }
+
+    #penjualan .sales-total-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: 65px;
+        padding: 11px 13px;
+        border-color: #d5e9e2 !important;
+        border-radius: 12px;
+        background: #eaf6f1 !important;
+    }
+
+    #penjualan .sales-total-card > span,
+    #penjualan .sales-total-card small {
+        grid-column: 1;
+        color: #506b63 !important;
+    }
+
+    #penjualan .sales-total-card strong {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+        margin: 0 0 0 10px;
+        color: var(--app-text) !important;
+        font-size: 18px;
+    }
+
+    #penjualan .sales-entry-footer {
+        gap: 10px;
+        margin-top: 14px;
+        padding-top: 14px;
+    }
+
+    #penjualan #simpanPenjualanButton {
+        min-height: 46px;
+        border-radius: 11px;
+        font-size: 13px;
+    }
+}
