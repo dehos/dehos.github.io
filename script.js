@@ -6143,7 +6143,8 @@ function getCanonicalTargetBrand(
 
 function renderTargetPenjualan(
     penjualan,
-    bulan
+    bulan,
+    tanggalTerakhir = null
 ) {
 
     const list =
@@ -6238,10 +6239,17 @@ function renderTargetPenjualan(
         }
     );
 
-    let statusPeriode =
-        "Belum ada data";
+    if (tanggalTerakhir !== null) {
+        tanggalDataTerakhir =
+            tanggalTerakhir;
+    }
 
-    if (tanggalDataTerakhir) {
+    let statusPeriode =
+        tanggalTerakhir === "error"
+            ? "Tanggal data tidak tersedia"
+            : "Belum ada data";
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(tanggalDataTerakhir)) {
         const bagianTanggal =
             tanggalDataTerakhir
                 .split("-")
@@ -11045,17 +11053,28 @@ async function loadDashboardSummary() {
                 ).padStart(2, "0") +
                 "-01";
 
-            const { data, error } =
-                await supabaseClient.rpc(
-                    "get_dashboard_summary",
-                    {
-                        p_today: getTodayDate(),
-                        p_month_start:
-                            bulan + "-01",
-                        p_month_end:
-                            batasBulan
-                    }
-                );
+            const [ringkasan, transaksiTerbaru] =
+                await Promise.all([
+                    supabaseClient.rpc(
+                        "get_dashboard_summary",
+                        {
+                            p_today: getTodayDate(),
+                            p_month_start:
+                                bulan + "-01",
+                            p_month_end:
+                                batasBulan
+                        }
+                    ),
+                    supabaseClient
+                        .from("penjualan")
+                        .select("tanggal_pembelian")
+                        .gte("tanggal_pembelian", bulan + "-01")
+                        .lt("tanggal_pembelian", batasBulan)
+                        .order("tanggal_pembelian", { ascending: false })
+                        .limit(1)
+                ]);
+
+            const { data, error } = ringkasan;
 
             if (error) {
                 console.error(
@@ -11131,7 +11150,13 @@ async function loadDashboardSummary() {
 
             renderTargetPenjualan(
                 ringkasanBrand,
-                bulan
+                bulan,
+                transaksiTerbaru.error
+                    ? "error"
+                    : String(
+                        transaksiTerbaru.data?.[0]
+                            ?.tanggal_pembelian || ""
+                    ).slice(0, 10)
             );
 
             setDatabaseStatus(
