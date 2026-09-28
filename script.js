@@ -8483,11 +8483,9 @@ function formatSaldoStokExport(
 
 
 const KETERANGAN_EXPORT =
-    "Keterangan: angka utama = stok | " +
-    "+ kecil = masuk | - kecil sesudah stok = laku | " +
-    "- kecil sebelum stok = pre-order | " +
-    "—/kosong = barang belum tercatat | " +
-    "sel hitam = terdapat transaksi";
+    "Keterangan: + = stok bertambah (barang masuk/koreksi) | " +
+    "- = stok berkurang (terjual/koreksi) | " +
+    "- di depan angka = pre-order";
 
 
 const NAMA_BULAN_EXPORT = [
