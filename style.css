@@ -13501,3 +13501,15 @@ body.auth-locked .auth-gate {
     }
     #rekap-stok .stock-recap-footer { align-items: flex-start; }
 }
+
+/* Separate the recap link from the three stock actions. */
+#stok-barang .stock-recap-action-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 16px;
+}
+@media (max-width: 700px) {
+    #stok-barang .stock-recap-action-row .stock-recap-link {
+        width: 100%;
+    }
+}
