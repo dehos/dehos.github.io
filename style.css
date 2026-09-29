@@ -13711,3 +13711,36 @@ body.auth-locked .auth-gate {
         font-size: 12px;
     }
 }
+
+/* Compact daily columns so more dates remain visible on narrow screens. */
+@media (max-width: 700px) {
+    #rekap-stok .stock-recap-scroll {
+        scrollbar-gutter: auto;
+    }
+    #rekap-stok .stock-recap-table {
+        table-layout: fixed;
+        width: var(--recap-table-width, 1406px);
+        min-width: 100%;
+        font-size: 11px;
+    }
+    #rekap-stok .stock-recap-table tr > :first-child {
+        width: 104px;
+        min-width: 104px;
+        max-width: 104px;
+        padding: 6px 5px;
+        overflow-wrap: anywhere;
+    }
+    #rekap-stok .stock-recap-table tr > :not(:first-child) {
+        width: 42px;
+        min-width: 0;
+        max-width: 42px;
+        padding: 6px 2px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.2;
+    }
+    #rekap-stok .stock-recap-table .stock-recap-brand th {
+        max-width: none;
+        text-align: left;
+    }
+}
