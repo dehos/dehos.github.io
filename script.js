@@ -9172,6 +9172,10 @@ function renderRekapStokLayar(ulangHalaman = false) {
         (rekapStokHalaman + 1) * REKAP_STOK_BARIS_PER_HALAMAN
     );
 
+    // Keep each daily column compact on mobile, regardless of the date range.
+    document.querySelector("#rekap-stok .stock-recap-table")
+        .style.setProperty("--recap-table-width", (104 + rentang.tanggalList.length * 42) + "px");
+
     head.innerHTML = "<tr><th scope=\"col\">" + escapeHTML(rentang.labelBulan) +
         "</th>" + rentang.tanggalList.map(function(tanggal) {
             return "<th scope=\"col\">" + escapeHTML(tanggal.label) + "</th>";
