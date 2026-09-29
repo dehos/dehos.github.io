@@ -13513,3 +13513,108 @@ body.auth-locked .auth-gate {
         width: 100%;
     }
 }
+
+/* Compact mobile layout for the daily stock recap controls. */
+#rekap-stok .stock-recap-back-short { display: none; }
+@media (max-width: 700px) {
+    #rekap-stok {
+        padding: 12px;
+    }
+    #rekap-stok .history-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        padding: 0 0 11px;
+        border-bottom: 1px solid var(--app-border-soft);
+    }
+    #rekap-stok .modern-title-group {
+        min-width: 0;
+        gap: 8px;
+    }
+    #rekap-stok .modern-title-icon {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        place-items: center;
+    }
+    #rekap-stok .modern-title-icon .ui-svg-icon {
+        width: 18px;
+        height: 18px;
+    }
+    #rekap-stok .modern-title-group h3 {
+        font-size: 16px;
+        line-height: 1.2;
+    }
+    #rekap-stok .modern-title-group small {
+        display: none;
+    }
+    #rekap-stok .stock-recap-back {
+        min-height: 36px;
+        padding: 7px 11px;
+        white-space: nowrap;
+    }
+    #rekap-stok .stock-recap-back-long { display: none; }
+    #rekap-stok .stock-recap-back-short { display: inline; }
+    #rekap-stok .stock-recap-controls,
+    #rekap-stok .stock-recap-filters {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        align-items: end;
+        gap: 8px;
+        margin: 0 0 10px;
+    }
+    #rekap-stok .stock-recap-controls label,
+    #rekap-stok .stock-recap-filters label {
+        min-width: 0;
+        font-size: 11px;
+        line-height: 1.2;
+    }
+    #rekap-stok .stock-recap-controls input,
+    #rekap-stok .stock-recap-filters input,
+    #rekap-stok .stock-recap-filters select {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        padding: 7px 8px;
+        font-size: 14px;
+    }
+    #rekap-stok .stock-recap-controls button {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 40px;
+        border-radius: 10px;
+    }
+    #rekap-stok .stock-recap-controls small {
+        grid-column: 1 / -1;
+        margin-top: -2px;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+    #rekap-stok .stock-recap-filters label {
+        flex: initial;
+    }
+    #rekap-stok .stock-recap-status {
+        margin: 6px 0 9px;
+        font-size: 12px;
+    }
+    #rekap-stok .stock-recap-footer {
+        gap: 8px;
+        margin: 10px 0 0;
+        font-size: 11px;
+    }
+    #rekap-stok .stock-recap-pager {
+        gap: 6px;
+    }
+    #rekap-stok .stock-recap-pager button {
+        min-height: 36px;
+        padding: 6px 9px;
+    }
+    #rekap-stok .stock-recap-legend {
+        margin-top: 10px;
+        line-height: 1.45;
+    }
+}
