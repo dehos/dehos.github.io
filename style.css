@@ -13618,3 +13618,96 @@ body.auth-locked .auth-gate {
         line-height: 1.45;
     }
 }
+
+/* Consistent page headings and mobile controls, September 2026. */
+.dashboard-card .dashboard-section-heading {
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--app-border-soft);
+}
+.dashboard-section-heading .modern-title-icon {
+    flex: 0 0 auto;
+}
+.dashboard-section-heading .modern-title-group h2 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+}
+.dashboard-section-heading .modern-title-group p {
+    margin: 4px 0 0;
+    font-size: 13px;
+}
+#rekap-stok .stock-recap-controls button,
+#rekap-stok .stock-recap-pager button,
+#rekap-stok .stock-recap-back {
+    border-radius: 10px;
+}
+#rekap-stok .stock-recap-controls button {
+    background: #118f91;
+    border-color: #118f91;
+    color: #fff;
+}
+#rekap-stok .stock-recap-controls button:hover {
+    background: #0e787b;
+}
+@media (max-width: 700px) {
+    .dashboard-card .dashboard-section-heading {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 13px;
+        padding-bottom: 11px;
+    }
+    .dashboard-section-heading .modern-title-group {
+        gap: 8px;
+    }
+    .dashboard-section-heading .modern-title-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+    .dashboard-section-heading .modern-title-icon .ui-svg-icon {
+        width: 18px;
+        height: 18px;
+    }
+    .dashboard-section-heading .modern-title-group h2 {
+        font-size: 16px;
+    }
+    .dashboard-section-heading .modern-title-group p {
+        display: none;
+    }
+    #catatan-penjualan .modern-sales-tools {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 40px;
+        gap: 7px;
+    }
+    #catatan-penjualan .modern-sales-tools .modern-month-nav,
+    #catatan-penjualan .modern-sales-tools .modern-sales-filter,
+    #catatan-penjualan .modern-sales-tools .form-select,
+    #catatan-penjualan .modern-sales-tools .modern-secondary-button {
+        height: 40px;
+        min-height: 40px;
+    }
+    #catatan-penjualan .modern-sales-tools .modern-month-nav strong,
+    #catatan-penjualan .modern-sales-tools .form-select {
+        font-size: 12px;
+    }
+    #catatan-penjualan .modern-sales-tools .modern-secondary-button {
+        width: 40px;
+    }
+    #rekap-stok .stock-recap-controls label,
+    #rekap-stok .stock-recap-filters label {
+        font-size: 12px;
+    }
+    #rekap-stok .stock-recap-controls input,
+    #rekap-stok .stock-recap-filters input,
+    #rekap-stok .stock-recap-filters select,
+    #rekap-stok .stock-recap-controls button {
+        min-height: 40px;
+        font-size: 14px;
+    }
+    #rekap-stok .stock-recap-pager button {
+        min-height: 40px;
+        font-size: 12px;
+    }
+}
