@@ -8567,15 +8567,15 @@ function formatTanggalNamaPDFExport(tanggal) {
 }
 
 
-function getRentangTanggalExport() {
+function getRentangTanggalExport(pakaiRekapLayar = false) {
     const nilaiMulaiKustom =
         document.getElementById(
-            "exportTanggalMulai"
+            pakaiRekapLayar ? "rekapTanggalMulai" : "exportTanggalMulai"
         )?.value || "";
 
     const nilaiAkhirKustom =
         document.getElementById(
-            "exportTanggalAkhir"
+            pakaiRekapLayar ? "rekapTanggalAkhir" : "exportTanggalAkhir"
         )?.value || "";
 
     const rentangKustom =
@@ -8594,12 +8594,9 @@ function getRentangTanggalExport() {
         return null;
     }
 
-    const nilaiTanggal =
-        document.getElementById(
-            "tanggal"
-        )?.value ||
-        tanggalDipilih ||
-        getTodayDate();
+    const nilaiTanggal = pakaiRekapLayar
+        ? getTodayDate()
+        : document.getElementById("tanggal")?.value || tanggalDipilih || getTodayDate();
 
     const hariIni =
         parseTanggalISOExport(
@@ -9123,6 +9120,96 @@ function buatRekapStokBarangExport(
     };
 }
 
+
+
+let rekapStokHalaman = 0;
+const REKAP_STOK_BARIS_PER_HALAMAN = 30;
+
+function ubahHalamanRekapStok(arah) {
+    rekapStokHalaman += arah;
+    renderRekapStokLayar();
+}
+
+function renderRekapStokLayar(ulangHalaman = false) {
+    const head = document.getElementById("rekapStokHead");
+    const body = document.getElementById("rekapStokBody");
+    if (!head || !body) return;
+
+    const rentang = getRentangTanggalExport(true);
+    if (!rentang) return;
+    if (ulangHalaman) rekapStokHalaman = 0;
+
+    const brandSelect = document.getElementById("rekapBrand");
+    const brandTerpilih = brandSelect.value;
+    const namaBrand = Array.from(new Set(dataBarang.map(function(barang) {
+        return String(barang.brand?.nama || "Tanpa Brand").trim() || "Tanpa Brand";
+    }))).sort(function(a, b) {
+        return a.localeCompare(b, "id", { sensitivity: "base" });
+    });
+    brandSelect.replaceChildren(new Option("Semua brand", ""));
+    namaBrand.forEach(function(brand) {
+        brandSelect.add(new Option(brand, brand));
+    });
+    brandSelect.value = namaBrand.includes(brandTerpilih) ? brandTerpilih : "";
+
+    const cari = document.getElementById("rekapCariBarang").value.trim().toLocaleLowerCase("id-ID");
+    const terpilih = dataBarang.filter(function(barang) {
+        const brand = String(barang.brand?.nama || "Tanpa Brand").trim() || "Tanpa Brand";
+        return (!brandSelect.value || brand === brandSelect.value) &&
+            (!cari || String(barang.nama || "").toLocaleLowerCase("id-ID").includes(cari)) &&
+            barangPunyaDataDalamRentangExport(barang, rentang);
+    });
+    const kelompok = kelompokkanBarangExport(terpilih);
+    const baris = kelompok.flatMap(function(grup) {
+        return grup.barang.map(function(barang) {
+            return { brand: grup.brand, barang: barang };
+        });
+    });
+    const jumlahHalaman = Math.max(1, Math.ceil(baris.length / REKAP_STOK_BARIS_PER_HALAMAN));
+    rekapStokHalaman = Math.max(0, Math.min(rekapStokHalaman, jumlahHalaman - 1));
+    const halaman = baris.slice(
+        rekapStokHalaman * REKAP_STOK_BARIS_PER_HALAMAN,
+        (rekapStokHalaman + 1) * REKAP_STOK_BARIS_PER_HALAMAN
+    );
+
+    head.innerHTML = "<tr><th scope=\"col\">" + escapeHTML(rentang.labelBulan) +
+        "</th>" + rentang.tanggalList.map(function(tanggal) {
+            return "<th scope=\"col\">" + escapeHTML(tanggal.label) + "</th>";
+        }).join("") + "</tr>";
+
+    let brandSebelumnya = "";
+    body.innerHTML = halaman.map(function(item) {
+        let hasil = "";
+        if (item.brand !== brandSebelumnya) {
+            brandSebelumnya = item.brand;
+            hasil += "<tr class=\"stock-recap-brand\"><th colspan=\"" +
+                (rentang.tanggalList.length + 1) + "\" scope=\"rowgroup\">" +
+                escapeHTML(item.brand.toLocaleUpperCase("id-ID")) + "</th></tr>";
+        }
+        const rekap = buatRekapStokBarangExport(item.barang, rentang);
+        hasil += "<tr><th scope=\"row\" title=\"" + escapeHTML(item.barang.nama) + "\">" +
+            escapeHTML(formatNamaBarangExport(item.barang.nama)) + "</th>" +
+            rekap.cells.map(function(cell) {
+                const kelas = cell.preOrder > 0 ? " is-preorder" :
+                    cell.adaTransaksi ? " has-movement" : "";
+                return "<td class=\"" + kelas.trim() + "\">" +
+                    escapeHTML(String(cell.value)) + "</td>";
+            }).join("") + "</tr>";
+        return hasil;
+    }).join("") || "<tr><td colspan=\"" + (rentang.tanggalList.length + 1) +
+        "\" class=\"stock-recap-empty\">Tidak ada barang pada periode atau filter ini.</td></tr>";
+
+    document.querySelector("#rekap-stok .stock-recap-legend").textContent = KETERANGAN_EXPORT;
+    document.getElementById("rekapStokStatus").textContent =
+        rentang.labelPeriode + " · " + formatNumber(baris.length) + " barang";
+    document.getElementById("rekapStokCount").textContent =
+        "Menampilkan " + formatNumber(halaman.length) + " dari " +
+        formatNumber(baris.length) + " barang";
+    document.getElementById("rekapPageLabel").textContent =
+        "Halaman " + (rekapStokHalaman + 1) + " / " + jumlahHalaman;
+    document.getElementById("rekapPrev").disabled = rekapStokHalaman === 0;
+    document.getElementById("rekapNext").disabled = rekapStokHalaman >= jumlahHalaman - 1;
+}
 
 async function exportExcel() {
     if (typeof XLSX === "undefined") {
@@ -11298,10 +11385,12 @@ async function loadSectionData(sectionId) {
             [
                 "penjualan",
                 "stok-barang",
+                "rekap-stok",
                 "riwayat-transaksi"
             ].includes(sectionId)
         ) {
             await refreshCoreData();
+            if (sectionId === "rekap-stok") renderRekapStokLayar();
         }
     } catch (error) {
         console.error(
@@ -11373,6 +11462,7 @@ async function init() {
             "dashboard",
             "penjualan",
             "stok-barang",
+            "rekap-stok",
             "catatan-penjualan",
             "riwayat-transaksi"
         ].includes(hashAwal)
@@ -11400,6 +11490,10 @@ function initAppNavigation() {
         "stok-barang": [
             "Stok Barang",
             "Kelola persediaan dan pergerakan stok"
+        ],
+        "rekap-stok": [
+            "Rekap Stok",
+            "Lihat stok harian seperti hasil export"
         ],
         "catatan-penjualan": [
             "Catatan Penjualan",
