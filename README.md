@@ -17,3 +17,9 @@ where lower(email) = lower('<email-admin-yang-sudah-ada>');
 ```
 
 Password akun tidak diubah oleh konfigurasi username.
+
+## Pemulihan password
+
+Tombol `Lupa atau ganti password?` di layar login meminta email akun. Tombol `Ganti Password` di header memakai email akun yang sedang masuk. Supabase mengirim tautan pemulihan melalui email; setelah tautan dibuka, pengguna mengisi password baru dua kali dan aplikasi keluar agar login ulang.
+
+Pastikan `https://dehos.github.io/` terdaftar pada Supabase Authentication → URL Configuration → Redirect URLs. Password baru tidak dicatat pada repositori.
