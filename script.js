@@ -16,6 +16,7 @@ const supabaseClient =
 
 let authActionBusy = false;
 let appHasInitialized = false;
+let passwordRecoveryPending = false;
 
 const appDataLoadState = {
     coreLoaded: false,
@@ -43,7 +44,9 @@ function setAuthBusy(isBusy) {
 
     [
         "authSignInButton",
-        "authSignUpButton"
+        "authSignUpButton",
+        "authResetButton",
+        "authSavePasswordButton"
     ].forEach(function(buttonId) {
         const button =
             document.getElementById(buttonId);
@@ -254,6 +257,98 @@ async function handleAdminSignUp() {
     }
 }
 
+function showAuthPanel(mode = "login") {
+    document.getElementById("authForm").hidden = mode !== "login";
+    document.getElementById("authResetRequestForm").hidden = mode !== "request";
+    document.getElementById("authNewPasswordForm").hidden = mode !== "new";
+    document.getElementById("authTitle").textContent =
+        mode === "request" ? "Pulihkan Password" :
+        mode === "new" ? "Buat Password Baru" :
+        "Masuk ke Stock Barang";
+    if (mode === "request") {
+        const loginId = document.getElementById("authEmail").value.trim();
+        if (loginId.includes("@")) {
+            document.getElementById("resetEmail").value = loginId;
+        }
+    }
+    setAuthStatus("");
+}
+
+function getPasswordResetRedirect() {
+    return window.location.origin + window.location.pathname;
+}
+
+async function handlePasswordResetRequest(event) {
+    event?.preventDefault();
+    if (authActionBusy) return;
+    const email = document.getElementById("resetEmail").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setAuthStatus("Isi alamat email yang valid.", "error");
+        return;
+    }
+    setAuthBusy(true);
+    try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            { redirectTo: getPasswordResetRedirect() }
+        );
+        if (error) {
+            setAuthStatus("Tautan belum bisa dikirim. Coba lagi.", "error");
+            return;
+        }
+        setAuthStatus(
+            "Jika email terdaftar, tautan konfirmasi akan dikirim. Buka email lalu kembali ke halaman ini.",
+            "success"
+        );
+    } finally {
+        setAuthBusy(false);
+    }
+}
+
+async function requestCurrentAdminPasswordReset() {
+    const { data, error } = await supabaseClient.auth.getUser();
+    if (error || !data.user?.email) {
+        showAppAlert("Sesi akun tidak tersedia. Silakan masuk kembali.");
+        return;
+    }
+    const result = await supabaseClient.auth.resetPasswordForEmail(
+        data.user.email,
+        { redirectTo: getPasswordResetRedirect() }
+    );
+    showAppAlert(result.error
+        ? "Tautan belum bisa dikirim. Coba lagi."
+        : "Tautan ganti password dikirim ke email akun. Buka email untuk melanjutkan."
+    );
+}
+
+async function handleNewPassword(event) {
+    event?.preventDefault();
+    if (authActionBusy || !passwordRecoveryPending) return;
+    const password = document.getElementById("newAuthPassword").value;
+    const confirmation = document.getElementById("confirmAuthPassword").value;
+    if (password.length < 8 || password !== confirmation) {
+        setAuthStatus("Password minimal 8 karakter dan konfirmasi harus sama.", "error");
+        return;
+    }
+    setAuthBusy(true);
+    try {
+        const { error } = await supabaseClient.auth.updateUser({ password });
+        if (error) {
+            setAuthStatus("Password gagal diperbarui: " + error.message, "error");
+            return;
+        }
+        document.getElementById("newAuthPassword").value = "";
+        document.getElementById("confirmAuthPassword").value = "";
+        passwordRecoveryPending = false;
+        await supabaseClient.auth.signOut();
+        window.history.replaceState(null, "", window.location.pathname);
+        showAuthPanel("login");
+        showAuthGate("Password berhasil diganti. Silakan masuk kembali.", "success");
+    } finally {
+        setAuthBusy(false);
+    }
+}
+
 async function signOutAdmin() {
     const confirmed =
         await showAppConfirm(
@@ -274,34 +369,43 @@ async function signOutAdmin() {
 }
 
 async function bootAuthenticatedApp() {
-    const { data, error } =
-        await supabaseClient.auth
-            .getSession();
+    passwordRecoveryPending =
+        new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
 
+    supabaseClient.auth.onAuthStateChange(function(event) {
+        if (event === "PASSWORD_RECOVERY") {
+            passwordRecoveryPending = true;
+            showAuthGate();
+            showAuthPanel("new");
+        } else if (event === "SIGNED_OUT" && !passwordRecoveryPending) {
+            showAuthGate();
+        }
+    });
+
+    const { data, error } = await supabaseClient.auth.getSession();
     if (error) {
-        showAuthGate(
-            "Sesi tidak dapat diperiksa. Silakan masuk kembali."
-        );
+        showAuthGate("Sesi tidak dapat diperiksa. Silakan masuk kembali.");
+        return;
+    }
+
+    if (passwordRecoveryPending) {
+        showAuthGate();
+        if (data.session) {
+            showAuthPanel("new");
+        } else {
+            passwordRecoveryPending = false;
+            showAuthPanel("login");
+            showAuthGate("Tautan pemulihan tidak valid atau kedaluwarsa.", "error");
+        }
         return;
     }
 
     if (data.session) {
-        await activateAdminSession(
-            data.session
-        );
+        await activateAdminSession(data.session);
     } else {
         showAuthGate();
     }
-
-    supabaseClient.auth.onAuthStateChange(
-        function(event) {
-            if (event === "SIGNED_OUT") {
-                showAuthGate();
-            }
-        }
-    );
 }
-
 
 /*/*==================================
    DATA
