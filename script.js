@@ -134,19 +134,14 @@ async function handleAdminSignIn(event) {
 
     if (authActionBusy) return;
 
-    const email =
-        document.getElementById(
-            "authEmail"
-        )?.value.trim();
-
+    const loginId =
+        document.getElementById("authEmail")?.value.trim() || "";
     const password =
-        document.getElementById(
-            "authPassword"
-        )?.value || "";
+        document.getElementById("authPassword")?.value || "";
 
-    if (!email || password.length < 8) {
+    if (!loginId || password.length < 8) {
         setAuthStatus(
-            "Isi email dan password minimal 8 karakter.",
+            "Isi username atau email dan password minimal 8 karakter.",
             "error"
         );
         return;
@@ -156,24 +151,43 @@ async function handleAdminSignIn(event) {
     setAuthStatus("Sedang masuk...", "loading");
 
     try {
-        const { data, error } =
-            await supabaseClient.auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
+        let session;
 
-        if (error) {
-            setAuthStatus(
-                "Gagal masuk: " + error.message,
-                "error"
-            );
-            return;
+        if (loginId.includes("@")) {
+            const { data, error } = await supabaseClient.auth
+                .signInWithPassword({ email: loginId, password });
+            if (error) {
+                setAuthStatus("Gagal masuk: " + error.message, "error");
+                return;
+            }
+            session = data.session;
+        } else {
+            const { data, error } = await supabaseClient.functions
+                .invoke("login-username", {
+                    body: { username: loginId, password }
+                });
+            if (error) {
+                setAuthStatus(
+                    error.context?.status === 429
+                        ? "Terlalu banyak percobaan. Coba lagi dalam 15 menit."
+                        : "Username atau password salah.",
+                    "error"
+                );
+                return;
+            }
+            const { data: authData, error: sessionError } =
+                await supabaseClient.auth.setSession({
+                    access_token: data.access_token,
+                    refresh_token: data.refresh_token
+                });
+            if (sessionError) {
+                setAuthStatus("Gagal memulai sesi. Coba lagi.", "error");
+                return;
+            }
+            session = authData.session;
         }
 
-        await activateAdminSession(
-            data.session
-        );
+        await activateAdminSession(session);
     } finally {
         setAuthBusy(false);
     }
@@ -192,9 +206,9 @@ async function handleAdminSignUp() {
             "authPassword"
         )?.value || "";
 
-    if (!email || password.length < 8) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "") || password.length < 8) {
         setAuthStatus(
-            "Isi email dan password minimal 8 karakter.",
+            "Pendaftaran memerlukan email valid dan password minimal 8 karakter.",
             "error"
         );
         return;
