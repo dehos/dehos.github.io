@@ -170,7 +170,9 @@ async function handleAdminSignIn(event) {
                 setAuthStatus(
                     error.context?.status === 429
                         ? "Terlalu banyak percobaan. Coba lagi dalam 15 menit."
-                        : "Username atau password salah.",
+                        : error.context?.status === 401
+                            ? "Username atau password salah."
+                            : "Login server belum bisa diproses. Coba lagi.",
                     "error"
                 );
                 return;
