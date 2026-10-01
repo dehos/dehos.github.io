@@ -14593,3 +14593,37 @@ button[aria-pressed="true"],
     width: 15px !important;
     height: 15px !important;
 }
+
+/* Teal surfaces for every desktop and mobile navigation button. */
+.app-nav a,
+.app-mobile-nav a {
+    background: #118f91 !important;
+    color: #fff !important;
+    border: 1px solid rgba(5, 94, 96, .3) !important;
+}
+.app-nav a:hover,
+.app-nav a:focus-visible,
+.app-mobile-nav a:hover,
+.app-mobile-nav a:focus-visible {
+    background: #0d7d80 !important;
+    color: #fff !important;
+}
+.app-nav a.active,
+.app-mobile-nav a.active {
+    background: #086568 !important;
+    color: #fff !important;
+    border-color: rgba(3, 74, 77, .45) !important;
+}
+.app-nav a .ui-svg-icon,
+.app-mobile-nav a .ui-svg-icon,
+.app-nav a span,
+.app-mobile-nav a span {
+    color: #fff !important;
+}
+.app-nav a .ui-svg-icon,
+.app-mobile-nav a .ui-svg-icon {
+    stroke: currentColor !important;
+}
+.app-mobile-nav a.active::after {
+    background: #fff !important;
+}
