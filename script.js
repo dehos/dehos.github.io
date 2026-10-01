@@ -10716,40 +10716,40 @@ async function exportPenjualanExcel() {
     if (!hasil) return;
 
     const baris = [
-        ["", hasil.judul, "", "", "", ""],
-        ["", "CATATAN PENJUALAN", "", "", "", ""],
-        ["", "", "", "", "", ""],
-        ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]
+        ["", hasil.judul, "", "", ""],
+        ["", "CATATAN PENJUALAN", "", "", ""],
+        ["", "", "", "", ""],
+        ["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total"]
     ];
     const jenisBaris = ["title", "subtitle", "spacer", "header"];
     let totalSemua = 0;
     hasil.grup.forEach(grup => {
-        baris.push(["", grup.brand.toUpperCase(), "", "", "", ""]);
+        baris.push(["", grup.brand.toUpperCase(), "", "", ""]);
         jenisBaris.push("brand");
         let subtotal = 0;
         grup.items.forEach(item => {
             baris.push([
                 formatTanggalExportPenjualan(item.tanggal),
-                item.nama, grup.brand, item.qty, item.harga, item.total
+                item.nama, item.qty, item.harga, item.total
             ]);
             jenisBaris.push("item");
             subtotal += item.total;
         });
-        baris.push(["", "", "", "", "TOTAL " + grup.brand, subtotal]);
+        baris.push(["", "", "", "TOTAL " + grup.brand, subtotal]);
         jenisBaris.push("subtotal");
         totalSemua += subtotal;
     });
-    baris.push(["", "", "", "", "TOTAL SEMUA", totalSemua]);
+    baris.push(["", "", "", "TOTAL SEMUA", totalSemua]);
     jenisBaris.push("grand");
 
     const worksheet = XLSX.utils.aoa_to_sheet(baris);
     worksheet["!cols"] = [
-        { wch: 13 }, { wch: 48 }, { wch: 20 },
-        { wch: 9 }, { wch: 19 }, { wch: 20 }
+        { wch: 13 }, { wch: 48 }, { wch: 9 },
+        { wch: 19 }, { wch: 20 }
     ];
     worksheet["!merges"] = jenisBaris.flatMap((jenis, r) =>
         ["title", "subtitle", "brand"].includes(jenis)
-            ? [{ s: { r, c: 1 }, e: { r, c: 5 } }] : []
+            ? [{ s: { r, c: 1 }, e: { r, c: 4 } }] : []
     );
     worksheet["!rows"] = jenisBaris.map(jenis => ({
         hpt: jenis === "title" ? 28 :
@@ -10764,7 +10764,7 @@ async function exportPenjualanExcel() {
         right: { style: "thin", color: { rgb: "D7DED9" } }
     };
     jenisBaris.forEach((jenis, r) => {
-        for (let c = 0; c < 6; c++) {
+        for (let c = 0; c < 5; c++) {
             const alamat = XLSX.utils.encode_cell({ r, c });
             const cell = worksheet[alamat];
             if (!cell) continue;
@@ -10787,10 +10787,10 @@ async function exportPenjualanExcel() {
                 },
                 alignment: {
                     vertical: "center",
-                    horizontal: c >= 3 ? "right" : "left"
+                    horizontal: c >= 2 ? "right" : "left"
                 }
             };
-            if ((c === 4 || c === 5) && typeof cell.v === "number") {
+            if ((c === 3 || c === 4) && typeof cell.v === "number") {
                 cell.z = '"Rp" #,##0';
             }
         }
@@ -10825,25 +10825,25 @@ async function exportPenjualanPDF() {
     let totalSemua = 0;
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
     hasil.grup.forEach(grup => {
-        body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
+        body.push([{ content: grup.brand.toUpperCase(), colSpan: 5,
             styles: { fillColor: [229, 242, 237], fontStyle: "bold" } }]);
         let subtotal = 0;
         grup.items.forEach(item => {
             body.push([
                 formatTanggalExportPenjualan(item.tanggal), item.nama,
-                grup.brand, String(item.qty), rupiah(item.harga),
+                String(item.qty), rupiah(item.harga),
                 rupiah(item.total)
             ]);
             subtotal += item.total;
         });
-        body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
+        body.push([{ content: "TOTAL " + grup.brand, colSpan: 4,
             styles: { halign: "right", fillColor: [241, 247, 243],
                 fontStyle: "bold" } },
             { content: rupiah(subtotal), styles: {
                 fillColor: [241, 247, 243], fontStyle: "bold" } }]);
         totalSemua += subtotal;
     });
-    body.push([{ content: "TOTAL SEMUA", colSpan: 5,
+    body.push([{ content: "TOTAL SEMUA", colSpan: 4,
         styles: { halign: "right", fillColor: [213, 238, 229],
             fontStyle: "bold" } },
         { content: rupiah(totalSemua), styles: {
@@ -10871,22 +10871,22 @@ async function exportPenjualanPDF() {
     pdf.text(hasil.judul, 35, 15);
     pdf.setFontSize(9);
     pdf.text(
-        "CATATAN PENJUALAN" + (hasil.brand ? " · " + hasil.brand : ""),
+        "CATATAN PENJUALAN",
         35, 21
     );
     pdf.autoTable({
         startY: 28,
         margin: { left: 10, right: 10, bottom: 10 },
-        head: [["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]],
+        head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total"]],
         body,
         theme: "grid",
         styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
         headStyles: { fillColor: [24, 143, 134], textColor: 255 },
         columnStyles: {
             0: { cellWidth: 23 }, 1: { cellWidth: "auto" },
-            2: { cellWidth: 32 }, 3: { cellWidth: 13, halign: "right" },
-            4: { cellWidth: 34, halign: "right" },
-            5: { cellWidth: 36, halign: "right" }
+            2: { cellWidth: 16, halign: "right" },
+            3: { cellWidth: 40, halign: "right" },
+            4: { cellWidth: 42, halign: "right" }
         }
     });
     simpanBlobExport(pdf.output("blob"), hasil.namaFile + ".pdf");
