@@ -14399,3 +14399,28 @@ button[aria-pressed="true"],
 #catatan-penjualan .sales-pagination button.active {
     color: #087d7f !important;
 }
+
+/* Transparent buttons inherit semantic icon colours, including legacy SVG rules. */
+#stok-barang .modern-header-actions svg,
+#stok-barang .stock-action-grid .stock-export-button svg,
+#stok-barang .stock-action-grid .stock-import-button svg,
+#stok-barang .stock-action-grid .stock-action-recap svg,
+#catatan-penjualan .sales-export-actions .modern-secondary-button svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+}
+#stok-barang .stock-action-grid .stock-export-button .modern-export-leading-icon,
+#stok-barang .stock-action-grid .stock-import-button .modern-export-leading-icon,
+#catatan-penjualan .sales-export-actions .modern-secondary-button .modern-export-leading-icon {
+    color: inherit !important;
+    background: transparent !important;
+}
+#stok-barang .stock-action-grid .stock-import-csv-icon text {
+    fill: currentColor !important;
+    stroke: none !important;
+}
+#stok-barang .stock-action-grid .stock-export-button svg path,
+#catatan-penjualan .sales-export-actions .modern-secondary-button svg path {
+    fill: none !important;
+    stroke: currentColor !important;
+}
