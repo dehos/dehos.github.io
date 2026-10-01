@@ -14830,3 +14830,59 @@ button[aria-pressed="true"] {
     color: inherit !important;
     stroke: currentColor !important;
 }
+
+/* Warm mobile navigation surface with a gently raised active label. */
+@media (max-width: 700px) {
+    .app-mobile-nav {
+        background: #fffef8 !important;
+        border: 0 !important;
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(40, 57, 49, .09) !important;
+    }
+
+    .app-mobile-nav a > svg,
+    .app-mobile-nav a > span {
+        transform: translateY(0);
+        transition: transform 160ms ease;
+    }
+
+    .app-mobile-nav a.active > svg,
+    .app-mobile-nav a.active > span {
+        transform: translateY(-3px);
+    }
+}
+
+/* Compact Stock rows use the same quiet spacing as sales records. */
+#stok-barang .modern-stock-table tbody td {
+    padding: 7px 8px;
+    line-height: 1.35;
+}
+#stok-barang #stockTable .action-btn {
+    height: 30px;
+    min-height: 30px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+#stok-barang #stockTable .stock-badge {
+    padding: 2px 6px;
+    line-height: 1.3;
+}
+@media (max-width: 700px) {
+    #stok-barang .modern-stock-table tbody td {
+        padding: 5px 4px;
+        font-size: 11px;
+        line-height: 1.35;
+    }
+
+    #stok-barang #stockTable .action-btn {
+        height: 30px;
+        min-height: 30px;
+        padding: 2px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .app-mobile-nav a > svg,
+    .app-mobile-nav a > span {
+        transition: none;
+    }
+}
