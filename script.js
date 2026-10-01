@@ -1777,7 +1777,7 @@ function parseImportWorkbook(
                     IMPORT_EXCEL_MAX_ROWS
                 ) {
                     throw new Error(
-                        "Excel maksimal berisi " +
+                        "File maksimal berisi " +
                         formatNumber(
                             IMPORT_EXCEL_MAX_ROWS
                         ) +
@@ -2092,12 +2092,12 @@ async function handleImportExcelFile(event) {
         }
 
         if (
-            !/\.(xlsx|xls)$/i.test(
+            !/\.(xlsx|xls|csv)$/i.test(
                 file.name
             )
         ) {
             throw new Error(
-                "Pilih file Excel berformat .xlsx atau .xls."
+                "Pilih file .xlsx, .xls, atau .csv."
             );
         }
 
@@ -2106,12 +2106,12 @@ async function handleImportExcelFile(event) {
             IMPORT_EXCEL_MAX_FILE_SIZE
         ) {
             throw new Error(
-                "Ukuran file Excel maksimal 5 MB."
+                "Ukuran file maksimal 5 MB."
             );
         }
 
         setDatabaseStatus(
-            "Membaca file Excel..."
+            "Membaca file import..."
         );
 
         await ensureCoreData();
@@ -2124,13 +2124,13 @@ async function handleImportExcelFile(event) {
             fetchImportBrands()
         ]);
 
-        const workbook =
-            XLSX.read(
-                buffer,
-                {
-                    type: "array"
-                }
-            );
+        const isCsv = /\.csv$/i.test(file.name);
+        const workbook = isCsv
+            ? XLSX.read(new TextDecoder("utf-8").decode(buffer), {
+                type: "string",
+                raw: true
+            })
+            : XLSX.read(buffer, { type: "array" });
 
         const parsed =
             parseImportWorkbook(
@@ -2163,22 +2163,22 @@ async function handleImportExcelFile(event) {
         );
     } catch (error) {
         console.error(
-            "ERROR BACA IMPORT EXCEL:",
+            "ERROR BACA IMPORT BARANG:",
             error
         );
 
         input.value = "";
 
         setDatabaseStatus(
-            "File Excel gagal dibaca.",
+            "File import gagal dibaca.",
             "error"
         );
 
         await showAppAlert(
             error?.message ||
-                "File Excel gagal dibaca.",
+                "File import gagal dibaca.",
             {
-                title: "Import Excel"
+                title: "Import Barang"
             }
         );
     }
