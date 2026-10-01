@@ -50,7 +50,7 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20261001-4">
+    <link rel="stylesheet" href="style.css?v=20261001-5">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -424,25 +424,18 @@
             <span>Barang baru</span>
         </button>
 
-        <details class="modern-export-menu">
-            <summary>
-                <span class="modern-export-leading-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 3v12"/>
-                        <path d="m7 10 5 5 5-5"/>
-                        <path d="M5 21h14"/>
+        <div class="stock-export-controls">
+            <details class="modern-export-menu stock-export-period">
+                <summary>
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 5h16v15H4zM4 9h16M8 3v4M16 3v4"/>
                     </svg>
-                </span>
-                <span>Export</span>
-                <svg
-                    class="modern-chevron"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
-                    <path d="m7 10 5 5 5-5"/>
-                </svg>
-            </summary>
-            <div class="modern-export-options">
+                    <span>Periode export</span>
+                    <svg class="modern-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m7 10 5 5 5-5"/>
+                    </svg>
+                </summary>
+                <div class="modern-export-options">
                 <div class="export-date-range">
                     <span class="export-date-range-title">Periode export</span>
                     <label>
@@ -455,34 +448,33 @@
                     </label>
                     <small>Kosongkan keduanya untuk periode otomatis.</small>
                 </div>
-                <button
-                    type="button"
-                    onclick="this.closest('details').removeAttribute('open'); exportExcel()"
-                >
-                    <span class="export-accent export-file-icon excel-accent" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
+                </div>
+            </details>
+            <div class="stock-export-actions" role="group" aria-label="Export stok barang">
+                <button type="button" class="modern-secondary-button"
+                    onclick="exportExcel()" aria-label="Export stok barang ke Excel">
+                    <span class="modern-export-leading-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
                             <path d="M6 3h9l3 3v15H6z"/>
                             <path d="M15 3v4h4"/>
                             <path d="m9 11 5 6M14 11l-5 6"/>
                         </svg>
                     </span>
-                    <span>Export Excel</span>
+                    <span>Excel</span>
                 </button>
-                <button
-                    type="button"
-                    onclick="this.closest('details').removeAttribute('open'); exportPDF()"
-                >
-                    <span class="export-accent export-file-icon pdf-accent" aria-hidden="true">
-                        <svg viewBox="0 0 24 24">
+                <button type="button" class="modern-secondary-button"
+                    onclick="exportPDF()" aria-label="Export stok barang ke PDF">
+                    <span class="modern-export-leading-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
                             <path d="M6 3h9l3 3v15H6z"/>
                             <path d="M15 3v4h4"/>
                             <path d="M9 12h6M9 16h5"/>
                         </svg>
                     </span>
-                    <span>Export PDF</span>
+                    <span>PDF</span>
                 </button>
             </div>
-        </details>
+        </div>
     </div>
 </div>
 <div class="stock-recap-action-row">
