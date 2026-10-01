@@ -14529,3 +14529,40 @@ button[aria-pressed="true"],
 #stok-barang .stock-action-grid > .stock-action-recap:hover {
     border-color: color-mix(in srgb, currentColor 48%, transparent) !important;
 }
+
+/* Restore the teal button surface while retaining the quiet outlines. */
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi)
+:is(.btn-primary, .modern-primary-button, .auth-primary-button, .app-message-confirm, .export-confirm-yes, .stock-in-btn),
+#stok-barang .stock-action-grid > .modern-primary-button,
+#stok-barang .stock-action-grid > .modern-import-button,
+#stok-barang .stock-action-grid > .modern-export-menu > summary,
+#stok-barang .stock-action-grid > .stock-action-recap,
+#rekap-stok .stock-recap-back {
+    background: #118f91 !important;
+    color: #fff !important;
+    border-color: rgba(5, 94, 96, .35) !important;
+}
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi)
+:is(.btn-primary, .modern-primary-button, .auth-primary-button, .app-message-confirm, .export-confirm-yes, .stock-in-btn):hover,
+#stok-barang .stock-action-grid > .modern-primary-button:hover,
+#stok-barang .stock-action-grid > .modern-import-button:hover,
+#stok-barang .stock-action-grid > .modern-export-menu > summary:hover,
+#stok-barang .stock-action-grid > .stock-action-recap:hover,
+#rekap-stok .stock-recap-back:hover {
+    background: #0d7d80 !important;
+    border-color: rgba(5, 94, 96, .55) !important;
+}
+#stok-barang .stock-action-grid > :is(button, a, details > summary) svg,
+#rekap-stok .stock-recap-back svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+}
+/* Keep export formats legible and distinct from the teal primary actions. */
+#catatan-penjualan .sales-export-actions .modern-secondary-button,
+#stok-barang .stock-action-grid .stock-export-button {
+    background: #fff !important;
+}
+#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
+#stok-barang .stock-action-grid .stock-export-button:hover {
+    background: #f4faf8 !important;
+}
