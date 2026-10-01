@@ -14636,3 +14636,118 @@ button[aria-pressed="true"] {
         font-size: 8px;
     }
 }
+
+/* Quiet utility controls keep teal as an accent rather than a solid surface. */
+#catatan-penjualan .history-month-nav button,
+#riwayat-transaksi .history-month-nav button,
+#stok-barang #stockTable button[class],
+#penjualan #penjualanTodayButton,
+#stok-barang #tanggalPickerButton,
+#penjualan #penjualanTanggalPickerButton,
+#riwayat-transaksi .history-type-options button[data-history-filter] {
+    background: transparent !important;
+    color: #667570 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+#catatan-penjualan .history-month-nav button:is(:hover, :focus-visible),
+#riwayat-transaksi .history-month-nav button:is(:hover, :focus-visible),
+#stok-barang #stockTable button[class]:is(:hover, :focus-visible),
+#stok-barang #tanggalPickerButton:is(:hover, :focus-visible),
+#penjualan #penjualanTanggalPickerButton:is(:hover, :focus-visible) {
+    background: #edf3ef !important;
+    color: #087d7f !important;
+}
+#penjualan #penjualanTodayButton:is(:hover, :focus-visible, [aria-pressed="true"]) {
+    background: transparent !important;
+    color: #7b8581 !important;
+}
+#riwayat-transaksi .history-type-options button[data-history-filter]:is(:hover, :focus-visible, [aria-pressed="true"]) {
+    background: #edf3ef !important;
+    color: #536761 !important;
+}
+#riwayat-transaksi .history-filter-group-label,
+#riwayat-transaksi .history-filter-menu select {
+    color: #536761 !important;
+}
+#catatan-penjualan .history-month-nav button svg,
+#riwayat-transaksi .history-month-nav button svg,
+#stok-barang #stockTable button[class] svg,
+#stok-barang #tanggalPickerButton svg,
+#penjualan #penjualanTanggalPickerButton svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+}
+
+/* Page numbers are light text actions with an underline for the current page. */
+#stok-barang .stock-pagination button,
+#catatan-penjualan .sales-pagination button {
+    position: relative;
+    background: transparent !important;
+    color: #087d7f !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+#stok-barang .stock-pagination button:is(.active, :hover, :focus-visible),
+#catatan-penjualan .sales-pagination button:is(.active, :hover, :focus-visible) {
+    background: transparent !important;
+    color: #087d7f !important;
+    border: 0 !important;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+#stok-barang .stock-pagination button.active::after,
+#catatan-penjualan .sales-pagination button.active::after {
+    content: "";
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: #118f91;
+}
+#stok-barang .stock-pagination button svg,
+#catatan-penjualan .sales-pagination button svg {
+    color: #087d7f !important;
+    stroke: currentColor !important;
+}
+
+/* Center calendar buttons without relying on a translated button. */
+#stok-barang .localized-date-control,
+#penjualan .localized-date-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+#stok-barang #tanggalPickerButton,
+#penjualan #penjualanTanggalPickerButton {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: auto 0;
+    line-height: 0;
+    transform: none !important;
+}
+#stok-barang #tanggalPickerButton svg,
+#penjualan #penjualanTanggalPickerButton svg {
+    display: block;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+#stok-barang .localized-date-display,
+#penjualan .localized-date-display {
+    padding-right: 42px !important;
+}
