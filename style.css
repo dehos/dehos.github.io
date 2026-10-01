@@ -14470,159 +14470,102 @@ button[aria-pressed="true"],
     }
 }
 
-/* Quiet outlines distinguish every action while keeping the light theme airy. */
-:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(button, summary),
+
+/* Shared teal button theme for all pages, tables, menus and dialogs. */
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi, #transactionModal, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal, #importExcelModal, #exportConfirmModal) :is(button, summary)[class],
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(button, summary):not([class]),
 .app-nav a,
 .app-mobile-nav a,
+#stok-barang .stock-action-grid > button,
+#stok-barang .stock-action-grid > .modern-export-menu > summary,
+#stok-barang .stock-action-grid .stock-export-button,
 #stok-barang .stock-action-grid .stock-action-recap,
+#catatan-penjualan .sales-export-actions .modern-secondary-button,
+#catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button,
 #rekap-stok .stock-recap-back,
 #stok-barang #stockTable button,
+.modern-stock-table #stockTable button,
 #catatan-penjualan .modern-sales-table button,
 #riwayat-transaksi .modern-history-table button,
 #stok-barang .stock-pagination button,
 #catatan-penjualan .sales-pagination button,
-#riwayat-transaksi .history-type-options button,
-#transactionModal button,
-#editTransaksiModal button,
-#editPenjualanModal button,
-#tambahBarangModal button,
-#importExcelModal button,
-#exportConfirmModal button {
-    border: 1px solid rgba(65, 88, 102, .2) !important;
+#riwayat-transaksi .history-type-options button {
+    background: #118f91 !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 10px !important;
     box-shadow: none !important;
+    text-decoration: none !important;
 }
-:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(button, summary):hover,
-.app-nav a:hover,
-.app-mobile-nav a:hover,
-#stok-barang #stockTable button:hover,
-#catatan-penjualan .modern-sales-table button:hover,
-#riwayat-transaksi .modern-history-table button:hover,
-#stok-barang .stock-pagination button:hover,
-#catatan-penjualan .sales-pagination button:hover,
-#riwayat-transaksi .history-type-options button:hover {
-    border-color: rgba(65, 88, 102, .36) !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button,
-#stok-barang .stock-action-grid .stock-export-button,
-#stok-barang .stock-action-grid > .modern-primary-button,
-#stok-barang .stock-action-grid > .modern-import-button,
-#stok-barang .stock-action-grid > .modern-export-menu > summary,
-#stok-barang .stock-action-grid > .stock-action-recap {
-    border: 1px solid currentColor !important;
-    border-radius: 8px !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button,
-#stok-barang .stock-action-grid .stock-export-button {
-    border-color: color-mix(in srgb, currentColor 25%, transparent) !important;
-}
-#stok-barang .stock-action-grid > .modern-primary-button,
-#stok-barang .stock-action-grid > .modern-import-button,
-#stok-barang .stock-action-grid > .modern-export-menu > summary,
-#stok-barang .stock-action-grid > .stock-action-recap {
-    border-color: color-mix(in srgb, currentColor 25%, transparent) !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
-#stok-barang .stock-action-grid .stock-export-button:hover,
-#stok-barang .stock-action-grid > .modern-primary-button:hover,
-#stok-barang .stock-action-grid > .modern-import-button:hover,
-#stok-barang .stock-action-grid > .modern-export-menu > summary:hover,
-#stok-barang .stock-action-grid > .stock-action-recap:hover {
-    border-color: color-mix(in srgb, currentColor 48%, transparent) !important;
-}
-
-/* Restore the teal button surface while retaining the quiet outlines. */
-:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi)
-:is(.btn-primary, .modern-primary-button, .auth-primary-button, .app-message-confirm, .export-confirm-yes, .stock-in-btn),
-#stok-barang .stock-action-grid > .modern-primary-button,
-#stok-barang .stock-action-grid > .modern-import-button,
-#stok-barang .stock-action-grid > .modern-export-menu > summary,
-#stok-barang .stock-action-grid > .stock-action-recap,
-#rekap-stok .stock-recap-back {
-    background: #118f91 !important;
-    color: #fff !important;
-    border-color: rgba(5, 94, 96, .35) !important;
-}
-:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi)
-:is(.btn-primary, .modern-primary-button, .auth-primary-button, .app-message-confirm, .export-confirm-yes, .stock-in-btn):hover,
-#stok-barang .stock-action-grid > .modern-primary-button:hover,
-#stok-barang .stock-action-grid > .modern-import-button:hover,
-#stok-barang .stock-action-grid > .modern-export-menu > summary:hover,
-#stok-barang .stock-action-grid > .stock-action-recap:hover,
-#rekap-stok .stock-recap-back:hover {
-    background: #0d7d80 !important;
-    border-color: rgba(5, 94, 96, .55) !important;
-}
-#stok-barang .stock-action-grid > :is(button, a, details > summary) svg,
-#rekap-stok .stock-recap-back svg {
-    color: inherit !important;
-    stroke: currentColor !important;
-}
-/* Teal surfaces for export actions; format icons retain their meaning. */
-#catatan-penjualan .sales-export-actions .modern-secondary-button,
-#stok-barang .stock-action-grid .stock-export-button {
-    background: #118f91 !important;
-    color: #fff !important;
-    border-color: rgba(5, 94, 96, .35) !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
-#stok-barang .stock-action-grid .stock-export-button:hover {
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi, #transactionModal, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal, #importExcelModal, #exportConfirmModal) :is(button, summary)[class]:is(:hover, :focus-visible),
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(button, summary):not([class]):is(:hover, :focus-visible),
+.app-nav a:is(:hover, :focus-visible),
+.app-mobile-nav a:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid > button:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid > .modern-export-menu > summary:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid .stock-export-button:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid .stock-action-recap:is(:hover, :focus-visible),
+#catatan-penjualan .sales-export-actions .modern-secondary-button:is(:hover, :focus-visible),
+#catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button:is(:hover, :focus-visible),
+#rekap-stok .stock-recap-back:is(:hover, :focus-visible),
+#stok-barang #stockTable button:is(:hover, :focus-visible),
+.modern-stock-table #stockTable button:is(:hover, :focus-visible),
+#catatan-penjualan .modern-sales-table button:is(:hover, :focus-visible),
+#riwayat-transaksi .modern-history-table button:is(:hover, :focus-visible),
+#stok-barang .stock-pagination button:is(:hover, :focus-visible),
+#catatan-penjualan .sales-pagination button:is(:hover, :focus-visible),
+#riwayat-transaksi .history-type-options button:is(:hover, :focus-visible) {
     background: #0d7d80 !important;
     color: #fff !important;
-    border-color: rgba(5, 94, 96, .55) !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button .modern-export-leading-icon,
-#stok-barang .stock-action-grid .stock-export-button .modern-export-leading-icon {
-    width: 19px !important;
-    height: 19px !important;
-    flex-basis: 19px;
-    border-radius: 4px;
-    background: #fff !important;
-}
-#catatan-penjualan .sales-export-actions .export-excel-action .modern-export-leading-icon,
-#stok-barang .stock-action-grid .export-excel-action .modern-export-leading-icon {
-    color: #217346 !important;
-}
-#catatan-penjualan .sales-export-actions .export-pdf-action .modern-export-leading-icon,
-#stok-barang .stock-action-grid .export-pdf-action .modern-export-leading-icon {
-    color: #d52b32 !important;
-}
-#catatan-penjualan .sales-export-actions .modern-secondary-button .modern-export-leading-icon svg,
-#stok-barang .stock-action-grid .stock-export-button .modern-export-leading-icon svg {
-    color: inherit !important;
-    stroke: currentColor !important;
-    width: 15px !important;
-    height: 15px !important;
-}
-
-/* Teal surfaces for every desktop and mobile navigation button. */
-.app-nav a,
-.app-mobile-nav a {
-    background: #118f91 !important;
-    color: #fff !important;
-    border: 1px solid rgba(5, 94, 96, .3) !important;
-}
-.app-nav a:hover,
-.app-nav a:focus-visible,
-.app-mobile-nav a:hover,
-.app-mobile-nav a:focus-visible {
-    background: #0d7d80 !important;
-    color: #fff !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
 }
 .app-nav a.active,
-.app-mobile-nav a.active {
+.app-mobile-nav a.active,
+#stok-barang .stock-pagination button.active,
+#catatan-penjualan .sales-pagination button.active,
+#riwayat-transaksi .history-type-options button[aria-pressed="true"],
+button[aria-pressed="true"] {
     background: #086568 !important;
     color: #fff !important;
-    border-color: rgba(3, 74, 77, .45) !important;
+    border: 0 !important;
+    text-decoration: none !important;
 }
-.app-nav a .ui-svg-icon,
-.app-mobile-nav a .ui-svg-icon,
-.app-nav a span,
-.app-mobile-nav a span {
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi, #transactionModal, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal, #importExcelModal, #exportConfirmModal) :is(button, summary)[class] svg,
+:is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(button, summary):not([class]) svg,
+.app-nav a svg,
+.app-mobile-nav a svg,
+#stok-barang .stock-action-grid > button svg,
+#stok-barang .stock-action-grid > .modern-export-menu > summary svg,
+#stok-barang .stock-action-grid .stock-export-button svg,
+#stok-barang .stock-action-grid .stock-action-recap svg,
+#catatan-penjualan .sales-export-actions .modern-secondary-button svg,
+#catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button svg,
+#rekap-stok .stock-recap-back svg,
+#stok-barang #stockTable button svg,
+.modern-stock-table #stockTable button svg,
+#catatan-penjualan .modern-sales-table button svg,
+#riwayat-transaksi .modern-history-table button svg,
+#stok-barang .stock-pagination button svg,
+#catatan-penjualan .sales-pagination button svg,
+#riwayat-transaksi .history-type-options button svg {
     color: #fff !important;
-}
-.app-nav a .ui-svg-icon,
-.app-mobile-nav a .ui-svg-icon {
     stroke: currentColor !important;
+}
+.app-nav a span,
+.app-mobile-nav a span,
+#stok-barang .stock-action-grid .modern-export-leading-icon,
+#stok-barang .stock-action-grid .export-download-icon,
+#catatan-penjualan .sales-export-actions .modern-export-leading-icon,
+#catatan-penjualan .sales-export-actions .export-download-icon {
+    color: #fff !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+#stok-barang .stock-action-grid .stock-import-csv-icon text {
+    fill: #fff !important;
+    stroke: none !important;
 }
 .app-mobile-nav a.active::after {
     background: #fff !important;
