@@ -10600,13 +10600,11 @@ async function siapkanExportPenjualan(jenis) {
         });
     });
     const grup = [...kelompok.values()];
+    // Dalam setiap brand, tampilkan tanggal paling awal lebih dahulu.
     grup.forEach(g => g.items.sort(
-        (a, b) => b.tanggal.localeCompare(a.tanggal) || b.id - a.id
+        (a, b) => a.tanggal.localeCompare(b.tanggal) || a.id - b.id
     ));
-    grup.sort((a, b) =>
-        b.items[0].tanggal.localeCompare(a.items[0].tanggal) ||
-        a.brand.localeCompare(b.brand, "id-ID")
-    );
+    grup.sort((a, b) => a.brand.localeCompare(b.brand, "id-ID"));
 
     let namaFile = "Penjualan";
     if (brand) namaFile += "-" + brand;
