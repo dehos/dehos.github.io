@@ -14667,8 +14667,9 @@ button[aria-pressed="true"] {
     background: #edf3ef !important;
     color: #536761 !important;
 }
+#riwayat-transaksi .history-filter-options label,
 #riwayat-transaksi .history-filter-group-label,
-#riwayat-transaksi .history-filter-menu select {
+#riwayat-transaksi #historyBrandFilter {
     color: #536761 !important;
 }
 #catatan-penjualan .history-month-nav button svg,
