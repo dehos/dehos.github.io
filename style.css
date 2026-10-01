@@ -13920,3 +13920,128 @@ body.auth-locked .auth-gate {
         display: inline !important;
     }
 }
+
+/* Stock export uses the same compact Excel/PDF controls as Sales. */
+#stok-barang .modern-header-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#stok-barang .stock-export-controls {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(115px, 1fr) minmax(0, 2fr);
+    align-items: stretch;
+    gap: 6px;
+    min-width: 0;
+    height: 40px;
+}
+#stok-barang .stock-export-period {
+    position: relative;
+    min-width: 0;
+}
+#stok-barang .stock-export-period > summary {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 8px;
+    border: 1px solid var(--app-border) !important;
+    border-radius: 999px !important;
+    background: var(--app-surface) !important;
+    color: var(--app-text-soft) !important;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+#stok-barang .stock-export-period > summary:hover {
+    background: #e7f4ee !important;
+    color: #087d7f !important;
+}
+#stok-barang .modern-header-actions .stock-export-period > summary svg {
+    width: 15px;
+    height: 15px;
+    fill: none !important;
+    color: var(--app-text-soft) !important;
+    stroke: currentColor !important;
+}
+#stok-barang .modern-header-actions .stock-export-period > summary:hover svg {
+    color: #087d7f !important;
+}
+#stok-barang .stock-export-period .modern-export-options {
+    left: 0;
+    right: auto;
+    width: min(290px, calc(100vw - 36px));
+}
+#stok-barang .stock-export-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #118f91;
+    border-radius: 999px;
+    background: #118f91;
+}
+#stok-barang .stock-export-actions .modern-secondary-button {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    height: 38px;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 7px;
+    border: 0;
+    border-radius: 0;
+    background: #118f91 !important;
+    color: #fff !important;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: none;
+}
+#stok-barang .stock-export-actions .modern-secondary-button + .modern-secondary-button {
+    border-left: 1px solid rgba(255, 255, 255, .35);
+}
+#stok-barang .stock-export-actions .modern-secondary-button:hover,
+#stok-barang .stock-export-actions .modern-secondary-button:active {
+    background: #0d7d80 !important;
+    color: #fff !important;
+}
+#stok-barang .stock-export-actions .modern-export-leading-icon {
+    display: inline-flex;
+    flex: 0 0 19px;
+    width: 19px;
+    height: 19px;
+    align-items: center;
+    justify-content: center;
+    border: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+}
+#stok-barang .stock-export-actions .modern-export-leading-icon svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    fill: none !important;
+    stroke: #fff !important;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+@media (max-width: 700px) {
+    #stok-barang .modern-header-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+    #stok-barang .stock-export-controls {
+        grid-template-columns: minmax(105px, 1fr) minmax(0, 2fr);
+    }
+    #stok-barang .stock-export-period > summary {
+        font-size: 10px;
+        padding-inline: 5px;
+    }
+}
