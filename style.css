@@ -13880,3 +13880,43 @@ body.auth-locked .auth-gate {
         color: #fff;
     }
 }
+
+/* Match Stock's Export control and keep file icons visible on mobile. */
+#catatan-penjualan .sales-export-actions .modern-secondary-button {
+    background: #118f91 !important;
+    border-color: #118f91 !important;
+    color: #fff !important;
+}
+
+#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
+#catatan-penjualan .sales-export-actions .modern-secondary-button:active {
+    background: #0d7d80 !important;
+    border-color: #0d7d80 !important;
+    color: #fff !important;
+}
+
+#catatan-penjualan .sales-export-actions .modern-export-leading-icon {
+    display: inline-flex !important;
+    flex: 0 0 19px;
+    align-items: center;
+    justify-content: center;
+    width: 19px !important;
+    height: 19px !important;
+    color: #fff !important;
+    background: transparent !important;
+}
+
+#catatan-penjualan .sales-export-actions .modern-export-leading-icon svg {
+    display: block !important;
+    width: 17px !important;
+    height: 17px !important;
+    fill: none !important;
+    stroke: #fff !important;
+    stroke-width: 1.9;
+}
+
+@media (max-width: 700px) {
+    #catatan-penjualan .sales-export-actions .modern-secondary-button > span:last-child {
+        display: inline !important;
+    }
+}
