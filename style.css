@@ -13744,3 +13744,45 @@ body.auth-locked .auth-gate {
         text-align: left;
     }
 }
+
+/* Keep the two sales export actions together on narrow screens. */
+#catatan-penjualan .sales-export-actions {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 0;
+}
+
+#catatan-penjualan .sales-export-actions .modern-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-tools {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+
+    #catatan-penjualan .sales-export-actions {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button {
+        width: 100%;
+        min-width: 0;
+        height: 36px;
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button > span:last-child {
+        display: inline;
+    }
+}
