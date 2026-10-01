@@ -14045,3 +14045,119 @@ body.auth-locked .auth-gate {
         padding-inline: 5px;
     }
 }
+
+/* Stock actions: three compact controls per row on all screen widths. */
+#stok-barang .modern-header-actions.stock-action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    align-items: stretch;
+}
+#stok-barang .stock-action-grid > button,
+#stok-barang .stock-action-grid > details,
+#stok-barang .stock-action-grid > a {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 40px;
+    height: 40px;
+    margin: 0 !important;
+}
+#stok-barang .stock-action-grid > button,
+#stok-barang .stock-action-grid > a,
+#stok-barang .stock-action-grid > details > summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 5px;
+    border-radius: 11px !important;
+    font-size: 10px;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: none !important;
+    transform: none !important;
+}
+#stok-barang .stock-action-grid > details > summary {
+    height: 40px !important;
+    min-height: 40px !important;
+    border: 1px solid var(--app-border) !important;
+    background: var(--app-surface) !important;
+    color: var(--app-text-soft) !important;
+}
+#stok-barang .stock-action-grid > details > summary:hover {
+    background: #e7f4ee !important;
+    color: #087d7f !important;
+}
+#stok-barang .stock-action-grid .stock-export-button {
+    border: 1px solid #118f91 !important;
+    background: #118f91 !important;
+    color: #fff !important;
+}
+#stok-barang .stock-action-grid .stock-export-button:hover {
+    border-color: #0d7d80 !important;
+    background: #0d7d80 !important;
+}
+#stok-barang .stock-action-grid .stock-action-recap {
+    border: 1px solid #b9ded3;
+    background: #e8f5ef;
+    color: #137d73;
+    text-decoration: none;
+}
+#stok-barang .stock-action-grid .stock-action-recap:hover {
+    background: #d8eee6;
+    color: #087d7f;
+}
+#stok-barang .stock-action-grid .modern-export-leading-icon {
+    display: inline-flex !important;
+    flex: 0 0 17px;
+    width: 17px !important;
+    height: 17px !important;
+    align-items: center;
+    justify-content: center;
+    border: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+}
+#stok-barang .stock-action-grid svg {
+    flex: 0 0 16px;
+    width: 16px !important;
+    height: 16px !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+#stok-barang .stock-action-grid .stock-import-csv-icon text {
+    fill: #fff !important;
+    stroke: none !important;
+}
+#stok-barang .stock-action-grid .stock-export-period > summary svg {
+    color: var(--app-text-soft) !important;
+}
+#stok-barang .stock-action-grid .stock-export-period > summary:hover svg {
+    color: #087d7f !important;
+}
+#stok-barang .stock-action-grid .stock-export-period .modern-export-options {
+    left: 0;
+    right: auto;
+    width: min(290px, calc(100vw - 36px));
+}
+@media (max-width: 370px) {
+    #stok-barang .stock-action-grid .modern-primary-button span,
+    #stok-barang .stock-action-grid .stock-export-period > summary span {
+        display: inline !important;
+    }
+    #stok-barang .stock-action-grid > button,
+    #stok-barang .stock-action-grid > a,
+    #stok-barang .stock-action-grid > details > summary {
+        font-size: 9px;
+        gap: 3px;
+        padding-inline: 3px;
+    }
+}
