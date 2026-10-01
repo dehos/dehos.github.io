@@ -10787,7 +10787,7 @@ async function exportPenjualanExcel() {
                 },
                 alignment: {
                     vertical: "center",
-                    horizontal: c >= 2 ? "right" : "left"
+                    horizontal: c === 2 ? "center" : c >= 3 ? "right" : "left"
                 }
             };
             if ((c === 3 || c === 4) && typeof cell.v === "number") {
@@ -10884,7 +10884,7 @@ async function exportPenjualanPDF() {
         headStyles: { fillColor: [24, 143, 134], textColor: 255 },
         columnStyles: {
             0: { cellWidth: 23 }, 1: { cellWidth: "auto" },
-            2: { cellWidth: 16, halign: "right" },
+            2: { cellWidth: 16, halign: "center" },
             3: { cellWidth: 40, halign: "right" },
             4: { cellWidth: 42, halign: "right" }
         }
