@@ -2580,6 +2580,12 @@ function isStockOut(transaction) {
 }
 
 function getRawCurrentStock(barang) {
+    if (
+        tanggalDipilih &&
+        !barangAdaPadaTanggal(barang, tanggalDipilih)
+    ) {
+        return 0;
+    }
 
     let stok =
         Number(
@@ -2818,6 +2824,8 @@ renderPaginationStok(0);
             function(barang) {
 
                 return (
+                    (!tanggalDipilih ||
+                        barangAdaPadaTanggal(barang, tanggalDipilih)) &&
                     getBarangSearchScore(
                         barang,
                         search
@@ -3435,7 +3443,12 @@ function updateStats() {
 
     let totalStok = 0;
 
-    dataBarang.forEach(
+    const barangPadaTanggal = dataBarang.filter(
+        barang => !tanggalDipilih ||
+            barangAdaPadaTanggal(barang, tanggalDipilih)
+    );
+
+    barangPadaTanggal.forEach(
     function(barang) {
 
             totalStok +=
@@ -3483,7 +3496,7 @@ function updateStats() {
 
         totalBarangElement.textContent =
             formatNumber(
-                dataBarang.length
+                barangPadaTanggal.length
             );
     }
 
@@ -6584,6 +6597,46 @@ function renderTargetPenjualan(
    LOAD PENJUALAN
 ===================================================== */
 
+async function fetchPenjualanLengkap(bulan, brand) {
+    const semua = [];
+    const ukuranHalaman = 500;
+
+    for (let posisi = 0; ; posisi += ukuranHalaman) {
+        let query = supabaseClient
+            .from("penjualan")
+            .select("*")
+            .order("tanggal_pembelian", { ascending: false })
+            .order("id", { ascending: false });
+
+        if (/^\d{4}-\d{2}$/.test(bulan)) {
+            const [tahun, nomorBulan] = bulan.split("-").map(Number);
+            const berikutnya = new Date(tahun, nomorBulan, 1);
+            const batas = berikutnya.getFullYear() + "-" +
+                String(berikutnya.getMonth() + 1).padStart(2, "0") + "-01";
+            query = query.gte("tanggal_pembelian", bulan + "-01")
+                .lt("tanggal_pembelian", batas);
+        }
+
+        if (brand) {
+            query = query.eq("brand", brand);
+        }
+
+        const { data, error } = await query.range(
+            posisi,
+            posisi + ukuranHalaman - 1
+        );
+        if (error) {
+            return { data: [], error };
+        }
+
+        const halaman = data || [];
+        semua.push(...halaman);
+        if (halaman.length < ukuranHalaman) {
+            return { data: semua, error: null };
+        }
+    }
+}
+
 async function loadPenjualan() {
 
     const tbody =
@@ -6617,63 +6670,7 @@ async function loadPenjualan() {
             "filterBrand"
         )?.value || "";
 
-    let query =
-        supabaseClient
-            .from("penjualan")
-            .select("*")
-            .order(
-                "tanggal_pembelian",
-                {
-                    ascending: false
-                }
-            )
-            .order(
-                "id",
-                {
-                    ascending: false
-                }
-            );
-
-    if (/^\d{4}-\d{2}$/.test(bulan)) {
-        const bagianBulan =
-            bulan.split("-").map(Number);
-
-        const awalBulanBerikutnya =
-            new Date(
-                bagianBulan[0],
-                bagianBulan[1],
-                1
-            );
-
-        const batasBulan =
-            awalBulanBerikutnya.getFullYear() +
-            "-" +
-            String(
-                awalBulanBerikutnya.getMonth() + 1
-            ).padStart(2, "0") +
-            "-01";
-
-        query = query
-            .gte(
-                "tanggal_pembelian",
-                bulan + "-01"
-            )
-            .lt(
-                "tanggal_pembelian",
-                batasBulan
-            );
-    }
-
-    if (brand) {
-        query = query.eq(
-            "brand",
-            brand
-        );
-    }
-
-    const { data, error } =
-        await query;
-
+    const { data, error } = await fetchPenjualanLengkap(bulan, brand);
 
     if (error) {
 
@@ -8826,19 +8823,17 @@ function getTanggalPembuatanBarangExport(
 }
 
 
+function barangAdaPadaTanggal(barang, tanggal) {
+    const tanggalPembuatan = getTanggalPembuatanBarangExport(barang);
+    return !tanggalPembuatan || tanggalPembuatan <= tanggal;
+}
+
+
 function getStokSebelumTanggalExport(
     barang,
     tanggalMulai
 ) {
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (
-        tanggalPembuatan &&
-        tanggalPembuatan > tanggalMulai
-    ) {
+    if (!barangAdaPadaTanggal(barang, tanggalMulai)) {
         return 0;
     }
 
@@ -8888,19 +8883,7 @@ function barangAdaDalamRentangExport(
     barang,
     tanggalAkhir
 ) {
-    const tanggalPembuatan =
-        getTanggalPembuatanBarangExport(
-            barang
-        );
-
-    if (!tanggalPembuatan) {
-        return true;
-    }
-
-    return (
-        tanggalPembuatan <=
-        tanggalAkhir
-    );
+    return barangAdaPadaTanggal(barang, tanggalAkhir);
 }
 
 
@@ -10602,8 +10585,17 @@ async function exportPenjualanExcel() {
             "filterBrand"
         )?.value || "";
 
+    const { data: semuaPenjualan, error } =
+        await fetchPenjualanLengkap(bulan, brand);
+
+    if (error) {
+        console.error("ERROR EXPORT PENJUALAN:", error);
+        showAppAlert("Gagal mengambil seluruh data penjualan untuk export.");
+        return;
+    }
+
     const data =
-        (window.dataPenjualan || []).filter(
+        semuaPenjualan.filter(
             function(item) {
                 if (
                     bulan &&
