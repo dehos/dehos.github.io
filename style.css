@@ -14570,3 +14570,69 @@ button[aria-pressed="true"] {
 .app-mobile-nav a.active::after {
     background: #fff !important;
 }
+
+/* Give the five mobile navigation actions clear breathing room. */
+@media (max-width: 700px) {
+    .app-mobile-nav {
+        left: 12px;
+        right: 12px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        align-items: stretch;
+        gap: 6px;
+        padding: 8px;
+        border: 0 !important;
+        border-radius: 20px;
+    }
+
+    .app-mobile-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        min-height: 56px;
+        margin: 0;
+        padding: 8px 2px;
+        gap: 5px;
+        border-radius: 12px !important;
+        font-size: 9px;
+        font-weight: 600;
+        line-height: 1.15;
+        text-align: center;
+    }
+
+    .app-mobile-nav a .ui-svg-icon {
+        display: block;
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+    }
+
+    .app-mobile-nav a span {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    .app-mobile-nav a.active::after {
+        display: none;
+    }
+}
+
+@media (max-width: 360px) {
+    .app-mobile-nav {
+        left: 8px;
+        right: 8px;
+        gap: 4px;
+        padding: 6px;
+    }
+
+    .app-mobile-nav a {
+        min-height: 54px;
+        font-size: 8px;
+    }
+}
