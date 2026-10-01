@@ -6090,11 +6090,11 @@ const TARGET_PENJUALAN_BRAND =
             target: 15000000
         },
         {
-            nama: "Hanata",
+            nama: "Bak Mandi",
             target: null
         },
         {
-            nama: "Morgan/Verano",
+            nama: "Morgan",
             target: 20000000
         }
     ]);
@@ -6109,8 +6109,8 @@ const TARGET_BRAND_COLORS =
         Tsunami: "#f07867",
         Trisensa: "#2f9e68",
         Rona: "#94a3b8",
-        Hanata: "#43c3df",
-        "Morgan/Verano": "#f59e0b"
+        "Bak Mandi": "#43c3df",
+        Morgan: "#f59e0b"
     });
 
 function getCanonicalTargetBrand(
@@ -6139,17 +6139,12 @@ function getCanonicalTargetBrand(
         return "Vapely/Wepe";
     }
 
-    if (
-        [
-            "morgan",
-            "verano",
-            "morgan/verano",
-            "verano/morgan"
-        ].includes(
-            normalized
-        )
-    ) {
-        return "Morgan/Verano";
+    if (normalized === "hanata" || normalized === "verano") {
+        return "Bak Mandi";
+    }
+
+    if (normalized === "morgan/verano" || normalized === "verano/morgan") {
+        return "Morgan";
     }
 
     const match =
@@ -6464,9 +6459,7 @@ function renderTargetPenjualan(
                             ${escapeHTML(item.nama)}
                         </strong>
 
-                        ${item.nama === "Morgan/Verano"
-                            ? `<small class="target-brand-note">Gabungan penjualan</small>`
-                            : ""}
+
                     </div>
                 </div>
 
