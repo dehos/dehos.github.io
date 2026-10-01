@@ -14424,3 +14424,48 @@ button[aria-pressed="true"],
     fill: none !important;
     stroke: currentColor !important;
 }
+
+/* Keep both Stock calendar icons centered in compact mobile filters. */
+@media (max-width: 600px) {
+    #stok-barang .stock-filter-field label .search-label-icon {
+        display: block;
+        flex: 0 0 14px;
+        width: 14px;
+        height: 14px;
+        align-self: center;
+        vertical-align: middle;
+    }
+
+    #stok-barang .localized-date-control {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    #stok-barang .localized-date-display {
+        padding-right: 42px;
+    }
+
+    #stok-barang .localized-date-picker-button {
+        top: 50%;
+        right: 5px;
+        display: flex;
+        flex: 0 0 30px;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+        transform: translateY(-50%);
+    }
+
+    #stok-barang .localized-date-picker-button .ui-svg-icon {
+        display: block;
+        flex: none;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+    }
+}
