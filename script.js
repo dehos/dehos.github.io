@@ -5528,6 +5528,19 @@ function updatePenjualanSummary() {
     const stok =
         statusStok.stokTersedia;
 
+    const tanggalPenjualan =
+        inputPenjualanTanggal?.value || getTodayDate();
+    const hariIni = getTodayDate();
+    const stokHariIni = barang
+        ? getPenjualanStockStatus(barang, hariIni).stokTersedia
+        : 0;
+    const labelStok = tanggalPenjualan === hariIni
+        ? "Stok tersedia hari ini: " + formatNumber(stok)
+        : "Stok pada " +
+          formatTanggalTampilan(tanggalPenjualan) +
+          ": " + formatNumber(stok) +
+          " · Stok hari ini: " + formatNumber(stokHariIni);
+
     const total =
         qty * harga;
 
@@ -5592,14 +5605,12 @@ function updatePenjualanSummary() {
             barang
                 ? (
                     menjadiPreOrder
-                        ? "Stok tersedia: " +
-                          formatNumber(stok) +
-                          " · Pre-order setelah dicatat: " +
+                        ? labelStok +
+                          " · Pre-order pada tanggal jual: " +
                           formatNumber(
                               statusStok.preOrderSetelah
                           )
-                        : "Stok tersedia: " +
-                          formatNumber(stok)
+                        : labelStok
                   )
                 : "Pilih barang untuk melihat stok.";
 
