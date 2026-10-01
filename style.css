@@ -14752,3 +14752,81 @@ button[aria-pressed="true"] {
 #penjualan .localized-date-display {
     padding-right: 42px !important;
 }
+
+/* Page navigation is an accent-only control, without a visible outer box. */
+.app-nav a,
+.app-nav a:is(.active, :hover, :focus-visible),
+.app-mobile-nav a,
+.app-mobile-nav a:is(.active, :hover, :focus-visible) {
+    background: transparent !important;
+    color: #087d7f !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+.app-nav a svg,
+.app-mobile-nav a svg,
+.app-nav a span,
+.app-mobile-nav a span {
+    color: #087d7f !important;
+}
+.app-nav a svg,
+.app-mobile-nav a svg {
+    stroke: currentColor !important;
+}
+.app-nav a.active span {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+}
+.app-mobile-nav {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+.app-mobile-nav a.active::after {
+    display: block;
+    content: "";
+    position: absolute;
+    left: 28%;
+    right: 28%;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: #118f91 !important;
+    box-shadow: none !important;
+}
+
+/* Sort labels belong to the neutral table header, not solid action buttons. */
+#stok-barang .modern-stock-table thead .table-sort-button,
+#stok-barang .modern-stock-table thead .table-sort-button:is(:hover, :focus-visible) {
+    background: transparent !important;
+    color: #586962 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+#stok-barang .modern-stock-table thead .table-sort-button svg {
+    color: #78867f !important;
+    stroke: currentColor !important;
+    transform: none !important;
+}
+
+/* Keep history editing quiet and consistent with row actions. */
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn {
+    background: transparent !important;
+    color: #667570 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:is(:hover, :focus-visible) {
+    background: #edf3ef !important;
+    color: #087d7f !important;
+    border: 0 !important;
+}
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg {
+    color: inherit !important;
+    stroke: currentColor !important;
+}
