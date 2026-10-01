@@ -13830,3 +13830,53 @@ body.auth-locked .auth-gate {
         background: transparent !important;
     }
 }
+
+/* Sales export uses the same teal as the Stock export action. */
+#catatan-penjualan .sales-export-actions .modern-secondary-button {
+    border-color: #118f91;
+    background: #118f91;
+    color: #fff;
+    box-shadow: none;
+}
+
+#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
+#catatan-penjualan .sales-export-actions .modern-secondary-button:active {
+    border-color: #0d7d80;
+    background: #0d7d80;
+    color: #fff;
+    box-shadow: none;
+}
+
+#catatan-penjualan .sales-export-actions .modern-secondary-button .modern-export-leading-icon {
+    border: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+}
+
+#catatan-penjualan .sales-export-actions .modern-secondary-button svg {
+    stroke: #fff !important;
+}
+
+@media (max-width: 700px) {
+    #catatan-penjualan .sales-export-actions {
+        border-color: #118f91;
+        border-radius: 999px;
+        background: #118f91;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button {
+        border: 0;
+        background: #118f91;
+        color: #fff;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
+        border-left: 1px solid rgba(255, 255, 255, .35);
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
+    #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
+        background: #0d7d80;
+        color: #fff;
+    }
+}
