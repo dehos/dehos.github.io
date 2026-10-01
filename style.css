@@ -13745,11 +13745,11 @@ body.auth-locked .auth-gate {
     }
 }
 
-/* Keep the two sales export actions together on narrow screens. */
+/* Compact sales controls: period and brand above a joined export pair. */
 #catatan-penjualan .sales-export-actions {
     display: inline-flex;
     align-items: stretch;
-    gap: 6px;
+    gap: 5px;
     min-width: 0;
 }
 
@@ -13763,7 +13763,22 @@ body.auth-locked .auth-gate {
 
 @media (max-width: 700px) {
     #catatan-penjualan .modern-sales-tools {
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        gap: 5px 6px;
+        align-items: stretch;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-month-nav,
+    #catatan-penjualan .modern-sales-tools .modern-sales-filter {
+        margin: 0;
+        height: 36px;
+        min-height: 36px;
+    }
+
+    #catatan-penjualan .modern-sales-tools .form-select {
+        height: 36px;
+        min-height: 36px;
     }
 
     #catatan-penjualan .sales-export-actions {
@@ -13771,18 +13786,47 @@ body.auth-locked .auth-gate {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         width: 100%;
+        gap: 0;
+        overflow: hidden;
+        border: 1px solid var(--app-border);
+        border-radius: 10px;
+        background: var(--app-surface);
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
         width: 100%;
         min-width: 0;
-        height: 36px;
-        min-height: 36px;
-        padding: 0 10px;
+        height: 34px;
+        min-height: 34px;
+        padding: 0 8px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--app-text-soft);
         font-size: 11px;
+        box-shadow: none;
+        transform: none;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
+        border-left: 1px solid var(--app-border);
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button:hover {
+        background: #e7f4ee;
+        color: #087d7f;
+        box-shadow: none;
+        transform: none;
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button > span:last-child {
         display: inline;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-export-leading-icon {
+        width: 18px;
+        height: 18px;
+        border: 0 !important;
+        background: transparent !important;
     }
 }
