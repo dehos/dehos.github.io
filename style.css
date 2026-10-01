@@ -14900,3 +14900,24 @@ button[aria-pressed="true"] {
 #stok-barang .stock-pagination button:is(.active, :hover, :focus-visible) {
     border-radius: 8px !important;
 }
+
+/* Match related import/export and recap toolbar actions to New Item. */
+#stok-barang .stock-action-grid > button,
+#stok-barang .stock-action-grid > .modern-export-menu > summary,
+#stok-barang .stock-action-grid .stock-export-button,
+#stok-barang .stock-action-grid .stock-action-recap,
+#catatan-penjualan .sales-export-actions .modern-secondary-button,
+#catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button,
+#rekap-stok .stock-recap-back,
+#rekap-stok .stock-recap-controls > button,
+#stok-barang .stock-action-grid > button:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid > .modern-export-menu > summary:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid .stock-export-button:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid .stock-action-recap:is(:hover, :focus-visible),
+#catatan-penjualan .sales-export-actions .modern-secondary-button:is(:hover, :focus-visible),
+#catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button:is(:hover, :focus-visible),
+#rekap-stok .stock-recap-back:is(:hover, :focus-visible),
+#rekap-stok .stock-recap-controls > button:is(:hover, :focus-visible) {
+    border: 1px solid rgba(17, 143, 145, .5) !important;
+    border-radius: 10px !important;
+}
