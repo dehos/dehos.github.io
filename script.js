@@ -10602,13 +10602,98 @@ async function siapkanExportPenjualan(jenis) {
     let namaFile = "Penjualan";
     if (brand) namaFile += "-" + brand;
     if (bulan) namaFile += "-" + bulan;
-    return { grup, namaFile, bulan, brand };
+    const [tahun, nomorBulan] = bulan.split("-").map(Number);
+    const judul = /^\d{4}-\d{2}$/.test(bulan)
+        ? new Date(tahun, nomorBulan - 1, 1).toLocaleDateString(
+            "id-ID", { month: "long" }
+        ) + ", " + tahun
+        : "Semua Periode";
+    return { grup, namaFile, bulan, brand, judul };
 }
 
 function formatTanggalExportPenjualan(tanggal) {
     if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(tanggal)) return tanggal || "-";
     return tanggal.slice(8, 10) + "/" + tanggal.slice(5, 7) +
         "/" + tanggal.slice(0, 4);
+}
+
+async function ambilLogoExportPenjualan() {
+    const response = await fetch("logo.png?v=20260928-1");
+    if (!response.ok) throw new Error("Logo aplikasi tidak dapat dimuat");
+    const blob = await response.blob();
+    return await new Promise((resolve, reject) => {
+        const pembaca = new FileReader();
+        pembaca.onload = () => resolve(pembaca.result);
+        pembaca.onerror = reject;
+        pembaca.readAsDataURL(blob);
+    });
+}
+
+async function sisipLogoExcelPenjualan(blobExcel, logoDataUrl) {
+    await loadJsZipLibrary();
+    const zip = await JSZip.loadAsync(blobExcel);
+    const gambar = String(logoDataUrl).split(",")[1];
+    if (!gambar || !zip.file("xl/worksheets/sheet1.xml")) {
+        throw new Error("Format Excel atau logo tidak valid");
+    }
+    const namespaceRel = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+    const namespacePaket = "http://schemas.openxmlformats.org/package/2006/relationships";
+    const relPath = "xl/worksheets/_rels/sheet1.xml.rels";
+    let rels = zip.file(relPath)
+        ? await zip.file(relPath).async("string")
+        : '<Relationships xmlns="' + namespacePaket + '"></Relationships>';
+    const idRel = "rId" + (Math.max(0, ...[...rels.matchAll(/Id="rId(\d+)"/g)]
+        .map(match => Number(match[1]))) + 1);
+    rels = rels.replace("</Relationships>",
+        '<Relationship Id="' + idRel +
+        '" Type="' + namespaceRel + '/drawing"' +
+        ' Target="../drawings/drawing_sales_logo.xml"/></Relationships>');
+    zip.file(relPath, rels);
+
+    let sheet = await zip.file("xl/worksheets/sheet1.xml").async("string");
+    if (!/xmlns:r=/.test(sheet)) {
+        sheet = sheet.replace(/<worksheet\b/,
+            '<worksheet xmlns:r="' + namespaceRel + '"');
+    }
+    sheet = sheet.replace("</worksheet>",
+        '<drawing r:id="' + idRel + '"/></worksheet>');
+    zip.file("xl/worksheets/sheet1.xml", sheet);
+
+    const drawing = '<xdr:wsDr ' +
+        'xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" ' +
+        'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" ' +
+        'xmlns:r="' + namespaceRel + '">' +
+        '<xdr:oneCellAnchor><xdr:from><xdr:col>0</xdr:col><xdr:colOff>0</xdr:colOff>' +
+        '<xdr:row>0</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from>' +
+        '<xdr:ext cx="685800" cy="487680"/>' +
+        '<xdr:pic><xdr:nvPicPr><xdr:cNvPr id="1" name="Logo Dhouse"/>' +
+        '<xdr:cNvPicPr/></xdr:nvPicPr><xdr:blipFill>' +
+        '<a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch>' +
+        '</xdr:blipFill><xdr:spPr><a:prstGeom prst="rect">' +
+        '<a:avLst/></a:prstGeom></xdr:spPr></xdr:pic>' +
+        '<xdr:clientData/></xdr:oneCellAnchor></xdr:wsDr>';
+    zip.file("xl/drawings/drawing_sales_logo.xml", drawing);
+    zip.file("xl/drawings/_rels/drawing_sales_logo.xml.rels",
+        '<Relationships xmlns="' + namespacePaket + '">' +
+        '<Relationship Id="rId1" Type="' + namespaceRel +
+        '/image" Target="../media/logo_sales.png"/></Relationships>');
+    zip.file("xl/media/logo_sales.png", gambar, { base64: true });
+
+    let types = await zip.file("[Content_Types].xml").async("string");
+    if (!/<Default Extension="png"/i.test(types)) {
+        types = types.replace("</Types>",
+            '<Default Extension="png" ContentType="image/png"/></Types>');
+    }
+    types = types.replace("</Types>",
+        '<Override PartName="/xl/drawings/drawing_sales_logo.xml" ' +
+        'ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/></Types>');
+    zip.file("[Content_Types].xml", types);
+    const output = await zip.generateAsync({
+        type: "arraybuffer", compression: "DEFLATE"
+    });
+    return new Blob([output], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    });
 }
 
 async function exportPenjualanExcel() {
@@ -10619,8 +10704,13 @@ async function exportPenjualanExcel() {
     const hasil = await siapkanExportPenjualan("Excel");
     if (!hasil) return;
 
-    const baris = [["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]];
-    const jenisBaris = ["header"];
+    const baris = [
+        ["", hasil.judul, "", "", "", ""],
+        ["", "CATATAN PENJUALAN", "", "", "", ""],
+        ["", "", "", "", "", ""],
+        ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]
+    ];
+    const jenisBaris = ["title", "subtitle", "spacer", "header"];
     let totalSemua = 0;
     hasil.grup.forEach(grup => {
         baris.push(["", grup.brand.toUpperCase(), "", "", "", ""]);
@@ -10647,10 +10737,14 @@ async function exportPenjualanExcel() {
         { wch: 9 }, { wch: 19 }, { wch: 20 }
     ];
     worksheet["!merges"] = jenisBaris.flatMap((jenis, r) =>
-        jenis === "brand" ? [{ s: { r, c: 1 }, e: { r, c: 5 } }] : []
+        ["title", "subtitle", "brand"].includes(jenis)
+            ? [{ s: { r, c: 1 }, e: { r, c: 5 } }] : []
     );
     worksheet["!rows"] = jenisBaris.map(jenis => ({
-        hpt: jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
+        hpt: jenis === "title" ? 28 :
+            jenis === "subtitle" ? 19 :
+            jenis === "spacer" ? 8 :
+            jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
     }));
     const border = {
         top: { style: "thin", color: { rgb: "D7DED9" } },
@@ -10664,9 +10758,11 @@ async function exportPenjualanExcel() {
             const cell = worksheet[alamat];
             if (!cell) continue;
             cell.s = {
-                border,
+                border: ["title", "subtitle", "spacer"].includes(jenis)
+                    ? undefined : border,
                 font: {
                     bold: jenis !== "item",
+                    sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : 11,
                     color: { rgb: jenis === "header" ? "FFFFFF" : "263933" }
                 },
                 fill: {
@@ -10698,7 +10794,9 @@ async function exportPenjualanExcel() {
     try {
         const data = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const blob = await createLandscapeExcelBlob(data);
-        simpanBlobExport(blob, hasil.namaFile + ".xlsx");
+        const logo = await ambilLogoExportPenjualan();
+        const denganLogo = await sisipLogoExcelPenjualan(blob, logo);
+        simpanBlobExport(denganLogo, hasil.namaFile + ".xlsx");
     } catch (error) {
         console.error(error);
         showAppAlert("Gagal membuat file Excel.");
@@ -10750,12 +10848,20 @@ async function exportPenjualanPDF() {
         showAppAlert("Library tabel PDF belum dimuat.");
         return;
     }
+    try {
+        const logo = await ambilLogoExportPenjualan();
+        pdf.addImage(logo, "PNG", 10, 7, 20, 14);
+    } catch (error) {
+        console.error(error);
+        showAppAlert("Gagal memuat logo untuk PDF.");
+        return;
+    }
     pdf.setFontSize(15);
-    pdf.text("CATATAN PENJUALAN", 10, 15);
+    pdf.text(hasil.judul, 35, 15);
     pdf.setFontSize(9);
     pdf.text(
-        (hasil.bulan || "Semua bulan") + " · " +
-        (hasil.brand || "Semua brand"), 10, 22
+        "CATATAN PENJUALAN" + (hasil.brand ? " · " + hasil.brand : ""),
+        35, 21
     );
     pdf.autoTable({
         startY: 28,
