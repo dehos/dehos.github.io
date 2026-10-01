@@ -10560,565 +10560,229 @@ async function exportPDF() {
    EXPORT EXCEL PENJUALAN
 ================================== */
 
+/* Susunan bersama untuk export penjualan Excel dan PDF. */
+async function siapkanExportPenjualan(jenis) {
+    const disetujui = await mintaKonfirmasiExport(
+        "Export catatan penjualan ke " + jenis + "?"
+    );
+    if (!disetujui) return null;
+
+    const bulan = document.getElementById("filterBulan")?.value || "";
+    const brand = document.getElementById("filterBrand")?.value || "";
+    const { data, error } = await fetchPenjualanLengkap(bulan, brand);
+    if (error) {
+        console.error("ERROR EXPORT PENJUALAN:", error);
+        showAppAlert("Gagal mengambil seluruh data penjualan untuk export.");
+        return null;
+    }
+    if (!data.length) {
+        showAppAlert("Tidak ada data penjualan untuk diekspor.");
+        return null;
+    }
+
+    const namaBarang = new Map(dataBarang.map(
+        barang => [String(barang.id), barang.nama]
+    ));
+    const kelompok = new Map();
+    data.forEach(item => {
+        const namaBrand = String(item.brand || "").trim() || "Tanpa brand";
+        const kunci = namaBrand.toLocaleLowerCase("id-ID");
+        if (!kelompok.has(kunci)) {
+            kelompok.set(kunci, { brand: namaBrand, items: [] });
+        }
+        const qty = Number(item.qty) || 0;
+        const harga = Number(item.harga) || 0;
+        kelompok.get(kunci).items.push({
+            tanggal: String(item.tanggal_pembelian || ""),
+            nama: namaBarang.get(String(item.barang_id)) || "Barang tidak ditemukan",
+            qty, harga, total: qty * harga,
+            id: Number(item.id) || 0
+        });
+    });
+    const grup = [...kelompok.values()];
+    grup.forEach(g => g.items.sort(
+        (a, b) => b.tanggal.localeCompare(a.tanggal) || b.id - a.id
+    ));
+    grup.sort((a, b) =>
+        b.items[0].tanggal.localeCompare(a.items[0].tanggal) ||
+        a.brand.localeCompare(b.brand, "id-ID")
+    );
+
+    let namaFile = "Penjualan";
+    if (brand) namaFile += "-" + brand;
+    if (bulan) namaFile += "-" + bulan;
+    return { grup, namaFile, bulan, brand };
+}
+
+function formatTanggalExportPenjualan(tanggal) {
+    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(tanggal)) return tanggal || "-";
+    return tanggal.slice(8, 10) + "/" + tanggal.slice(5, 7) +
+        "/" + tanggal.slice(0, 4);
+}
+
 async function exportPenjualanExcel() {
     if (typeof XLSX === "undefined") {
         showAppAlert("Library Excel belum dimuat.");
         return;
     }
+    const hasil = await siapkanExportPenjualan("Excel");
+    if (!hasil) return;
 
-    const disetujui =
-        await mintaKonfirmasiExport(
-            "Export catatan penjualan ke Excel?"
-        );
-
-    if (!disetujui) {
-        return;
-    }
-
-    const bulan =
-        document.getElementById(
-            "filterBulan"
-        )?.value || "";
-
-    const brand =
-        document.getElementById(
-            "filterBrand"
-        )?.value || "";
-
-    const { data: semuaPenjualan, error } =
-        await fetchPenjualanLengkap(bulan, brand);
-
-    if (error) {
-        console.error("ERROR EXPORT PENJUALAN:", error);
-        showAppAlert("Gagal mengambil seluruh data penjualan untuk export.");
-        return;
-    }
-
-    const data =
-        semuaPenjualan.filter(
-            function(item) {
-                if (
-                    bulan &&
-                    !String(
-                        item.tanggal_pembelian || ""
-                    ).startsWith(bulan)
-                ) {
-                    return false;
-                }
-
-                if (
-                    brand &&
-                    String(item.brand || "")
-                        .trim()
-                        .toLowerCase() !==
-                        String(brand)
-                            .trim()
-                            .toLowerCase()
-                ) {
-                    return false;
-                }
-
-                return true;
-            }
-        );
-
-    if (data.length === 0) {
-        showAppAlert(
-            "Tidak ada data penjualan untuk diekspor."
-        );
-        return;
-    }
-
-    const excelData = [
-        [
-            "Tanggal",
-            "Nama Barang",
-            "Brand",
-            "Qty",
-            "Harga/Unit",
-            "Total"
-        ]
-    ];
-
-    let totalPenjualan = 0;
-
-    data.forEach(
-        function(item) {
-            const barang =
-                dataBarang.find(
-                    function(barangItem) {
-                        return (
-                            String(
-                                barangItem.id
-                            ) ===
-                            String(
-                                item.barang_id
-                            )
-                        );
-                    }
-                );
-
-            const namaBarang =
-                barang
-                    ? barang.nama
-                    : "Barang tidak ditemukan";
-
-            const qty =
-                Number(item.qty) || 0;
-
-            const harga =
-                Number(item.harga) || 0;
-
-            const total =
-                qty * harga;
-
-            totalPenjualan += total;
-
-            const tanggal =
-                item.tanggal_pembelian
-                    ? new Date(
-                        item.tanggal_pembelian +
-                            "T00:00:00"
-                    ).toLocaleDateString(
-                        "id-ID",
-                        {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "2-digit"
-                        }
-                    )
-                    : "-";
-
-            excelData.push([
-                tanggal,
-                namaBarang,
-                item.brand || "-",
-                qty,
-                harga,
-                total
+    const baris = [["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]];
+    const jenisBaris = ["header"];
+    let totalSemua = 0;
+    hasil.grup.forEach(grup => {
+        baris.push(["", grup.brand.toUpperCase(), "", "", "", ""]);
+        jenisBaris.push("brand");
+        let subtotal = 0;
+        grup.items.forEach(item => {
+            baris.push([
+                formatTanggalExportPenjualan(item.tanggal),
+                item.nama, grup.brand, item.qty, item.harga, item.total
             ]);
-        }
+            jenisBaris.push("item");
+            subtotal += item.total;
+        });
+        baris.push(["", "", "", "", "TOTAL " + grup.brand, subtotal]);
+        jenisBaris.push("subtotal");
+        totalSemua += subtotal;
+    });
+    baris.push(["", "", "", "", "TOTAL SEMUA", totalSemua]);
+    jenisBaris.push("grand");
+
+    const worksheet = XLSX.utils.aoa_to_sheet(baris);
+    worksheet["!cols"] = [
+        { wch: 13 }, { wch: 48 }, { wch: 20 },
+        { wch: 9 }, { wch: 19 }, { wch: 20 }
+    ];
+    worksheet["!merges"] = jenisBaris.flatMap((jenis, r) =>
+        jenis === "brand" ? [{ s: { r, c: 1 }, e: { r, c: 5 } }] : []
     );
-
-    excelData.push([
-        "",
-        "",
-        "",
-        "",
-        "TOTAL",
-        totalPenjualan
-    ]);
-
-
-    /* BUAT WORKBOOK PENJUALAN */
-
-    const worksheet =
-        XLSX.utils.aoa_to_sheet(
-            excelData
-        );
-
-    const workbook =
-        XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
-        "Penjualan"
-    );
-
-
-    /* LEBAR KOLOM */
-
-    const formatLebarCell =
-        function(value, columnIndex) {
-            if (
-                typeof value === "number" &&
-                (columnIndex === 4 ||
-                    columnIndex === 5)
-            ) {
-                return (
-                    "Rp " +
-                    value.toLocaleString("id-ID")
-                );
-            }
-
-            return String(value ?? "");
-        };
-
-    worksheet["!cols"] =
-        excelData[0].map(
-            function(_, columnIndex) {
-                const panjangTerbesar =
-                    excelData.reduce(
-                        function(maximum, row) {
-                            return Math.max(
-                                maximum,
-                                formatLebarCell(
-                                    row[columnIndex],
-                                    columnIndex
-                                ).length
-                            );
-                        },
-                        0
-                    );
-
-                return {
-                    wch: panjangTerbesar + 2
-                };
-            }
-        );
-
-
-    /* STYLE HEADER */
-
-    for (
-        let c = 0;
-        c < 6;
-        c++
-    ) {
-        const cell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: 0,
-                    c: c
-                })
-            ];
-
-        if (cell) {
-            cell.s = {
-                font: {
-                    bold: true
-                },
-
-                alignment: {
-                    horizontal: "center",
-                    vertical: "center"
-                }
-            };
-        }
-    }
-
-
-    /* FORMAT HARGA DAN TOTAL */
-
-    for (
-        let r = 1;
-        r < excelData.length;
-        r++
-    ) {
-        const hargaCell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: r,
-                    c: 4
-                })
-            ];
-
-        const totalCell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: r,
-                    c: 5
-                })
-            ];
-
-        if (hargaCell) {
-            hargaCell.z =
-                '"Rp" #,##0';
-        }
-
-        if (totalCell) {
-            totalCell.z =
-                '"Rp" #,##0';
-        }
-    }
-
-
-    /* BRAND DAN QTY RATA TENGAH */
-
-    const totalRow =
-        excelData.length - 1;
-
-    for (
-        let r = 1;
-        r < totalRow;
-        r++
-    ) {
-        const totalCell =
-            worksheet[
-                XLSX.utils.encode_cell({
-                    r: r,
-                    c: 5
-                })
-            ];
-
-        if (totalCell) {
-            const nomorBarisExcel =
-                r + 1;
-
-            totalCell.t = "n";
-            totalCell.f =
-                `D${nomorBarisExcel}` +
-                `*E${nomorBarisExcel}`;
-        }
-    }
-
-    for (
-        let r = 1;
-        r < totalRow;
-        r++
-    ) {
-        [2, 3].forEach(
-            function(columnIndex) {
-                const cell =
-                    worksheet[
-                        XLSX.utils.encode_cell({
-                            r: r,
-                            c: columnIndex
-                        })
-                    ];
-
-                if (cell) {
-                    cell.s = {
-                        alignment: {
-                            horizontal: "center",
-                            vertical: "center"
-                        }
-                    };
-                }
-            }
-        );
-    }
-
-
-    /* STYLE BARIS TOTAL */
-
-    const totalLabelCell =
-        worksheet[
-            XLSX.utils.encode_cell({
-                r: totalRow,
-                c: 4
-            })
-        ];
-
-    const totalValueCell =
-        worksheet[
-            XLSX.utils.encode_cell({
-                r: totalRow,
-                c: 5
-            })
-        ];
-
-    if (totalValueCell) {
-        totalValueCell.t = "n";
-        totalValueCell.f =
-            `SUM(F2:F${totalRow})`;
-    }
-
-    if (totalLabelCell) {
-        totalLabelCell.s = {
-            font: {
-                bold: true
-            },
-            alignment: {
-                horizontal: "right",
-                vertical: "center"
-            }
-        };
-    }
-
-    if (totalValueCell) {
-        totalValueCell.s = {
-            font: {
-                bold: true
-            },
-            alignment: {
-                horizontal: "left",
-                vertical: "center"
-            }
-        };
-    }
-
-
-    /* FORMAT TABEL, BORDER, DAN FILTER */
-
-    const borderTabel = {
-        top: {
-            style: "thin",
-            color: { rgb: "B7B7B7" }
-        },
-        bottom: {
-            style: "thin",
-            color: { rgb: "B7B7B7" }
-        },
-        left: {
-            style: "thin",
-            color: { rgb: "B7B7B7" }
-        },
-        right: {
-            style: "thin",
-            color: { rgb: "B7B7B7" }
-        }
+    worksheet["!rows"] = jenisBaris.map(jenis => ({
+        hpt: jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
+    }));
+    const border = {
+        top: { style: "thin", color: { rgb: "D7DED9" } },
+        bottom: { style: "thin", color: { rgb: "D7DED9" } },
+        left: { style: "thin", color: { rgb: "D7DED9" } },
+        right: { style: "thin", color: { rgb: "D7DED9" } }
     };
-
-    for (
-        let r = 0;
-        r <= totalRow;
-        r++
-    ) {
-        for (
-            let c = 0;
-            c < 6;
-            c++
-        ) {
-            const alamatCell =
-                XLSX.utils.encode_cell({
-                    r: r,
-                    c: c
-                });
-
-            if (!worksheet[alamatCell]) {
-                worksheet[alamatCell] = {
-                    t: "s",
-                    v: ""
-                };
-            }
-
-            const cell =
-                worksheet[alamatCell];
-
-            const styleCell =
-                Object.assign(
-                    {},
-                    cell.s || {}
-                );
-
-            styleCell.border =
-                borderTabel;
-
-            styleCell.alignment =
-                Object.assign(
-                    {
-                        vertical: "center"
-                    },
-                    styleCell.alignment || {}
-                );
-
-            if (r === 0) {
-                styleCell.font =
-                    Object.assign(
-                        {},
-                        styleCell.font || {},
-                        {
-                            bold: true,
-                            color: {
-                                rgb: "FFF4C7"
-                            }
-                        }
-                    );
-
-                styleCell.fill = {
+    jenisBaris.forEach((jenis, r) => {
+        for (let c = 0; c < 6; c++) {
+            const alamat = XLSX.utils.encode_cell({ r, c });
+            const cell = worksheet[alamat];
+            if (!cell) continue;
+            cell.s = {
+                border,
+                font: {
+                    bold: jenis !== "item",
+                    color: { rgb: jenis === "header" ? "FFFFFF" : "263933" }
+                },
+                fill: {
                     patternType: "solid",
                     fgColor: {
-                        rgb: "4A3A12"
+                        rgb: jenis === "header" ? "188F86" :
+                            jenis === "brand" ? "E5F2ED" :
+                            jenis === "grand" ? "D5EEE5" :
+                            jenis === "subtotal" ? "F1F7F3" : "FFFFFF"
                     }
-                };
+                },
+                alignment: {
+                    vertical: "center",
+                    horizontal: c >= 3 ? "right" : "left"
+                }
+            };
+            if ((c === 4 || c === 5) && typeof cell.v === "number") {
+                cell.z = '"Rp" #,##0';
             }
-
-            cell.s = styleCell;
         }
-    }
-
-    worksheet["!autofilter"] = {
-        ref: XLSX.utils.encode_range({
-            s: {
-                r: 0,
-                c: 0
-            },
-            e: {
-                r: totalRow - 1,
-                c: 5
-            }
-        })
+    });
+    worksheet["!pageSetup"] = {
+        orientation: "landscape",
+        fitToWidth: 1,
+        fitToHeight: 1
     };
-
-    worksheet["!rows"] =
-        excelData.map(
-            function(_, rowIndex) {
-                return {
-                    hpt:
-                        rowIndex === 0
-                            ? 22
-                            : 19
-                };
-            }
-        );
-
-
-    /* EXPORT XLSX LANDSCAPE */
-
-    const excelDataArray =
-        XLSX.write(
-            workbook,
-            {
-                bookType: "xlsx",
-                type: "array"
-            }
-        );
-
-    let blob;
-
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Penjualan");
     try {
-        blob =
-            await createLandscapeExcelBlob(
-                excelDataArray
-            );
+        const data = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const blob = await createLandscapeExcelBlob(data);
+        simpanBlobExport(blob, hasil.namaFile + ".xlsx");
     } catch (error) {
         console.error(error);
-
-        showAppAlert(
-            "Gagal membuat file Excel Landscape."
-        );
-        return;
+        showAppAlert("Gagal membuat file Excel.");
     }
-
-    let namaFile = "Penjualan";
-
-    if (brand) {
-        namaFile +=
-            "-" + brand;
-    }
-
-    if (bulan) {
-        const tanggal =
-            new Date(
-                bulan + "-01"
-            );
-
-        const namaBulan =
-            tanggal.toLocaleDateString(
-                "id-ID",
-                {
-                    month: "long"
-                }
-            );
-
-        const tahun =
-            tanggal.getFullYear();
-
-        namaFile +=
-            "-" +
-            namaBulan +
-            "-" +
-            tahun;
-    }
-
-    simpanBlobExport(
-        blob,
-        `${namaFile}.xlsx`
-    );
 }
 
+async function exportPenjualanPDF() {
+    if (!window.jspdf?.jsPDF) {
+        showAppAlert("Library PDF belum dimuat.");
+        return;
+    }
+    const hasil = await siapkanExportPenjualan("PDF");
+    if (!hasil) return;
+    const body = [];
+    let totalSemua = 0;
+    const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
+    hasil.grup.forEach(grup => {
+        body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
+            styles: { fillColor: [229, 242, 237], fontStyle: "bold" } }]);
+        let subtotal = 0;
+        grup.items.forEach(item => {
+            body.push([
+                formatTanggalExportPenjualan(item.tanggal), item.nama,
+                grup.brand, String(item.qty), rupiah(item.harga),
+                rupiah(item.total)
+            ]);
+            subtotal += item.total;
+        });
+        body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
+            styles: { halign: "right", fillColor: [241, 247, 243],
+                fontStyle: "bold" } },
+            { content: rupiah(subtotal), styles: {
+                fillColor: [241, 247, 243], fontStyle: "bold" } }]);
+        totalSemua += subtotal;
+    });
+    body.push([{ content: "TOTAL SEMUA", colSpan: 5,
+        styles: { halign: "right", fillColor: [213, 238, 229],
+            fontStyle: "bold" } },
+        { content: rupiah(totalSemua), styles: {
+            fillColor: [213, 238, 229], fontStyle: "bold" } }]);
+
+    // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
+    const tinggi = Math.max(210, 38 + body.length * 8);
+    const pdf = new window.jspdf.jsPDF({
+        orientation: "portrait", unit: "mm",
+        format: [297, tinggi], compress: true
+    });
+    if (typeof pdf.autoTable !== "function") {
+        showAppAlert("Library tabel PDF belum dimuat.");
+        return;
+    }
+    pdf.setFontSize(15);
+    pdf.text("CATATAN PENJUALAN", 10, 15);
+    pdf.setFontSize(9);
+    pdf.text(
+        (hasil.bulan || "Semua bulan") + " · " +
+        (hasil.brand || "Semua brand"), 10, 22
+    );
+    pdf.autoTable({
+        startY: 28,
+        margin: { left: 10, right: 10, bottom: 10 },
+        head: [["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total"]],
+        body,
+        theme: "grid",
+        styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
+        headStyles: { fillColor: [24, 143, 134], textColor: 255 },
+        columnStyles: {
+            0: { cellWidth: 23 }, 1: { cellWidth: "auto" },
+            2: { cellWidth: 32 }, 3: { cellWidth: 13, halign: "right" },
+            4: { cellWidth: 34, halign: "right" },
+            5: { cellWidth: 36, halign: "right" }
+        }
+    });
+    simpanBlobExport(pdf.output("blob"), hasil.namaFile + ".pdf");
+}
 
 /* ==================================
    INIT
