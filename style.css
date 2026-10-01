@@ -14886,3 +14886,17 @@ button[aria-pressed="true"] {
         transition: none;
     }
 }
+
+/* Half-opacity teal outlines for Stock creation, import and table pagination. */
+#stok-barang .stock-action-grid > .modern-import-button,
+#stok-barang .stock-action-grid > .modern-primary-button,
+#stok-barang .stock-action-grid > .modern-import-button:is(:hover, :focus-visible),
+#stok-barang .stock-action-grid > .modern-primary-button:is(:hover, :focus-visible),
+#stok-barang .stock-pagination button,
+#stok-barang .stock-pagination button:is(.active, :hover, :focus-visible) {
+    border: 1px solid rgba(17, 143, 145, .5) !important;
+}
+#stok-barang .stock-pagination button,
+#stok-barang .stock-pagination button:is(.active, :hover, :focus-visible) {
+    border-radius: 8px !important;
+}
