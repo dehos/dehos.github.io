@@ -45,12 +45,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20261001-5"></script>
+    <script defer src="script.js?v=20261001-6"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20261001-5">
+    <link rel="stylesheet" href="style.css?v=20261001-6">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -388,102 +388,71 @@
         </div>
     </div>
 
-    <div class="modern-header-actions">
-        <button
-            type="button"
-            class="modern-import-button"
-            onclick="openImportExcel()"
-            aria-label="Import database barang dari Excel"
-        >
+    <div class="modern-header-actions stock-action-grid">
+        <details class="modern-export-menu stock-export-period">
+            <summary aria-label="Pilih periode export stok">
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 5h16v15H4zM4 9h16M8 3v4M16 3v4"/>
+                </svg>
+                <span>Periode</span>
+            </summary>
+            <div class="modern-export-options"><div class="export-date-range">
+                <span class="export-date-range-title">Periode export</span>
+                <label><span>Tanggal awal</span><input type="date" id="exportTanggalMulai"></label>
+                <label><span>Tanggal akhir</span><input type="date" id="exportTanggalAkhir"></label>
+                <small>Kosongkan keduanya untuk periode otomatis.</small>
+            </div></div>
+        </details>
+        <button type="button" class="modern-import-button stock-import-button"
+            onclick="openImportExcel()" aria-label="Import barang dari Excel atau CSV">
             <span class="modern-export-leading-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 21V9"/>
-                    <path d="m7 14 5-5 5 5"/>
-                    <path d="M5 3h14"/>
+                <svg class="stock-import-csv-icon" viewBox="0 0 24 24" focusable="false">
+                    <path d="M5 2h10l4 4v16H5zM15 2v5h4"/>
+                    <text x="12" y="17" text-anchor="middle" font-size="6" font-weight="700">CSV</text>
                 </svg>
             </span>
-            <span>Import Excel</span>
+            <span>Import</span>
         </button>
-
-        <input
-            type="file"
-            id="importExcelFile"
-            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
-            onchange="handleImportExcelFile(event)"
-            hidden
-        >
-
-        <button
-            type="button"
-            class="modern-primary-button"
-            onclick="openTambahBarang()"
-        >
+        <input type="file" id="importExcelFile"
+            accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+            onchange="handleImportExcelFile(event)" hidden>
+        <button type="button" class="modern-primary-button"
+            onclick="openTambahBarang()">
             <svg class="ui-svg-icon button-plus-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 5v14M5 12h14"/>
             </svg>
-            <span>Barang baru</span>
+            <span>Barang Baru</span>
         </button>
-
-        <div class="stock-export-controls">
-            <details class="modern-export-menu stock-export-period">
-                <summary>
-                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M4 5h16v15H4zM4 9h16M8 3v4M16 3v4"/>
-                    </svg>
-                    <span>Periode export</span>
-                    <svg class="modern-chevron" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="m7 10 5 5 5-5"/>
-                    </svg>
-                </summary>
-                <div class="modern-export-options">
-                <div class="export-date-range">
-                    <span class="export-date-range-title">Periode export</span>
-                    <label>
-                        <span>Tanggal awal</span>
-                        <input type="date" id="exportTanggalMulai">
-                    </label>
-                    <label>
-                        <span>Tanggal akhir</span>
-                        <input type="date" id="exportTanggalAkhir">
-                    </label>
-                    <small>Kosongkan keduanya untuk periode otomatis.</small>
-                </div>
-                </div>
-            </details>
-            <div class="stock-export-actions" role="group" aria-label="Export stok barang">
-                <button type="button" class="modern-secondary-button"
-                    onclick="exportExcel()" aria-label="Export stok barang ke Excel">
-                    <span class="modern-export-leading-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M6 3h9l3 3v15H6z"/>
-                            <path d="M15 3v4h4"/>
-                            <path d="m9 11 5 6M14 11l-5 6"/>
-                        </svg>
-                    </span>
-                    <span>Excel</span>
-                </button>
-                <button type="button" class="modern-secondary-button"
-                    onclick="exportPDF()" aria-label="Export stok barang ke PDF">
-                    <span class="modern-export-leading-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M6 3h9l3 3v15H6z"/>
-                            <path d="M15 3v4h4"/>
-                            <path d="M9 12h6M9 16h5"/>
-                        </svg>
-                    </span>
-                    <span>PDF</span>
-                </button>
-            </div>
-        </div>
+        <button type="button" class="modern-secondary-button stock-export-button"
+            onclick="exportExcel()" aria-label="Export stok barang ke Excel">
+            <span class="modern-export-leading-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M6 3h9l3 3v15H6zM15 3v4h4"/>
+                    <path d="m9 11 5 6M14 11l-5 6"/>
+                </svg>
+            </span>
+            <span>Excel</span>
+        </button>
+        <button type="button" class="modern-secondary-button stock-export-button"
+            onclick="exportPDF()" aria-label="Export stok barang ke PDF">
+            <span class="modern-export-leading-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M6 3h9l3 3v15H6zM15 3v4h4"/>
+                    <path d="M9 12h6M9 16h5"/>
+                </svg>
+            </span>
+            <span>PDF</span>
+        </button>
+        <a href="#rekap-stok" class="stock-recap-link stock-action-recap"
+            aria-label="Lihat rekap stok seperti hasil export">
+            <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16v16H4zM4 9h16M10 9v11M15 9v11"/>
+            </svg>
+            <span>Hasil Rekap</span>
+        </a>
     </div>
 </div>
-<div class="stock-recap-action-row">
-    <a href="#rekap-stok" class="stock-recap-link" aria-label="Lihat rekap stok seperti hasil export">
-        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h16M10 9v11M15 9v11"/></svg>
-        <span>Lihat Rekap</span>
-    </a>
-</div>
-    
+
     <!-- FILTER STOK -->
     <div class="stock-filter-toolbar">
         <div class="stock-filter-field">
@@ -1490,7 +1459,7 @@
                 <path d="M15 3v4h4"/>
                 <path d="M9 12h6M9 16h6"/>
             </svg>
-            <span>Pratinjau Import Excel</span>
+            <span>Pratinjau Import Barang</span>
         </div>
 
         <p class="import-excel-help">
@@ -1523,7 +1492,7 @@
         <div
             class="import-excel-table-wrapper"
             role="region"
-            aria-label="Pratinjau data Excel"
+            aria-label="Pratinjau data Excel atau CSV"
             tabindex="0"
         >
             <table class="import-excel-table">
