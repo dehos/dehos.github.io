@@ -15013,3 +15013,58 @@ button[aria-pressed="true"] {
     display: block; width: 16px; height: 16px; margin: 0;
     color: inherit !important; stroke: currentColor !important;
 }
+
+
+/* Consistent localized date controls across forms, exports and stock recap. */
+.app-date-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+}
+.app-date-control .app-date-display {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding-right: 42px !important;
+    font-family: inherit;
+}
+.app-date-control .localized-date-native {
+    position: absolute;
+    width: 1px !important;
+    height: 1px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+}
+:is(#stok-barang, #rekap-stok, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal) .app-date-control .app-date-picker-button,
+:is(#stok-barang, #rekap-stok, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal) .app-date-control .app-date-picker-button:is(:hover, :focus-visible) {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    min-height: 0;
+    padding: 0;
+    margin: auto 0;
+    background: transparent !important;
+    border: 0 !important;
+    color: #667570 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+:is(#stok-barang, #rekap-stok, #editTransaksiModal, #editPenjualanModal, #tambahBarangModal) .app-date-control .app-date-picker-button svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    color: inherit !important;
+    stroke: currentColor !important;
+}
