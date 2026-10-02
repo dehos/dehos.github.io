@@ -14925,3 +14925,51 @@ button[aria-pressed="true"] {
     border: 1px solid rgba(17, 143, 145, .5) !important;
     border-radius: 999px !important;
 }
+
+/* Keep the product clear action centered inside its input, independent of global button styles. */
+#penjualan .sales-product-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+#penjualan .sales-product-input-wrapper #penjualanBarang {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding-right: 44px;
+}
+#penjualan #penjualanBarangClear {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-height: 0;
+    padding: 0;
+    margin: auto 0;
+    line-height: 0;
+    transform: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    color: #7b8581 !important;
+    box-shadow: none !important;
+}
+#penjualan #penjualanBarangClear:is(:hover, :focus-visible) {
+    background: transparent !important;
+    color: #536761 !important;
+    border: 0 !important;
+}
+#penjualan #penjualanBarangClear .ui-svg-icon {
+    display: block;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    color: inherit !important;
+    stroke: currentColor !important;
+}
