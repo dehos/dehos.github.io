@@ -6025,7 +6025,7 @@ async function simpanPenjualan() {
 
     document.getElementById(
         "penjualanQty"
-    ).value = 1;
+    ).value = "";
 
     document.getElementById(
         "penjualanHarga"
