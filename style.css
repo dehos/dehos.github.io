@@ -15141,18 +15141,23 @@ body.auth-locked .auth-gate {
 }
 @media (max-height: 640px) { body.auth-locked .auth-gate { align-items: start; } }
 /* Account links and eye controls must override the shared filled-button theme. */
-:is(#authGate, #passwordDialog) .auth-text-button,
-:is(#authGate, #passwordDialog) .auth-text-button:is(:hover, :focus-visible) {
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .auth-text-button,
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .auth-text-button:is(:hover, :focus-visible) {
     min-height: 24px; padding: 4px 0; border: 0 !important;
     background: transparent !important; background-image: none !important;
     color: #087f82 !important; box-shadow: none !important; transform: none !important;
 }
-:is(#authGate, #passwordDialog) .password-toggle {
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle {
     border: 0 !important; background: transparent !important; background-image: none !important;
     color: #718078 !important; box-shadow: none !important; transform: none !important;
 }
-:is(#authGate, #passwordDialog) .password-toggle:is(:hover, [aria-pressed="true"]) { background: #edf6f0 !important; color: #087f82 !important; }
-:is(#authGate, #passwordDialog) .password-toggle svg { stroke: currentColor !important; color: inherit !important; }
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle:is(:hover, [aria-pressed="true"]) { background: #edf6f0 !important; color: #087f82 !important; }
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle svg { stroke: currentColor !important; color: inherit !important; }
 .app-topbar #accountPasswordButton { border-color: #d6e5dc !important; background: #e9f3ec !important; background-image: none !important; color: #22685c !important; box-shadow: none !important; }
 .app-topbar #accountPasswordButton:hover { background: #dceee4 !important; }
 .app-topbar #accountPasswordButton svg { stroke: currentColor !important; color: inherit !important; }
+@media (max-width: 700px) {
+    .app-topbar { grid-template-columns: minmax(0, 1fr) 114px; }
+    .app-topbar-actions { min-width: 114px; }
+    .app-topbar #accountPasswordButton { width: 34px; min-height: 34px; flex: 0 0 34px; padding: 0; }
+}
