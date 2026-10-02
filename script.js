@@ -8508,8 +8508,8 @@ function formatSaldoStokExport(
 
 
 const KETERANGAN_EXPORT =
-    "Keterangan: + = stok bertambah (barang masuk/koreksi) | " +
-    "- = stok berkurang (terjual/koreksi) | " +
+    "Keterangan: + = stok bertambah (barang masuk) | " +
+    "- = stok berkurang (terjual) | " +
     "- di depan angka = pre-order";
 
 
@@ -9051,8 +9051,7 @@ function buatRekapStokBarangExport(
 
                 let totalMasuk = 0;
                 let totalKeluar = 0;
-                const stokAwalHari =
-                    stokMentah;
+                let totalAdjust = 0;
 
                 transaksiHari.forEach(
                     function(transaction) {
@@ -9061,22 +9060,22 @@ function buatRekapStokBarangExport(
                                 transaction.qty
                             ) || 0;
 
-                        if (
-                            isStockIn(transaction)
-                        ) {
+                        if (transaction.type === "adjust_masuk") {
+                            totalAdjust += qty;
+                        } else if (transaction.type === "adjust_keluar") {
+                            totalAdjust -= qty;
+                        } else if (transaction.type === "masuk") {
                             totalMasuk += qty;
-                        }
-
-                        if (
-                            isStockOut(transaction)
-                        ) {
+                        } else if (transaction.type === "laku") {
                             totalKeluar += qty;
                         }
                     }
                 );
 
+                // Adjust corrects the balance without appearing as an in/out annotation.
+                const stokAwalHari = stokMentah + totalAdjust;
                 const stokSebelumKeluar =
-                    stokMentah + totalMasuk;
+                    stokAwalHari + totalMasuk;
 
                 stokMentah =
                     stokSebelumKeluar -
@@ -9112,7 +9111,7 @@ function buatRekapStokBarangExport(
                     totalMasuk,
                     totalKeluar,
                     adaTransaksi:
-                        transaksiHari.length > 0
+                        totalMasuk > 0 || totalKeluar > 0
                 };
             }
         );
