@@ -15443,3 +15443,11 @@ body.auth-locked .auth-gate {
 }
 #stok-barang .modern-stock-table th:nth-child(4), #stok-barang .modern-stock-table td:nth-child(4), #stok-barang .stock-actions-header, #stok-barang #stockTable .stock-actions-cell { width: 78px; min-width: 78px; }
 }
+
+/* Keep In/Out action glyphs white, including the SVG paths. */
+#riwayat-transaksi .modern-history-table button.history-edit-transaction-btn svg,
+#riwayat-transaksi .modern-history-table button.history-edit-transaction-btn svg * {
+    color: #fff !important;
+    stroke: #fff !important;
+    fill: none !important;
+}
