@@ -8562,7 +8562,7 @@ function getStockAktualUntukExport(
 
 let penyelesaiKonfirmasiExport = null;
 
-function mintaKonfirmasiExport(message) {
+function mintaKonfirmasiExport(message, pilihPeriode = false) {
     const dialog =
         document.getElementById("exportConfirmDialog");
 
@@ -8580,6 +8580,18 @@ function mintaKonfirmasiExport(message) {
         );
     }
 
+    if (penyelesaiKonfirmasiExport) {
+        selesaikanKonfirmasiExport(false);
+    }
+    dialog.dataset.pilihPeriode = String(pilihPeriode);
+    const fields = document.getElementById("exportPeriodFields");
+    if (fields) fields.hidden = !pilihPeriode;
+    if (pilihPeriode) {
+        for (const id of ["exportTanggalMulai", "exportTanggalAkhir"]) {
+            document.getElementById(id).value = "";
+        }
+        sinkronkanTanggalForm(fields);
+    }
     if (messageElement) {
         messageElement.textContent = message;
     }
@@ -8601,13 +8613,18 @@ function selesaikanKonfirmasiExport(disetujui) {
     const dialog =
         document.getElementById("exportConfirmDialog");
 
+    let hasil = Boolean(disetujui);
+    if (disetujui && dialog?.dataset.pilihPeriode === "true") {
+        hasil = getRentangTanggalExport();
+        if (!hasil) return;
+    }
     if (dialog?.open) {
         dialog.close();
     }
 
     if (penyelesaiKonfirmasiExport) {
         penyelesaiKonfirmasiExport(
-            Boolean(disetujui)
+            hasil
         );
         penyelesaiKonfirmasiExport = null;
     }
@@ -8923,7 +8940,7 @@ function getRentangTanggalExport(pakaiRekapLayar = false) {
 
     const nilaiTanggal = pakaiRekapLayar
         ? getTodayDate()
-        : document.getElementById("tanggal")?.value || tanggalDipilih || getTodayDate();
+        : getTodayDate();
 
     const hariIni =
         parseTanggalISOExport(
@@ -8986,6 +9003,9 @@ function getRentangTanggalExport(pakaiRekapLayar = false) {
             );
             return null;
         }
+    } else if (!pakaiRekapLayar) {
+        tanggalMulai = new Date(tanggalAkhir);
+        tanggalMulai.setDate(tanggalMulai.getDate() - 29);
     } else {
         const tahunBulanSebelumnya =
             tanggalAkhir.getMonth() === 0
@@ -9539,26 +9559,12 @@ async function exportExcel() {
         return;
     }
 
-    const rentangExport =
-        getRentangTanggalExport();
-
-    if (!rentangExport) {
-        return;
-    }
-
-    const jumlahHari =
-        rentangExport.tanggalList.length;
-
-    const disetujui =
-        await mintaKonfirmasiExport(
-            "Export rekap stok " +
-            rentangExport.labelPeriode +
-            " ke Excel?"
-        );
-
-    if (!disetujui) {
-        return;
-    }
+    const rentangExport = await mintaKonfirmasiExport(
+        "Export rekap stok ke Excel — pilih tanggal atau langsung lanjut.",
+        true
+    );
+    if (!rentangExport) return;
+    const jumlahHari = rentangExport.tanggalList.length;
 
     /* HEADER EXCEL */
 
@@ -10147,6 +10153,13 @@ for (
    EXPORT PDF REKAP STOK
 ================================== */
 
+document.querySelector("#exportConfirmDialog form")
+    ?.addEventListener("submit", function(event) {
+        event.preventDefault();
+        selesaikanKonfirmasiExport(true);
+    });
+
+
 async function exportPDF() {
     if (
         typeof window.jspdf ===
@@ -10182,26 +10195,12 @@ async function exportPDF() {
     }
 
 
-    const rentangExport =
-        getRentangTanggalExport();
-
-    if (!rentangExport) {
-        return;
-    }
-
-    const jumlahHari =
-        rentangExport.tanggalList.length;
-
-    const disetujui =
-        await mintaKonfirmasiExport(
-            "Export rekap stok " +
-            rentangExport.labelPeriode +
-            " ke PDF?"
-        );
-
-    if (!disetujui) {
-        return;
-    }
+    const rentangExport = await mintaKonfirmasiExport(
+        "Export rekap stok ke PDF — pilih tanggal atau langsung lanjut.",
+        true
+    );
+    if (!rentangExport) return;
+    const jumlahHari = rentangExport.tanggalList.length;
 
     /* HEADER PDF */
 
