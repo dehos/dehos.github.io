@@ -4,7 +4,7 @@ Aplikasi web stok dan penjualan D'house.
 
 ## Login admin
 
-Login menerima email admin atau username yang dikonfigurasi pada `public.app_admins.username`. Email tetap tersimpan pada Supabase Auth dan `app_admins`; password diverifikasi oleh Supabase Auth. Pendaftaran akun baru tetap memerlukan email.
+Login menerima email admin atau username yang dikonfigurasi pada `public.app_admins.username`. Email tetap tersimpan pada Supabase Auth dan `app_admins`; password diverifikasi oleh Supabase Auth. Login tidak menyediakan pendaftaran mandiri. Akun tambahan dibuat melalui Supabase Auth dan diberi izin di `app_admins` oleh administrator.
 
 Username login menggunakan Edge Function `login-username`. Fungsi mencari email di sisi server, membatasi 10 percobaan per username dalam 15 menit, lalu mengembalikan sesi hanya setelah password valid. Deploy fungsi dengan `verify_jwt = false` sebagaimana tercatat dalam `supabase/config.toml`; fungsi tersebut menerapkan pemeriksaan password sendiri. Jangan menaruh email admin atau password dalam kode frontend.
 
