@@ -328,6 +328,7 @@ function setAuthMode(mode, message = "", type = "") {
     confirm.disabled = !recovering;
     confirm.value = "";
     document.getElementById("authForgotButton").hidden = mode !== "login";
+    document.querySelector(".auth-form-links").hidden = mode !== "login";
     document.getElementById("authRegistration").hidden = mode !== "login";
     document.getElementById("authBackButton").hidden = mode === "login";
     document.getElementById("authTitle").textContent = recovering ? "Buat password baru" : resetting ? "Lupa password?" : "Masuk ke Dhouse";
