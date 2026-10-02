@@ -2596,10 +2596,10 @@ function isStockOut(transaction) {
         transaction.type === "adjust_keluar";
 }
 
-function getRawCurrentStock(barang) {
+function getRawCurrentStock(barang, tanggal = tanggalDipilih) {
     if (
-        tanggalDipilih &&
-        !barangAdaPadaTanggal(barang, tanggalDipilih)
+        tanggal &&
+        !barangAdaPadaTanggal(barang, tanggal)
     ) {
         return 0;
     }
@@ -2624,10 +2624,10 @@ function getRawCurrentStock(barang) {
             }
 
             if (
-                tanggalDipilih &&
+                tanggal &&
                 transaction.tanggal &&
                 transaction.tanggal >
-                tanggalDipilih
+                tanggal
             ) {
                 return;
             }
@@ -3609,6 +3609,11 @@ function openTransaction(
     product.textContent =
         barang.nama;
 
+    const tanggalField = document.getElementById("transactionTanggalField");
+    const tanggalInput = document.getElementById("transactionTanggal");
+    if (tanggalField) tanggalField.hidden = type !== "masuk";
+    if (tanggalInput) tanggalInput.value = getTodayDate();
+
     const qtyInput =
         document.getElementById(
             "transactionQty"
@@ -3718,9 +3723,15 @@ async function confirmTransaction() {
         return;
     }
 
-    const tanggal =
-        tanggalDipilih ||
-        getTodayDate();
+    const tanggal = selectedTransactionType === "masuk"
+        ? document.getElementById("transactionTanggal")?.value || ""
+        : tanggalDipilih || getTodayDate();
+
+    if (!parseTanggalISOExport(tanggal)) {
+        await showAppAlert("Pilih tanggal barang masuk yang valid.");
+        document.getElementById("transactionTanggal")?.focus();
+        return;
+    }
 
 
     modalSubmitState.transaksi = true;
@@ -3730,7 +3741,7 @@ async function confirmTransaction() {
     );
 
     try {
-        const stokSebelum = getRawCurrentStock(barang);
+        const stokSebelum = getRawCurrentStock(barang, tanggal);
         await refreshCoreData();
         const barangTerbaru = dataBarang.find(
             item => Number(item.id) === Number(barang.id)
@@ -3738,7 +3749,7 @@ async function confirmTransaction() {
         if (!barangTerbaru) {
             throw new Error("Barang tidak ditemukan lagi di database.");
         }
-        const stokSekarang = getRawCurrentStock(barangTerbaru);
+        const stokSekarang = getRawCurrentStock(barangTerbaru, tanggal);
         if (stokSekarang !== stokSebelum) {
             await showAppAlert(
                 "Stok berubah menjadi " + formatNumber(Math.max(0, stokSekarang)) +
