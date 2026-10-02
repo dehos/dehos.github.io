@@ -14998,3 +14998,18 @@ button[aria-pressed="true"] {
         height: 0 !important;
     }
 }
+
+/* Center the receipt calendar in the dd/mm/yyyy control. */
+#transactionModal .localized-date-control { position: relative; display: flex; align-items: center; }
+#transactionModal #transactionTanggalTampilan { margin: 0; padding-right: 42px; }
+#transactionModal #transactionTanggalPickerButton,
+#transactionModal #transactionTanggalPickerButton:is(:hover, :focus-visible) {
+    top: 0; bottom: 0; right: 6px; margin: auto 0; padding: 0;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    background: transparent !important; color: #667570 !important; border: 0 !important;
+    transform: none !important;
+}
+#transactionModal #transactionTanggalPickerButton svg {
+    display: block; width: 16px; height: 16px; margin: 0;
+    color: inherit !important; stroke: currentColor !important;
+}
