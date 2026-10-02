@@ -3613,6 +3613,8 @@ function openTransaction(
     const tanggalInput = document.getElementById("transactionTanggal");
     if (tanggalField) tanggalField.hidden = type !== "masuk";
     if (tanggalInput) tanggalInput.value = getTodayDate();
+    const tanggalTampilan = document.getElementById("transactionTanggalTampilan");
+    if (tanggalTampilan) tanggalTampilan.value = formatTanggalTampilan(getTodayDate());
 
     const qtyInput =
         document.getElementById(
@@ -3665,6 +3667,29 @@ function closeModal() {
 /*/*==================================
    SIMPAN TRANSAKSI
 ===================================================== */
+
+
+const transactionTanggalInput = document.getElementById("transactionTanggal");
+const transactionTanggalDisplay = document.getElementById("transactionTanggalTampilan");
+const transactionTanggalPicker = document.getElementById("transactionTanggalPickerButton");
+if (transactionTanggalDisplay && transactionTanggalInput) {
+    transactionTanggalDisplay.addEventListener("input", function() {
+        this.value = formatKetikTanggal(this.value);
+        transactionTanggalInput.value = parseTanggalTampilan(this.value);
+    });
+    transactionTanggalInput.addEventListener("change", function() {
+        transactionTanggalDisplay.value = formatTanggalTampilan(this.value);
+    });
+}
+if (transactionTanggalPicker && transactionTanggalInput) {
+    transactionTanggalPicker.addEventListener("click", function() {
+        if (typeof transactionTanggalInput.showPicker === "function") {
+            transactionTanggalInput.showPicker();
+        } else {
+            transactionTanggalInput.click();
+        }
+    });
+}
 
 async function confirmTransaction() {
 
