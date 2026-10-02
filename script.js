@@ -43,7 +43,6 @@ function setAuthBusy(isBusy) {
 
     [
         "authSignInButton",
-        "authSignUpButton",
         "authForgotButton",
         "authBackButton"
     ].forEach(function(buttonId) {
@@ -199,67 +198,6 @@ async function handleAdminSignIn(event) {
     }
 }
 
-async function handleAdminSignUp() {
-    if (authActionBusy) return;
-
-    const email =
-        document.getElementById(
-            "authEmail"
-        )?.value.trim();
-
-    const password =
-        document.getElementById(
-            "authPassword"
-        )?.value || "";
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "") || password.length < 8) {
-        setAuthStatus(
-            "Pendaftaran memerlukan email valid dan password minimal 8 karakter.",
-            "error"
-        );
-        return;
-    }
-
-    setAuthBusy(true);
-    setAuthStatus(
-        "Membuat akun admin...",
-        "loading"
-    );
-
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signUp({
-                email,
-                password
-            });
-
-        if (error) {
-            setAuthStatus(
-                "Gagal membuat akun: " +
-                    error.message,
-                "error"
-            );
-            return;
-        }
-
-        if (data.session) {
-            await activateAdminSession(
-                data.session
-            );
-            return;
-        }
-
-        setAuthStatus(
-            "Akun dibuat. Periksa email untuk konfirmasi, lalu masuk.",
-            "success"
-        );
-    } catch {
-        setAuthStatus("Akun belum dapat dibuat. Periksa koneksi dan coba lagi.", "error");
-    } finally {
-        setAuthBusy(false);
-    }
-}
-
 async function signOutAdmin() {
     const confirmed =
         await showAppConfirm(
@@ -329,7 +267,6 @@ function setAuthMode(mode, message = "", type = "") {
     confirm.value = "";
     document.getElementById("authForgotButton").hidden = mode !== "login";
     document.querySelector(".auth-form-links").hidden = mode !== "login";
-    document.getElementById("authRegistration").hidden = mode !== "login";
     document.getElementById("authBackButton").hidden = mode === "login";
     document.getElementById("authTitle").textContent = recovering ? "Buat password baru" : resetting ? "Lupa password?" : "Masuk ke Dhouse";
     document.getElementById("authDescription").textContent = recovering ? "Atur password baru untuk akun Dhouse kamu." : resetting ? "Kami akan mengirim tautan reset ke email akunmu." : "Kelola stok dan transaksi dalam satu tempat.";
@@ -8586,19 +8523,22 @@ function mintaKonfirmasiExport(message, pilihPeriode = false) {
     dialog.dataset.pilihPeriode = String(pilihPeriode);
     const fields = document.getElementById("exportPeriodFields");
     if (fields) fields.hidden = !pilihPeriode;
+    const formats = document.getElementById("exportFormatFields");
+    if (formats) formats.hidden = !pilihPeriode;
     if (pilihPeriode) {
         for (const id of ["exportTanggalMulai", "exportTanggalAkhir"]) {
             document.getElementById(id).value = "";
         }
         sinkronkanTanggalForm(fields);
+        document.querySelector('input[name="exportFormat"][value="Excel"]').checked = true;
     }
     document.getElementById("exportConfirmTitle").textContent = pilihPeriode
-        ? "Export " + message : "Konfirmasi Export";
+        ? "Export rekap stok" : "Konfirmasi Export";
     dialog.querySelector(".export-confirm-yes span").textContent = pilihPeriode
-        ? "Export " + message : "Ya, Export";
+        ? "Export" : "Ya, Export";
     if (messageElement) {
         messageElement.textContent = pilihPeriode
-            ? "Pilih tanggal rekap yang ingin diunduh." : message;
+            ? "Pilih format file dan periode rekap." : message;
     }
 
     if (dialog.open) {
@@ -8622,6 +8562,7 @@ function selesaikanKonfirmasiExport(disetujui) {
     if (disetujui && dialog?.dataset.pilihPeriode === "true") {
         hasil = getRentangTanggalExport();
         if (!hasil) return;
+        hasil.format = document.querySelector('input[name="exportFormat"]:checked')?.value || "Excel";
     }
     if (dialog?.open) {
         dialog.close();
@@ -9558,16 +9499,22 @@ function renderRekapStokLayar(ulangHalaman = false) {
     document.getElementById("rekapNext").disabled = rekapStokHalaman >= jumlahHalaman - 1;
 }
 
-async function exportExcel() {
+async function openExportStok() {
+    const rentang = await mintaKonfirmasiExport("Rekap stok", true);
+    if (!rentang) return;
+    if (rentang.format === "PDF") {
+        await exportPDF(rentang);
+    } else {
+        await exportExcel(rentang);
+    }
+}
+
+async function exportExcel(rentangExport) {
     if (typeof XLSX === "undefined") {
         showAppAlert("Library Excel belum dimuat.");
         return;
     }
 
-    const rentangExport = await mintaKonfirmasiExport(
-        "Excel",
-        true
-    );
     if (!rentangExport) return;
     const jumlahHari = rentangExport.tanggalList.length;
 
@@ -10165,7 +10112,7 @@ document.querySelector("#exportConfirmDialog form")
     });
 
 
-async function exportPDF() {
+async function exportPDF(rentangExport) {
     if (
         typeof window.jspdf ===
             "undefined" ||
@@ -10200,10 +10147,6 @@ async function exportPDF() {
     }
 
 
-    const rentangExport = await mintaKonfirmasiExport(
-        "PDF",
-        true
-    );
     if (!rentangExport) return;
     const jumlahHari = rentangExport.tanggalList.length;
 
