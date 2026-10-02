@@ -1155,7 +1155,7 @@ async function loadBarang(render = true) {
             await supabaseClient
                 .from("barang")
                 .select(
-    "id, nama, stok_awal, created_at, brand_id, brand:brand!barang_brand_id_fkey(id, nama, aktif)"
+    "id, nama, stok_awal, created_at, tanggal_mulai, brand_id, brand:brand!barang_brand_id_fkey(id, nama, aktif)"
 )
                 .order(
                     "nama",
@@ -1333,6 +1333,9 @@ async function tambahBarang() {
             "brandBarangBaru"
         );
 
+    const tanggalInput = document.getElementById("tanggalBarangBaru");
+    const tanggalMulai = tanggalInput?.value || "";
+
     const nama =
         namaInput.value.trim();
 
@@ -1408,6 +1411,12 @@ async function tambahBarang() {
         return;
     }
 
+    if (!parseTanggalISOExport(tanggalMulai)) {
+        await showAppAlert("Pilih tanggal mulai stok yang valid.");
+        tanggalInput?.focus();
+        return;
+    }
+
     modalSubmitState.tambahBarang = true;
     setModalSubmitBusy(
         "tambahBarangSubmit",
@@ -1430,7 +1439,9 @@ async function tambahBarang() {
 
                     stok_awal: stokAwal,
 
-                    brand_id: brandId
+                    brand_id: brandId,
+
+                    tanggal_mulai: tanggalMulai
 
                 });
 
@@ -1489,6 +1500,12 @@ async function tambahBarang() {
 ===================================================== */
 
 function openTambahBarang() {
+
+    const tanggalInput = document.getElementById("tanggalBarangBaru");
+    if (tanggalInput) {
+        tanggalInput.value = document.getElementById("tanggal")?.value ||
+            tanggalDipilih || getTodayDate();
+    }
 
     const modal =
         document.getElementById(
@@ -8800,6 +8817,10 @@ function getRentangTanggalExport(pakaiRekapLayar = false) {
 function getTanggalPembuatanBarangExport(
     barang
 ) {
+    if (parseTanggalISOExport(barang?.tanggal_mulai)) {
+        return barang.tanggal_mulai;
+    }
+
     const tanggal =
         new Date(
             barang?.created_at || ""
