@@ -15163,16 +15163,66 @@ body.auth-locked .auth-gate {
 }
 
 
-/* Period selection lives inside the PDF/Excel confirmation dialog. */
-#exportPeriodFields[hidden] { display: none; }
-#exportPeriodFields {
-    display: grid;
-    width: 100%;
-    gap: 12px;
-    margin-bottom: 20px;
+/* Compact export dialog, isolated from global button and form styles. */
+#exportConfirmDialog {
+    width: min(400px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    border-radius: 18px;
+    overflow-y: auto;
+}
+#exportConfirmDialog .export-confirm-card {
+    display: block;
+    padding: 22px;
+    border-radius: 18px;
+    background: #fffef9 !important;
     text-align: left;
 }
-#exportPeriodFields label { display: grid; gap: 6px; font-size: 12px; }
-#exportPeriodFields .export-date-range-title { font-size: 12px; font-weight: 600; }
-#exportPeriodFields input { width: 100%; min-height: 40px; box-sizing: border-box; }
-#exportPeriodFields small { color: #64748b; font-size: 11px; line-height: 1.5; }
+#exportConfirmDialog .export-dialog-heading { display: flex; align-items: center; gap: 10px; }
+#exportConfirmDialog .export-confirm-icon {
+    flex: 0 0 34px;
+    width: 34px; height: 34px; margin: 0;
+    border: 0 !important; border-radius: 10px;
+    background: #e7f3ef !important; color: #118f91 !important;
+}
+#exportConfirmDialog .export-confirm-icon svg { width: 18px; height: 18px; }
+#exportConfirmDialog h3 { font-size: 17px; line-height: 1.3; color: #283c35; }
+#exportConfirmDialog #exportConfirmMessage { margin: 12px 0 18px; font-size: 12px; line-height: 1.5; color: #748079; }
+#exportPeriodFields[hidden] { display: none; }
+#exportPeriodFields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; width: 100%; margin-bottom: 20px; text-align: left; }
+#exportPeriodFields label { display: grid; gap: 7px; min-width: 0; margin: 0; font-size: 12px; font-weight: 500; color: #45584f; }
+#exportPeriodFields .app-date-display {
+    box-sizing: border-box; width: 100%; height: 42px; min-height: 42px;
+    padding: 0 32px 0 10px !important;
+    border: 1px solid #dce5dd !important; border-radius: 9px !important;
+    background: #ffffff !important; color: #283c35 !important;
+    font-family: inherit; font-size: 12px; font-weight: 400;
+    box-shadow: none !important;
+}
+#exportPeriodFields .app-date-display::placeholder { color: #9aa79f; }
+#exportPeriodFields .app-date-display:focus { outline: 2px solid #118f9130; outline-offset: 1px; border-color: #118f91 !important; }
+#exportPeriodFields .app-date-control .app-date-picker-button,
+#exportPeriodFields .app-date-control .app-date-picker-button:is(:hover, :focus-visible) {
+    position: absolute; top: 0; bottom: 0; right: 4px;
+    display: flex; align-items: center; justify-content: center;
+    box-sizing: border-box; width: 28px; height: 32px; min-height: 0;
+    padding: 0; margin: auto 0; border: 0 !important;
+    border-radius: 6px !important; background: transparent !important;
+    background-image: none !important; color: #6f8278 !important;
+    box-shadow: none !important; transform: none !important;
+}
+#exportPeriodFields .app-date-picker-button svg { width: 16px; height: 16px; margin: 0; color: inherit !important; stroke: currentColor !important; }
+#exportPeriodFields small { grid-column: 1 / -1; margin-top: 2px; padding: 10px 12px; border-radius: 9px; background: #f2f5ee; color: #778478; font-size: 11px; line-height: 1.6; font-weight: 400; }
+#exportPeriodFields small strong { color: #526659; font-weight: 500; }
+#exportConfirmDialog .export-confirm-actions { gap: 10px; }
+#exportConfirmDialog .export-confirm-actions button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 10px; border-radius: 9px !important; font-size: 12px; box-shadow: none !important; transform: none !important; }
+#exportConfirmDialog .export-confirm-no,
+#exportConfirmDialog .export-confirm-no:is(:hover, :focus-visible) { background: #fffef9 !important; background-image: none !important; border: 1px solid #dce5dd !important; color: #69796e !important; }
+#exportConfirmDialog .export-confirm-no svg { display: none; }
+#exportConfirmDialog .export-confirm-yes,
+#exportConfirmDialog .export-confirm-yes:is(:hover, :focus-visible) { background: #118f91 !important; background-image: none !important; border: 1px solid #118f91 !important; color: #ffffff !important; }
+#exportConfirmDialog .export-confirm-actions svg { width: 16px; height: 16px; margin: 0; stroke: currentColor !important; color: inherit !important; }
+@media (max-width: 350px) {
+    #exportConfirmDialog .export-confirm-card { padding: 18px; }
+    #exportPeriodFields { gap: 8px; }
+    #exportPeriodFields .app-date-display { font-size: 11px; padding-left: 8px !important; }
+}

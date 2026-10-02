@@ -8592,8 +8592,13 @@ function mintaKonfirmasiExport(message, pilihPeriode = false) {
         }
         sinkronkanTanggalForm(fields);
     }
+    document.getElementById("exportConfirmTitle").textContent = pilihPeriode
+        ? "Export " + message : "Konfirmasi Export";
+    dialog.querySelector(".export-confirm-yes span").textContent = pilihPeriode
+        ? "Export " + message : "Ya, Export";
     if (messageElement) {
-        messageElement.textContent = message;
+        messageElement.textContent = pilihPeriode
+            ? "Pilih tanggal rekap yang ingin diunduh." : message;
     }
 
     if (dialog.open) {
@@ -9560,7 +9565,7 @@ async function exportExcel() {
     }
 
     const rentangExport = await mintaKonfirmasiExport(
-        "Export rekap stok ke Excel — pilih tanggal atau langsung lanjut.",
+        "Excel",
         true
     );
     if (!rentangExport) return;
@@ -10196,7 +10201,7 @@ async function exportPDF() {
 
 
     const rentangExport = await mintaKonfirmasiExport(
-        "Export rekap stok ke PDF — pilih tanggal atau langsung lanjut.",
+        "PDF",
         true
     );
     if (!rentangExport) return;
