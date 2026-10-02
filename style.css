@@ -15451,3 +15451,60 @@ body.auth-locked .auth-gate {
     stroke: #fff !important;
     fill: none !important;
 }
+
+/* Circular account controls with a matching database indicator. */
+.app-topbar .app-topbar-actions #accountPasswordButton,
+.app-topbar .app-topbar-actions #databaseStatus.status,
+.app-topbar .app-topbar-actions button.app-logout-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    flex: 0 0 38px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: #118f91 !important;
+    background-image: none !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+.app-topbar .app-topbar-actions #accountPasswordButton svg,
+.app-topbar .app-topbar-actions #databaseStatus.status svg,
+.app-topbar .app-topbar-actions button.app-logout-button svg {
+    width: 17px !important;
+    height: 17px !important;
+    color: #fff !important;
+    stroke: #fff !important;
+    fill: none !important;
+    margin: 0 !important;
+}
+.app-topbar .app-topbar-actions #accountPasswordButton span,
+.app-topbar .app-topbar-actions button.app-logout-button span { display: none !important; }
+.app-topbar .app-topbar-actions #databaseStatus.status > span {
+    display: block !important;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+@media (max-width: 700px) {
+    .app-topbar .app-topbar-actions #accountPasswordButton,
+    .app-topbar .app-topbar-actions #databaseStatus.status,
+    .app-topbar .app-topbar-actions button.app-logout-button {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
+        flex-basis: 34px !important;
+    }
+}
