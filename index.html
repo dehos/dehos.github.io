@@ -41,12 +41,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20261002-15"></script>
+    <script defer src="script.js?v=20261003-19"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20261003-18">
+    <link rel="stylesheet" href="style.css?v=20261003-19">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -1612,14 +1612,14 @@
         </fieldset>
         <div id="exportPeriodFields" class="export-date-range" hidden>
                 <label><span>Dari</span><div class="app-date-control">
-<input type="text" id="exportTanggalMulaiTampilan" data-date-source="exportTanggalMulai" class="form-control form-control-sm app-date-display" placeholder="dd/mm/yyyy" inputmode="numeric" maxlength="10" autocomplete="off">
+<input type="text" id="exportTanggalMulaiTampilan" data-date-source="exportTanggalMulai" class="form-control form-control-sm app-date-display" placeholder="Pilih tanggal" readonly aria-haspopup="dialog" autocomplete="off">
 <input type="date" id="exportTanggalMulai" class="localized-date-native" tabindex="-1" aria-hidden="true">
 <button type="button" class="app-date-picker-button" data-date-picker="exportTanggalMulai" aria-label="Pilih tanggal melalui kalender">
 <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
 </button>
 </div></label>
                 <label><span>Sampai</span><div class="app-date-control">
-<input type="text" id="exportTanggalAkhirTampilan" data-date-source="exportTanggalAkhir" class="form-control form-control-sm app-date-display" placeholder="dd/mm/yyyy" inputmode="numeric" maxlength="10" autocomplete="off">
+<input type="text" id="exportTanggalAkhirTampilan" data-date-source="exportTanggalAkhir" class="form-control form-control-sm app-date-display" placeholder="Pilih tanggal" readonly aria-haspopup="dialog" autocomplete="off">
 <input type="date" id="exportTanggalAkhir" class="localized-date-native" tabindex="-1" aria-hidden="true">
 <button type="button" class="app-date-picker-button" data-date-picker="exportTanggalAkhir" aria-label="Pilih tanggal melalui kalender">
 <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>

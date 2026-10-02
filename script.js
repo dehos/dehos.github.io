@@ -11748,6 +11748,20 @@ function sinkronkanTanggalForm(root = document) {
 
 document.querySelectorAll("[data-date-source]").forEach(function(tampilan) {
     const tanggal = document.getElementById(tampilan.dataset.dateSource);
+    if (tampilan.readOnly) {
+        const bukaKalender = function() {
+            tampilan.closest(".app-date-control")
+                ?.querySelector("[data-date-picker]")?.click();
+        };
+        tampilan.addEventListener("click", bukaKalender);
+        tampilan.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                event.stopPropagation();
+                bukaKalender();
+            }
+        });
+    }
     tampilan.addEventListener("input", function() {
         this.value = formatKetikTanggal(this.value);
         const iso = parseTanggalTampilan(this.value);
