@@ -2604,10 +2604,10 @@ function getRawCurrentStock(barang, tanggal = tanggalDipilih) {
         return 0;
     }
 
-    let stok =
-        Number(
-            barang.stok_awal
-        ) || 0;
+    const tanggalAwal = getTanggalPembuatanBarangExport(barang);
+    let stok = !tanggal || !tanggalAwal || tanggalAwal <= tanggal
+        ? Number(barang.stok_awal) || 0
+        : 0;
 
     transactions.forEach(
         function(transaction) {
@@ -8886,7 +8886,11 @@ function getTanggalPembuatanBarangExport(
 
 function barangAdaPadaTanggal(barang, tanggal) {
     const tanggalPembuatan = getTanggalPembuatanBarangExport(barang);
-    return !tanggalPembuatan || tanggalPembuatan <= tanggal;
+    return !tanggalPembuatan || tanggalPembuatan <= tanggal ||
+        transactions.some(function(transaction) {
+            return Number(transaction.barang_id) === Number(barang?.id) &&
+                transaction.tanggal && transaction.tanggal <= tanggal;
+        });
 }
 
 
@@ -8898,10 +8902,10 @@ function getStokSebelumTanggalExport(
         return 0;
     }
 
-    let stok =
-        Number(
-            barang?.stok_awal
-        ) || 0;
+    const tanggalAwal = getTanggalPembuatanBarangExport(barang);
+    let stok = !tanggalAwal || tanggalAwal <= tanggalMulai
+        ? Number(barang?.stok_awal) || 0
+        : 0;
 
     transactions.forEach(
         function(transaction) {
@@ -9069,9 +9073,7 @@ function buatRekapStokBarangExport(
                 }
 
                 if (
-                    tanggalPembuatan &&
-                    itemTanggal.iso <
-                        tanggalPembuatan
+                    !barangAdaPadaTanggal(barang, itemTanggal.iso)
                 ) {
                     return {
                         value:
@@ -9095,7 +9097,7 @@ function buatRekapStokBarangExport(
                     tanggalPembuatan >
                         rentang.tanggalMulaiISO
                 ) {
-                    stokMentah =
+                    stokMentah +=
                         Number(
                             barang?.stok_awal
                         ) || 0;
