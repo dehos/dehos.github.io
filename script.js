@@ -678,6 +678,8 @@ function showAppModal(
     lastModalTrigger =
         document.activeElement;
 
+    sinkronkanTanggalForm(modal);
+    focusTarget = document.getElementById(focusTarget?.id + "Tampilan") || focusTarget;
     modal.style.display = "flex";
     modal.setAttribute(
         "aria-hidden",
@@ -8638,6 +8640,17 @@ function formatTanggalNamaPDFExport(tanggal) {
 
 
 function getRentangTanggalExport(pakaiRekapLayar = false) {
+    const idTanggal = pakaiRekapLayar
+        ? ["rekapTanggalMulai", "rekapTanggalAkhir"]
+        : ["exportTanggalMulai", "exportTanggalAkhir"];
+    for (const id of idTanggal) {
+        const tampilan = document.getElementById(id + "Tampilan");
+        if (tampilan && !tampilan.checkValidity()) {
+            tampilan.reportValidity();
+            return null;
+        }
+    }
+
     const nilaiMulaiKustom =
         document.getElementById(
             pakaiRekapLayar ? "rekapTanggalMulai" : "exportTanggalMulai"
@@ -11531,3 +11544,48 @@ document.addEventListener("visibilitychange", function() {
     const sectionId = window.location.hash.replace("#", "") || "dashboard";
     void loadSectionData(sectionId);
 });
+
+
+// Keep visible dates in dd/mm/yyyy and native calendar values in ISO format.
+function sinkronkanTanggalForm(root = document) {
+    root.querySelectorAll("[data-date-source]").forEach(function(tampilan) {
+        const tanggal = document.getElementById(tampilan.dataset.dateSource);
+        tampilan.value = formatTanggalTampilan(tanggal?.value);
+        tampilan.setCustomValidity("");
+    });
+}
+
+document.querySelectorAll("[data-date-source]").forEach(function(tampilan) {
+    const tanggal = document.getElementById(tampilan.dataset.dateSource);
+    tampilan.addEventListener("input", function() {
+        this.value = formatKetikTanggal(this.value);
+        const iso = parseTanggalTampilan(this.value);
+        this.setCustomValidity(this.value && !iso
+            ? "Gunakan tanggal yang valid dalam format dd/mm/yyyy."
+            : "");
+        tanggal.value = iso;
+        tanggal.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    tampilan.addEventListener("change", function() {
+        if (!this.checkValidity()) {
+            this.reportValidity();
+            return;
+        }
+        tanggal.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    tanggal.addEventListener("change", function() {
+        tampilan.value = formatTanggalTampilan(this.value);
+        tampilan.setCustomValidity("");
+    });
+});
+document.querySelectorAll("[data-date-picker]").forEach(function(tombol) {
+    const tanggal = document.getElementById(tombol.dataset.datePicker);
+    tombol.addEventListener("click", function() {
+        if (typeof tanggal.showPicker === "function") {
+            tanggal.showPicker();
+        } else {
+            tanggal.click();
+        }
+    });
+});
+sinkronkanTanggalForm();
