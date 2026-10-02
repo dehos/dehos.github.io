@@ -14973,3 +14973,28 @@ button[aria-pressed="true"] {
     color: inherit !important;
     stroke: currentColor !important;
 }
+
+/* Mobile tables keep touch scrolling without a visible scrollbar or reserved gutter. */
+@media (max-width: 700px) {
+    #stok-barang .modern-stock-table-wrapper,
+    #catatan-penjualan .modern-sales-table-wrapper,
+    #riwayat-transaksi .modern-history-table-wrapper,
+    #rekap-stok .stock-recap-scroll,
+    #importExcelModal .import-excel-table-wrapper,
+    .table-wrapper {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none;
+        scrollbar-gutter: auto !important;
+    }
+
+    #stok-barang .modern-stock-table-wrapper::-webkit-scrollbar,
+    #catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar,
+    #riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar,
+    #rekap-stok .stock-recap-scroll::-webkit-scrollbar,
+    #importExcelModal .import-excel-table-wrapper::-webkit-scrollbar,
+    .table-wrapper::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+}
