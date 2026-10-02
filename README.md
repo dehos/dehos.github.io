@@ -17,3 +17,11 @@ where lower(email) = lower('<email-admin-yang-sudah-ada>');
 ```
 
 Password akun tidak diubah oleh konfigurasi username.
+
+## Ganti dan reset password
+
+Setelah login, gunakan tombol **Ganti password** (ikon kunci di mobile). Masukkan password lama, password baru minimal 8 karakter, dan konfirmasi. Password lama diverifikasi memakai sesi Supabase terpisah yang tidak disimpan ke browser, lalu password diperbarui melalui Supabase Auth.
+
+Jika lupa password, klik **Lupa password?** di login dan masukkan email akun, termasuk jika biasanya masuk dengan username. Buka tautan email, isi password baru dan konfirmasi, lalu login kembali. Form recovery ditampilkan sebelum inisialisasi aplikasi; refresh di tab yang sama tetap mempertahankan form recovery. Tautan kedaluwarsa menampilkan permintaan tautan baru.
+
+Konfigurasi Supabase Auth harus menggunakan Site URL `https://dehos.github.io/` dan mengizinkan URL tersebut untuk redirect. Pengiriman reset bergantung pada konfigurasi email/SMTP proyek. Pengujian pengiriman email nyata memerlukan pemilik akun untuk meminta dan membuka tautannya; pengujian frontend memakai mock dan tidak mengganti password akun produksi.

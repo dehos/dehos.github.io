@@ -43,7 +43,9 @@ function setAuthBusy(isBusy) {
 
     [
         "authSignInButton",
-        "authSignUpButton"
+        "authSignUpButton",
+        "authForgotButton",
+        "authBackButton"
     ].forEach(function(buttonId) {
         const button =
             document.getElementById(buttonId);
@@ -190,6 +192,8 @@ async function handleAdminSignIn(event) {
         }
 
         await activateAdminSession(session);
+    } catch {
+        setAuthStatus("Login belum dapat diproses. Periksa koneksi dan coba lagi.", "error");
     } finally {
         setAuthBusy(false);
     }
@@ -249,6 +253,8 @@ async function handleAdminSignUp() {
             "Akun dibuat. Periksa email untuk konfirmasi, lalu masuk.",
             "success"
         );
+    } catch {
+        setAuthStatus("Akun belum dapat dibuat. Periksa koneksi dan coba lagi.", "error");
     } finally {
         setAuthBusy(false);
     }
@@ -273,33 +279,270 @@ async function signOutAdmin() {
     );
 }
 
-async function bootAuthenticatedApp() {
-    const { data, error } =
-        await supabaseClient.auth
-            .getSession();
+// Passwords stay in form memory and go directly to Supabase Auth.
+let authMode = "login";
+let passwordChangeBusy = false;
+let recoverySessionActive = false;
+const recoveryLinkRequested = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
+const recoveryLinkError = new URLSearchParams(window.location.hash.slice(1)).get("error_description");
 
-    if (error) {
-        showAuthGate(
-            "Sesi tidak dapat diperiksa. Silakan masuk kembali."
-        );
+function resetPasswordVisibility(root = document) {
+    root.querySelectorAll("[data-password-toggle]").forEach(function(button) {
+        document.getElementById(button.dataset.passwordToggle).type = "password";
+        button.setAttribute("aria-pressed", "false");
+        button.setAttribute("aria-label", "Tampilkan password");
+    });
+}
+
+document.querySelectorAll("[data-password-toggle]").forEach(function(button) {
+    button.addEventListener("click", function() {
+        const input = document.getElementById(this.dataset.passwordToggle);
+        const visible = input.type === "password";
+        input.type = visible ? "text" : "password";
+        this.setAttribute("aria-pressed", String(visible));
+        this.setAttribute("aria-label", visible ? "Sembunyikan password" : "Tampilkan password");
+    });
+});
+
+function setAuthMode(mode, message = "", type = "") {
+    if (authActionBusy) return;
+    authMode = mode;
+    const recovering = mode === "recovery";
+    const resetting = mode === "reset";
+    const email = document.getElementById("authEmail");
+    const password = document.getElementById("authPassword");
+    const confirm = document.getElementById("authPasswordConfirm");
+    document.getElementById("authEmailField").hidden = recovering;
+    email.disabled = recovering;
+    email.type = resetting ? "email" : "text";
+    email.autocomplete = resetting ? "email" : "username";
+    email.placeholder = resetting ? "Masukkan email akun admin" : "Masukkan username atau email";
+    document.getElementById("authEmailLabel").textContent = resetting ? "Email akun" : "Username atau email";
+    document.getElementById("authPasswordField").hidden = resetting;
+    password.disabled = resetting;
+    password.value = "";
+    password.autocomplete = recovering ? "new-password" : "current-password";
+    password.placeholder = recovering ? "Minimal 8 karakter" : "Masukkan password";
+    document.querySelector('label[for="authPassword"]').textContent = recovering ? "Password baru" : "Password";
+    document.getElementById("authConfirmField").hidden = !recovering;
+    confirm.disabled = !recovering;
+    confirm.value = "";
+    document.getElementById("authForgotButton").hidden = mode !== "login";
+    document.getElementById("authRegistration").hidden = mode !== "login";
+    document.getElementById("authBackButton").hidden = mode === "login";
+    document.getElementById("authTitle").textContent = recovering ? "Buat password baru" : resetting ? "Lupa password?" : "Masuk ke Dhouse";
+    document.getElementById("authDescription").textContent = recovering ? "Atur password baru untuk akun Dhouse kamu." : resetting ? "Kami akan mengirim tautan reset ke email akunmu." : "Kelola stok dan transaksi dalam satu tempat.";
+    document.getElementById("authSubmitLabel").textContent = recovering ? "Simpan password baru" : resetting ? "Kirim tautan reset" : "Masuk";
+    document.getElementById("authHelp").textContent = resetting ? "Gunakan email yang terdaftar, meski biasanya masuk dengan username." : "Akses khusus akun admin yang telah disetujui.";
+    resetPasswordVisibility(document.getElementById("authForm"));
+    setAuthStatus(message, type);
+}
+
+function cleanRecoveryUrl() {
+    // SDK consumes the credentials; remove recovery/error fragments from history.
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+}
+
+async function returnToSignIn() {
+    if (authActionBusy) return;
+    if (recoverySessionActive) {
+        setAuthBusy(true);
+        try {
+            const { error } = await supabaseClient.auth.signOut({ scope: "local" });
+            if (error) throw error;
+            recoverySessionActive = false;
+            sessionStorage.removeItem("dhouse-password-recovery");
+        } catch {
+            setAuthStatus("Sesi belum dapat ditutup. Coba kembali.", "error");
+            return;
+        } finally {
+            setAuthBusy(false);
+        }
+    }
+    cleanRecoveryUrl();
+    setAuthMode("login");
+}
+
+async function handleAuthForm(event) {
+    event.preventDefault();
+    if (authActionBusy) return;
+    if (authMode === "login") return handleAdminSignIn(event);
+    if (authMode === "reset") return requestPasswordReset();
+    if (authMode === "recovery") return saveRecoveredPassword();
+}
+
+async function requestPasswordReset() {
+    const email = document.getElementById("authEmail").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setAuthStatus("Masukkan email akun yang valid.", "error");
         return;
     }
-
-    if (data.session) {
-        await activateAdminSession(
-            data.session
-        );
-    } else {
-        showAuthGate();
+    setAuthBusy(true);
+    setAuthStatus("Mengirim tautan reset...", "loading");
+    try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: new URL(window.location.pathname, window.location.origin).href
+        });
+        if (error) throw error;
+        setAuthStatus("Jika email terdaftar, tautan reset akan dikirim. Periksa kotak masuk dan folder spam.", "success");
+    } catch (error) {
+        setAuthStatus(error.status === 429 || /rate_limit/.test(error.code || "")
+            ? "Terlalu banyak permintaan. Tunggu beberapa saat sebelum mencoba lagi."
+            : "Tautan reset belum dapat dikirim. Coba lagi nanti.", "error");
+    } finally {
+        setAuthBusy(false);
     }
+}
 
-    supabaseClient.auth.onAuthStateChange(
-        function(event) {
-            if (event === "SIGNED_OUT") {
-                showAuthGate();
-            }
+function validateNewPassword(password, confirm, current = "") {
+    if (password.length < 8) return "Password baru harus minimal 8 karakter.";
+    if (password !== confirm) return "Konfirmasi password belum sama.";
+    if (current && password === current) return "Gunakan password baru yang berbeda dari password lama.";
+    return "";
+}
+
+function passwordErrorMessage(error) {
+    if (error.code === "same_password") return "Gunakan password baru yang berbeda dari password lama.";
+    if (error.code === "weak_password") return "Password belum memenuhi aturan keamanan. Gunakan password yang lebih kuat.";
+    if (error.code === "current_password_mismatch" || error.code === "invalid_credentials") return "Password lama salah.";
+    if (error.code === "reauthentication_needed" || error.code === "reauthentication_not_valid") return "Sesi perlu diverifikasi ulang. Keluar lalu login kembali, atau gunakan Lupa password.";
+    return "Password belum dapat disimpan. Periksa koneksi dan coba lagi, atau minta tautan reset baru.";
+}
+
+async function saveRecoveredPassword() {
+    const password = document.getElementById("authPassword").value;
+    const validation = validateNewPassword(password, document.getElementById("authPasswordConfirm").value);
+    if (validation) return setAuthStatus(validation, "error");
+    setAuthBusy(true);
+    setAuthStatus("Menyimpan password baru...", "loading");
+    let updated = false;
+    try {
+        if (!recoverySessionActive) throw new Error("Missing recovery session");
+        const { error } = await supabaseClient.auth.updateUser({ password });
+        if (error) throw error;
+        updated = true;
+        document.getElementById("authForm").reset();
+        const { error: signOutError } = await supabaseClient.auth.signOut({ scope: "global" });
+        if (signOutError) throw signOutError;
+        recoverySessionActive = false;
+        sessionStorage.removeItem("dhouse-password-recovery");
+        cleanRecoveryUrl();
+    } catch (error) {
+        setAuthStatus(updated ? "Password sudah diperbarui. Kembali ke login untuk menutup sesi ini." : passwordErrorMessage(error), updated ? "success" : "error");
+    } finally {
+        setAuthBusy(false);
+    }
+    if (updated && !recoverySessionActive) {
+        setAuthMode("login", "Password berhasil diperbarui. Silakan masuk dengan password baru.", "success");
+    }
+}
+
+function setPasswordChangeStatus(message, type = "") {
+    const status = document.getElementById("passwordChangeStatus");
+    status.textContent = message;
+    status.className = "auth-status" + (type ? ` is-${type}` : "");
+}
+
+function openPasswordDialog() {
+    if (!document.body.classList.contains("auth-ready")) return;
+    document.getElementById("passwordChangeForm").reset();
+    resetPasswordVisibility(document.getElementById("passwordChangeForm"));
+    setPasswordChangeStatus("");
+    document.getElementById("passwordDialog").showModal();
+    document.getElementById("accountCurrentPassword").focus();
+}
+
+function closePasswordDialog() {
+    if (passwordChangeBusy) return;
+    document.getElementById("passwordDialog").close();
+}
+
+document.getElementById("passwordDialog").addEventListener("cancel", function(event) {
+    if (passwordChangeBusy) event.preventDefault();
+});
+document.getElementById("passwordDialog").addEventListener("close", function() {
+    document.getElementById("passwordChangeForm").reset();
+    resetPasswordVisibility(document.getElementById("passwordChangeForm"));
+});
+
+async function handlePasswordChange(event) {
+    event.preventDefault();
+    if (passwordChangeBusy) return;
+    const current = document.getElementById("accountCurrentPassword").value;
+    const password = document.getElementById("accountNewPassword").value;
+    const validation = validateNewPassword(password, document.getElementById("accountConfirmPassword").value, current);
+    if (!current) return setPasswordChangeStatus("Isi password lama terlebih dahulu.", "error");
+    if (validation) return setPasswordChangeStatus(validation, "error");
+    passwordChangeBusy = true;
+    const submit = document.getElementById("passwordChangeSubmit");
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    document.getElementById("passwordDialogClose").disabled = true;
+    setPasswordChangeStatus("Menyimpan password...", "loading");
+    let verifier;
+    try {
+        const { data, error: userError } = await supabaseClient.auth.getUser();
+        if (userError || !data.user?.email) throw userError || new Error("Missing account");
+        // Independent session verifies the old password without replacing app storage.
+        verifier = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+        });
+        const { data: verified, error: verifyError } = await verifier.auth.signInWithPassword({ email: data.user.email, password: current });
+        if (verifyError) throw verifyError;
+        if (verified.user?.id !== data.user.id) throw new Error("Account mismatch");
+        const { error } = await supabaseClient.auth.updateUser({ password, current_password: current });
+        if (error) throw error;
+        document.getElementById("passwordChangeForm").reset();
+        resetPasswordVisibility(document.getElementById("passwordChangeForm"));
+        setPasswordChangeStatus("Password berhasil diperbarui.", "success");
+    } catch (error) {
+        setPasswordChangeStatus(passwordErrorMessage(error), "error");
+    } finally {
+        if (verifier) {
+            try { await verifier.auth.signOut({ scope: "local" }); } catch { /* No persistent session. */ }
         }
-    );
+        passwordChangeBusy = false;
+        submit.disabled = false;
+        submit.setAttribute("aria-busy", "false");
+        document.getElementById("passwordDialogClose").disabled = false;
+    }
+}
+
+async function bootAuthenticatedApp() {
+    setAuthMode("login");
+    supabaseClient.auth.onAuthStateChange(function(event) {
+        // Keep this callback synchronous to avoid SDK auth-lock deadlocks.
+        if (event === "PASSWORD_RECOVERY") {
+            recoverySessionActive = true;
+            sessionStorage.setItem("dhouse-password-recovery", "1");
+            showAuthGate();
+            setAuthMode("recovery");
+        } else if (event === "SIGNED_OUT") {
+            sessionStorage.removeItem("dhouse-password-recovery");
+            document.getElementById("passwordDialog").close();
+            showAuthGate();
+        }
+    });
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        if (recoveryLinkError || (recoveryLinkRequested && !data.session)) {
+            cleanRecoveryUrl();
+            showAuthGate();
+            setAuthMode("reset", "Tautan reset tidak valid atau sudah kedaluwarsa. Minta tautan baru.", "error");
+        } else if (data.session && (recoveryLinkRequested || recoverySessionActive || sessionStorage.getItem("dhouse-password-recovery") === "1")) {
+            recoverySessionActive = true;
+            sessionStorage.setItem("dhouse-password-recovery", "1");
+            showAuthGate();
+            setAuthMode("recovery");
+        } else if (data.session) {
+            await activateAdminSession(data.session);
+        } else {
+            showAuthGate();
+        }
+    } catch {
+        showAuthGate("Sesi tidak dapat diperiksa. Silakan masuk kembali.", "error");
+    }
 }
 
 
