@@ -15241,70 +15241,205 @@ body.auth-locked .auth-gate {
 #exportFormatFields input:checked + span { background: #e7f3ef; border-color: #118f91; color: #087f82; }
 #exportFormatFields input:focus-visible + span { outline: 2px solid #118f91; outline-offset: 2px; }
 
-/* Match Stock and In/Out row actions to the Sales Records icon buttons. */
-#stok-barang #stockTable .action-btn,
-#riwayat-transaksi .modern-history-table .history-edit-transaction-btn,
-#catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn) {
-    display: inline-grid;
-    place-items: center;
-    box-sizing: border-box;
-    flex: 0 0 auto;
-    width: 30px;
-    min-width: 30px;
-    height: 30px;
-    min-height: 30px;
-    padding: 0;
-    margin: 0 2px;
+
+
+
+
+/* Copy the original Sales Records action styles; keep the reference page unchanged. */
+#stok-barang #stockTable button.action-btn,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    display: inline-grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    place-items: center !important;
+    margin: 0 2px !important;
+    padding: 0 !important;
+    border-color: #d9e4ff !important;
+    transform: none !important;
+    background: #118f91 !important;
+    color: #fff !important;
     border: 0 !important;
     border-radius: 10px !important;
-    background: #118f91 !important;
-    background-image: none !important;
-    color: #fff !important;
     box-shadow: none !important;
+}
+#stok-barang #stockTable button.action-btn,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn { min-width: 0; min-height: 0; flex: 0 0 auto; }
+#stok-barang #stockTable button.action-btn:hover,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:hover {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    display: inline-grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    place-items: center !important;
+    margin: 0 2px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
     transform: none !important;
-    line-height: 1;
-    cursor: pointer;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-color: rgba(229, 184, 59, .32) !important;
+    background: rgba(229, 184, 59, .16) !important;
+    color: var(--dhouse-gold-bright) !important;
 }
-#stok-barang #stockTable .action-btn:is(:hover, :focus-visible),
-#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:is(:hover, :focus-visible),
-#catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn):is(:hover, :focus-visible) {
-    background: #119b9d !important;
+#stok-barang #stockTable button.action-btn:focus-visible,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:focus-visible {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    outline-offset: 1px !important;
+    display: inline-grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    place-items: center !important;
+    margin: 0 2px !important;
+    padding: 0 !important;
+    border-color: #d9e4ff !important;
+    outline: 2px solid currentColor !important;
+    transform: none !important;
+    border-radius: 10px !important;
+    background: #0d7d80 !important;
     color: #fff !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
-#stok-barang #stockTable .action-btn:focus-visible,
-#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:focus-visible,
-#catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn):focus-visible {
-    outline: 2px solid #087d7f;
-    outline-offset: 2px;
+#stok-barang #stockTable button.action-btn:active,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:active {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    display: inline-grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    place-items: center !important;
+    margin: 0 2px !important;
+    padding: 0 !important;
+    border-color: #d9e4ff !important;
+    transform: none !important;
+    background: #118f91 !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
 }
-#stok-barang #stockTable .action-btn > span { display: none; }
-#stok-barang #stockTable .stock-action-group { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 4px; width: auto; padding: 0; border: 0 !important; background: transparent !important; box-shadow: none !important; }
-#stok-barang .stock-actions-header,
-#stok-barang #stockTable .stock-actions-cell { width: 110px; min-width: 110px; }
-#stok-barang #stockTable .action-btn svg,
-#riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg,
-#catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn) svg {
-    width: 15px;
-    height: 15px;
-    margin: 0;
-    fill: none;
+#stok-barang #stockTable button.action-btn svg,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg {
+    box-sizing: border-box !important;
+    width: 15px !important;
+    height: 15px !important;
+    fill: none !important;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    box-shadow: none !important;
+    color: #fff !important;
     stroke: currentColor !important;
-    color: inherit !important;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
 }
+#stok-barang #stockTable button.action-btn > span { display: none; }
+#stok-barang #stockTable .stock-action-group { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; width: auto; padding: 0; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+#stok-barang .stock-actions-header, #stok-barang #stockTable .stock-actions-cell { width: 110px; min-width: 110px; }
 @media (max-width: 700px) {
-    #stok-barang #stockTable .action-btn,
-    #riwayat-transaksi .modern-history-table .history-edit-transaction-btn,
-    #catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn) {
-        width: 21px; min-width: 21px; height: 21px; min-height: 21px; margin: 0; padding: 0;
-    }
-    #stok-barang #stockTable .action-btn svg,
-    #riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg,
-    #catatan-penjualan .modern-sales-table :is(.edit-history-btn, .delete-history-btn) svg { width: 11px; height: 11px; }
-    #stok-barang .modern-stock-table th:nth-child(4),
-    #stok-barang .modern-stock-table td:nth-child(4),
-    #stok-barang .stock-actions-header,
-    #stok-barang #stockTable .stock-actions-cell { width: 78px; min-width: 78px; }
+#stok-barang #stockTable button.action-btn,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn {
+    width: 21px !important;
+    height: 21px !important;
+    margin: 0 !important;
+}
+#stok-barang #stockTable button.action-btn svg,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg {
+    width: 11px !important;
+    height: 11px !important;
+}
+#stok-barang #stockTable button.action-btn:hover,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:hover {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    width: 21px !important;
+    height: 21px !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+    transform: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-color: rgba(229, 184, 59, .32) !important;
+    background: rgba(229, 184, 59, .16) !important;
+    color: var(--dhouse-gold-bright) !important;
+}
+#stok-barang #stockTable button.action-btn:focus-visible,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:focus-visible {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    outline-offset: 1px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    width: 21px !important;
+    height: 21px !important;
+    margin: 0 !important;
+    border-color: #d9e4ff !important;
+    outline: 2px solid currentColor !important;
+    transform: none !important;
+    border-radius: 10px !important;
+    background: #0d7d80 !important;
+    color: #fff !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+#stok-barang #stockTable button.action-btn:active,
+#riwayat-transaksi .modern-history-table .history-edit-transaction-btn:active {
+    box-sizing: border-box !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif !important;
+    transition: color .14s ease,
+        border-color .14s ease,
+        background-color .14s ease,
+        box-shadow .14s ease,
+        transform .14s ease !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    width: 21px !important;
+    height: 21px !important;
+    margin: 0 !important;
+    border-color: #d9e4ff !important;
+    transform: none !important;
+    background: #118f91 !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+}
+#stok-barang .modern-stock-table th:nth-child(4), #stok-barang .modern-stock-table td:nth-child(4), #stok-barang .stock-actions-header, #stok-barang #stockTable .stock-actions-cell { width: 78px; min-width: 78px; }
 }
