@@ -268,7 +268,7 @@ function setAuthMode(mode, message = "", type = "") {
     document.getElementById("authForgotButton").hidden = mode !== "login";
     document.querySelector(".auth-form-links").hidden = mode !== "login";
     document.getElementById("authBackButton").hidden = mode === "login";
-    document.getElementById("authTitle").textContent = recovering ? "Buat password baru" : resetting ? "Lupa password?" : "Masuk ke Dhouse";
+    document.getElementById("authTitle").textContent = recovering ? "Buat password baru" : resetting ? "Lupa password?" : "Masuk ke akun";
     document.getElementById("authDescription").textContent = recovering ? "Atur password baru untuk akun Dhouse kamu." : resetting ? "Kami akan mengirim tautan reset ke email akunmu." : "Kelola stok dan transaksi dalam satu tempat.";
     document.getElementById("authSubmitLabel").textContent = recovering ? "Simpan password baru" : resetting ? "Kirim tautan reset" : "Masuk";
     document.getElementById("authHelp").textContent = resetting ? "Gunakan email yang terdaftar, meski biasanya masuk dengan username." : "Akses khusus akun admin yang telah disetujui.";
