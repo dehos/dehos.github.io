@@ -6348,15 +6348,15 @@ const TARGET_PENJUALAN_BRAND =
 
 const TARGET_BRAND_COLORS =
     Object.freeze({
-        Belleza: "#68d391",
+        Belleza: "#b66b80",
         Solid: "#d7aa47",
         Dekkson: "#63b3ed",
         Violet: "#a78bfa",
         "Vapely/Wepe": "#b7794a",
         Tsunami: "#f07867",
-        Trisensa: "#2f9e68",
+        Trisensa: "#800020",
         Rona: "#94a3b8",
-        "Bak Mandi": "#43c3df",
+        "Bak Mandi": "#b66b80",
         Morgan: "#f59e0b"
     });
 
@@ -11020,10 +11020,10 @@ async function exportPenjualanExcel() {
             jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
     }));
     const border = {
-        top: { style: "thin", color: { rgb: "D7DED9" } },
-        bottom: { style: "thin", color: { rgb: "D7DED9" } },
-        left: { style: "thin", color: { rgb: "D7DED9" } },
-        right: { style: "thin", color: { rgb: "D7DED9" } }
+        top: { style: "thin", color: { rgb: "DFC5CE" } },
+        bottom: { style: "thin", color: { rgb: "DFC5CE" } },
+        left: { style: "thin", color: { rgb: "DFC5CE" } },
+        right: { style: "thin", color: { rgb: "DFC5CE" } }
     };
     jenisBaris.forEach((jenis, r) => {
         for (let c = 0; c < 5; c++) {
@@ -11036,15 +11036,15 @@ async function exportPenjualanExcel() {
                 font: {
                     bold: jenis !== "item",
                     sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : 11,
-                    color: { rgb: jenis === "header" ? "FFFFFF" : "263933" }
+                    color: { rgb: jenis === "header" ? "FFFFFF" : "35262C" }
                 },
                 fill: {
                     patternType: "solid",
                     fgColor: {
-                        rgb: jenis === "header" ? "188F86" :
-                            jenis === "brand" ? "E5F2ED" :
-                            jenis === "grand" ? "D5EEE5" :
-                            jenis === "subtotal" ? "F1F7F3" : "FFFFFF"
+                        rgb: jenis === "header" ? "800020" :
+                            jenis === "brand" ? "F4E5EA" :
+                            jenis === "grand" ? "E9CBD5" :
+                            jenis === "subtotal" ? "FAF2F5" : "FFFFFF"
                     }
                 },
                 alignment: {
@@ -11088,7 +11088,7 @@ async function exportPenjualanPDF() {
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
     hasil.grup.forEach(grup => {
         body.push([{ content: grup.brand.toUpperCase(), colSpan: 5,
-            styles: { fillColor: [229, 242, 237], fontStyle: "bold" } }]);
+            styles: { fillColor: [244, 229, 234], fontStyle: "bold" } }]);
         let subtotal = 0;
         grup.items.forEach(item => {
             body.push([
@@ -11099,17 +11099,17 @@ async function exportPenjualanPDF() {
             subtotal += item.total;
         });
         body.push([{ content: "TOTAL " + grup.brand, colSpan: 4,
-            styles: { halign: "right", fillColor: [241, 247, 243],
+            styles: { halign: "right", fillColor: [250, 242, 245],
                 fontStyle: "bold" } },
             { content: rupiah(subtotal), styles: {
-                fillColor: [241, 247, 243], fontStyle: "bold" } }]);
+                fillColor: [250, 242, 245], fontStyle: "bold" } }]);
         totalSemua += subtotal;
     });
     body.push([{ content: "TOTAL SEMUA", colSpan: 4,
-        styles: { halign: "right", fillColor: [213, 238, 229],
+        styles: { halign: "right", fillColor: [233, 203, 213],
             fontStyle: "bold" } },
         { content: rupiah(totalSemua), styles: {
-            fillColor: [213, 238, 229], fontStyle: "bold" } }]);
+            fillColor: [233, 203, 213], fontStyle: "bold" } }]);
 
     // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
     const tinggi = Math.max(210, 38 + body.length * 8);
@@ -11143,7 +11143,7 @@ async function exportPenjualanPDF() {
         body,
         theme: "grid",
         styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
-        headStyles: { fillColor: [24, 143, 134], textColor: 255 },
+        headStyles: { fillColor: [128, 0, 32], textColor: 255 },
         columnStyles: {
             0: { cellWidth: 23 }, 1: { cellWidth: "auto" },
             2: { cellWidth: 16, halign: "center" },

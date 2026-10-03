@@ -192,7 +192,7 @@ select {
 }
 
 .success {
-    color: #15803d;
+    color: #800020;
 }
 
 .error {
@@ -309,7 +309,7 @@ select {
 }
 
 .stock-aman {
-    color: #15803d;
+    color: #800020;
 
     font-weight: bold;
 }
@@ -461,14 +461,14 @@ select {
 /* Hijau */
 
 .stat-success {
-    background: #d1e7dd;
+    background: #f4e5ea;
 
-    border-color: #a3cfbb !important;
+    border-color: #dfb7c4 !important;
 }
 
 .stat-success small,
 .stat-success strong {
-    color: #0f5132;
+    color: #4d0013;
 }
 
 
@@ -491,9 +491,9 @@ select {
 ===================================================== */
 
 .database-info {
-    background: #f0fdf4;
+    background: #faf2f5;
 
-    border: 1px solid #bbf7d0;
+    border: 1px solid #f4e5ea;
 
     padding: 12px;
 
@@ -609,7 +609,7 @@ select {
 }
 
 .toast.success {
-    background: #198754;
+    background: #800020;
 }
 
 .toast.error {
@@ -969,7 +969,7 @@ footer small {
 }
 
 .history-masuk {
-    color: #198754;
+    color: #800020;
     font-weight: 700;
 }
 
@@ -1056,7 +1056,7 @@ body.auth-locked .auth-gate {
     padding: 24px;
     background:
         radial-gradient(circle at 18% 12%, rgba(123, 114, 255, .2), transparent 34%),
-        radial-gradient(circle at 82% 84%, rgba(55, 215, 255, .1), transparent 32%),
+        radial-gradient(circle at 82% 84%, rgba(182, 107, 128, .1), transparent 32%),
         #050816;
 }
 
@@ -1075,9 +1075,9 @@ body.auth-locked .auth-gate {
     width: 48px;
     height: 48px;
     place-items: center;
-    border: 1px solid rgba(55, 215, 255, .24);
+    border: 1px solid rgba(182, 107, 128, .24);
     border-radius: 15px;
-    background: linear-gradient(145deg, rgba(123, 114, 255, .2), rgba(55, 215, 255, .1));
+    background: linear-gradient(145deg, rgba(123, 114, 255, .2), rgba(182, 107, 128, .1));
     color: var(--app-cyan);
 }
 
@@ -1141,8 +1141,8 @@ body.auth-locked .auth-gate {
 }
 
 .auth-form input:focus {
-    border-color: rgba(55, 215, 255, .72);
-    box-shadow: 0 0 0 3px rgba(55, 215, 255, .09);
+    border-color: rgba(182, 107, 128, .72);
+    box-shadow: 0 0 0 3px rgba(182, 107, 128, .09);
 }
 
 .auth-form input::placeholder {
@@ -1161,11 +1161,11 @@ body.auth-locked .auth-gate {
 }
 
 .auth-status.is-success {
-    color: #8ceac6;
+    color: #dfb7c4;
 }
 
 .auth-status.is-loading {
-    color: #9eeaff;
+    color: #f4e5ea;
 }
 
 .auth-primary-button,
@@ -1478,8 +1478,8 @@ table {
 }
 
 #stockTable .stock-badge.stock-aman {
-    background: #dcfce7;
-    color: #15803d;
+    background: #faf2f5;
+    color: #800020;
 }
 
 @media (max-width: 600px) {
@@ -1672,8 +1672,8 @@ table {
             #ef4444,
             #f59e0b,
             #eab308,
-            #22c55e,
-            #06b6d4,
+            #800020,
+            #800020,
             #3b82f6,
             #8b5cf6,
             #ec4899,
@@ -2066,7 +2066,7 @@ table {
 }
 
 .excel-accent {
-    background: #16a34a;
+    background: #800020;
 }
 
 .pdf-accent {
@@ -2433,7 +2433,7 @@ table {
 }
 
 .modern-stock-table #stockTable .stock-in-btn {
-    color: #15803d;
+    color: #800020;
 }
 
 .modern-stock-table #stockTable .stock-out-btn {
@@ -2441,8 +2441,8 @@ table {
 }
 
 .modern-stock-table #stockTable .stock-in-btn:hover {
-    background: #dcfce7;
-    color: #166534;
+    background: #faf2f5;
+    color: #800020;
 }
 
 .modern-stock-table #stockTable .stock-out-btn:hover {
@@ -2722,7 +2722,7 @@ table {
 }
 
 #toast.toast.success {
-    background: #137a50;
+    background: #800020;
 }
 
 #toast.toast.error {
@@ -3359,9 +3359,9 @@ label {
 }
 
 #databaseStatus.status.success {
-    border-color: #bbebd2;
-    background: #effbf4;
-    color: #13734b;
+    border-color: #f4e5ea;
+    background: #faf2f5;
+    color: #800020;
 }
 
 #databaseStatus.status.error {
@@ -3612,10 +3612,10 @@ footer small {
     max-width: 100%;
     min-height: 27px;
     padding: 5px 9px;
-    border: 1px solid #c7ead6;
+    border: 1px solid #f4e5ea;
     border-radius: 999px;
-    background: #f0faf4;
-    color: #14724a;
+    background: #faf2f5;
+    color: #800020;
     font-size: 9.5px;
     font-weight: 600;
     line-height: 1.35;
@@ -4120,7 +4120,7 @@ footer small {
 }
 
 .modern-export-options .excel-accent {
-    background: #168454;
+    background: #800020;
 }
 
 .modern-export-options .pdf-accent {
@@ -4154,7 +4154,7 @@ footer small {
 }
 
 .database-status-icon-success {
-    color: #15915b;
+    color: #800020;
 }
 
 .database-status-icon-error {
@@ -4296,7 +4296,7 @@ footer small {
 }
 
 .toast.success .toast-status-icon {
-    color: #dcfce7;
+    color: #faf2f5;
 }
 
 .toast.error .toast-status-icon {
@@ -4415,8 +4415,8 @@ footer small {
     --app-muted: #a9b6d3;
     --app-accent: #7b72ff;
     --app-accent-soft: rgba(123, 114, 255, .16);
-    --app-cyan: #37d7ff;
-    --app-green: #53e0ac;
+    --app-cyan: #b66b80;
+    --app-green: #b66b80;
     --app-red: #ff6f91;
     --app-yellow: #f0bb4f;
     --app-radius: 16px;
@@ -4431,7 +4431,7 @@ body {
     min-width: 320px;
     background:
         radial-gradient(circle at 82% 0, rgba(123, 114, 255, .13), transparent 29%),
-        radial-gradient(circle at 55% 52%, rgba(55, 215, 255, .045), transparent 34%),
+        radial-gradient(circle at 55% 52%, rgba(182, 107, 128, .045), transparent 34%),
         var(--app-bg);
     color: var(--app-text-soft);
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
@@ -4477,7 +4477,7 @@ body {
     place-items: center;
     border: 1px solid rgba(123, 114, 255, .28);
     border-radius: 12px;
-    background: linear-gradient(135deg, rgba(123, 114, 255, .24), rgba(55, 215, 255, .12));
+    background: linear-gradient(135deg, rgba(123, 114, 255, .24), rgba(182, 107, 128, .12));
     box-shadow: 0 10px 28px rgba(31, 36, 99, .28);
 }
 
@@ -4567,10 +4567,10 @@ body {
     gap: 9px;
     margin-top: auto;
     padding: 10px 11px;
-    border: 1px solid rgba(83, 224, 172, .17);
+    border: 1px solid rgba(182, 107, 128, .17);
     border-radius: 12px;
-    background: rgba(83, 224, 172, .075);
-    color: #a8f0d3;
+    background: rgba(182, 107, 128, .075);
+    color: #f4e5ea;
     font-size: 11px;
 }
 
@@ -4629,10 +4629,10 @@ body {
     gap: 7px;
     margin: 0;
     padding: 8px 11px;
-    border: 1px solid rgba(83, 224, 172, .22);
+    border: 1px solid rgba(182, 107, 128, .22);
     border-radius: 11px;
-    background: rgba(83, 224, 172, .08);
-    color: #a8f0d3;
+    background: rgba(182, 107, 128, .08);
+    color: #f4e5ea;
     font-size: 12px;
     white-space: nowrap;
 }
@@ -4726,10 +4726,10 @@ body {
     align-items: center;
     gap: 7px;
     padding: 6px 9px;
-    border: 1px solid rgba(83, 224, 172, .18);
+    border: 1px solid rgba(182, 107, 128, .18);
     border-radius: 999px;
-    background: rgba(83, 224, 172, .075);
-    color: #a8f0d3;
+    background: rgba(182, 107, 128, .075);
+    color: #f4e5ea;
     font-size: 11px;
     white-space: nowrap;
 }
@@ -4739,7 +4739,7 @@ body {
     height: 7px;
     border-radius: 50%;
     background: var(--app-green);
-    box-shadow: 0 0 11px rgba(83, 224, 172, .75);
+    box-shadow: 0 0 11px rgba(182, 107, 128, .75);
 }
 
 .dashboard-card .stats {
@@ -4772,7 +4772,7 @@ body {
     width: 112px;
     height: 112px;
     border-radius: 50%;
-    background: rgba(55, 215, 255, .045);
+    background: rgba(182, 107, 128, .045);
     content: "";
 }
 
@@ -4798,7 +4798,7 @@ body {
 }
 
 .dashboard-card .stat-success {
-    border-top-color: rgba(83, 224, 172, .65);
+    border-top-color: rgba(182, 107, 128, .65);
 }
 
 .dashboard-card .stat-warning {
@@ -4931,7 +4931,7 @@ body {
 
 .dashboard-card .target-progress-rainbow {
     width: 100%;
-    background: linear-gradient(90deg, #ef6f91, #f0bb4f, #53e0ac, #37d7ff, #7b72ff);
+    background: linear-gradient(90deg, #ef6f91, #f0bb4f, #b66b80, #b66b80, #7b72ff);
 }
 
 .dashboard-card .target-card-values {
@@ -5302,7 +5302,7 @@ body > footer {
     place-items: center;
     border: 1px solid rgba(123, 114, 255, .28);
     border-radius: 11px;
-    background: linear-gradient(145deg, rgba(123, 114, 255, .2), rgba(55, 215, 255, .1));
+    background: linear-gradient(145deg, rgba(123, 114, 255, .2), rgba(182, 107, 128, .1));
     color: #aaa5ff;
     box-shadow: 0 9px 24px rgba(20, 24, 76, .24);
 }
@@ -5334,10 +5334,10 @@ body > footer {
     align-items: center;
     gap: 7px;
     padding: 6px 9px;
-    border: 1px solid rgba(83, 224, 172, .2);
+    border: 1px solid rgba(182, 107, 128, .2);
     border-radius: 999px;
-    background: rgba(83, 224, 172, .075);
-    color: #a8f0d3;
+    background: rgba(182, 107, 128, .075);
+    color: #f4e5ea;
     font-size: 11px;
     font-weight: 500;
     white-space: nowrap;
@@ -5454,7 +5454,7 @@ body > footer {
     border: 1px solid rgba(123, 114, 255, .3);
     border-radius: 12px;
     background:
-        radial-gradient(circle at 100% 0, rgba(55, 215, 255, .11), transparent 50%),
+        radial-gradient(circle at 100% 0, rgba(182, 107, 128, .11), transparent 50%),
         linear-gradient(145deg, rgba(123, 114, 255, .16), rgba(7, 13, 31, .66));
     box-shadow: inset 3px 0 0 var(--app-accent);
 }
@@ -5465,7 +5465,7 @@ body > footer {
     top: auto;
     width: 100px;
     height: 100px;
-    background: rgba(55, 215, 255, .04);
+    background: rgba(182, 107, 128, .04);
 }
 
 #penjualan .sales-total-card > span {
@@ -5514,10 +5514,10 @@ body > footer {
     min-height: 32px;
     align-items: center;
     padding: 6px 10px;
-    border: 1px solid rgba(83, 224, 172, .2);
+    border: 1px solid rgba(182, 107, 128, .2);
     border-radius: 999px;
-    background: rgba(83, 224, 172, .075);
-    color: #a8f0d3;
+    background: rgba(182, 107, 128, .075);
+    color: #f4e5ea;
     font-size: 11px;
     font-weight: 500;
     line-height: 1.35;
@@ -5775,10 +5775,10 @@ body > footer {
     height: 38px;
     flex: 0 0 auto;
     place-items: center;
-    border: 1px solid rgba(55, 215, 255, .22);
+    border: 1px solid rgba(182, 107, 128, .22);
     border-radius: 11px;
-    background: linear-gradient(145deg, rgba(55, 215, 255, .15), rgba(123, 114, 255, .11));
-    color: #7de4ff;
+    background: linear-gradient(145deg, rgba(182, 107, 128, .15), rgba(123, 114, 255, .11));
+    color: #dfb7c4;
     box-shadow: 0 9px 24px rgba(13, 54, 87, .2);
 }
 
@@ -5864,8 +5864,8 @@ body > footer {
     height: 23px;
     place-items: center;
     border-radius: 7px;
-    background: rgba(55, 215, 255, .1);
-    color: #7de4ff;
+    background: rgba(182, 107, 128, .1);
+    color: #dfb7c4;
 }
 
 #stok-barang .modern-export-leading-icon svg,
@@ -6002,7 +6002,7 @@ body > footer {
 #stok-barang .search-label-icon {
     width: 14px;
     height: 14px;
-    color: #7de4ff;
+    color: #dfb7c4;
 }
 
 #stok-barang .form-control,
@@ -6171,9 +6171,9 @@ body > footer {
 }
 
 #stok-barang #stockTable .stock-badge.stock-aman {
-    border-color: rgba(83, 224, 172, .18);
-    background: rgba(83, 224, 172, .09);
-    color: #a8f0d3;
+    border-color: rgba(182, 107, 128, .18);
+    background: rgba(182, 107, 128, .09);
+    color: #f4e5ea;
 }
 
 #stok-barang #stockTable .stock-badge.stock-menipis {
@@ -6217,7 +6217,7 @@ body > footer {
 }
 
 #stok-barang #stockTable .stock-in-btn {
-    color: #96ebc9;
+    color: #f4e5ea;
 }
 
 #stok-barang #stockTable .stock-out-btn {
@@ -6225,8 +6225,8 @@ body > footer {
 }
 
 #stok-barang #stockTable .stock-in-btn:hover {
-    background: rgba(83, 224, 172, .12);
-    color: #b8f4dc;
+    background: rgba(182, 107, 128, .12);
+    color: #f4e5ea;
 }
 
 #stok-barang #stockTable .stock-out-btn:hover {
@@ -6538,7 +6538,7 @@ body > footer {
 #tambahBarangModal .modal-title-icon {
     width: 20px;
     height: 20px;
-    color: #8fe8ff;
+    color: #f4e5ea;
 }
 
 #transactionModal .modal-product {
@@ -6691,7 +6691,7 @@ body > footer {
     place-items: center;
     border: 1px solid rgba(123, 114, 255, .26);
     border-radius: 11px;
-    background: linear-gradient(145deg, rgba(123, 114, 255, .18), rgba(55, 215, 255, .08));
+    background: linear-gradient(145deg, rgba(123, 114, 255, .18), rgba(182, 107, 128, .08));
     color: #aaa5ff;
     box-shadow: 0 9px 24px rgba(20, 24, 76, .22);
 }
@@ -6805,8 +6805,8 @@ body > footer {
     height: 23px;
     place-items: center;
     border-radius: 7px;
-    background: rgba(55, 215, 255, .1);
-    color: #7de4ff;
+    background: rgba(182, 107, 128, .1);
+    color: #dfb7c4;
 }
 
 #catatan-penjualan .modern-secondary-button svg {
@@ -6844,7 +6844,7 @@ body > footer {
 #catatan-penjualan .sales-filter-control label .ui-svg-icon {
     width: 13px;
     height: 13px;
-    color: #7de4ff;
+    color: #dfb7c4;
 }
 
 #catatan-penjualan .modern-sales-filter .form-select {
@@ -7013,7 +7013,7 @@ body > footer {
 }
 
 #catatan-penjualan .modern-sales-table .edit-history-btn {
-    color: #8fe8ff;
+    color: #f4e5ea;
 }
 
 #catatan-penjualan .modern-sales-table .delete-history-btn {
@@ -7021,9 +7021,9 @@ body > footer {
 }
 
 #catatan-penjualan .modern-sales-table .edit-history-btn:hover {
-    border-color: rgba(55, 215, 255, .18);
-    background: rgba(55, 215, 255, .09);
-    color: #b9f1ff;
+    border-color: rgba(182, 107, 128, .18);
+    background: rgba(182, 107, 128, .09);
+    color: #f4e5ea;
 }
 
 #catatan-penjualan .modern-sales-table .delete-history-btn:hover {
@@ -7178,7 +7178,7 @@ body > footer {
 #editPenjualanModal .modal-title-icon {
     width: 20px;
     height: 20px;
-    color: #8fe8ff;
+    color: #f4e5ea;
 }
 
 #editPenjualanModal .modal-content label {
@@ -7305,10 +7305,10 @@ body > footer {
     height: 38px;
     flex: 0 0 auto;
     place-items: center;
-    border: 1px solid rgba(55, 215, 255, .24);
+    border: 1px solid rgba(182, 107, 128, .24);
     border-radius: 11px;
-    background: linear-gradient(145deg, rgba(55, 215, 255, .15), rgba(123, 114, 255, .09));
-    color: #7de4ff;
+    background: linear-gradient(145deg, rgba(182, 107, 128, .15), rgba(123, 114, 255, .09));
+    color: #dfb7c4;
     box-shadow: 0 9px 24px rgba(9, 39, 73, .22);
 }
 
@@ -7358,13 +7358,13 @@ body > footer {
 }
 
 #riwayat-transaksi .modern-history-month-nav button:hover:not(:disabled) {
-    border-color: rgba(55, 215, 255, .18);
-    background: rgba(55, 215, 255, .08);
+    border-color: rgba(182, 107, 128, .18);
+    background: rgba(182, 107, 128, .08);
     color: var(--app-text);
 }
 
 #riwayat-transaksi .modern-history-month-nav button:focus-visible {
-    outline: 2px solid rgba(55, 215, 255, .72);
+    outline: 2px solid rgba(182, 107, 128, .72);
     outline-offset: 1px;
 }
 
@@ -7511,15 +7511,15 @@ body > footer {
     height: 30px;
     place-items: center;
     padding: 0 !important;
-    border: 1px solid rgba(55, 215, 255, .18);
+    border: 1px solid rgba(182, 107, 128, .18);
     border-radius: 8px;
-    background: rgba(55, 215, 255, .08) !important;
-    color: #8fe8ff !important;
+    background: rgba(182, 107, 128, .08) !important;
+    color: #f4e5ea !important;
 }
 
 #riwayat-transaksi .history-edit-transaction-btn:hover {
-    background: rgba(55, 215, 255, .15) !important;
-    color: #c4f5ff !important;
+    background: rgba(182, 107, 128, .15) !important;
+    color: #faf2f5 !important;
 }
 
 #riwayat-transaksi .history-edit-transaction-btn svg {
@@ -7591,10 +7591,10 @@ body > footer {
 .export-confirm-icon {
     width: 44px;
     height: 44px;
-    border: 1px solid rgba(55, 215, 255, .2);
+    border: 1px solid rgba(182, 107, 128, .2);
     border-radius: 13px;
-    background: linear-gradient(145deg, rgba(55, 215, 255, .14), rgba(123, 114, 255, .12));
-    color: #7de4ff;
+    background: linear-gradient(145deg, rgba(182, 107, 128, .14), rgba(123, 114, 255, .12));
+    color: #dfb7c4;
     box-shadow: 0 10px 28px rgba(6, 34, 68, .28);
 }
 
@@ -7759,7 +7759,7 @@ summary:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible {
-    outline: 2px solid rgba(55, 215, 255, .78);
+    outline: 2px solid rgba(182, 107, 128, .78);
     outline-offset: 2px;
 }
 
@@ -8149,7 +8149,7 @@ select:disabled {
         border-radius: 999px;
         background: linear-gradient(90deg, var(--app-accent), var(--app-cyan));
         content: "";
-        box-shadow: 0 0 9px rgba(55, 215, 255, .42);
+        box-shadow: 0 0 9px rgba(182, 107, 128, .42);
     }
 }
 
@@ -8255,12 +8255,12 @@ select:disabled {
 }
 
 #stok-barang .table-sort-button:hover .table-sort-icon {
-    color: #d7f7ff;
+    color: #faf2f5;
     transform: translateY(-1px);
 }
 
 #stok-barang .table-sort-button:focus-visible {
-    outline: 2px solid rgba(55, 215, 255, .86);
+    outline: 2px solid rgba(182, 107, 128, .86);
     outline-offset: 3px;
 }
 
@@ -8334,7 +8334,7 @@ select:disabled {
 #editPenjualanModal .modal-content select:focus-visible,
 #tambahBarangModal .modal-content input:focus-visible,
 #tambahBarangModal .modal-content select:focus-visible {
-    outline: 2px solid rgba(55, 215, 255, .72);
+    outline: 2px solid rgba(182, 107, 128, .72);
     outline-offset: 2px;
 }
 
@@ -8440,9 +8440,9 @@ select:disabled {
     width: 46px;
     height: 46px;
     place-items: center;
-    border: 1px solid rgba(55, 215, 255, .2);
+    border: 1px solid rgba(182, 107, 128, .2);
     border-radius: 14px;
-    background: linear-gradient(145deg, rgba(55, 215, 255, .14), rgba(123, 114, 255, .12));
+    background: linear-gradient(145deg, rgba(182, 107, 128, .14), rgba(123, 114, 255, .12));
     color: var(--app-cyan);
     box-shadow: 0 12px 30px rgba(4, 23, 49, .28);
 }
@@ -8579,7 +8579,7 @@ select:disabled {
 #toast.toast.success {
     --toast-accent: var(--app-green);
     background:
-        radial-gradient(circle at 100% 0%, rgba(83, 224, 172, .11), transparent 45%),
+        radial-gradient(circle at 100% 0%, rgba(182, 107, 128, .11), transparent 45%),
         rgba(15, 23, 48, .97);
 }
 
@@ -8714,10 +8714,10 @@ input[type="date"]::-webkit-datetime-edit-year-field {
 }
 
 .modern-data-table-wrapper[tabindex="0"]:focus-visible {
-    border-color: rgba(55, 215, 255, .68);
-    outline: 2px solid rgba(55, 215, 255, .72);
+    border-color: rgba(182, 107, 128, .68);
+    outline: 2px solid rgba(182, 107, 128, .72);
     outline-offset: 3px;
-    box-shadow: 0 0 0 4px rgba(55, 215, 255, .08);
+    box-shadow: 0 0 0 4px rgba(182, 107, 128, .08);
 }
 
 #penjualan .sales-stock-info {
@@ -8910,7 +8910,7 @@ dialog::backdrop {
     height: 28px;
     border-radius: 999px;
     background: var(--brand-color);
-    box-shadow: 0 0 10px rgba(55, 215, 255, .12);
+    box-shadow: 0 0 10px rgba(182, 107, 128, .12);
 }
 
 .dashboard-card .target-brand-name {
@@ -9034,8 +9034,8 @@ dialog::backdrop {
         90deg,
         #ef6f91,
         #f0bb4f,
-        #53e0ac,
-        #37d7ff,
+        #b66b80,
+        #b66b80,
         #7b72ff
     );
 }
@@ -9160,7 +9160,7 @@ dialog::backdrop {
             linear-gradient(
                 135deg,
                 rgba(123, 114, 255, .22),
-                rgba(55, 215, 255, .1)
+                rgba(182, 107, 128, .1)
             );
     }
 
@@ -9230,7 +9230,7 @@ dialog::backdrop {
     border: 1px solid var(--app-border);
     border-radius: 16px;
     background:
-        radial-gradient(circle at 100% 0, rgba(83, 224, 172, .1), transparent 38%),
+        radial-gradient(circle at 100% 0, rgba(182, 107, 128, .1), transparent 38%),
         #0d162d;
     color: var(--app-text-soft);
     box-shadow: var(--app-shadow-dialog);
@@ -9251,7 +9251,7 @@ dialog::backdrop {
     width: 20px;
     height: 20px;
     flex: 0 0 auto;
-    color: #8fe8ff;
+    color: #f4e5ea;
 }
 
 #importExcelModal .import-excel-help {
@@ -9381,9 +9381,9 @@ dialog::backdrop {
 }
 
 #importExcelModal .import-row-ready {
-    border-color: rgba(83, 224, 172, .22);
-    background: rgba(83, 224, 172, .1);
-    color: #a8f0d3;
+    border-color: rgba(182, 107, 128, .22);
+    background: rgba(182, 107, 128, .1);
+    color: #f4e5ea;
 }
 
 #importExcelModal .import-row-skipped {
@@ -10317,8 +10317,8 @@ select:focus-visible {
     --app-muted: #9297a3;
     --app-accent: #7180f3;
     --app-accent-soft: rgba(113, 128, 243, .13);
-    --app-cyan: #43c3df;
-    --app-green: #48c997;
+    --app-cyan: #b66b80;
+    --app-green: #800020;
     --app-red: #df687e;
     --app-yellow: #d7aa47;
     --dhouse-gold: var(--app-accent);
@@ -10359,9 +10359,9 @@ body.auth-locked .auth-gate {
 }
 
 #stok-barang .modern-title-icon {
-    border-color: rgba(67, 195, 223, .25) !important;
-    background: rgba(67, 195, 223, .1) !important;
-    color: #68d7ee !important;
+    border-color: rgba(182, 107, 128, .25) !important;
+    background: rgba(182, 107, 128, .1) !important;
+    color: #dfb7c4 !important;
 }
 
 #catatan-penjualan .modern-title-icon {
@@ -10371,9 +10371,9 @@ body.auth-locked .auth-gate {
 }
 
 #riwayat-transaksi .modern-title-icon {
-    border-color: rgba(72, 201, 151, .25) !important;
-    background: rgba(72, 201, 151, .1) !important;
-    color: #73ddb5 !important;
+    border-color: rgba(128, 0, 32, .25) !important;
+    background: rgba(128, 0, 32, .1) !important;
+    color: #dfb7c4 !important;
 }
 
 .auth-heading > span,
@@ -10465,9 +10465,9 @@ body.auth-locked .auth-gate {
 .app-sidebar-note,
 .app-topbar #databaseStatus.status,
 .dashboard-live-badge {
-    border-color: rgba(72, 201, 151, .24);
-    background: rgba(72, 201, 151, .08);
-    color: #79ddb8;
+    border-color: rgba(128, 0, 32, .24);
+    background: rgba(128, 0, 32, .08);
+    color: #dfb7c4;
 }
 
 #penjualan .sales-entry-indicator {
@@ -10481,7 +10481,7 @@ body.auth-locked .auth-gate {
 }
 
 .dashboard-card .stat-success {
-    border-top-color: rgba(72, 201, 151, .7);
+    border-top-color: rgba(128, 0, 32, .7);
 }
 
 .dashboard-card .stat-warning {
@@ -10494,7 +10494,7 @@ body.auth-locked .auth-gate {
 }
 
 .dashboard-card .target-progress-rainbow {
-    background: linear-gradient(90deg, #df687e, #d7aa47, #48c997, #43c3df, #8b85ff);
+    background: linear-gradient(90deg, #df687e, #d7aa47, #800020, #b66b80, #8b85ff);
 }
 
 .container .table {
@@ -10540,8 +10540,8 @@ body.auth-locked .auth-gate {
 }
 
 .modern-stock-table #stockTable .stock-in-btn:hover {
-    background: rgba(72, 201, 151, .12);
-    color: #75ddb7;
+    background: rgba(128, 0, 32, .12);
+    color: #dfb7c4;
 }
 
 .modern-stock-table #stockTable .stock-out-btn:hover {
@@ -10550,9 +10550,9 @@ body.auth-locked .auth-gate {
 }
 
 #stockTable .stock-badge.stock-aman {
-    border-color: rgba(72, 201, 151, .2);
-    background: rgba(72, 201, 151, .12);
-    color: #75ddb7;
+    border-color: rgba(128, 0, 32, .2);
+    background: rgba(128, 0, 32, .12);
+    color: #dfb7c4;
 }
 
 #stockTable .stock-badge.stock-menipis {
@@ -10569,9 +10569,9 @@ body.auth-locked .auth-gate {
 
 .modern-sales-table .edit-history-btn,
 #riwayat-transaksi .history-edit-transaction-btn {
-    border-color: rgba(67, 195, 223, .22) !important;
-    background: rgba(67, 195, 223, .08) !important;
-    color: #68d7ee !important;
+    border-color: rgba(182, 107, 128, .22) !important;
+    background: rgba(182, 107, 128, .08) !important;
+    color: #dfb7c4 !important;
 }
 
 .modern-sales-table .delete-history-btn {
@@ -10595,8 +10595,8 @@ body.auth-locked .auth-gate {
 
 #stok-barang .modern-export-leading-icon,
 #stok-barang .search-label-icon {
-    background: rgba(67, 195, 223, .09);
-    color: #68d7ee;
+    background: rgba(182, 107, 128, .09);
+    color: #dfb7c4;
 }
 
 #catatan-penjualan .modern-secondary-button .modern-export-leading-icon,
@@ -10710,12 +10710,12 @@ select:focus-visible {
     --app-muted: #6f7b90;
     --app-accent: #2f67f6;
     --app-accent-soft: rgba(47, 103, 246, .1);
-    --app-cyan: #159fbd;
-    --app-green: #16ad73;
+    --app-cyan: #800020;
+    --app-green: #800020;
     --app-red: #e6535d;
     --app-yellow: #eea600;
     --editorial-blue-soft: #eef4ff;
-    --editorial-green-soft: #ecfaf4;
+    --editorial-green-soft: #faf2f5;
     --editorial-red-soft: #fff0f1;
     --editorial-amber-soft: #fff7e3;
     --editorial-purple: #8a48df;
@@ -10823,9 +10823,9 @@ textarea {
 .app-sidebar-note,
 .app-topbar #databaseStatus.status,
 .dashboard-live-badge {
-    border-color: #ccebdd !important;
+    border-color: #f4e5ea !important;
     background: var(--editorial-green-soft) !important;
-    color: #12805a !important;
+    color: #800020 !important;
 }
 
 .app-sidebar-note .ui-svg-icon,
@@ -10901,7 +10901,7 @@ textarea {
 #stok-barang .modern-export-leading-icon,
 #stok-barang .search-label-icon,
 #tambahBarangModal .modal-title-icon {
-    border-color: #cfeee1 !important;
+    border-color: #f4e5ea !important;
     background: var(--editorial-green-soft) !important;
     color: var(--app-green) !important;
 }
@@ -10959,7 +10959,7 @@ textarea {
 }
 
 .dashboard-card .stat-success {
-    border-color: #d5f0e5 !important;
+    border-color: #faf2f5 !important;
     border-left-color: var(--app-green) !important;
     background: var(--editorial-green-soft) !important;
 }
@@ -11039,7 +11039,7 @@ textarea {
 .dashboard-card .target-brand-rainbow .target-brand-indicator,
 .dashboard-card .target-brand-rainbow .target-progress-fill,
 .dashboard-card .target-progress-rainbow {
-    background: linear-gradient(90deg, #e6535d, #eea600, #16ad73, #159fbd, #8a48df) !important;
+    background: linear-gradient(90deg, #e6535d, #eea600, #800020, #800020, #8a48df) !important;
 }
 
 .auth-brand-mark,
@@ -11277,7 +11277,7 @@ textarea {
 
 .modern-stock-table #stockTable .stock-in-btn,
 #riwayat-transaksi .modern-history-table td.history-masuk {
-    color: #10875e !important;
+    color: #800020 !important;
 }
 
 .modern-stock-table #stockTable .stock-out-btn,
@@ -11288,7 +11288,7 @@ textarea {
 
 .modern-stock-table #stockTable .stock-in-btn:hover {
     background: var(--editorial-green-soft) !important;
-    color: #0d7652 !important;
+    color: #800020 !important;
 }
 
 .modern-stock-table #stockTable .stock-out-btn:hover {
@@ -11297,9 +11297,9 @@ textarea {
 }
 
 #stockTable .stock-badge.stock-aman {
-    border-color: #c8ebdc !important;
+    border-color: #f4e5ea !important;
     background: var(--editorial-green-soft) !important;
-    color: #0e8059 !important;
+    color: #800020 !important;
 }
 
 #stockTable .stock-badge.stock-menipis {
@@ -11354,9 +11354,9 @@ textarea {
 }
 
 #importExcelModal .import-row-ready {
-    border-color: #c8ebdc !important;
+    border-color: #f4e5ea !important;
     background: var(--editorial-green-soft) !important;
-    color: #0e8059 !important;
+    color: #800020 !important;
 }
 
 #importExcelModal .import-row-skipped {
@@ -11646,7 +11646,7 @@ select:focus-visible {
 }
 
 #stok-barang .search-label-icon {
-    color: #168565 !important;
+    color: #800020 !important;
 }
 
 #stok-barang .stock-filter-toolbar {
@@ -11966,7 +11966,7 @@ select:focus-visible {
 }
 
 #toast.toast.success {
-    border-color: #c9e4d8 !important;
+    border-color: #f4e5ea !important;
 }
 
 #toast.toast.error {
@@ -11979,7 +11979,7 @@ select:focus-visible {
 }
 
 #toast.toast.success .toast-status-icon {
-    color: #16815d !important;
+    color: #800020 !important;
 }
 
 #toast.toast.error .toast-status-icon {
@@ -12014,7 +12014,7 @@ select:focus-visible {
     border-color: rgba(155, 194, 222, .18) !important;
     background-color: #062b47 !important;
     background-image:
-        radial-gradient(circle at 24% 18%, rgba(19, 126, 179, .28), transparent 42%),
+        radial-gradient(circle at 24% 18%, rgba(128, 0, 32, .28), transparent 42%),
         repeating-linear-gradient(118deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 34px) !important;
     color: #f7fbff !important;
     backdrop-filter: none !important;
@@ -12055,13 +12055,13 @@ select:focus-visible {
 }
 
 .app-topbar #databaseStatus.status {
-    border-color: rgba(137, 226, 193, .28) !important;
+    border-color: rgba(223, 183, 196, .28) !important;
     background: rgba(255, 255, 255, .09) !important;
-    color: #b7eed9 !important;
+    color: #f4e5ea !important;
 }
 
 .app-topbar #databaseStatus.status .database-status-icon {
-    color: #80d8b6 !important;
+    color: #dfb7c4 !important;
 }
 
 .app-logout-button {
@@ -12590,16 +12590,16 @@ select:focus-visible {
     --app-sidebar: #f6f5ee;
     --app-surface: #fffef8;
     --app-surface-raised: #fbfaf4;
-    --app-border: #d9ddd5;
-    --app-border-soft: #e8eae3;
-    --app-text: #25312f;
-    --app-text-soft: #3b4946;
-    --app-muted: #687673;
-    --app-accent: #118f91;
-    --app-accent-soft: #e3f4f0;
-    --app-cyan: #118f91;
-    --editorial-blue-soft: #e3f4f0;
-    --editorial-green-soft: #eaf6ee;
+    --app-border: #dfc5ce;
+    --app-border-soft: #eee0e5;
+    --app-text: #35262c;
+    --app-text-soft: #514047;
+    --app-muted: #806b72;
+    --app-accent: #800020;
+    --app-accent-soft: #f4e5ea;
+    --app-cyan: #800020;
+    --editorial-blue-soft: #f4e5ea;
+    --editorial-green-soft: #f4e5ea;
     --editorial-amber-soft: #fff3d9;
     --dhouse-gold: #d6a738;
     --dhouse-gold-bright: #e8bd55;
@@ -12613,14 +12613,14 @@ body.auth-locked .auth-gate {
 }
 
 .app-sidebar {
-    border-right-color: #d5dad1 !important;
+    border-right-color: #e6d5dc !important;
     background: var(--app-sidebar) !important;
 }
 
 .header,
 .app-topbar {
-    border-color: #3c4845 !important;
-    background-color: #303b39 !important;
+    border-color: #514047 !important;
+    background-color: #35262c !important;
     background-image: none !important;
     color: #f8f8f2 !important;
     -webkit-backdrop-filter: none !important;
@@ -12635,7 +12635,7 @@ body.auth-locked .auth-gate {
 .header p,
 .app-topbar p,
 .app-topbar-eyebrow {
-    color: #c6d9d5 !important;
+    color: #f4e5ea !important;
 }
 
 @media (min-width: 981px) {
@@ -12644,7 +12644,7 @@ body.auth-locked .auth-gate {
         padding: 13px 10px;
         border: 0 !important;
         border-radius: 17px;
-        background: #303b39 !important;
+        background: #35262c !important;
     }
 
     .app-sidebar .header-text h1 {
@@ -12652,7 +12652,7 @@ body.auth-locked .auth-gate {
     }
 
     .app-sidebar .header-text p {
-        color: #c6d9d5 !important;
+        color: #f4e5ea !important;
     }
 }
 
@@ -12660,21 +12660,21 @@ body.auth-locked .auth-gate {
     margin: 3px 8px;
     border: 1px solid transparent !important;
     border-radius: 13px;
-    color: #50605b !important;
+    color: #514047 !important;
 }
 
 .app-nav a:hover,
 .app-nav a:focus-visible {
-    border-color: #d7e2dc !important;
+    border-color: #e6d5dc !important;
     background: #fffef8 !important;
-    color: #146f72 !important;
+    color: #800020 !important;
 }
 
 .app-nav a.active {
-    border-color: #087f82 !important;
-    background: #119b9d !important;
+    border-color: #650019 !important;
+    background: #800020 !important;
     color: #ffffff !important;
-    box-shadow: 0 5px 11px rgba(12, 108, 109, .18) !important;
+    box-shadow: 0 5px 11px rgba(77, 0, 19, .18) !important;
 }
 
 .container > .card,
@@ -12683,9 +12683,9 @@ body.auth-locked .auth-gate {
 .modal-content,
 .export-confirm-card,
 .app-message-card {
-    border-color: #e1e5db !important;
+    border-color: #e6d5dc !important;
     background: var(--app-surface) !important;
-    box-shadow: 0 5px 16px rgba(57, 67, 54, .09) !important;
+    box-shadow: 0 5px 16px rgba(53, 38, 44, .09) !important;
 }
 
 .container > .card,
@@ -12696,17 +12696,17 @@ body.auth-locked .auth-gate {
 .dashboard-card .stat,
 .dashboard-card .sales-target-section,
 #penjualan .sales-total-card {
-    border-color: #e2e6dd !important;
-    background: #f8f9f2 !important;
-    box-shadow: 0 3px 9px rgba(57, 67, 54, .055) !important;
+    border-color: #e6d5dc !important;
+    background: #faf2f5 !important;
+    box-shadow: 0 3px 9px rgba(53, 38, 44, .055) !important;
 }
 
 .modern-title-icon,
 #penjualan .modern-title-icon,
 #riwayat-transaksi .modern-title-icon {
-    border-color: #d5e9e2 !important;
-    background: #e7f4ee !important;
-    color: #12898a !important;
+    border-color: #f4e5ea !important;
+    background: #f4e5ea !important;
+    color: #800020 !important;
 }
 
 .auth-primary-button,
@@ -12715,8 +12715,8 @@ body.auth-locked .auth-gate {
 #simpanPenjualanButton,
 .modal-actions .btn-primary,
 .export-confirm-yes {
-    border-color: #118f91 !important;
-    background: #118f91 !important;
+    border-color: #800020 !important;
+    background: #800020 !important;
     color: #ffffff !important;
 }
 
@@ -12726,18 +12726,18 @@ body.auth-locked .auth-gate {
 #stok-barang .stock-filter-toolbar,
 #catatan-penjualan .modern-sales-filter {
     border-color: var(--app-border) !important;
-    background: #f7f8f1 !important;
+    background: #faf2f5 !important;
 }
 
 #riwayat-transaksi .history-filter-options {
     border-color: var(--app-border);
     background: #fffef8;
-    box-shadow: 0 10px 22px rgba(52, 64, 52, .15);
+    box-shadow: 0 10px 22px rgba(53, 38, 44, .15);
 }
 
 #riwayat-transaksi .history-filter-options button[aria-pressed="true"] {
-    background: #e2f3ef;
-    color: #087d7f;
+    background: #faf2f5;
+    color: #650019;
 }
 
 .modern-data-table-wrapper,
@@ -12752,8 +12752,8 @@ body.auth-locked .auth-gate {
 .modern-data-table thead th,
 .modern-sales-table thead th,
 #riwayat-transaksi .modern-history-table thead th {
-    background: #eceee7 !important;
-    color: #596963 !important;
+    background: #f3e9ed !important;
+    color: #514047 !important;
 }
 
 .modern-data-table tbody td,
@@ -12763,15 +12763,15 @@ body.auth-locked .auth-gate {
 }
 
 .app-mobile-nav {
-    border-color: #d8ddd4 !important;
+    border-color: #e6d5dc !important;
     background: #fffef8 !important;
-    box-shadow: 0 5px 17px rgba(48, 60, 50, .13) !important;
+    box-shadow: 0 5px 17px rgba(53, 38, 44, .13) !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 }
 
 .app-mobile-nav a.active {
-    background: #119b9d !important;
+    background: #800020 !important;
     color: #ffffff !important;
 }
 
@@ -12780,7 +12780,7 @@ body.auth-locked .auth-gate {
 }
 
 .app-footer {
-    border-top-color: #dfe3da !important;
+    border-top-color: #e6d5dc !important;
     background: #f6f5ef !important;
 }
 
@@ -12789,46 +12789,46 @@ body.auth-locked .auth-gate {
     min-height: 86px;
     padding: 15px 25px;
     border: 0 !important;
-    border-bottom: 1px solid #dfe3da !important;
+    border-bottom: 1px solid #e6d5dc !important;
     background: #f8f8f2 !important;
     box-shadow: none !important;
 }
 
 .app-topbar h2 {
-    color: #25312f !important;
+    color: #35262c !important;
     font-size: clamp(22px, 2.4vw, 29px);
     line-height: 1.13;
 }
 
 .app-topbar p {
-    color: #687673 !important;
+    color: #806b72 !important;
 }
 
 .app-topbar-eyebrow {
-    color: #168587 !important;
+    color: #800020 !important;
     letter-spacing: .07em;
 }
 
 .app-topbar #databaseStatus.status {
-    border-color: #c8e7d8 !important;
-    background: #eaf6ee !important;
-    color: #267454 !important;
+    border-color: #f4e5ea !important;
+    background: #f4e5ea !important;
+    color: #800020 !important;
 }
 
 .app-topbar #databaseStatus.status .database-status-icon {
-    color: #2a9971 !important;
+    color: #800020 !important;
 }
 
 .app-logout-button {
-    border-color: #d9ddd5 !important;
+    border-color: #dfc5ce !important;
     background: #fffef8 !important;
-    color: #53605c !important;
+    color: #514047 !important;
 }
 
 .app-logout-button:hover {
-    border-color: #b9d6cd !important;
-    background: #eaf6f1 !important;
-    color: #176f71 !important;
+    border-color: #f4e5ea !important;
+    background: #f4e5ea !important;
+    color: #800020 !important;
 }
 
 @media (min-width: 701px) and (max-width: 980px) {
@@ -12844,8 +12844,8 @@ body.auth-locked .auth-gate {
         height: 54px;
         border: 0 !important;
         border-radius: 15px;
-        background: #303b39 !important;
-        box-shadow: 0 4px 10px rgba(48, 59, 57, .14) !important;
+        background: #35262c !important;
+        box-shadow: 0 4px 10px rgba(53, 38, 44, .14) !important;
     }
 
     .app-sidebar .company-logo-shell .company-logo {
@@ -12867,7 +12867,7 @@ body.auth-locked .auth-gate {
 
     .app-mobile-logo {
         border-radius: 12px;
-        background: #303b39 !important;
+        background: #35262c !important;
     }
 
     .app-mobile-logo img {
@@ -12910,29 +12910,29 @@ body.auth-locked .auth-gate {
 }
 
 #stok-barang .modern-import-button {
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
 }
 
 #stok-barang .modern-import-button:hover,
 #stok-barang .modern-export-menu > summary:hover {
-    background: #0d7d80 !important;
+    background: #650019 !important;
     color: #fff !important;
 }
 
 #stok-barang .modern-header-actions > .modern-primary-button {
     border-radius: 999px !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
 }
 
 #stok-barang .modern-header-actions > .modern-primary-button:hover {
-    background: #0d7d80 !important;
+    background: #650019 !important;
 }
 
 #stok-barang .modern-export-menu > summary {
     border-radius: 999px !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
 }
 
@@ -12963,42 +12963,42 @@ body.auth-locked .auth-gate {
 
 /* Match stock table pagination to the cream and teal theme. */
 #stok-barang .stock-pagination-area {
-    background: #f8f9f2;
+    background: #faf2f5;
 }
 
 #stok-barang .stock-pagination button {
-    border-color: #d9ddd5 !important;
+    border-color: #dfc5ce !important;
     background: #fffef8 !important;
-    color: #3b4946 !important;
+    color: #514047 !important;
     box-shadow: none !important;
 }
 
 #stok-barang .stock-pagination button:hover:not(:disabled):not(.active) {
-    border-color: #118f91 !important;
-    background: #e3f4f0 !important;
-    color: #087d7f !important;
+    border-color: #800020 !important;
+    background: #f4e5ea !important;
+    color: #650019 !important;
 }
 
 #stok-barang .stock-pagination button.active,
 #stok-barang .stock-pagination button.active:hover {
-    border-color: #118f91 !important;
-    background: #118f91 !important;
+    border-color: #800020 !important;
+    background: #800020 !important;
     color: #fff !important;
 }
 
 #stok-barang .stock-pagination button:disabled {
-    border-color: #e8eae3 !important;
-    background: #f1f3ed !important;
-    color: #9aa5a0 !important;
+    border-color: #eee0e5 !important;
+    background: #faf2f5 !important;
+    color: #806b72 !important;
 }
 
 #stok-barang .stock-pagination button:focus-visible {
-    outline: 2px solid #118f91;
+    outline: 2px solid #800020;
     outline-offset: 2px;
 }
 
 #stok-barang .pagination-dots {
-    color: #687673;
+    color: #806b72;
 }
 
 /* Sales history controls stay in one aligned toolbar. */
@@ -13040,9 +13040,9 @@ body.auth-locked .auth-gate {
 #catatan-penjualan .modern-title-icon,
 #catatan-penjualan .modern-secondary-button .modern-export-leading-icon,
 #editPenjualanModal .modal-title-icon {
-    border-color: #d5e9e2 !important;
-    background: #e7f4ee !important;
-    color: #12898a !important;
+    border-color: #f4e5ea !important;
+    background: #f4e5ea !important;
+    color: #800020 !important;
 }
 
 #catatan-penjualan .modern-secondary-button .modern-export-leading-icon {
@@ -13182,7 +13182,7 @@ body.auth-locked .auth-gate {
         padding: 5px 10px;
         border: 1px solid var(--app-border-soft);
         border-radius: 10px;
-        background: #f8f9f2;
+        background: #faf2f5;
     }
 
     #penjualan .sales-brand-field label {
@@ -13206,15 +13206,15 @@ body.auth-locked .auth-gate {
         grid-template-columns: minmax(0, 1fr) auto;
         min-height: 65px;
         padding: 11px 13px;
-        border-color: #d5e9e2 !important;
+        border-color: #f4e5ea !important;
         border-radius: 12px;
-        background: #eaf6f1 !important;
+        background: #f4e5ea !important;
     }
 
     #penjualan .sales-total-card > span,
     #penjualan .sales-total-card small {
         grid-column: 1;
-        color: #506b63 !important;
+        color: #514047 !important;
     }
 
     #penjualan .sales-total-card strong {
@@ -13253,7 +13253,7 @@ body.auth-locked .auth-gate {
     padding: 5px 9px;
     border: 1px solid var(--app-border-soft);
     border-radius: 999px;
-    background: #f8f9f2;
+    background: #faf2f5;
     color: var(--app-text-soft);
     font-size: 11px;
     line-height: 1.35;
@@ -13285,8 +13285,8 @@ body.auth-locked .auth-gate {
     flex: 0 0 auto;
     padding: 3px 7px;
     border-radius: 999px;
-    background: #eaf6ee;
-    color: #267454;
+    background: #f4e5ea;
+    color: #800020;
     font-size: 10px;
     font-weight: 600;
     white-space: nowrap;
@@ -13350,20 +13350,20 @@ body.auth-locked .auth-gate {
         align-items: center;
         margin: -3px 0 4px;
         padding: 3px 9px;
-        border: 1px solid #d5e9e2;
+        border: 1px solid #f4e5ea;
         border-radius: 999px;
         background: #fffef8;
-        color: #12898a;
+        color: #800020;
         font-size: 10px;
         font-weight: 600;
     }
 
     #penjualan .sales-today-button[aria-pressed="true"] {
-        background: #e7f4ee;
+        background: #f4e5ea;
     }
 
     #penjualan .sales-today-button:focus-visible {
-        outline: 2px solid #118f91;
+        outline: 2px solid #800020;
         outline-offset: 2px;
     }
 
@@ -13414,10 +13414,10 @@ body.auth-locked .auth-gate {
     justify-content: center;
     gap: 7px;
     padding: 8px 13px;
-    border: 1px solid #b9ded3;
+    border: 1px solid #f4e5ea;
     border-radius: 999px;
-    background: #e8f5ef;
-    color: #137d73;
+    background: #faf2f5;
+    color: #800020;
     font-size: 12px;
     font-weight: 700;
     text-decoration: none;
@@ -13445,8 +13445,8 @@ body.auth-locked .auth-gate {
 #rekap-stok .stock-recap-table td {
     min-width: 51px;
     padding: 8px 6px;
-    border-right: 1px solid #e4e9e5;
-    border-bottom: 1px solid #e4e9e5;
+    border-right: 1px solid #f3e9ed;
+    border-bottom: 1px solid #f3e9ed;
     text-align: center;
     white-space: nowrap;
 }
@@ -13454,8 +13454,8 @@ body.auth-locked .auth-gate {
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #e5f2ec;
-    color: #264d48;
+    background: #f4e5ea;
+    color: #4d0013;
 }
 #rekap-stok .stock-recap-table tr > :first-child {
     position: sticky;
@@ -13468,17 +13468,17 @@ body.auth-locked .auth-gate {
     text-align: left;
     white-space: normal;
 }
-#rekap-stok .stock-recap-table thead tr > :first-child { z-index: 3; background: #e5f2ec; }
+#rekap-stok .stock-recap-table thead tr > :first-child { z-index: 3; background: #f4e5ea; }
 #rekap-stok .stock-recap-table .stock-recap-brand th {
     position: sticky;
     left: 0;
     z-index: 1;
     padding: 9px 12px;
-    background: #e9ece8;
+    background: #f3e9ed;
     font-weight: 800;
     letter-spacing: .04em;
 }
-#rekap-stok .stock-recap-table td.has-movement { background: #e9f6f0; font-weight: 700; }
+#rekap-stok .stock-recap-table td.has-movement { background: #faf2f5; font-weight: 700; }
 #rekap-stok .stock-recap-table td.is-preorder { background: #fff1e1; color: #945823; font-weight: 700; }
 #rekap-stok .stock-recap-empty { padding: 25px !important; text-align: left !important; }
 #rekap-stok .stock-recap-footer { justify-content: space-between; }
@@ -13643,12 +13643,12 @@ body.auth-locked .auth-gate {
     border-radius: 10px;
 }
 #rekap-stok .stock-recap-controls button {
-    background: #118f91;
-    border-color: #118f91;
+    background: #800020;
+    border-color: #800020;
     color: #fff;
 }
 #rekap-stok .stock-recap-controls button:hover {
-    background: #0e787b;
+    background: #650019;
 }
 @media (max-width: 700px) {
     .dashboard-card .dashboard-section-heading {
@@ -13813,8 +13813,8 @@ body.auth-locked .auth-gate {
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button:hover {
-        background: #e7f4ee;
-        color: #087d7f;
+        background: #f4e5ea;
+        color: #650019;
         box-shadow: none;
         transform: none;
     }
@@ -13833,16 +13833,16 @@ body.auth-locked .auth-gate {
 
 /* Sales export uses the same teal as the Stock export action. */
 #catatan-penjualan .sales-export-actions .modern-secondary-button {
-    border-color: #118f91;
-    background: #118f91;
+    border-color: #800020;
+    background: #800020;
     color: #fff;
     box-shadow: none;
 }
 
 #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
 #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
-    border-color: #0d7d80;
-    background: #0d7d80;
+    border-color: #650019;
+    background: #650019;
     color: #fff;
     box-shadow: none;
 }
@@ -13859,14 +13859,14 @@ body.auth-locked .auth-gate {
 
 @media (max-width: 700px) {
     #catatan-penjualan .sales-export-actions {
-        border-color: #118f91;
+        border-color: #800020;
         border-radius: 999px;
-        background: #118f91;
+        background: #800020;
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
         border: 0;
-        background: #118f91;
+        background: #800020;
         color: #fff;
     }
 
@@ -13876,22 +13876,22 @@ body.auth-locked .auth-gate {
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
     #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
-        background: #0d7d80;
+        background: #650019;
         color: #fff;
     }
 }
 
 /* Match Stock's Export control and keep file icons visible on mobile. */
 #catatan-penjualan .sales-export-actions .modern-secondary-button {
-    background: #118f91 !important;
-    border-color: #118f91 !important;
+    background: #800020 !important;
+    border-color: #800020 !important;
     color: #fff !important;
 }
 
 #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
 #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
-    background: #0d7d80 !important;
-    border-color: #0d7d80 !important;
+    background: #650019 !important;
+    border-color: #650019 !important;
     color: #fff !important;
 }
 
@@ -13957,8 +13957,8 @@ body.auth-locked .auth-gate {
     cursor: pointer;
 }
 #stok-barang .stock-export-period > summary:hover {
-    background: #e7f4ee !important;
-    color: #087d7f !important;
+    background: #f4e5ea !important;
+    color: #650019 !important;
 }
 #stok-barang .modern-header-actions .stock-export-period > summary svg {
     width: 15px;
@@ -13968,7 +13968,7 @@ body.auth-locked .auth-gate {
     stroke: currentColor !important;
 }
 #stok-barang .modern-header-actions .stock-export-period > summary:hover svg {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 #stok-barang .stock-export-period .modern-export-options {
     left: 0;
@@ -13980,9 +13980,9 @@ body.auth-locked .auth-gate {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     min-width: 0;
     overflow: hidden;
-    border: 1px solid #118f91;
+    border: 1px solid #800020;
     border-radius: 999px;
-    background: #118f91;
+    background: #800020;
 }
 #stok-barang .stock-export-actions .modern-secondary-button {
     display: inline-flex;
@@ -13996,7 +13996,7 @@ body.auth-locked .auth-gate {
     padding: 0 7px;
     border: 0;
     border-radius: 0;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
     font-size: 11px;
     font-weight: 600;
@@ -14008,7 +14008,7 @@ body.auth-locked .auth-gate {
 }
 #stok-barang .stock-export-actions .modern-secondary-button:hover,
 #stok-barang .stock-export-actions .modern-secondary-button:active {
-    background: #0d7d80 !important;
+    background: #650019 !important;
     color: #fff !important;
 }
 #stok-barang .stock-export-actions .modern-export-leading-icon {
@@ -14090,27 +14090,27 @@ body.auth-locked .auth-gate {
     color: var(--app-text-soft) !important;
 }
 #stok-barang .stock-action-grid > details > summary:hover {
-    background: #e7f4ee !important;
-    color: #087d7f !important;
+    background: #f4e5ea !important;
+    color: #650019 !important;
 }
 #stok-barang .stock-action-grid .stock-export-button {
-    border: 1px solid #118f91 !important;
-    background: #118f91 !important;
+    border: 1px solid #800020 !important;
+    background: #800020 !important;
     color: #fff !important;
 }
 #stok-barang .stock-action-grid .stock-export-button:hover {
-    border-color: #0d7d80 !important;
-    background: #0d7d80 !important;
+    border-color: #650019 !important;
+    background: #650019 !important;
 }
 #stok-barang .stock-action-grid .stock-action-recap {
-    border: 1px solid #b9ded3;
-    background: #e8f5ef;
-    color: #137d73;
+    border: 1px solid #f4e5ea;
+    background: #faf2f5;
+    color: #800020;
     text-decoration: none;
 }
 #stok-barang .stock-action-grid .stock-action-recap:hover {
-    background: #d8eee6;
-    color: #087d7f;
+    background: #faf2f5;
+    color: #650019;
 }
 #stok-barang .stock-action-grid .modern-export-leading-icon {
     display: inline-flex !important;
@@ -14141,7 +14141,7 @@ body.auth-locked .auth-gate {
     color: var(--app-text-soft) !important;
 }
 #stok-barang .stock-action-grid .stock-export-period > summary:hover svg {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 #stok-barang .stock-action-grid .stock-export-period .modern-export-options {
     left: 0;
@@ -14221,7 +14221,7 @@ button:disabled {
 }
 #catatan-penjualan .sales-export-actions .export-excel-action,
 #stok-barang .stock-action-grid .export-excel-action {
-    color: #217346 !important;
+    color: #800020 !important;
 }
 #catatan-penjualan .sales-export-actions .export-pdf-action,
 #stok-barang .stock-action-grid .export-pdf-action {
@@ -14267,17 +14267,17 @@ button:disabled {
 
 /* Other actions use their meaning rather than a filled background. */
 :is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(.btn-primary, .modern-primary-button, .auth-primary-button, .app-message-confirm, .export-confirm-yes, .stock-in-btn) {
-    color: #16805a !important;
+    color: #800020 !important;
 }
 :is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(.modern-import-button, .stock-import-button, .stock-recap-link, .stock-recap-back) {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 :is(body, #dashboard, #penjualan, #stok-barang, #rekap-stok, #catatan-penjualan, #riwayat-transaksi) :is(.stock-out-btn, .delete-history-btn, .app-logout-button) {
     color: #c43d42 !important;
 }
 #stok-barang .stock-action-grid .stock-import-button,
 #stok-barang .stock-action-grid .stock-action-recap {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 #stok-barang .stock-action-grid .stock-import-csv-icon text {
     fill: currentColor !important;
@@ -14289,7 +14289,7 @@ button:disabled {
 .app-nav a.active,
 .app-mobile-nav a.active {
     background: transparent !important;
-    color: #087d7f !important;
+    color: #650019 !important;
     box-shadow: none !important;
 }
 #catatan-penjualan .sales-export-actions .modern-secondary-button,
@@ -14331,10 +14331,10 @@ button:disabled {
     text-underline-offset: 3px;
 }
 #stok-barang .stock-action-grid > .modern-primary-button {
-    color: #16805a !important;
+    color: #800020 !important;
 }
 #stok-barang .stock-action-grid > .modern-import-button {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 #stok-barang .stock-action-grid > .modern-export-menu > summary {
     color: #516d82 !important;
@@ -14384,7 +14384,7 @@ button[aria-pressed="true"],
 }
 #stok-barang #stockTable .stock-in-btn,
 #riwayat-transaksi .history-type-options [data-history-filter="masuk"] {
-    color: #16805a !important;
+    color: #800020 !important;
 }
 #stok-barang #stockTable .stock-out-btn,
 #catatan-penjualan .delete-history-btn,
@@ -14397,7 +14397,7 @@ button[aria-pressed="true"],
 }
 #stok-barang .stock-pagination button.active,
 #catatan-penjualan .sales-pagination button.active {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 
 /* Transparent buttons inherit semantic icon colours, including legacy SVG rules. */
@@ -14490,7 +14490,7 @@ button[aria-pressed="true"],
 #stok-barang .stock-pagination button,
 #catatan-penjualan .sales-pagination button,
 #riwayat-transaksi .history-type-options button {
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
     border: 0 !important;
     border-radius: 10px !important;
@@ -14515,7 +14515,7 @@ button[aria-pressed="true"],
 #stok-barang .stock-pagination button:is(:hover, :focus-visible),
 #catatan-penjualan .sales-pagination button:is(:hover, :focus-visible),
 #riwayat-transaksi .history-type-options button:is(:hover, :focus-visible) {
-    background: #0d7d80 !important;
+    background: #650019 !important;
     color: #fff !important;
     border: 0 !important;
     box-shadow: none !important;
@@ -14527,7 +14527,7 @@ button[aria-pressed="true"],
 #catatan-penjualan .sales-pagination button.active,
 #riwayat-transaksi .history-type-options button[aria-pressed="true"],
 button[aria-pressed="true"] {
-    background: #086568 !important;
+    background: #4d0013 !important;
     color: #fff !important;
     border: 0 !important;
     text-decoration: none !important;
@@ -14646,7 +14646,7 @@ button[aria-pressed="true"] {
 #penjualan #penjualanTanggalPickerButton,
 #riwayat-transaksi .history-type-options button[data-history-filter] {
     background: transparent !important;
-    color: #667570 !important;
+    color: #806b72 !important;
     border: 0 !important;
     box-shadow: none !important;
     text-decoration: none !important;
@@ -14656,21 +14656,21 @@ button[aria-pressed="true"] {
 #stok-barang #stockTable button[class]:is(:hover, :focus-visible),
 #stok-barang #tanggalPickerButton:is(:hover, :focus-visible),
 #penjualan #penjualanTanggalPickerButton:is(:hover, :focus-visible) {
-    background: #edf3ef !important;
-    color: #087d7f !important;
+    background: #faf2f5 !important;
+    color: #650019 !important;
 }
 #penjualan #penjualanTodayButton:is(:hover, :focus-visible, [aria-pressed="true"]) {
     background: transparent !important;
-    color: #7b8581 !important;
+    color: #806b72 !important;
 }
 #riwayat-transaksi .history-type-options button[data-history-filter]:is(:hover, :focus-visible, [aria-pressed="true"]) {
-    background: #edf3ef !important;
-    color: #536761 !important;
+    background: #faf2f5 !important;
+    color: #514047 !important;
 }
 #riwayat-transaksi .history-filter-options label,
 #riwayat-transaksi .history-filter-group-label,
 #riwayat-transaksi #historyBrandFilter {
-    color: #536761 !important;
+    color: #514047 !important;
 }
 #catatan-penjualan .history-month-nav button svg,
 #riwayat-transaksi .history-month-nav button svg,
@@ -14686,7 +14686,7 @@ button[aria-pressed="true"] {
 #catatan-penjualan .sales-pagination button {
     position: relative;
     background: transparent !important;
-    color: #087d7f !important;
+    color: #650019 !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -14695,7 +14695,7 @@ button[aria-pressed="true"] {
 #stok-barang .stock-pagination button:is(.active, :hover, :focus-visible),
 #catatan-penjualan .sales-pagination button:is(.active, :hover, :focus-visible) {
     background: transparent !important;
-    color: #087d7f !important;
+    color: #650019 !important;
     border: 0 !important;
     font-weight: 600;
     text-decoration: none !important;
@@ -14709,11 +14709,11 @@ button[aria-pressed="true"] {
     bottom: 2px;
     height: 2px;
     border-radius: 2px;
-    background: #118f91;
+    background: #800020;
 }
 #stok-barang .stock-pagination button svg,
 #catatan-penjualan .sales-pagination button svg {
-    color: #087d7f !important;
+    color: #650019 !important;
     stroke: currentColor !important;
 }
 
@@ -14759,7 +14759,7 @@ button[aria-pressed="true"] {
 .app-mobile-nav a,
 .app-mobile-nav a:is(.active, :hover, :focus-visible) {
     background: transparent !important;
-    color: #087d7f !important;
+    color: #650019 !important;
     border: 0 !important;
     box-shadow: none !important;
 }
@@ -14767,7 +14767,7 @@ button[aria-pressed="true"] {
 .app-mobile-nav a svg,
 .app-nav a span,
 .app-mobile-nav a span {
-    color: #087d7f !important;
+    color: #650019 !important;
 }
 .app-nav a svg,
 .app-mobile-nav a svg {
@@ -14795,7 +14795,7 @@ button[aria-pressed="true"] {
     bottom: 2px;
     height: 2px;
     border-radius: 2px;
-    background: #118f91 !important;
+    background: #800020 !important;
     box-shadow: none !important;
 }
 
@@ -14803,13 +14803,13 @@ button[aria-pressed="true"] {
 #stok-barang .modern-stock-table thead .table-sort-button,
 #stok-barang .modern-stock-table thead .table-sort-button:is(:hover, :focus-visible) {
     background: transparent !important;
-    color: #586962 !important;
+    color: #514047 !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
 }
 #stok-barang .modern-stock-table thead .table-sort-button svg {
-    color: #78867f !important;
+    color: #806b72 !important;
     stroke: currentColor !important;
     transform: none !important;
 }
@@ -14817,13 +14817,13 @@ button[aria-pressed="true"] {
 /* Keep history editing quiet and consistent with row actions. */
 #riwayat-transaksi .modern-history-table .history-edit-transaction-btn {
     background: transparent !important;
-    color: #667570 !important;
+    color: #806b72 !important;
     border: 0 !important;
     box-shadow: none !important;
 }
 #riwayat-transaksi .modern-history-table .history-edit-transaction-btn:is(:hover, :focus-visible) {
-    background: #edf3ef !important;
-    color: #087d7f !important;
+    background: #faf2f5 !important;
+    color: #650019 !important;
     border: 0 !important;
 }
 #riwayat-transaksi .modern-history-table .history-edit-transaction-btn svg {
@@ -14837,7 +14837,7 @@ button[aria-pressed="true"] {
         background: #fffef8 !important;
         border: 0 !important;
         border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(40, 57, 49, .09) !important;
+        box-shadow: 0 4px 16px rgba(53, 38, 44, .09) !important;
     }
 
     .app-mobile-nav a > svg,
@@ -14894,7 +14894,7 @@ button[aria-pressed="true"] {
 #stok-barang .stock-action-grid > .modern-primary-button:is(:hover, :focus-visible),
 #stok-barang .stock-pagination button,
 #stok-barang .stock-pagination button:is(.active, :hover, :focus-visible) {
-    border: 1px solid rgba(17, 143, 145, .5) !important;
+    border: 1px solid rgba(128, 0, 32, .5) !important;
 }
 #stok-barang .stock-pagination button,
 #stok-barang .stock-pagination button:is(.active, :hover, :focus-visible) {
@@ -14922,7 +14922,7 @@ button[aria-pressed="true"] {
 #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button:is(:hover, :focus-visible),
 #rekap-stok .stock-recap-back:is(:hover, :focus-visible),
 #rekap-stok .stock-recap-controls > button:is(:hover, :focus-visible) {
-    border: 1px solid rgba(17, 143, 145, .5) !important;
+    border: 1px solid rgba(128, 0, 32, .5) !important;
     border-radius: 999px !important;
 }
 
@@ -14956,12 +14956,12 @@ button[aria-pressed="true"] {
     background: transparent !important;
     border: 0 !important;
     border-radius: 50% !important;
-    color: #7b8581 !important;
+    color: #806b72 !important;
     box-shadow: none !important;
 }
 #penjualan #penjualanBarangClear:is(:hover, :focus-visible) {
     background: transparent !important;
-    color: #536761 !important;
+    color: #514047 !important;
     border: 0 !important;
 }
 #penjualan #penjualanBarangClear .ui-svg-icon {
@@ -15006,7 +15006,7 @@ button[aria-pressed="true"] {
 #transactionModal #transactionTanggalPickerButton:is(:hover, :focus-visible) {
     top: 0; bottom: 0; right: 6px; margin: auto 0; padding: 0;
     width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-    background: transparent !important; color: #667570 !important; border: 0 !important;
+    background: transparent !important; color: #806b72 !important; border: 0 !important;
     transform: none !important;
 }
 #transactionModal #transactionTanggalPickerButton svg {
@@ -15056,7 +15056,7 @@ button[aria-pressed="true"] {
     margin: auto 0;
     background: transparent !important;
     border: 0 !important;
-    color: #667570 !important;
+    color: #806b72 !important;
     transform: none !important;
     box-shadow: none !important;
 }
@@ -15080,55 +15080,55 @@ body.auth-locked .auth-gate {
     border: 1px solid #e5e5da !important;
     border-radius: 24px !important;
     background: #fffef9 !important;
-    box-shadow: 0 12px 36px rgba(57, 67, 54, .07) !important;
+    box-shadow: 0 12px 36px rgba(53, 38, 44, .07) !important;
 }
 .auth-brand { display: flex; align-items: center; gap: 12px; }
 .auth-brand img { width: 48px; height: 48px; object-fit: contain; }
-.auth-brand strong { display: block; color: #293b36; font-size: 19px; letter-spacing: -.03em; }
-.auth-brand span { display: block; margin-top: 2px; color: #748078; font-size: 11px; }
+.auth-brand strong { display: block; color: #35262c; font-size: 19px; letter-spacing: -.03em; }
+.auth-brand span { display: block; margin-top: 2px; color: #806b72; font-size: 11px; }
 .auth-gate .auth-heading { margin-top: 28px; }
-.auth-gate .auth-heading h1 { margin: 0; color: #293b36 !important; font-size: 26px; font-weight: 700; letter-spacing: -.04em; }
-.auth-gate .auth-heading p, .password-dialog-heading p { color: #6d7971 !important; font-size: 12px; line-height: 1.6; }
+.auth-gate .auth-heading h1 { margin: 0; color: #35262c !important; font-size: 26px; font-weight: 700; letter-spacing: -.04em; }
+.auth-gate .auth-heading p, .password-dialog-heading p { color: #806b72 !important; font-size: 12px; line-height: 1.6; }
 .auth-gate .auth-form, .password-dialog .auth-form { gap: 16px; margin-top: 25px; }
 .auth-field { display: grid; gap: 8px; min-width: 0; }
-.auth-gate .auth-field label, .password-dialog .auth-field label { margin: 0; color: #3e5149 !important; font-size: 12px; font-weight: 500; }
+.auth-gate .auth-field label, .password-dialog .auth-field label { margin: 0; color: #514047 !important; font-size: 12px; font-weight: 500; }
 .auth-gate .auth-form input, .password-dialog .auth-form input {
-    min-height: 48px; border: 1px solid #dce2d7 !important; border-radius: 12px;
-    background: #fff !important; color: #293b36 !important; box-shadow: none !important;
+    min-height: 48px; border: 1px solid #e6d5dc !important; border-radius: 12px;
+    background: #fff !important; color: #35262c !important; box-shadow: none !important;
 }
-.auth-gate .auth-form input::placeholder, .password-dialog .auth-form input::placeholder { color: #8a958d !important; font-size: 12px; }
-.auth-gate .auth-form input:focus, .password-dialog .auth-form input:focus { border-color: #118f91 !important; box-shadow: 0 0 0 3px rgba(17,143,145,.10) !important; }
+.auth-gate .auth-form input::placeholder, .password-dialog .auth-form input::placeholder { color: #806b72 !important; font-size: 12px; }
+.auth-gate .auth-form input:focus, .password-dialog .auth-form input:focus { border-color: #800020 !important; box-shadow: 0 0 0 3px rgba(128, 0, 32,.10) !important; }
 .auth-password-wrap { position: relative; }
 .auth-password-wrap input { padding-right: 48px !important; }
-.password-toggle { position: absolute; right: 3px; top: 3px; width: 42px; height: 42px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 9px; background: transparent; color: #718078; }
+.password-toggle { position: absolute; right: 3px; top: 3px; width: 42px; height: 42px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 9px; background: transparent; color: #806b72; }
 .password-toggle .ui-svg-icon { width: 19px; height: 19px; }
-.password-toggle[aria-pressed="true"] { color: #087f82; background: #edf6f0; }
-.password-toggle:hover { background: #f1f5ec; }
-.auth-text-button { padding: 4px 0; border: 0; background: transparent; color: #087f82; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.password-toggle[aria-pressed="true"] { color: #650019; background: #faf2f5; }
+.password-toggle:hover { background: #faf2f5; }
+.auth-text-button { padding: 4px 0; border: 0; background: transparent; color: #650019; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
 .auth-text-button:hover { text-decoration: underline; }
-.auth-text-button:focus-visible, .password-toggle:focus-visible, .app-account-button:focus-visible { outline: 2px solid #118f91; outline-offset: 3px; }
+.auth-text-button:focus-visible, .password-toggle:focus-visible, .app-account-button:focus-visible { outline: 2px solid #800020; outline-offset: 3px; }
 .auth-form-links { display: flex; justify-content: flex-end; margin-top: -7px; }
 .auth-gate .auth-primary-button, .password-dialog .auth-primary-button {
     width: 100%; min-height: 48px; margin: 0; padding: 12px 16px; border-radius: 12px;
-    background: #118f91 !important; border: 1px solid #118f91 !important; color: #fff !important; box-shadow: none !important;
+    background: #800020 !important; border: 1px solid #800020 !important; color: #fff !important; box-shadow: none !important;
     font-size: 13px; font-weight: 600;
 }
-.auth-gate .auth-primary-button:hover:not(:disabled), .password-dialog .auth-primary-button:hover:not(:disabled) { background: #087f82 !important; transform: none; }
-.auth-gate .auth-status, .password-dialog .auth-status { min-height: 0; font-size: 12px; color: #6d7971; }
+.auth-gate .auth-primary-button:hover:not(:disabled), .password-dialog .auth-primary-button:hover:not(:disabled) { background: #650019 !important; transform: none; }
+.auth-gate .auth-status, .password-dialog .auth-status { min-height: 0; font-size: 12px; color: #806b72; }
 .auth-gate .auth-status:empty, .password-dialog .auth-status:empty { display: none; }
 .auth-gate .auth-status.is-error, .password-dialog .auth-status.is-error { color: #b33e37 !important; }
-.auth-gate .auth-status.is-success, .password-dialog .auth-status.is-success { color: #28734f !important; }
-.auth-gate .auth-status.is-loading, .password-dialog .auth-status.is-loading { color: #087f82 !important; }
-.auth-registration { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 3px 7px; padding-top: 17px; border-top: 1px solid #e9eade; color: #748078; font-size: 11px; }
-.auth-gate .auth-help { margin-top: 20px; color: #7c877f !important; font-size: 10px; text-align: center; line-height: 1.6; }
+.auth-gate .auth-status.is-success, .password-dialog .auth-status.is-success { color: #800020 !important; }
+.auth-gate .auth-status.is-loading, .password-dialog .auth-status.is-loading { color: #650019 !important; }
+.auth-registration { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 3px 7px; padding-top: 17px; border-top: 1px solid #e9eade; color: #806b72; font-size: 11px; }
+.auth-gate .auth-help { margin-top: 20px; color: #806b72 !important; font-size: 10px; text-align: center; line-height: 1.6; }
 .auth-back-button { justify-self: center; }
 .auth-gate [hidden], .password-dialog [hidden] { display: none !important; }
 .auth-text-button:disabled { opacity: .55; cursor: wait; }
-.app-account-button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; padding: 8px 11px; border: 1px solid #d6e5dc; border-radius: 11px; background: #e9f3ec; color: #22685c; font: inherit; font-size: 11px; font-weight: 600; }
+.app-account-button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; padding: 8px 11px; border: 1px solid #f4e5ea; border-radius: 11px; background: #faf2f5; color: #800020; font: inherit; font-size: 11px; font-weight: 600; }
 .app-account-button .ui-svg-icon { width: 17px; height: 17px; }
-.app-account-button:hover { background: #dceee4; }
-.password-dialog { width: min(420px, calc(100% - 32px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 28px; border: 1px solid #e1e5db; border-radius: 22px; background: #fffef9; color: #293b36; box-shadow: 0 18px 50px rgba(30,50,40,.18); }
-.password-dialog::backdrop { background: rgba(30,45,38,.38); }
+.app-account-button:hover { background: #faf2f5; }
+.password-dialog { width: min(420px, calc(100% - 32px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 28px; border: 1px solid #e6d5dc; border-radius: 22px; background: #fffef9; color: #35262c; box-shadow: 0 18px 50px rgba(77, 0, 19,.18); }
+.password-dialog::backdrop { background: rgba(77, 0, 19,.38); }
 .password-dialog-heading { display: flex; align-items: flex-start; gap: 16px; justify-content: space-between; }
 .password-dialog-heading h2 { margin: 0; font-size: 20px; letter-spacing: -.025em; }
 .password-dialog-heading p { margin: 8px 0 0; }
@@ -15145,16 +15145,16 @@ body.auth-locked .auth-gate {
 :is(#authGate.auth-gate, #passwordDialog.password-dialog) .auth-text-button:is(:hover, :focus-visible) {
     min-height: 24px; padding: 4px 0; border: 0 !important;
     background: transparent !important; background-image: none !important;
-    color: #087f82 !important; box-shadow: none !important; transform: none !important;
+    color: #650019 !important; box-shadow: none !important; transform: none !important;
 }
 :is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle {
     border: 0 !important; background: transparent !important; background-image: none !important;
-    color: #718078 !important; box-shadow: none !important; transform: none !important;
+    color: #806b72 !important; box-shadow: none !important; transform: none !important;
 }
-:is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle:is(:hover, [aria-pressed="true"]) { background: #edf6f0 !important; color: #087f82 !important; }
+:is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle:is(:hover, [aria-pressed="true"]) { background: #faf2f5 !important; color: #650019 !important; }
 :is(#authGate.auth-gate, #passwordDialog.password-dialog) .password-toggle svg { stroke: currentColor !important; color: inherit !important; }
-.app-topbar #accountPasswordButton { border-color: #d6e5dc !important; background: #e9f3ec !important; background-image: none !important; color: #22685c !important; box-shadow: none !important; }
-.app-topbar #accountPasswordButton:hover { background: #dceee4 !important; }
+.app-topbar #accountPasswordButton { border-color: #f4e5ea !important; background: #faf2f5 !important; background-image: none !important; color: #800020 !important; box-shadow: none !important; }
+.app-topbar #accountPasswordButton:hover { background: #faf2f5 !important; }
 .app-topbar #accountPasswordButton svg { stroke: currentColor !important; color: inherit !important; }
 @media (max-width: 700px) {
     .app-topbar { grid-template-columns: minmax(0, 1fr) 114px; }
@@ -15182,24 +15182,24 @@ body.auth-locked .auth-gate {
     flex: 0 0 34px;
     width: 34px; height: 34px; margin: 0;
     border: 0 !important; border-radius: 10px;
-    background: #e7f3ef !important; color: #118f91 !important;
+    background: #f4e5ea !important; color: #800020 !important;
 }
 #exportConfirmDialog .export-confirm-icon svg { width: 18px; height: 18px; }
-#exportConfirmDialog h3 { font-size: 17px; line-height: 1.3; color: #283c35; }
-#exportConfirmDialog #exportConfirmMessage { margin: 12px 0 18px; font-size: 12px; line-height: 1.5; color: #748079; }
+#exportConfirmDialog h3 { font-size: 17px; line-height: 1.3; color: #35262c; }
+#exportConfirmDialog #exportConfirmMessage { margin: 12px 0 18px; font-size: 12px; line-height: 1.5; color: #806b72; }
 #exportPeriodFields[hidden] { display: none; }
 #exportPeriodFields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; width: 100%; margin-bottom: 20px; text-align: left; }
-#exportPeriodFields label { display: grid; gap: 7px; min-width: 0; margin: 0; font-size: 12px; font-weight: 500; color: #45584f; }
+#exportPeriodFields label { display: grid; gap: 7px; min-width: 0; margin: 0; font-size: 12px; font-weight: 500; color: #514047; }
 #exportPeriodFields .app-date-display {
     box-sizing: border-box; width: 100%; height: 42px; min-height: 42px;
     padding: 0 32px 0 10px !important;
-    border: 1px solid #dce5dd !important; border-radius: 9px !important;
-    background: #ffffff !important; color: #283c35 !important;
+    border: 1px solid #e6d5dc !important; border-radius: 9px !important;
+    background: #ffffff !important; color: #35262c !important;
     font-family: inherit; font-size: 12px; font-weight: 400;
     box-shadow: none !important;
 }
-#exportPeriodFields .app-date-display::placeholder { color: #9aa79f; }
-#exportPeriodFields .app-date-display:focus { outline: 2px solid #118f9130; outline-offset: 1px; border-color: #118f91 !important; }
+#exportPeriodFields .app-date-display::placeholder { color: #806b72; }
+#exportPeriodFields .app-date-display:focus { outline: 2px solid #80002030; outline-offset: 1px; border-color: #800020 !important; }
 #exportPeriodFields .app-date-control .app-date-picker-button,
 #exportPeriodFields .app-date-control .app-date-picker-button:is(:hover, :focus-visible) {
     position: absolute; top: 0; bottom: 0; right: 4px;
@@ -15207,19 +15207,19 @@ body.auth-locked .auth-gate {
     box-sizing: border-box; width: 28px; height: 32px; min-height: 0;
     padding: 0; margin: auto 0; border: 0 !important;
     border-radius: 6px !important; background: transparent !important;
-    background-image: none !important; color: #6f8278 !important;
+    background-image: none !important; color: #806b72 !important;
     box-shadow: none !important; transform: none !important;
 }
 #exportPeriodFields .app-date-picker-button svg { width: 16px; height: 16px; margin: 0; color: inherit !important; stroke: currentColor !important; }
-#exportPeriodFields small { grid-column: 1 / -1; margin-top: 2px; padding: 10px 12px; border-radius: 9px; background: #f2f5ee; color: #778478; font-size: 11px; line-height: 1.6; font-weight: 400; }
-#exportPeriodFields small strong { color: #526659; font-weight: 500; }
+#exportPeriodFields small { grid-column: 1 / -1; margin-top: 2px; padding: 10px 12px; border-radius: 9px; background: #faf2f5; color: #806b72; font-size: 11px; line-height: 1.6; font-weight: 400; }
+#exportPeriodFields small strong { color: #514047; font-weight: 500; }
 #exportConfirmDialog .export-confirm-actions { gap: 10px; }
 #exportConfirmDialog .export-confirm-actions button { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 10px; border-radius: 9px !important; font-size: 12px; box-shadow: none !important; transform: none !important; }
 #exportConfirmDialog .export-confirm-no,
-#exportConfirmDialog .export-confirm-no:is(:hover, :focus-visible) { background: #fffef9 !important; background-image: none !important; border: 1px solid #dce5dd !important; color: #69796e !important; }
+#exportConfirmDialog .export-confirm-no:is(:hover, :focus-visible) { background: #fffef9 !important; background-image: none !important; border: 1px solid #e6d5dc !important; color: #806b72 !important; }
 #exportConfirmDialog .export-confirm-no svg { display: none; }
 #exportConfirmDialog .export-confirm-yes,
-#exportConfirmDialog .export-confirm-yes:is(:hover, :focus-visible) { background: #118f91 !important; background-image: none !important; border: 1px solid #118f91 !important; color: #ffffff !important; }
+#exportConfirmDialog .export-confirm-yes:is(:hover, :focus-visible) { background: #800020 !important; background-image: none !important; border: 1px solid #800020 !important; color: #ffffff !important; }
 #exportConfirmDialog .export-confirm-actions svg { width: 16px; height: 16px; margin: 0; stroke: currentColor !important; color: inherit !important; }
 @media (max-width: 350px) {
     #exportConfirmDialog .export-confirm-card { padding: 18px; }
@@ -15230,16 +15230,16 @@ body.auth-locked .auth-gate {
 /* A single export action and native, accessible format choices. */
 #stok-barang .modern-header-actions.stock-action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 #stok-barang .stock-action-grid .stock-export-action,
-#stok-barang .stock-action-grid .stock-export-action:is(:hover, :focus-visible) { background: #118f91 !important; border-color: #118f91 !important; color: #fff !important; }
+#stok-barang .stock-action-grid .stock-export-action:is(:hover, :focus-visible) { background: #800020 !important; border-color: #800020 !important; color: #fff !important; }
 #exportFormatFields[hidden] { display: none; }
 #exportFormatFields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-width: 0; padding: 0; margin: 0 0 18px; border: 0; }
-#exportFormatFields legend { float: none; width: auto; margin-bottom: 8px; font-size: 12px; font-weight: 500; color: #45584f; }
+#exportFormatFields legend { float: none; width: auto; margin-bottom: 8px; font-size: 12px; font-weight: 500; color: #514047; }
 #exportFormatFields label { position: relative; display: block; min-width: 0; margin: 0; cursor: pointer; }
 #exportFormatFields input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-#exportFormatFields label > span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 0 8px; border: 1px solid #dce5dd; border-radius: 9px; background: #fff; color: #69796e; font-size: 12px; font-weight: 500; }
+#exportFormatFields label > span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 0 8px; border: 1px solid #e6d5dc; border-radius: 9px; background: #fff; color: #806b72; font-size: 12px; font-weight: 500; }
 #exportFormatFields small { font-size: 10px; font-weight: 400; color: inherit; opacity: .7; }
-#exportFormatFields input:checked + span { background: #e7f3ef; border-color: #118f91; color: #087f82; }
-#exportFormatFields input:focus-visible + span { outline: 2px solid #118f91; outline-offset: 2px; }
+#exportFormatFields input:checked + span { background: #f4e5ea; border-color: #800020; color: #650019; }
+#exportFormatFields input:focus-visible + span { outline: 2px solid #800020; outline-offset: 2px; }
 
 
 
@@ -15263,7 +15263,7 @@ body.auth-locked .auth-gate {
     padding: 0 !important;
     border-color: #d9e4ff !important;
     transform: none !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
     border: 0 !important;
     border-radius: 10px !important;
@@ -15314,7 +15314,7 @@ body.auth-locked .auth-gate {
     outline: 2px solid currentColor !important;
     transform: none !important;
     border-radius: 10px !important;
-    background: #0d7d80 !important;
+    background: #650019 !important;
     color: #fff !important;
     border: 0 !important;
     box-shadow: none !important;
@@ -15336,7 +15336,7 @@ body.auth-locked .auth-gate {
     padding: 0 !important;
     border-color: #d9e4ff !important;
     transform: none !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
     border: 0 !important;
     border-radius: 10px !important;
@@ -15413,7 +15413,7 @@ body.auth-locked .auth-gate {
     outline: 2px solid currentColor !important;
     transform: none !important;
     border-radius: 10px !important;
-    background: #0d7d80 !important;
+    background: #650019 !important;
     color: #fff !important;
     border: 0 !important;
     box-shadow: none !important;
@@ -15435,7 +15435,7 @@ body.auth-locked .auth-gate {
     margin: 0 !important;
     border-color: #d9e4ff !important;
     transform: none !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     color: #fff !important;
     border: 0 !important;
     border-radius: 10px !important;
@@ -15469,7 +15469,7 @@ body.auth-locked .auth-gate {
     gap: 0 !important;
     border: 0 !important;
     border-radius: 50% !important;
-    background: #118f91 !important;
+    background: #800020 !important;
     background-image: none !important;
     color: #fff !important;
     box-shadow: none !important;
@@ -15508,3 +15508,12 @@ body.auth-locked .auth-gate {
         flex-basis: 34px !important;
     }
 }
+
+/* Maroon palette also covers browser-native form controls and semantic utilities. */
+:root { --app-green: #800020; --app-cyan: #800020; --app-accent: #800020; --app-accent-soft: #f4e5ea; --editorial-green-soft: #f4e5ea; }
+:root { --bs-success: #800020; --bs-success-rgb: 128, 0, 32; --bs-success-text-emphasis: #650019; --bs-success-bg-subtle: #f4e5ea; --bs-success-border-subtle: #dfc5ce; --bs-teal: #800020; }
+input, select, textarea, progress { accent-color: #800020; }
+.text-success { color: #800020 !important; }
+.bg-success { background-color: #800020 !important; }
+.border-success { border-color: #dfc5ce !important; }
+#penjualan .sales-stock-info:not(.is-error):not(.is-preorder) { color: #800020; background: #f4e5ea; border-color: #dfc5ce; }
