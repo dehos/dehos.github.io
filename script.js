@@ -8499,7 +8499,7 @@ function getStockAktualUntukExport(
 
 let penyelesaiKonfirmasiExport = null;
 
-function mintaKonfirmasiExport(message, pilihPeriode = false) {
+function mintaKonfirmasiExport(message, pilihPeriode = false, pilihFormat = false) {
     const dialog =
         document.getElementById("exportConfirmDialog");
 
@@ -8521,20 +8521,23 @@ function mintaKonfirmasiExport(message, pilihPeriode = false) {
         selesaikanKonfirmasiExport(false);
     }
     dialog.dataset.pilihPeriode = String(pilihPeriode);
+    dialog.dataset.pilihFormat = String(pilihFormat);
     const fields = document.getElementById("exportPeriodFields");
     if (fields) fields.hidden = !pilihPeriode;
     const formats = document.getElementById("exportFormatFields");
-    if (formats) formats.hidden = !pilihPeriode;
+    if (formats) formats.hidden = !(pilihPeriode || pilihFormat);
     if (pilihPeriode) {
         for (const id of ["exportTanggalMulai", "exportTanggalAkhir"]) {
             document.getElementById(id).value = "";
         }
         sinkronkanTanggalForm(fields);
+    }
+    if (pilihPeriode || pilihFormat) {
         document.querySelector('input[name="exportFormat"][value="Excel"]').checked = true;
     }
     document.getElementById("exportConfirmTitle").textContent = pilihPeriode
-        ? "Export rekap stok" : "Konfirmasi Export";
-    dialog.querySelector(".export-confirm-yes span").textContent = pilihPeriode
+        ? "Export rekap stok" : pilihFormat ? "Export catatan penjualan" : "Konfirmasi Export";
+    dialog.querySelector(".export-confirm-yes span").textContent = (pilihPeriode || pilihFormat)
         ? "Export" : "Ya, Export";
     if (messageElement) {
         messageElement.textContent = pilihPeriode
@@ -8563,6 +8566,8 @@ function selesaikanKonfirmasiExport(disetujui) {
         hasil = getRentangTanggalExport();
         if (!hasil) return;
         hasil.format = document.querySelector('input[name="exportFormat"]:checked')?.value || "Excel";
+    } else if (disetujui && dialog?.dataset.pilihFormat === "true") {
+        hasil = { format: document.querySelector('input[name="exportFormat"]:checked')?.value || "Excel" };
     }
     if (dialog?.open) {
         dialog.close();
@@ -10827,8 +10832,8 @@ async function exportPDF(rentangExport) {
 ================================== */
 
 /* Susunan bersama untuk export penjualan Excel dan PDF. */
-async function siapkanExportPenjualan(jenis) {
-    const disetujui = await mintaKonfirmasiExport(
+async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
+    const disetujui = sudahDisetujui || await mintaKonfirmasiExport(
         "Export catatan penjualan ke " + jenis + "?"
     );
     if (!disetujui) return null;
@@ -10969,12 +10974,24 @@ async function sisipLogoExcelPenjualan(blobExcel, logoDataUrl) {
     });
 }
 
-async function exportPenjualanExcel() {
+async function openExportPenjualan() {
+    const pilihan = await mintaKonfirmasiExport(
+        "Pilih format file. Data mengikuti bulan dan brand yang sedang dipilih.", false, true
+    );
+    if (!pilihan) return;
+    if (pilihan.format === "PDF") {
+        await exportPenjualanPDF(true);
+    } else {
+        await exportPenjualanExcel(true);
+    }
+}
+
+async function exportPenjualanExcel(sudahDisetujui = false) {
     if (typeof XLSX === "undefined") {
         showAppAlert("Library Excel belum dimuat.");
         return;
     }
-    const hasil = await siapkanExportPenjualan("Excel");
+    const hasil = await siapkanExportPenjualan("Excel", sudahDisetujui);
     if (!hasil) return;
 
     const baris = [
@@ -11076,12 +11093,12 @@ async function exportPenjualanExcel() {
     }
 }
 
-async function exportPenjualanPDF() {
+async function exportPenjualanPDF(sudahDisetujui = false) {
     if (!window.jspdf?.jsPDF) {
         showAppAlert("Library PDF belum dimuat.");
         return;
     }
-    const hasil = await siapkanExportPenjualan("PDF");
+    const hasil = await siapkanExportPenjualan("PDF", sudahDisetujui);
     if (!hasil) return;
     const body = [];
     let totalSemua = 0;

@@ -15517,3 +15517,46 @@ input, select, textarea, progress { accent-color: #800020; }
 .bg-success { background-color: #800020 !important; }
 .border-success { border-color: #dfc5ce !important; }
 #penjualan .sales-stock-info:not(.is-error):not(.is-preorder) { color: #800020; background: #f4e5ea; border-color: #dfc5ce; }
+
+/* One spacious Sales Records export action on desktop and mobile. */
+#catatan-penjualan .modern-sales-tools { gap: 12px; }
+#catatan-penjualan .sales-export-actions { width: auto; flex: 0 0 auto; gap: 0; }
+#catatan-penjualan .sales-export-actions #salesExportButton {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: auto !important;
+    min-width: 124px;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 10px 20px !important;
+    border: 1px solid rgba(128, 0, 32, .5) !important;
+    border-radius: 999px !important;
+    background: #800020 !important;
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none !important;
+    box-shadow: none !important;
+}
+#catatan-penjualan .sales-export-actions #salesExportButton:is(:hover, :focus-visible) {
+    background: #650019 !important;
+    color: #fff !important;
+    text-decoration: none !important;
+}
+#catatan-penjualan .sales-export-actions #salesExportButton svg {
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    flex: 0 0 18px;
+    fill: none !important;
+    stroke: #fff !important;
+}
+#catatan-penjualan .sales-export-actions #salesExportButton span { display: inline !important; }
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-tools { gap: 8px; }
+    #catatan-penjualan .sales-export-actions { grid-column: 1 / -1; width: 100%; }
+    #catatan-penjualan .sales-export-actions #salesExportButton { width: 100% !important; min-width: 0; }
+}
