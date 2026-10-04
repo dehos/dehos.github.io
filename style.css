@@ -16352,3 +16352,59 @@ html[data-theme="dark"] :is(.app-nav a.active, .app-mobile-nav a.active,
     .stock-pagination button.active, .sales-pagination button.active)::after {
     background: #161616 !important;
 }
+
+/* Compact dashboard summary: keep all three metrics on one mobile row. */
+#dashboard .dashboard-section-heading {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+}
+#dashboard .dashboard-section-heading .modern-title-icon {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+}
+#dashboard .dashboard-section-heading h2 {
+    font-size: 18px;
+}
+#dashboard .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+#dashboard .stat {
+    grid-column: auto;
+    min-height: 74px;
+    padding: 10px 12px;
+    align-content: start;
+    border-left-width: 3px !important;
+    border-radius: 10px !important;
+}
+#dashboard .stat small {
+    font-size: 14px;
+    line-height: 1.35;
+}
+#dashboard .stat strong {
+    margin-top: 4px;
+    font-size: 22px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+    #dashboard .dashboard-section-heading h2 {
+        font-size: 16px;
+    }
+    #dashboard .stats {
+        gap: 6px;
+    }
+    #dashboard .stat {
+        min-height: 76px;
+        padding: 8px;
+    }
+    #dashboard .stat small {
+        min-height: 2.7em;
+        font-size: 12px;
+    }
+    #dashboard .stat strong {
+        margin-top: 3px;
+        font-size: clamp(16px, 4.8vw, 20px);
+    }
+}
