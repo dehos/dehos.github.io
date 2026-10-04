@@ -6687,10 +6687,8 @@ function renderTargetPenjualan(
             card.className =
                 "target-brand-card";
 
-            card.style.setProperty(
-                "--brand-color",
-                brandColor
-            );
+            card.dataset.themeColor = brandColor;
+            card.style.setProperty("--brand-color", getAppThemeColor(brandColor));
 
             card.style.setProperty(
                 "--progress",
@@ -6780,11 +6778,8 @@ function renderTargetPenjualan(
                     ? " target-brand-rainbow"
                     : "");
 
-            noTargetCard.style.setProperty(
-                "--brand-color",
-                TARGET_BRAND_COLORS[item.nama] ||
-                    "#64748b"
-            );
+            noTargetCard.dataset.themeColor = TARGET_BRAND_COLORS[item.nama] || "#64748b";
+            noTargetCard.style.setProperty("--brand-color", getAppThemeColor(noTargetCard.dataset.themeColor));
 
             noTargetCard.style.setProperty(
                 "--progress",
@@ -9800,14 +9795,14 @@ for (
             sz: 8,
             bold: true,
             color: {
-                rgb: "FFFFFF"
+                rgb: getAppThemeColor("#ffffff").slice(1).toUpperCase()
             }
         },
 
         fill: {
             patternType: "solid",
             fgColor: {
-                rgb: "000000"
+                rgb: getAppThemeColor("#000000").slice(1).toUpperCase()
             }
         },
 
@@ -9846,13 +9841,13 @@ for (
                         sz: 9,
                         bold: true,
                         color: {
-                            rgb: "FFFFFF"
+                            rgb: getAppThemeColor("#ffffff").slice(1).toUpperCase()
                         }
                     },
                     fill: {
                         patternType: "solid",
                         fgColor: {
-                            rgb: "808080"
+                            rgb: getAppThemeColor("#808080").slice(1).toUpperCase()
                         }
                     },
                     alignment: {
@@ -9881,7 +9876,7 @@ for (
                         sz: 7,
                         italic: true,
                         color: {
-                            rgb: "4B5563"
+                            rgb: getAppThemeColor("#4b5563").slice(1).toUpperCase()
                         }
                     },
                     alignment: {
@@ -9912,7 +9907,7 @@ for (
                     },
                     fill: {
                         patternType: "solid",
-                        fgColor: { rgb: "E5E7EB" }
+                        fgColor: { rgb: getAppThemeColor("#e5e7eb").slice(1).toUpperCase() }
                     },
                     alignment: {
                         horizontal: c === 0 ? "left" : "center",
@@ -9970,13 +9965,13 @@ for (
                     font: {
                         bold: true,
                         color: {
-                            rgb: "FFFFFF"
+                            rgb: getAppThemeColor("#ffffff").slice(1).toUpperCase()
                         }
                     },
                     fill: {
                         patternType: "solid",
                         fgColor: {
-                            rgb: "000000"
+                            rgb: getAppThemeColor("#000000").slice(1).toUpperCase()
                         }
                     },
                     alignment: {
@@ -10041,28 +10036,28 @@ for (
             top: {
                 style: "thin",
                 color: {
-                    rgb: "D8D8D8"
+                    rgb: getAppThemeColor("#d8d8d8").slice(1).toUpperCase()
                 }
             },
 
             bottom: {
                 style: "thin",
                 color: {
-                    rgb: "D8D8D8"
+                    rgb: getAppThemeColor("#d8d8d8").slice(1).toUpperCase()
                 }
             },
 
             left: {
                 style: "thin",
                 color: {
-                    rgb: "D8D8D8"
+                    rgb: getAppThemeColor("#d8d8d8").slice(1).toUpperCase()
                 }
             },
 
             right: {
                 style: "thin",
                 color: {
-                    rgb: "D8D8D8"
+                    rgb: getAppThemeColor("#d8d8d8").slice(1).toUpperCase()
                 }
             }
         };
@@ -10404,13 +10399,13 @@ async function exportPDF(rentangExport) {
                 "normal",
 
             textColor:
-                [0, 0, 0],
+                getAppThemeRGB([0, 0, 0]),
 
             fillColor:
-                [255, 255, 255],
+                getAppThemeRGB([255, 255, 255]),
 
             lineColor:
-                [216, 216, 216],
+                getAppThemeRGB([216, 216, 216]),
 
             lineWidth:
                 0.1,
@@ -10445,13 +10440,13 @@ async function exportPDF(rentangExport) {
                 "bold",
 
             textColor:
-                [255, 255, 255],
+                getAppThemeRGB([255, 255, 255]),
 
             fillColor:
-                [0, 0, 0],
+                getAppThemeRGB([0, 0, 0]),
 
             lineColor:
-                [216, 216, 216],
+                getAppThemeRGB([216, 216, 216]),
 
             lineWidth:
                 0.1,
@@ -10471,10 +10466,10 @@ async function exportPDF(rentangExport) {
                 8,
 
             textColor:
-                [0, 0, 0],
+                getAppThemeRGB([0, 0, 0]),
 
             fillColor:
-                [255, 255, 255]
+                getAppThemeRGB([255, 255, 255])
         },
 
         columnStyles:
@@ -10502,8 +10497,8 @@ async function exportPDF(rentangExport) {
 
                 if (metadata?.type === "brand") {
                     if (data.column.index === 0) {
-                        data.cell.styles.fillColor = [128, 128, 128];
-                        data.cell.styles.textColor = [255, 255, 255];
+                        data.cell.styles.fillColor = getAppThemeRGB([128, 128, 128]);
+                        data.cell.styles.textColor = getAppThemeRGB([255, 255, 255]);
                         data.cell.styles.fontStyle = "bold";
                         data.cell.styles.fontSize = 9;
                         data.cell.styles.halign = "center";
@@ -10515,10 +10510,10 @@ async function exportPDF(rentangExport) {
 
                 if (metadata?.type === "legenda") {
                     data.cell.styles.fillColor =
-                        [255, 255, 255];
+                        getAppThemeRGB([255, 255, 255]);
 
                     data.cell.styles.textColor =
-                        [75, 85, 99];
+                        getAppThemeRGB([75, 85, 99]);
 
                     data.cell.styles.fontStyle =
                         "italic";
@@ -10536,8 +10531,8 @@ async function exportPDF(rentangExport) {
                 }
 
                 if (metadata?.type === "jumlah") {
-                    data.cell.styles.fillColor = [229, 231, 235];
-                    data.cell.styles.textColor = [0, 0, 0];
+                    data.cell.styles.fillColor = getAppThemeRGB([229, 231, 235]);
+                    data.cell.styles.textColor = getAppThemeRGB([0, 0, 0]);
                     data.cell.styles.fontStyle = "bold";
                     data.cell.styles.halign =
                         data.column.index === 0
@@ -10566,10 +10561,10 @@ async function exportPDF(rentangExport) {
 
                 if (detailStok?.adaTransaksi) {
                     data.cell.styles.fillColor =
-                        [0, 0, 0];
+                        getAppThemeRGB([0, 0, 0]);
 
                     data.cell.styles.textColor =
-                        [255, 255, 255];
+                        getAppThemeRGB([255, 255, 255]);
 
                     data.cell.styles.fontStyle =
                         "bold";
@@ -11037,10 +11032,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
             jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
     }));
     const border = {
-        top: { style: "thin", color: { rgb: "DFC5CE" } },
-        bottom: { style: "thin", color: { rgb: "DFC5CE" } },
-        left: { style: "thin", color: { rgb: "DFC5CE" } },
-        right: { style: "thin", color: { rgb: "DFC5CE" } }
+        top: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
+        bottom: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
+        left: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
+        right: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } }
     };
     jenisBaris.forEach((jenis, r) => {
         for (let c = 0; c < 5; c++) {
@@ -11053,15 +11048,15 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 font: {
                     bold: jenis !== "item",
                     sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : 11,
-                    color: { rgb: jenis === "header" ? "FFFFFF" : "35262C" }
+                    color: { rgb: jenis === "header" ? getAppThemeColor("#ffffff").slice(1).toUpperCase() : getAppThemeColor("#35262c").slice(1).toUpperCase() }
                 },
                 fill: {
                     patternType: "solid",
                     fgColor: {
-                        rgb: jenis === "header" ? "800020" :
-                            jenis === "brand" ? "F4E5EA" :
-                            jenis === "grand" ? "E9CBD5" :
-                            jenis === "subtotal" ? "FAF2F5" : "FFFFFF"
+                        rgb: jenis === "header" ? getAppThemeColor("#800020").slice(1).toUpperCase() :
+                            jenis === "brand" ? getAppThemeColor("#f4e5ea").slice(1).toUpperCase() :
+                            jenis === "grand" ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase() :
+                            jenis === "subtotal" ? getAppThemeColor("#faf2f5").slice(1).toUpperCase() : getAppThemeColor("#ffffff").slice(1).toUpperCase()
                     }
                 },
                 alignment: {
@@ -11105,7 +11100,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
     hasil.grup.forEach(grup => {
         body.push([{ content: grup.brand.toUpperCase(), colSpan: 5,
-            styles: { fillColor: [244, 229, 234], fontStyle: "bold" } }]);
+            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
         let subtotal = 0;
         grup.items.forEach(item => {
             body.push([
@@ -11116,17 +11111,17 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             subtotal += item.total;
         });
         body.push([{ content: "TOTAL " + grup.brand, colSpan: 4,
-            styles: { halign: "right", fillColor: [250, 242, 245],
+            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
                 fontStyle: "bold" } },
             { content: rupiah(subtotal), styles: {
-                fillColor: [250, 242, 245], fontStyle: "bold" } }]);
+                fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
         totalSemua += subtotal;
     });
     body.push([{ content: "TOTAL SEMUA", colSpan: 4,
-        styles: { halign: "right", fillColor: [233, 203, 213],
+        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]),
             fontStyle: "bold" } },
         { content: rupiah(totalSemua), styles: {
-            fillColor: [233, 203, 213], fontStyle: "bold" } }]);
+            fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
 
     // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
     const tinggi = Math.max(210, 38 + body.length * 8);
@@ -11160,7 +11155,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         body,
         theme: "grid",
         styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
-        headStyles: { fillColor: [128, 0, 32], textColor: 255 },
+        headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255 },
         columnStyles: {
             0: { cellWidth: 23 }, 1: { cellWidth: "auto" },
             2: { cellWidth: 16, halign: "center" },
