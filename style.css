@@ -16317,3 +16317,38 @@ html[data-theme="dark"] :is(input[type="checkbox"], input[type="radio"]) { accen
 html[data-theme="dark"] ::selection { background: #ffffff; color: #121212; }
 html[data-theme="dark"] :is(.app-nav a.active, .app-mobile-nav a.active)::after { background: #ffffff !important; }
 html[data-theme="dark"] .theme-choice-mark { border-color: #ffffff !important; }
+
+/* Selected controls use local semantic colors, including rules with !important. */
+html[data-theme="dark"] :is(
+    button[aria-pressed="true"], button.active, button.selected,
+    [role="option"][aria-selected="true"], [role="tab"][aria-selected="true"],
+    .app-nav a.active, .app-mobile-nav a.active,
+    input[type="radio"]:checked + span, input[type="checkbox"]:checked + span
+) {
+    --theme-element-bg: #ffffff;
+    --theme-element-border: #ffffff;
+    --theme-ink: #161616;
+    background: var(--theme-element-bg) !important;
+    color: var(--theme-ink) !important;
+    font-weight: 600;
+}
+html[data-theme="dark"] #exportFormatFields input:not(:checked) + span {
+    --theme-element-bg: #292929;
+    --theme-element-border: #858585;
+    --theme-ink: #ffffff;
+}
+html[data-theme="dark"] #exportFormatFields input:checked + span {
+    --theme-element-bg: #ffffff;
+    --theme-element-border: #ffffff;
+    --theme-ink: #161616;
+    font-weight: 700;
+}
+html[data-theme="dark"] [data-theme-option][aria-pressed="true"] .theme-choice-mark {
+    background: #161616 !important;
+    border-color: #161616 !important;
+    box-shadow: inset 0 0 0 3px #ffffff;
+}
+html[data-theme="dark"] :is(.app-nav a.active, .app-mobile-nav a.active,
+    .stock-pagination button.active, .sales-pagination button.active)::after {
+    background: #161616 !important;
+}
