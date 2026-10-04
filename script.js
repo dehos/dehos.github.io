@@ -6688,7 +6688,7 @@ function renderTargetPenjualan(
                 "target-brand-card";
 
             card.dataset.themeColor = brandColor;
-            card.style.setProperty("--brand-color", getAppThemeColor(brandColor));
+            card.style.setProperty("--brand-color", getAppThemeColor(brandColor, "chart"));
 
             card.style.setProperty(
                 "--progress",
@@ -6779,7 +6779,7 @@ function renderTargetPenjualan(
                     : "");
 
             noTargetCard.dataset.themeColor = TARGET_BRAND_COLORS[item.nama] || "#64748b";
-            noTargetCard.style.setProperty("--brand-color", getAppThemeColor(noTargetCard.dataset.themeColor));
+            noTargetCard.style.setProperty("--brand-color", getAppThemeColor(noTargetCard.dataset.themeColor, "chart"));
 
             noTargetCard.style.setProperty(
                 "--progress",

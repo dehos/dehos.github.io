@@ -12,7 +12,7 @@
         content="Aplikasi rekap stok barang dan transaksi penjualan."
     >
     <title>Stock Barang</title>
-    <script src="theme.js?v=20261004-1"></script>
+    <script src="theme.js?v=20261004-2"></script>
 
     <link
         rel="preconnect"
@@ -42,12 +42,12 @@
     <!-- JSPDF AUTOTABLE -->
     <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
     <!-- JAVASCRIPT UTAMA -->
-    <script defer src="script.js?v=20261004-1"></script>
+    <script defer src="script.js?v=20261004-2"></script>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20261004-1">
+    <link rel="stylesheet" href="style.css?v=20261004-2">
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -201,7 +201,7 @@
         </div>
         <div id="accountMenu" class="account-menu">
             <button type="button" id="accountMenuToggle" aria-label="Buka menu akun" aria-expanded="false" aria-controls="accountMenuPanel">
-                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 8 14-4M5 14l14-4M6 20l14-4"/></svg>
+                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14" stroke-width="3" stroke-linecap="round"/></svg>
             </button>
             <div id="accountMenuPanel" role="group" aria-label="Menu akun" hidden>
                 <button type="button" id="accountPasswordButton" class="app-account-button" onclick="closeAccountMenu(); openPasswordDialog()">
@@ -214,6 +214,7 @@
                     <button type="button" data-theme-option="maroon" aria-pressed="true"><span class="theme-choice-mark" aria-hidden="true"></span>Maroon</button>
                     <button type="button" data-theme-option="tosca" aria-pressed="false"><span class="theme-choice-mark" aria-hidden="true"></span>Toska</button>
                     <button type="button" data-theme-option="gray" aria-pressed="false"><span class="theme-choice-mark" aria-hidden="true"></span>Abu-abu</button>
+                    <button type="button" data-theme-option="dark" aria-pressed="false"><span class="theme-choice-mark" aria-hidden="true"></span>Gelap</button>
                 </div>
                 <div class="account-menu-divider" aria-hidden="true"></div>
                 <button type="button" id="accountLogoutButton" class="app-logout-button" onclick="closeAccountMenu(); signOutAdmin()">
