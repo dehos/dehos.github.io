@@ -10887,29 +10887,12 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
 
 
 function buatTeksRekapPenjualan(rekap) {
-    const baris = ["REKAP PENJUALAN", rekap.judul];
-    let totalQty = 0, totalRupiah = 0;
-    rekap.grup.forEach(grup => {
-        baris.push("", grup.brand.toLocaleUpperCase("id-ID"));
-        const produk = new Map();
-        grup.items.forEach(item => {
-            const kunci = item.barangId || item.nama;
-            if (!produk.has(kunci)) produk.set(kunci, { nama: item.nama, qty: 0, total: 0 });
-            const hasil = produk.get(kunci);
-            hasil.qty += item.qty;
-            hasil.total += item.total;
-        });
-        let subtotal = 0;
-        [...produk.values()].sort((a, b) => a.nama.localeCompare(b.nama, "id-ID")).forEach(item => {
-            baris.push(item.nama + " — " + formatNumber(item.qty) + " pcs — Rp" + formatNumber(item.total));
-            totalQty += item.qty;
-            subtotal += item.total;
-        });
-        totalRupiah += subtotal;
-        baris.push("Total " + grup.brand + ": Rp" + formatNumber(subtotal));
-    });
-    baris.push("", "TOTAL: " + formatNumber(totalQty) + " pcs — Rp" + formatNumber(totalRupiah));
-    return baris.join("\n");
+    return rekap.grup.map(grup => {
+        const total = grup.items.reduce(
+            (jumlah, item) => jumlah + item.total, 0
+        );
+        return grup.brand + " = Rp" + formatNumber(total);
+    }).join("\n");
 }
 
 async function salinRekapPenjualan() {
