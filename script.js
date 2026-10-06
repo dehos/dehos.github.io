@@ -10891,7 +10891,7 @@ function buatTeksRekapPenjualan(rekap) {
         const total = grup.items.reduce(
             (jumlah, item) => jumlah + item.total, 0
         );
-        return grup.brand + " = Rp" + formatNumber(total);
+        return "*" + grup.brand + "* = _Rp" + formatNumber(total) + "_";
     }).join("\n");
 }
 
