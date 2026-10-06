@@ -6348,13 +6348,13 @@ const TARGET_PENJUALAN_BRAND =
 
 const TARGET_BRAND_COLORS =
     Object.freeze({
-        Belleza: "#b66b80",
+        Belleza: "#66bb6a",
         Solid: "#d7aa47",
         Dekkson: "#63b3ed",
         Violet: "#a78bfa",
         "Vapely/Wepe": "#b7794a",
         Tsunami: "#f07867",
-        Trisensa: "#800020",
+        Trisensa: "#2e7d32",
         Rona: "#94a3b8",
         "Bak Mandi": "#b66b80",
         Morgan: "#f59e0b"
