@@ -1,0 +1,9 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_button" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center_vertical" android:padding="16dp"
+    android:background="@drawable/widget_background" android:contentDescription="Buka perintah perangkat rumah di Gemini">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Perangkat rumah  ↗" android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Buka perintah di Gemini" android:textColor="#C7D8F4" android:textSize="12sp" android:layout_marginTop="4dp"/>
+</LinearLayout>

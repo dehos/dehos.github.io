@@ -1,0 +1,41 @@
+name: Build Perintah Gemini APK
+
+# Place this file at .github/workflows/gemini-widget-apk.yml.
+# This build runs only on the isolated widget branch; no website deployment.
+on:
+  push:
+    branches: ['build/gemini-home-widget']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build signed debug APK
+        working-directory: GeminiHomeWidget
+        run: gradle --no-daemon assembleDebug
+      - name: Verify APK signature
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose GeminiHomeWidget/app/build/outputs/apk/debug/app-debug.apk
+          cp GeminiHomeWidget/app/build/outputs/apk/debug/app-debug.apk Perintah-Gemini.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Perintah-Gemini-APK
+          path: Perintah-Gemini.apk
+          if-no-files-found: error
+          retention-days: 7
