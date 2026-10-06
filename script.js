@@ -10859,6 +10859,7 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
         const qty = Number(item.qty) || 0;
         const harga = Number(item.harga) || 0;
         kelompok.get(kunci).items.push({
+            barangId: String(item.barang_id),
             tanggal: String(item.tanggal_pembelian || "").slice(0, 10),
             nama: namaBarang.get(String(item.barang_id)) || "Barang tidak ditemukan",
             qty, harga, total: qty * harga,
@@ -10882,6 +10883,72 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
         ) + ", " + tahun
         : "Semua Periode";
     return { grup, namaFile, bulan, brand, judul };
+}
+
+
+function buatTeksRekapPenjualan(rekap) {
+    const baris = ["REKAP PENJUALAN", rekap.judul];
+    let totalQty = 0, totalRupiah = 0;
+    rekap.grup.forEach(grup => {
+        baris.push("", grup.brand.toLocaleUpperCase("id-ID"));
+        const produk = new Map();
+        grup.items.forEach(item => {
+            const kunci = item.barangId || item.nama;
+            if (!produk.has(kunci)) produk.set(kunci, { nama: item.nama, qty: 0, total: 0 });
+            const hasil = produk.get(kunci);
+            hasil.qty += item.qty;
+            hasil.total += item.total;
+        });
+        let subtotal = 0;
+        [...produk.values()].sort((a, b) => a.nama.localeCompare(b.nama, "id-ID")).forEach(item => {
+            baris.push(item.nama + " — " + formatNumber(item.qty) + " pcs — Rp" + formatNumber(item.total));
+            totalQty += item.qty;
+            subtotal += item.total;
+        });
+        totalRupiah += subtotal;
+        baris.push("Total " + grup.brand + ": Rp" + formatNumber(subtotal));
+    });
+    baris.push("", "TOTAL: " + formatNumber(totalQty) + " pcs — Rp" + formatNumber(totalRupiah));
+    return baris.join("\n");
+}
+
+async function salinRekapPenjualan() {
+    const tombol = document.getElementById("salesCopyButton");
+    if (tombol?.disabled) return;
+    if (tombol) { tombol.disabled = true; tombol.setAttribute("aria-busy", "true"); }
+    try {
+        const rekap = await siapkanExportPenjualan("teks", true);
+        if (!rekap) return;
+        const teks = buatTeksRekapPenjualan(rekap);
+        let tersalin = false;
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(teks);
+                tersalin = true;
+            }
+        } catch (_) { /* Coba dukungan browser lama. */ }
+        if (!tersalin) {
+            const input = document.createElement("textarea");
+            input.value = teks;
+            input.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;";
+            document.body.appendChild(input);
+            try {
+                input.focus(); input.select(); input.setSelectionRange(0, teks.length);
+                tersalin = document.execCommand("copy");
+            } catch (_) { tersalin = false; }
+            finally { input.remove(); tombol?.focus(); }
+        }
+        if (tersalin) {
+            showAppAlert("Rekap penjualan berhasil disalin. Langsung tempel ke chat atau catatan.", { title: "Rekap Disalin", type: "success" });
+        } else {
+            window.prompt("Browser tidak mengizinkan salin otomatis. Pilih dan salin teks rekap berikut:", teks);
+        }
+    } catch (error) {
+        console.error("ERROR SALIN REKAP:", error);
+        showAppAlert("Gagal menyiapkan rekap penjualan. Coba lagi.");
+    } finally {
+        if (tombol) { tombol.disabled = false; tombol.removeAttribute("aria-busy"); }
+    }
 }
 
 function formatTanggalExportPenjualan(tanggal) {
