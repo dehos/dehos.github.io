@@ -10859,7 +10859,7 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
         const qty = Number(item.qty) || 0;
         const harga = Number(item.harga) || 0;
         kelompok.get(kunci).items.push({
-            tanggal: String(item.tanggal_pembelian || ""),
+            tanggal: String(item.tanggal_pembelian || "").slice(0, 10),
             nama: namaBarang.get(String(item.barang_id)) || "Barang tidak ditemukan",
             qty, harga, total: qty * harga,
             id: Number(item.id) || 0
@@ -10885,9 +10885,24 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
 }
 
 function formatTanggalExportPenjualan(tanggal) {
-    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(tanggal)) return tanggal || "-";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(tanggal)) return tanggal || "-";
     return tanggal.slice(8, 10) + "/" + tanggal.slice(5, 7) +
         "/" + tanggal.slice(0, 4);
+}
+
+// Items are sorted by date within each brand before export.
+function kelompokTanggalExportPenjualan(items) {
+    const kelompok = [];
+    items.forEach(item => {
+        const tanggal = String(item.tanggal || "").slice(0, 10);
+        const terakhir = kelompok[kelompok.length - 1];
+        if (terakhir && terakhir.tanggal === tanggal) {
+            terakhir.items.push(item);
+        } else {
+            kelompok.push({ tanggal, items: [item] });
+        }
+    });
+    return kelompok;
 }
 
 async function ambilLogoExportPenjualan() {
@@ -10996,24 +11011,40 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         ["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total"]
     ];
     const jenisBaris = ["title", "subtitle", "spacer", "header"];
+    const gabunganTanggal = [];
+    const selSubtotal = [];
     let totalSemua = 0;
     hasil.grup.forEach(grup => {
         baris.push(["", grup.brand.toUpperCase(), "", "", ""]);
         jenisBaris.push("brand");
+        const awalBarang = baris.length + 1;
         let subtotal = 0;
-        grup.items.forEach(item => {
-            baris.push([
-                formatTanggalExportPenjualan(item.tanggal),
-                item.nama, item.qty, item.harga, item.total
-            ]);
-            jenisBaris.push("item");
-            subtotal += item.total;
+        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            const awalTanggal = baris.length;
+            hari.items.forEach((item, index) => {
+                baris.push([
+                    index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
+                    item.nama, item.qty, item.harga, item.total
+                ]);
+                jenisBaris.push("item");
+                subtotal += item.total;
+            });
+            if (hari.items.length > 1) {
+                gabunganTanggal.push({
+                    s: { r: awalTanggal, c: 0 },
+                    e: { r: baris.length - 1, c: 0 }
+                });
+            }
         });
-        baris.push(["", "", "", "TOTAL " + grup.brand, subtotal]);
+        const akhirBarang = baris.length;
+        selSubtotal.push("E" + (baris.length + 1));
+        baris.push(["", "", "", "TOTAL " + grup.brand,
+            { t: "n", v: subtotal, f: `SUM(E${awalBarang}:E${akhirBarang})` }]);
         jenisBaris.push("subtotal");
         totalSemua += subtotal;
     });
-    baris.push(["", "", "", "TOTAL SEMUA", totalSemua]);
+    baris.push(["", "", "", "TOTAL SEMUA",
+        { t: "n", v: totalSemua, f: "SUM(" + selSubtotal.join(",") + ")" }]);
     jenisBaris.push("grand");
 
     const worksheet = XLSX.utils.aoa_to_sheet(baris);
@@ -11021,10 +11052,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         { wch: 13 }, { wch: 48 }, { wch: 9 },
         { wch: 19 }, { wch: 20 }
     ];
-    worksheet["!merges"] = jenisBaris.flatMap((jenis, r) =>
+    worksheet["!merges"] = gabunganTanggal.concat(jenisBaris.flatMap((jenis, r) =>
         ["title", "subtitle", "brand"].includes(jenis)
             ? [{ s: { r, c: 1 }, e: { r, c: 4 } }] : []
-    );
+    ));
     worksheet["!rows"] = jenisBaris.map(jenis => ({
         hpt: jenis === "title" ? 28 :
             jenis === "subtitle" ? 19 :
@@ -11102,13 +11133,22 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         body.push([{ content: grup.brand.toUpperCase(), colSpan: 5,
             styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
         let subtotal = 0;
-        grup.items.forEach(item => {
-            body.push([
-                formatTanggalExportPenjualan(item.tanggal), item.nama,
-                String(item.qty), rupiah(item.harga),
-                rupiah(item.total)
-            ]);
-            subtotal += item.total;
+        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            hari.items.forEach((item, index) => {
+                const row = {
+                    1: item.nama, 2: String(item.qty),
+                    3: rupiah(item.harga), 4: rupiah(item.total)
+                };
+                if (index === 0) {
+                    row[0] = {
+                        content: formatTanggalExportPenjualan(hari.tanggal),
+                        rowSpan: hari.items.length,
+                        styles: { valign: "middle" }
+                    };
+                }
+                body.push(row);
+                subtotal += item.total;
+            });
         });
         body.push([{ content: "TOTAL " + grup.brand, colSpan: 4,
             styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
@@ -11806,3 +11846,4 @@ document.querySelectorAll("[data-date-picker]").forEach(function(tombol) {
     });
 });
 sinkronkanTanggalForm();
+
