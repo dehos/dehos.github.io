@@ -16334,3 +16334,23 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         font-size: clamp(16px, 4.8vw, 20px);
     }
 }
+
+/* On-page brand totals use the current theme, with compact spreadsheet rows. */
+#catatan-penjualan .sales-recap-panel {
+    margin: 0 0 18px; padding: 16px;
+    border: 1px solid var(--theme-border, var(--tone-dfc5ce));
+    border-radius: 12px;
+    background: var(--theme-element-bg, var(--tone-fffef8));
+    color: var(--theme-ink, var(--tone-35262c));
+}
+#catatan-penjualan .sales-recap-panel[hidden] { display: none; }
+#catatan-penjualan .sales-recap-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+#catatan-penjualan .sales-recap-heading h3 { margin: 0; font-size: 15px; font-weight: 600; color: inherit; }
+#catatan-penjualan .sales-recap-heading p { margin: 4px 0 0; font-size: 12px; color: inherit; }
+#catatan-penjualan .sales-recap-heading button { padding: 7px 12px; font-size: 12px; }
+#catatan-penjualan .sales-brand-recap-table { width: 100%; border-collapse: collapse; font-size: 13px; color: inherit; }
+#catatan-penjualan .sales-brand-recap-table :is(th, td) { padding: 10px 12px; border: 1px solid var(--theme-border, var(--tone-dfc5ce)); }
+#catatan-penjualan .sales-brand-recap-table thead { background: var(--theme-element-bg, var(--tone-f4e5ea)); }
+#catatan-penjualan .sales-brand-recap-table th { text-align: left; font-weight: 600; }
+#catatan-penjualan .sales-brand-recap-table :is(th, td):last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+#catatan-penjualan .sales-brand-recap-table tbody th { font-weight: 400; }

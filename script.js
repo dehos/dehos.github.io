@@ -10886,6 +10886,53 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
 }
 
 
+function tutupRekapPenjualan() {
+    document.getElementById("salesRecapPanel").hidden = true;
+    const tombol = document.getElementById("salesRecapButton");
+    tombol.setAttribute("aria-expanded", "false");
+    tombol.focus();
+}
+
+async function tampilkanRekapPenjualan() {
+    const tombol = document.getElementById("salesRecapButton");
+    const panel = document.getElementById("salesRecapPanel");
+    if (tombol.disabled) return;
+    tombol.disabled = true;
+    tombol.setAttribute("aria-busy", "true");
+    // Hide the previous result while retrieving the currently selected filters.
+    panel.hidden = true;
+    tombol.setAttribute("aria-expanded", "false");
+    try {
+        const rekap = await siapkanExportPenjualan("tabel", true);
+        if (!rekap) return;
+        const rows = document.getElementById("salesRecapRows");
+        rows.replaceChildren();
+        rekap.grup.forEach(grup => {
+            const tr = document.createElement("tr");
+            const brand = document.createElement("th");
+            brand.scope = "row";
+            brand.textContent = grup.brand;
+            const total = document.createElement("td");
+            total.textContent = "Rp" + formatNumber(
+                grup.items.reduce((jumlah, item) => jumlah + item.total, 0)
+            );
+            tr.append(brand, total);
+            rows.appendChild(tr);
+        });
+        document.getElementById("salesRecapPeriod").textContent =
+            rekap.judul + " · " + (rekap.brand || "Semua brand");
+        panel.hidden = false;
+        tombol.setAttribute("aria-expanded", "true");
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch (error) {
+        console.error("ERROR TABEL REKAP:", error);
+        showAppAlert("Gagal menampilkan tabel rekap. Coba lagi.");
+    } finally {
+        tombol.disabled = false;
+        tombol.removeAttribute("aria-busy");
+    }
+}
+
 function buatTeksRekapPenjualan(rekap) {
     return rekap.grup.map(grup => {
         const total = grup.items.reduce(
