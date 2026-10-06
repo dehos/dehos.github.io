@@ -1743,6 +1743,8 @@ function normalizeImportKey(value) {
         .replace(/[\u0300-\u036f]/g, "")
         .trim()
         .toLocaleLowerCase("id-ID")
+        .replace(/^trisensa\b/, "roster")
+        .replace(/^rona\b/, "wallpanel")
         .replace(/\s+/g, " ");
 }
 
@@ -1987,11 +1989,15 @@ function parseImportWorkbook(
 
                 const nama =
                     String(rawName ?? "")
+                        .replace(/^\s*trisensa\b/i, "Roster")
+                        .replace(/^\s*rona\b/i, "Wallpanel")
                         .trim()
                         .replace(/\s+/g, " ");
 
                 const brandInput =
                     String(rawBrand ?? "")
+                        .replace(/^\s*trisensa\s*$/i, "Roster")
+                        .replace(/^\s*rona\s*$/i, "Wallpanel")
                         .trim()
                         .replace(/\s+/g, " ");
 
@@ -6317,7 +6323,7 @@ const TARGET_PENJUALAN_BRAND =
             target: null
         },
         {
-            nama: "Rona",
+            nama: "Wallpanel",
             target: 20000000
         },
         {
@@ -6329,7 +6335,7 @@ const TARGET_PENJUALAN_BRAND =
             target: 15000000
         },
         {
-            nama: "Trisensa",
+            nama: "Roster",
             target: 10000000
         },
         {
@@ -6354,8 +6360,8 @@ const TARGET_BRAND_COLORS =
         Violet: "#a78bfa",
         "Vapely/Wepe": "#b7794a",
         Tsunami: "#f07867",
-        Trisensa: "#2e7d32",
-        Rona: "#94a3b8",
+        Roster: "#2e7d32",
+        Wallpanel: "#94a3b8",
         "Bak Mandi": "#b66b80",
         Morgan: "#f59e0b"
     });
@@ -6368,6 +6374,9 @@ function getCanonicalTargetBrand(
         normalizeSearchValue(
             brandName
         );
+
+    if (normalized === "trisensa") return "Roster";
+    if (normalized === "rona") return "Wallpanel";
 
     if (normalized === "bellezza") {
         return "Belleza";
@@ -8644,8 +8653,8 @@ function formatNamaBarangExport(namaBarang) {
         /^BELLEZ{1,2}A\b[\s:.-]*/i,
         /^SOLID\b[\s:.-]*/i,
         /^DEKKSON\b[\s:.-]*/i,
-        /^RONA\b[\s:.-]*/i,
-        /^TRISENSA\b[\s:.-]*/i,
+        /^(?:RONA|WALLPANEL)\b[\s:.-]*/i,
+        /^(?:TRISENSA|ROSTER)\b[\s:.-]*/i,
         /^HANATA\b[\s:.-]*/i,
         /^MORGAN\b[\s:.-]*/i,
         /^VIOLET\s+PINTU\s+ALUMUNIUM\b[\s:.-]*/i
