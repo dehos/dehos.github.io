@@ -10962,21 +10962,19 @@ function formatTanggalKemarin() {
 
 function buatTeksRekapKemarin(data) {
     const tanggal = data[0]?.tanggal || "";
-    const baris = [
-        "REKAP PENJUALAN " + formatTanggalExportPenjualan(tanggal),
-        ""
-    ];
-    data.forEach(item => {
+    const baris = ["*" + formatTanggalExportPenjualan(tanggal) + "*"];
+    data.forEach((item, index) => {
         baris.push(
-            item.nama + " | " + item.brand + " | Qty: " + item.qty +
-            " | Harga: Rp" + formatNumber(item.harga) +
-            " | Total: Rp" + formatNumber(item.total)
+            item.nama,
+            item.qty + "pcs",
+            "_Rp" + formatNumber(item.harga) + "_"
         );
+        if (index < data.length - 1) {
+            baris.push("#");
+        }
     });
-    return baris.join("\
-");
+    return baris.join("\n");
 }
-
 async function salinRekapKemarin() {
     const tombol = document.getElementById("salesYesterdayButton");
     if (tombol?.disabled) return;
