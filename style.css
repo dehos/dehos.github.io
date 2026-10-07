@@ -16354,3 +16354,33 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 #catatan-penjualan .sales-brand-recap-table th { text-align: left; font-weight: 600; }
 #catatan-penjualan .sales-brand-recap-table :is(th, td):last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 #catatan-penjualan .sales-brand-recap-table tbody th { font-weight: 400; }
+
+
+/* Perbaikan jarak tombol Catatan Penjualan di mobile. */
+@media (max-width: 700px) {
+    #catatan-penjualan .sales-export-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button {
+        width: 100%;
+        min-width: 0;
+        height: 36px;
+        min-height: 36px;
+        padding: 0 7px;
+        border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-650019))) !important;
+        border-radius: 9px;
+        font-size: 10.5px;
+        gap: 4px;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
+        border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-650019))) !important;
+    }
+}
