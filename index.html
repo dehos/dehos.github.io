@@ -1527,6 +1527,29 @@
         </div>
     </div>
 </div>
+<dialog
+    id="rekapTanggalDialog"
+    class="export-confirm-dialog"
+    aria-labelledby="rekapTanggalTitle"
+    aria-describedby="rekapTanggalMessage"
+>
+    <form method="dialog" class="export-confirm-card">
+        <div class="export-confirm-icon" aria-hidden="true">
+            <svg class="ui-svg-icon" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>
+        </div>
+        <h3 id="rekapTanggalTitle">Pilih Rekap Penjualan</h3>
+        <p id="rekapTanggalMessage">Pilih tanggal yang ingin disalin.</p>
+        <div class="export-confirm-actions rekap-tanggal-actions">
+            <button type="button" class="export-confirm-no" data-rekap-days="0">Hari ini</button>
+            <button type="button" class="export-confirm-no" data-rekap-days="1">Kemarin</button>
+            <button type="button" class="export-confirm-no" data-rekap-days="2">2 hari lalu</button>
+            <button type="button" class="export-confirm-no" data-rekap-days="3">3 hari lalu</button>
+            <button type="button" class="export-confirm-no" data-rekap-days="4">4 hari lalu</button>
+            <button type="button" class="export-confirm-no" data-rekap-days="5">5 hari lalu</button>
+        </div>
+    </form>
+</dialog>
+
 <!-- =====================================================
      FOOTER
 ===================================================== -->
