@@ -10951,7 +10951,88 @@ function buatTeksRekapPenjualan(rekap) {
     }).join("\n");
 }
 
-function formatTanggalKemarin() {\n    const tanggal = new Date();\n    tanggal.setDate(tanggal.getDate() - 1);\n    const tahun = tanggal.getFullYear();\n    const bulan = String(tanggal.getMonth() + 1).padStart(2, "0");\n    const hari = String(tanggal.getDate()).padStart(2, "0");\n    return tahun + "-" + bulan + "-" + hari;\n}\n\nfunction buatTeksRekapKemarin(data) {\n    const tanggal = data[0]?.tanggal || "";\n    const baris = [\n        "REKAP PENJUALAN " + formatTanggalExportPenjualan(tanggal),\n        ""\n    ];\n    data.forEach(item => {\n        baris.push(\n            item.nama + " | " + item.brand + " | Qty: " + item.qty +\n            " | Harga: Rp" + formatNumber(item.harga) +\n            " | Total: Rp" + formatNumber(item.total)\n        );\n    });\n    return baris.join("\\n");\n}\n\nasync function salinRekapKemarin() {\n    const tombol = document.getElementById("salesYesterdayButton");\n    if (tombol?.disabled) return;\n    if (tombol) { tombol.disabled = true; tombol.setAttribute("aria-busy", "true"); }\n    try {\n        const tanggalKemarin = formatTanggalKemarin();\n        const { data, error } = await fetchPenjualanLengkap("", "");\n        if (error) throw error;\n        const namaBarang = new Map(dataBarang.map(barang => [String(barang.id), barang.nama]));\n        const hasil = data\n            .filter(item => String(item.tanggal_pembelian || "").slice(0, 10) === tanggalKemarin)\n            .map(item => ({\n                tanggal: tanggalKemarin,\n                nama: namaBarang.get(String(item.barang_id)) || "Barang tidak ditemukan",\n                brand: String(item.brand || "").trim() || "Tanpa brand",\n                qty: Number(item.qty) || 0,\n                harga: Number(item.harga) || 0,\n                total: (Number(item.qty) || 0) * (Number(item.harga) || 0),\n                id: Number(item.id) || 0\n            }))\n            .sort((a, b) => a.brand.localeCompare(b.brand, "id-ID") || a.nama.localeCompare(b.nama, "id-ID") || a.id - b.id);\n        if (!hasil.length) {\n            showAppAlert("Tidak ada penjualan pada " + formatTanggalExportPenjualan(tanggalKemarin) + ".");\n            return;\n        }\n        const teks = buatTeksRekapKemarin(hasil);\n        let tersalin = false;\n        try {\n            if (navigator.clipboard?.writeText) {\n                await navigator.clipboard.writeText(teks);\n                tersalin = true;\n            }\n        } catch (_) {}\n        if (!tersalin) {\n            const input = document.createElement("textarea");\n            input.value = teks;\n            input.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;";\n            document.body.appendChild(input);\n            try { input.focus(); input.select(); input.setSelectionRange(0, teks.length); tersalin = document.execCommand("copy"); }\n            catch (_) { tersalin = false; }\n            finally { input.remove(); tombol?.focus(); }\n        }\n        if (tersalin) {\n            showAppAlert("Rekap penjualan kemarin berhasil disalin.", { title: "Recap Kemarin Disalin", type: "success" });\n        } else {\n            window.prompt("Salin teks rekap berikut:", teks);\n        }\n    } catch (error) {\n        console.error("ERROR SALIN REKAP KEMARIN:", error);\n        showAppAlert("Gagal menyiapkan rekap penjualan kemarin. Coba lagi.");\n    } finally {\n        if (tombol) { tombol.disabled = false; tombol.removeAttribute("aria-busy"); }\n    }\n}\n\nasync function salinRekapPenjualan() {
+function formatTanggalKemarin() {
+    const tanggal = new Date();
+    tanggal.setDate(tanggal.getDate() - 1);
+    const tahun = tanggal.getFullYear();
+    const bulan = String(tanggal.getMonth() + 1).padStart(2, "0");
+    const hari = String(tanggal.getDate()).padStart(2, "0");
+    return tahun + "-" + bulan + "-" + hari;
+}
+
+function buatTeksRekapKemarin(data) {
+    const tanggal = data[0]?.tanggal || "";
+    const baris = [
+        "REKAP PENJUALAN " + formatTanggalExportPenjualan(tanggal),
+        ""
+    ];
+    data.forEach(item => {
+        baris.push(
+            item.nama + " | " + item.brand + " | Qty: " + item.qty +
+            " | Harga: Rp" + formatNumber(item.harga) +
+            " | Total: Rp" + formatNumber(item.total)
+        );
+    });
+    return baris.join("\
+");
+}
+
+async function salinRekapKemarin() {
+    const tombol = document.getElementById("salesYesterdayButton");
+    if (tombol?.disabled) return;
+    if (tombol) { tombol.disabled = true; tombol.setAttribute("aria-busy", "true"); }
+    try {
+        const tanggalKemarin = formatTanggalKemarin();
+        const { data, error } = await fetchPenjualanLengkap("", "");
+        if (error) throw error;
+        const namaBarang = new Map(dataBarang.map(barang => [String(barang.id), barang.nama]));
+        const hasil = data
+            .filter(item => String(item.tanggal_pembelian || "").slice(0, 10) === tanggalKemarin)
+            .map(item => ({
+                tanggal: tanggalKemarin,
+                nama: namaBarang.get(String(item.barang_id)) || "Barang tidak ditemukan",
+                brand: String(item.brand || "").trim() || "Tanpa brand",
+                qty: Number(item.qty) || 0,
+                harga: Number(item.harga) || 0,
+                total: (Number(item.qty) || 0) * (Number(item.harga) || 0),
+                id: Number(item.id) || 0
+            }))
+            .sort((a, b) => a.brand.localeCompare(b.brand, "id-ID") || a.nama.localeCompare(b.nama, "id-ID") || a.id - b.id);
+        if (!hasil.length) {
+            showAppAlert("Tidak ada penjualan pada " + formatTanggalExportPenjualan(tanggalKemarin) + ".");
+            return;
+        }
+        const teks = buatTeksRekapKemarin(hasil);
+        let tersalin = false;
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(teks);
+                tersalin = true;
+            }
+        } catch (_) {}
+        if (!tersalin) {
+            const input = document.createElement("textarea");
+            input.value = teks;
+            input.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;";
+            document.body.appendChild(input);
+            try { input.focus(); input.select(); input.setSelectionRange(0, teks.length); tersalin = document.execCommand("copy"); }
+            catch (_) { tersalin = false; }
+            finally { input.remove(); tombol?.focus(); }
+        }
+        if (tersalin) {
+            showAppAlert("Rekap penjualan kemarin berhasil disalin.", { title: "Recap Kemarin Disalin", type: "success" });
+        } else {
+            window.prompt("Salin teks rekap berikut:", teks);
+        }
+    } catch (error) {
+        console.error("ERROR SALIN REKAP KEMARIN:", error);
+        showAppAlert("Gagal menyiapkan rekap penjualan kemarin. Coba lagi.");
+    } finally {
+        if (tombol) { tombol.disabled = false; tombol.removeAttribute("aria-busy"); }
+    }
+}
+
+async function salinRekapPenjualan() {
     const tombol = document.getElementById("salesCopyButton");
     if (tombol?.disabled) return;
     if (tombol) { tombol.disabled = true; tombol.setAttribute("aria-busy", "true"); }
