@@ -10975,27 +10975,51 @@ function buatTeksRekapKemarin(data) {
     });
     return baris.join("\n");
 }
+let penyelesaiPilihanRekapTanggal = null;
+
+function pilihTanggalRekap() {
+    const dialog = document.getElementById("rekapTanggalDialog");
+    if (!dialog) return Promise.resolve(null);
+    if (penyelesaiPilihanRekapTanggal) {
+        penyelesaiPilihanRekapTanggal(null);
+        penyelesaiPilihanRekapTanggal = null;
+    }
+    dialog.showModal();
+    return new Promise(function(resolve) {
+        penyelesaiPilihanRekapTanggal = resolve;
+    });
+}
+
+document.getElementById("rekapTanggalDialog")
+    ?.addEventListener("click", function(event) {
+        const tombolTanggal = event.target.closest("[data-rekap-days]");
+        if (!tombolTanggal) return;
+        const mundur = Number(tombolTanggal.dataset.rekapDays);
+        const dialog = document.getElementById("rekapTanggalDialog");
+        if (dialog?.open) dialog.close();
+        if (penyelesaiPilihanRekapTanggal) {
+            penyelesaiPilihanRekapTanggal(mundur);
+            penyelesaiPilihanRekapTanggal = null;
+        }
+    });
+
+document.getElementById("rekapTanggalDialog")
+    ?.addEventListener("cancel", function(event) {
+        event.preventDefault();
+        const dialog = document.getElementById("rekapTanggalDialog");
+        if (dialog?.open) dialog.close();
+        if (penyelesaiPilihanRekapTanggal) {
+            penyelesaiPilihanRekapTanggal(null);
+            penyelesaiPilihanRekapTanggal = null;
+        }
+    });
+
 async function salinRekapKemarin() {
     const tombol = document.getElementById("salesYesterdayButton");
     if (tombol?.disabled) return;
 
-    const pilihan = window.prompt(
-        "Pilih rekap yang ingin disalin:\n\n" +
-        "0 = Hari ini\n" +
-        "1 = Kemarin\n" +
-        "2 = 2 hari lalu\n" +
-        "3 = 3 hari lalu\n" +
-        "4 = 4 hari lalu\n" +
-        "5 = 5 hari lalu\n\n" +
-        "Masukkan angka 0-5:"
-    );
-    if (pilihan === null) return;
-
-    const mundur = Number(pilihan);
-    if (!Number.isInteger(mundur) || mundur < 0 || mundur > 5) {
-        showAppAlert("Pilihan tidak valid. Masukkan angka 0 sampai 5.");
-        return;
-    }
+    const mundur = await pilihTanggalRekap();
+    if (mundur === null) return;
 
     if (tombol) { tombol.disabled = true; tombol.setAttribute("aria-busy", "true"); }
     try {
@@ -11022,10 +11046,12 @@ async function salinRekapKemarin() {
                 id: Number(item.id) || 0
             }))
             .sort((a, b) => a.brand.localeCompare(b.brand, "id-ID") || a.nama.localeCompare(b.nama, "id-ID") || a.id - b.id);
+
         if (!hasil.length) {
             showAppAlert("Tidak ada penjualan pada " + formatTanggalExportPenjualan(tanggalRekap) + ".");
             return;
         }
+
         const teks = buatTeksRekapKemarin(hasil);
         let tersalin = false;
         try {
@@ -11034,20 +11060,19 @@ async function salinRekapKemarin() {
                 tersalin = true;
             }
         } catch (_) {}
+
         if (!tersalin) {
-            const input = document.createElement("textarea");
-            input.value = teks;
-            input.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;";
-            document.body.appendChild(input);
-            try { input.focus(); input.select(); input.setSelectionRange(0, teks.length); tersalin = document.execCommand("copy"); }
-            catch (_) { tersalin = false; }
-            finally { input.remove(); tombol?.focus(); }
+            showAppAlert("Browser tidak mengizinkan penyalinan otomatis. Silakan coba lagi.", {
+                title: "Gagal Menyalin",
+                type: "error"
+            });
+            return;
         }
-        if (tersalin) {
-            showAppAlert("Rekap penjualan " + formatTanggalExportPenjualan(tanggalRekap) + " berhasil disalin.", { title: "Rekap Disalin", type: "success" });
-        } else {
-            window.prompt("Salin teks rekap berikut:", teks);
-        }
+
+        showAppAlert("Rekap penjualan " + formatTanggalExportPenjualan(tanggalRekap) + " berhasil disalin.", {
+            title: "Rekap Disalin",
+            type: "success"
+        });
     } catch (error) {
         console.error("ERROR SALIN REKAP:", error);
         showAppAlert("Gagal menyiapkan rekap penjualan. Coba lagi.");
@@ -11055,7 +11080,6 @@ async function salinRekapKemarin() {
         if (tombol) { tombol.disabled = false; tombol.removeAttribute("aria-busy"); }
     }
 }
-
 async function salinRekapPenjualan() {
     const tombol = document.getElementById("salesCopyButton");
     if (tombol?.disabled) return;
