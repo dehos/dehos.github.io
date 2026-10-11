@@ -5453,11 +5453,17 @@ const inputPenjualanQty =
 document.querySelectorAll("[data-qty-step]").forEach(function(tombol) {
     tombol.addEventListener("click", function() {
         const langkah = Number(tombol.dataset.qtyStep);
-        const nilaiSaatIni = Number(inputPenjualanQty.value);
-        const nilaiDasar = Number.isFinite(nilaiSaatIni) && nilaiSaatIni >= 1
-            ? Math.floor(nilaiSaatIni)
-            : 1;
-        inputPenjualanQty.value = String(Math.max(1, nilaiDasar + langkah));
+        const teksSaatIni = inputPenjualanQty.value.trim();
+        const nilaiSaatIni = Number(teksSaatIni);
+        const nilaiDasar = teksSaatIni === ""
+            ? 1
+            : (Number.isFinite(nilaiSaatIni) && nilaiSaatIni >= 1
+                ? Math.floor(nilaiSaatIni)
+                : 1);
+        const nilaiBaru = teksSaatIni === ""
+            ? 1
+            : Math.max(1, nilaiDasar + langkah);
+        inputPenjualanQty.value = String(nilaiBaru);
         inputPenjualanQty.dispatchEvent(new Event("input", { bubbles: true }));
     });
 });
