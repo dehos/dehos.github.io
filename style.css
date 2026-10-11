@@ -16434,3 +16434,21 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 #penjualan .qty-counter-btn:active {
     opacity: 0.7;
 }
+
+
+/* Desktop: samakan ukuran tombol Catatan Penjualan dan beri jarak yang nyaman. */
+@media (min-width: 701px) {
+    #catatan-penjualan .sales-export-actions {
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button {
+        box-sizing: border-box;
+        height: 42px;
+        min-height: 42px;
+        padding: 0 14px;
+        justify-content: center;
+        align-items: center;
+    }
+}
