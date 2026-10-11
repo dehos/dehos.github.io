@@ -329,8 +329,14 @@
 
         <div class="sales-field sales-qty-field">
             <label for="penjualanQty">Quantity</label>
-            <input type="number" id="penjualanQty" class="form-control form-control-sm"
-                min="1" step="1" inputmode="numeric" value="">
+            <div class="qty-counter">
+                <button type="button" class="qty-counter-btn" data-qty-step="-1"
+                    aria-label="Kurangi quantity">−</button>
+                <input type="number" id="penjualanQty" class="form-control form-control-sm"
+                    min="1" step="1" inputmode="numeric" value="">
+                <button type="button" class="qty-counter-btn" data-qty-step="1"
+                    aria-label="Tambah quantity">+</button>
+            </div>
         </div>
 
         <div class="sales-field sales-price-field">
