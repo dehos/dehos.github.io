@@ -5450,6 +5450,18 @@ const penjualanBrandDisplay =
 const inputPenjualanQty =
     document.getElementById("penjualanQty");
 
+document.querySelectorAll("[data-qty-step]").forEach(function(tombol) {
+    tombol.addEventListener("click", function() {
+        const langkah = Number(tombol.dataset.qtyStep);
+        const nilaiSaatIni = Number(inputPenjualanQty.value);
+        const nilaiDasar = Number.isFinite(nilaiSaatIni) && nilaiSaatIni >= 1
+            ? Math.floor(nilaiSaatIni)
+            : 1;
+        inputPenjualanQty.value = String(Math.max(1, nilaiDasar + langkah));
+        inputPenjualanQty.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+});
+
 const inputPenjualanHarga =
     document.getElementById("penjualanHarga");
 
