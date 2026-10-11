@@ -16479,3 +16479,50 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         text-overflow: ellipsis;
     }
 }
+
+/* Desktop: jaga tombol aksi Catatan Penjualan tetap di dalam frame. */
+@media (min-width: 701px) {
+    #catatan-penjualan .modern-sales-header {
+        flex-wrap: wrap;
+    }
+
+    #catatan-penjualan .modern-sales-tools {
+        display: grid;
+        grid-template-columns: 190px 190px;
+        justify-content: end;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    #catatan-penjualan .sales-export-actions {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        gap: 8px;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding: 0 8px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        gap: 5px;
+    }
+
+    #catatan-penjualan .sales-export-actions .modern-secondary-button > span {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: center;
+    }
+}
+
