@@ -16526,3 +16526,40 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     }
 }
 
+
+
+/* Desktop: pisahkan baris filter brand dari tombol aksi agar tidak tertutup. */
+@media (min-width: 701px) {
+    #catatan-penjualan .modern-sales-tools {
+        grid-template-areas:
+            "month brand"
+            "actions actions";
+        grid-template-columns: repeat(2, minmax(0, 190px));
+        grid-auto-rows: auto;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-month-nav {
+        grid-area: month;
+        min-width: 0;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-sales-filter {
+        grid-area: brand;
+        position: relative;
+        z-index: 2;
+        min-width: 0;
+        overflow: visible;
+    }
+
+    #catatan-penjualan .modern-sales-tools .modern-sales-filter .form-select {
+        position: relative;
+        z-index: 2;
+    }
+
+    #catatan-penjualan .sales-export-actions {
+        grid-area: actions;
+        position: relative;
+        z-index: 1;
+        margin-top: 0;
+    }
+}
