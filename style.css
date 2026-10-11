@@ -16528,26 +16528,33 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 
 
 
-/* Desktop: pisahkan baris filter brand dari tombol aksi agar tidak tertutup. */
+/* Desktop: dua susun, rata kiri, dan beri ruang untuk pilihan brand. */
 @media (min-width: 701px) {
     #catatan-penjualan .modern-sales-tools {
+        width: 100%;
+        justify-content: start;
         grid-template-areas:
             "month brand"
             "actions actions";
         grid-template-columns: repeat(2, minmax(0, 190px));
         grid-auto-rows: auto;
+        align-items: center;
     }
 
     #catatan-penjualan .modern-sales-tools .modern-month-nav {
         grid-area: month;
+        width: 100%;
         min-width: 0;
+        flex: initial;
     }
 
     #catatan-penjualan .modern-sales-tools .modern-sales-filter {
         grid-area: brand;
         position: relative;
         z-index: 2;
+        width: 100%;
         min-width: 0;
+        flex: initial;
         overflow: visible;
     }
 
