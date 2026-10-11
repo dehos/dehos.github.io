@@ -16388,3 +16388,49 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         font-size: 9.5px;
     }
 }
+
+
+/* Counter Quantity pada form penjualan */
+#penjualan .qty-counter {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    gap: 6px;
+}
+
+#penjualan .qty-counter #penjualanQty {
+    flex: 1 1 auto;
+    width: 0;
+    min-width: 0;
+    text-align: center;
+    padding-left: 4px;
+    padding-right: 4px;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+#penjualan .qty-counter #penjualanQty::-webkit-inner-spin-button,
+#penjualan .qty-counter #penjualanQty::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#penjualan .qty-counter-btn {
+    flex: 0 0 36px;
+    width: 36px;
+    min-height: 44px;
+    padding: 0;
+    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
+    border-radius: 11px;
+    background: var(--theme-element-bg, var(--tone-fffef8));
+    color: var(--theme-ink, var(--app-text));
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#penjualan .qty-counter-btn:active {
+    opacity: 0.7;
+}
