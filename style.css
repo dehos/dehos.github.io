@@ -16616,19 +16616,19 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     min-height: 0;
     color: var(--theme-ink, var(--app-muted)) !important;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.35;
     letter-spacing: 0.01em;
-    opacity: 0.72;
+    opacity: 0.85;
 }
 
 #dashboard .stats .stat strong {
     margin: 0;
     color: var(--theme-ink, var(--app-text)) !important;
     font-size: clamp(28px, 4.2vw, 38px);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.1;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     font-variant-numeric: lining-nums tabular-nums;
     overflow-wrap: anywhere;
 }
