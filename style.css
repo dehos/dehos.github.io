@@ -16582,9 +16582,10 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     overflow: hidden;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
+    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-e6d5dc)));
     border-radius: 16px;
-    background: var(--theme-element-bg, var(--app-surface, transparent));
+    background: var(--theme-element-bg, var(--tone-faf2f5));
+    box-shadow: 0 3px 9px var(--tone-35262c-ap055);
 }
 
 #dashboard .stats .stat {
@@ -16603,7 +16604,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 }
 
 #dashboard .stats .stat + .stat {
-    border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
+    border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-e6d5dc))) !important;
 }
 
 #dashboard .stats .stat::before,
