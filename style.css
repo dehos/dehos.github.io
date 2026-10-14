@@ -14,11 +14,6 @@ body {
     margin: 0;
     padding: 0;
 
-    font-family: Arial, sans-serif;
-
-    background: var(--theme-element-bg, var(--tone-f4f6f8));
-    color: var(--theme-ink, var(--tone-1f2937));
-
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -30,23 +25,14 @@ body {
    HEADER
 ===================================================== */
 
-.header {
-    background: var(--theme-element-bg, var(--tone-111827));
-    color: var(--theme-ink, white);
 
-    padding: 20px;
-}
 
 .header h1 {
     margin: 0;
-
-    font-size: 24px;
 }
 
 .header p {
     margin: 5px 0 0;
-
-    color: var(--theme-ink, var(--tone-d1d5db));
 }
 
 
@@ -58,17 +44,11 @@ body {
     display: flex;
 
     align-items: center;
-
-    gap: 12px;
 }
 
 .company-logo {
-    width: 55px;
-    height: 55px;
 
     object-fit: contain;
-
-    border-radius: 8px;
 }
 
 
@@ -76,14 +56,7 @@ body {
    CONTAINER
 ===================================================== */
 
-.container {
-    width: 100%;
-    max-width: 1100px;
 
-    margin: 2px auto;
-
-    padding: 15px;
-}
 
 
 /* =====================================================
@@ -92,17 +65,6 @@ body {
 
 .card {
     width: 100%;
-
-    background: var(--theme-element-bg, white);
-
-    border-radius: 14px;
-
-    padding: 18px;
-
-    margin-bottom: 15px;
-
-    box-shadow:
-        0 2px 10px var(--tone-000000-ap06);
 }
 
 
@@ -134,10 +96,6 @@ h2 {
 label {
     display: block;
 
-    font-size: 13px;
-
-    font-weight: bold;
-
     margin-bottom: 5px;
 }
 
@@ -147,17 +105,7 @@ input[type="date"],
 select {
     width: 100%;
 
-    padding: 9px 11px;
-
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-d1d5db)));
-
-    border-radius: 8px;
-
-    font-size: 11px;
-
     background: var(--theme-element-bg, white);
-
-    color: var(--theme-ink, var(--tone-1f2937));
 }
 
 
@@ -320,19 +268,11 @@ select {
 ===================================================== */
 
 .history-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
 
     margin-bottom: 12px;
 }
 
 .history-header h3 {
-    margin: 0;
 
     font-size: 18px;
 }
@@ -393,14 +333,10 @@ select {
     text-align: center;
 
     color: var(--theme-ink, var(--tone-6b7280));
-
-    padding: 30px;
 }
 
 .loading {
     text-align: center;
-
-    padding: 25px;
 
     color: var(--theme-ink, var(--tone-6b7280));
 }
@@ -514,16 +450,11 @@ select {
 
     inset: 0;
 
-    background:
-        var(--theme-element-bg, var(--tone-000000-ap55));
-
     z-index: 1000;
 
     align-items: center;
 
     justify-content: center;
-
-    padding: 15px;
 }
 
 .modal-content {
@@ -531,23 +462,11 @@ select {
 
     width: 100%;
 
-    max-width: 400px;
-
-    border-radius: 15px;
-
-    padding: 20px;
-
-    max-height: 90vh;
-
     overflow-y: auto;
 }
 
 .modal-actions {
     display: flex;
-
-    gap: 10px;
-
-    margin-top: 15px;
 }
 
 
@@ -622,7 +541,6 @@ select {
 ===================================================== */
 
 sd {
-    display: block;
 
     text-align: center;
 
@@ -630,25 +548,13 @@ sd {
 
     margin-bottom: 5px;
 
-    font-size: 12px;
-
-    color: var(--theme-ink, var(--tone-777777));
-
     border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-eeeeee)));
 }
 
 footer {
     text-align: center;
 
-    padding: 12px 10px;
-
     margin-top: 20px;
-
-    font-size: 12px;
-
-    color: var(--theme-ink, var(--tone-777777));
-
-    border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-eeeeee)));
 }
 
 footer small {
@@ -737,15 +643,6 @@ footer small {
 ===================================================== */
 
 #stockTable .action-btn {
-    display: inline-block;
-
-    padding: 3px 7px;
-    margin: 1px;
-
-    font-size: 11px;
-    line-height: 1.3;
-
-    border-radius: 5px;
 
     white-space: nowrap;
 }
@@ -817,21 +714,12 @@ footer small {
 
 }
 
-#penjualanTable th:nth-child(2),
-#penjualanTable td:nth-child(2) {
-    width: 150px;
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+
 /* CSS — style.css */
 /* CSS — style.css */
 /* Tempel di bawah CSS penjualan sebelumnya */
 
-#penjualanTable {
-    table-layout: auto;
-}
+
 
 #penjualanTable th:nth-child(1),
 #penjualanTable td:nth-child(1),
@@ -992,10 +880,7 @@ footer small {
 #saranBarang:not(:empty) {
     display: block;
 }
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
+
 
 
 /* =====================================================
@@ -1053,11 +938,6 @@ body.auth-locked .auth-gate {
     min-height: 100vh;
     place-items: center;
     overflow: auto;
-    padding: 24px;
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 18% 12%, var(--tone-7b72ff-ap2), transparent 34%),
-        radial-gradient(circle at 82% 84%, var(--tone-b66b80-ap1), transparent 32%),
-        var(--tone-050816));
 }
 
 .auth-card {
@@ -1346,8 +1226,6 @@ table {
 }
 
 .stock-filter-field label {
-    display: flex;
-    align-items: center;
     min-height: 20px;
     margin-bottom: 6px;
     color: var(--theme-ink, var(--tone-374151));
@@ -1383,7 +1261,6 @@ table {
 
     .stock-pagination-area {
         align-items: center;
-        padding-top: 9px;
     }
 
     .stock-pagination {
@@ -1467,20 +1344,11 @@ table {
     line-height: 1.2;
 }
 
-#stockTable .stock-badge.stock-habis {
-    background: var(--theme-element-bg, var(--tone-fee2e2));
-    color: var(--theme-ink, var(--tone-b91c1c));
-}
 
-#stockTable .stock-badge.stock-menipis {
-    background: var(--theme-element-bg, var(--tone-fef3c7));
-    color: var(--theme-ink, var(--tone-b45309));
-}
 
-#stockTable .stock-badge.stock-aman {
-    background: var(--theme-element-bg, var(--tone-faf2f5));
-    color: var(--theme-ink, var(--tone-800020));
-}
+
+
+
 
 @media (max-width: 600px) {
     .stock-actions-header,
@@ -1870,8 +1738,6 @@ table {
         display: grid;
         grid-template-columns: 1fr auto;
         align-items: center;
-        min-height: 48px;
-        padding: 7px 10px;
     }
 
     .sales-total-card span {
@@ -1881,7 +1747,6 @@ table {
     .sales-total-card strong {
         grid-row: 1 / span 2;
         grid-column: 2;
-        font-size: 15px;
         text-align: right;
     }
 
@@ -1895,13 +1760,11 @@ table {
 
     .sales-stock-info {
         flex: 1;
-        font-size: 9px;
         line-height: 1.25;
     }
 
     #simpanPenjualanButton {
         width: auto;
-        min-width: 122px;
         white-space: nowrap;
     }
 }
@@ -2021,23 +1884,15 @@ table {
     display: none;
 }
 
-.modern-chevron {
-    margin-left: 2px;
-    color: var(--theme-ink, var(--tone-9ca3af));
-}
+
 
 .modern-export-options {
     position: absolute;
-    top: calc(100% + 6px);
     right: 0;
     z-index: 1100;
     display: grid;
-    min-width: 170px;
-    padding: 6px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-e5e7eb)));
-    border-radius: 10px;
     background: var(--theme-element-bg, var(--tone-ffffff));
-    box-shadow: 0 14px 30px var(--tone-0f172a-a0p14);
 }
 
 .modern-export-options button {
@@ -2045,23 +1900,15 @@ table {
     align-items: center;
     gap: 9px;
     width: 100%;
-    padding: 9px 10px;
-    border: 0;
-    border-radius: 7px;
     background: var(--theme-element-bg, transparent);
-    color: var(--theme-ink, var(--tone-374151));
     font-size: 11px;
     font-weight: 600;
     text-align: left;
 }
 
-.modern-export-options button:hover {
-    background: var(--theme-element-bg, var(--tone-f3f4f6));
-}
+
 
 .export-accent {
-    width: 8px;
-    height: 8px;
     border-radius: 50%;
 }
 
@@ -2166,8 +2013,6 @@ table {
     padding: 10px 8px;
     border: 0;
     border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dbe4ee)));
-    background: var(--theme-element-bg, var(--tone-eff6ff));
-    color: var(--theme-ink, var(--tone-1e3a8a));
     font-size: 10.5px;
     font-weight: 700;
 }
@@ -2180,19 +2025,15 @@ table {
     height: 28px;
     margin: 0 2px;
     padding: 0;
-    border: 0;
     border-radius: 7px;
     background: var(--theme-element-bg, transparent);
-    transition: background-color 140ms ease, color 140ms ease;
 }
 
 .modern-sales-table .edit-history-btn {
     color: var(--theme-ink, var(--tone-2563eb));
 }
 
-.modern-sales-table .delete-history-btn {
-    color: var(--theme-ink, var(--tone-64748b));
-}
+
 
 .modern-sales-table .edit-history-btn svg,
 .modern-sales-table .delete-history-btn svg {
@@ -2253,13 +2094,9 @@ table {
 
 
 /* Tombol hapus pilihan barang pada form jual. */
-#penjualan .sales-product-input-wrapper {
-    position: relative;
-}
 
-#penjualan .sales-product-input-wrapper #penjualanBarang {
-    padding-right: 42px;
-}
+
+
 
 #penjualan .sales-product-clear {
     position: absolute;
@@ -2405,7 +2242,6 @@ table {
     padding: 3px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-e5e7eb)));
     border-radius: 9px;
-    background: var(--theme-element-bg, var(--tone-f3f4f6));
 }
 
 .modern-stock-table #stockTable .action-btn {
@@ -2440,15 +2276,9 @@ table {
     color: var(--theme-ink, var(--tone-b91c1c));
 }
 
-.modern-stock-table #stockTable .stock-in-btn:hover {
-    background: var(--theme-element-bg, var(--tone-faf2f5));
-    color: var(--theme-ink, var(--tone-800020));
-}
 
-.modern-stock-table #stockTable .stock-out-btn:hover {
-    background: var(--theme-element-bg, var(--tone-fee2e2));
-    color: var(--theme-ink, var(--tone-991b1b));
-}
+
+
 
 .modern-stock-table #stockTable .action-btn:focus-visible {
     outline: 2px solid var(--theme-element-border, var(--theme-border, var(--tone-93c5fd)));
@@ -2456,7 +2286,6 @@ table {
 }
 
 .stock-action-icon {
-    font-size: 13px;
     font-weight: 500;
     line-height: 1;
 }
@@ -2505,51 +2334,34 @@ table {
     width: min(92vw, 360px);
     padding: 0;
     border: 0;
-    border-radius: 14px;
     background: var(--theme-element-bg, transparent);
     box-shadow: none;
 }
 
 .export-confirm-dialog::backdrop {
-    background: var(--theme-element-bg, var(--tone-0f172a-a0p48));
     backdrop-filter: blur(2px);
 }
 
 .export-confirm-card {
     display: grid;
     justify-items: center;
-    padding: 24px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-e5e7eb)));
-    border-radius: 14px;
-    background: var(--theme-element-bg, var(--tone-ffffff));
-    box-shadow: 0 22px 50px var(--tone-0f172a-a0p2);
     text-align: center;
 }
 
 .export-confirm-icon {
     display: grid;
     place-items: center;
-    width: 42px;
-    height: 42px;
     margin-bottom: 12px;
-    border-radius: 12px;
-    background: var(--theme-element-bg, var(--tone-eff6ff));
-    color: var(--theme-ink, var(--tone-2563eb));
     font-size: 20px;
     font-weight: 700;
 }
 
 .export-confirm-card h3 {
     margin: 0;
-    color: var(--theme-ink, var(--tone-111827));
-    font-size: 16px;
-    font-weight: 700;
 }
 
 .export-confirm-card p {
     margin: 8px 0 20px;
-    color: var(--theme-ink, var(--tone-64748b));
-    font-size: 11px;
     line-height: 1.5;
 }
 
@@ -2561,35 +2373,23 @@ table {
 }
 
 .export-confirm-actions button {
-    min-height: 36px;
     padding: 7px 12px;
-    border-radius: 9px;
     font-family: "Inter", Arial, sans-serif;
-    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
 }
 
 .export-confirm-no {
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-d1d5db)));
-    background: var(--theme-element-bg, var(--tone-ffffff));
-    color: var(--theme-ink, var(--tone-374151));
 }
 
-.export-confirm-no:hover {
-    background: var(--theme-element-bg, var(--tone-f3f4f6));
-}
+
 
 .export-confirm-yes {
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-2563eb)));
-    background: var(--theme-element-bg, var(--tone-2563eb));
-    color: var(--theme-ink, var(--tone-ffffff));
 }
 
-.export-confirm-yes:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-1d4ed8)));
-    background: var(--theme-element-bg, var(--tone-1d4ed8));
-}
+
 
 @media (max-width: 700px) {
     .modern-history-table-wrapper {
@@ -2700,34 +2500,12 @@ table {
 }
 
 #toast.toast {
-    top: 18px;
     width: max-content;
-    max-width: min(420px, calc(100% - 28px));
-    padding: 12px 16px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap18)));
-    border-radius: 12px;
-    background: var(--theme-element-bg, var(--tone-172033));
-    box-shadow:
-        0 14px 34px var(--tone-0f172a-ap18),
-        0 2px 8px var(--tone-0f172a-ap08);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.45;
-    text-align: left;
-    transition:
-        opacity .22s ease,
-        transform .22s ease,
-        visibility .22s ease;
 }
 
-#toast.toast.success {
-    background: var(--theme-element-bg, var(--tone-800020));
-}
 
-#toast.toast.error {
-    background: var(--theme-element-bg, var(--tone-c93645));
-}
+
+
 
 @media (max-width: 600px) {
     .modal {
@@ -2753,8 +2531,6 @@ table {
 
     #toast.toast {
         top: 12px;
-        width: calc(100% - 24px);
-        max-width: calc(100% - 24px);
         text-align: center;
     }
 }
@@ -2765,19 +2541,12 @@ table {
    Visual only: tidak mengubah fungsi atau struktur data
 ===================================================== */
 
-body {
-    background:
-        var(--theme-element-bg, radial-gradient(circle at top right, var(--tone-dbeafe-ap34), transparent 360px),
-        var(--tone-f6f8fb));
-}
+
 
 .header {
     position: relative;
     overflow: hidden;
-    padding: 18px 22px;
     border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap08)));
-    background:
-        var(--theme-element-bg, linear-gradient(135deg, var(--tone-111827) 0%, var(--tone-172033) 58%, var(--tone-1e293b) 100%));
     box-shadow: 0 8px 24px var(--tone-0f172a-ap12);
 }
 
@@ -2799,37 +2568,24 @@ body {
     z-index: 1;
     max-width: 1100px;
     margin: 0 auto;
-    gap: 13px;
 }
 
 .company-logo {
-    width: 50px;
-    height: 50px;
     padding: 4px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap14)));
-    border-radius: 12px;
     background: var(--theme-element-bg, var(--tone-ffffff-ap07));
     box-shadow: 0 5px 14px var(--tone-000000-ap14);
 }
 
 .header h1 {
-    font-size: clamp(20px, 2.3vw, 24px);
-    font-weight: 700;
     line-height: 1.2;
-    letter-spacing: -.02em;
 }
 
 .header p {
-    margin-top: 4px;
-    color: var(--theme-ink, var(--tone-cbd5e1));
-    font-size: 12px;
     line-height: 1.45;
 }
 
-.container {
-    max-width: 1120px;
-    padding: 18px 15px;
-}
+
 
 .card {
     padding: 19px;
@@ -2852,18 +2608,14 @@ body {
         background: var(--theme-element-bg, var(--tone-f6f8fb));
     }
 
-    .header {
-        padding: 14px 15px;
-    }
+    
 
     .header::after {
         top: -115px;
         right: -105px;
     }
 
-    .header-content {
-        gap: 10px;
-    }
+    
 
     .company-logo {
         width: 43px;
