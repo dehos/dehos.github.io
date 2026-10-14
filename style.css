@@ -48,10 +48,7 @@ body {
     align-items: center;
 }
 
-.company-logo {
 
-    object-fit: contain;
-}
 
 
 /* =====================================================
@@ -563,6 +560,7 @@ footer {
 
 footer small {
     display: block;
+    font-size: inherit;
 }
 
 
@@ -2338,9 +2336,7 @@ table {
     box-shadow: none;
 }
 
-.export-confirm-dialog::backdrop {
-    backdrop-filter: blur(2px);
-}
+
 
 .export-confirm-card {
     display: grid;
@@ -2501,6 +2497,7 @@ table {
 
 #toast.toast {
     width: max-content;
+    box-shadow: 0 12px 28px var(--tone-000000-ap28) !important;
 }
 
 
@@ -2571,6 +2568,7 @@ table {
 }
 
 .company-logo {
+    object-fit: contain;
     padding: 4px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap14)));
     background: var(--theme-element-bg, var(--tone-ffffff-ap07));
@@ -3108,6 +3106,7 @@ label {
     font-weight: 600;
     line-height: 1.35;
     white-space: normal;
+    gap: 6px;
 }
 
 #databaseStatus.status.success {
@@ -3148,9 +3147,7 @@ footer {
     line-height: 1.5;
 }
 
-footer small {
-    font-size: inherit;
-}
+
 
 @media (max-width: 600px) {
     #databaseStatus.status {
@@ -3405,9 +3402,7 @@ footer small {
     max-width: 100%;
 }
 
-.sales-name-track {
-    gap: 34px;
-}
+
 
 .sales-name-track > span {
     flex: 0 0 auto;
@@ -3534,6 +3529,7 @@ footer small {
 }
 
 .sales-name-track {
+    gap: 34px;
     display: block;
     min-width: 0;
 }
@@ -3836,9 +3832,7 @@ footer small {
 
 
 /* Database status: SVG icons */
-#databaseStatus.status {
-    gap: 6px;
-}
+
 
 .database-status-icon {
     flex: 0 0 auto;
@@ -3991,9 +3985,7 @@ footer small {
     height: 14px;
 }
 
-#toastMessage {
-    display: flex;
-}
+
 
 .toast-status-icon {
     width: 17px;
@@ -4896,6 +4888,7 @@ body {
     color: var(--theme-ink, var(--app-text-soft));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
+    background: var(--theme-element-bg, var(--app-bg));
 }
 
 .app-shell {
@@ -5189,6 +5182,7 @@ body {
     border-radius: 50%;
     background: var(--theme-element-bg, var(--tone-b66b80-ap045));
     content: "";
+    display: none !important;
 }
 
 .dashboard-card .stat small {
@@ -5476,6 +5470,7 @@ body > footer {
     body {
         padding-bottom: 78px;
         font-size: 13px;
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
     }
 
     .app-shell {
@@ -5810,6 +5805,7 @@ body > footer {
     width: 100px;
     height: 100px;
     background: var(--theme-element-bg, var(--tone-b66b80-ap04));
+    display: none !important;
 }
 
 #penjualan .sales-total-card > span {
@@ -6570,9 +6566,7 @@ body > footer {
     font-weight: 600;
 }
 
-#stok-barang .stock-pagination button:hover:not(:disabled):not(.active) {
-    transform: translateY(-1px);
-}
+
 
 #stok-barang .stock-pagination button.active {
     box-shadow: 0 7px 18px var(--tone-3c33af-ap25);
@@ -6691,11 +6685,7 @@ body > footer {
         padding-left: 2px;
     }
 
-    #stok-barang .modern-stock-table th:nth-child(4),
-    #stok-barang .modern-stock-table td:nth-child(4) {
-        padding-right: 3px;
-        padding-left: 3px;
-    }
+    
 
     #stok-barang #stockTable .stock-badge {
         min-width: 31px;
@@ -7524,6 +7514,8 @@ body > footer {
     margin: 0 0 13px;
     padding: 0 0 15px;
     border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
+    position: relative;
+    z-index: 20;
 }
 
 #riwayat-transaksi .modern-title-group {
@@ -7624,6 +7616,8 @@ body > footer {
     border-radius: 13px;
     background: var(--theme-element-bg, var(--tone-060c1d-ap38));
     scrollbar-color: var(--tone-42557e) var(--tone-070d1f-ap6);
+    position: relative;
+    z-index: 0;
 }
 
 #riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar {
@@ -7807,6 +7801,7 @@ body > footer {
 }
 
 .export-confirm-dialog::backdrop {
+    backdrop-filter: blur(2px);
     background: var(--theme-element-bg, var(--tone-02050f-ap72));
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -7879,6 +7874,10 @@ body > footer {
 
 #toast.toast.success {
     border-left-color: var(--theme-element-border, var(--theme-border, var(--app-green)));
+    --toast-accent: var(--app-green);
+    background:
+        var(--theme-element-bg, radial-gradient(circle at 100% 0%, var(--tone-b66b80-ap11), transparent 45%),
+        var(--tone-0f1730-ap97));
 }
 
 
@@ -7978,6 +7977,7 @@ input:focus-visible,
 select:focus-visible {
     outline: 2px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap78)));
     outline-offset: 2px;
+    outline-color: var(--theme-element-border, var(--theme-border, var(--tone-2f67f6-ap72))) !important;
 }
 
 button:disabled,
@@ -8083,9 +8083,7 @@ select:disabled {
 }
 
 @media (max-width: 700px) {
-    body {
-        padding-bottom: calc(78px + env(safe-area-inset-bottom));
-    }
+    
 
     .app-topbar {
         display: grid;
@@ -8180,6 +8178,7 @@ select:disabled {
     .app-mobile-nav {
         right: 7px;
         left: 7px;
+    padding: 5px 4px;
     }
 }
 
@@ -8237,6 +8236,8 @@ select:disabled {
 @media (max-width: 700px) {
     #stok-barang .modern-stock-table th:nth-child(4),
     #stok-barang .modern-stock-table td:nth-child(4) {
+    padding-right: 3px;
+    padding-left: 3px;
         width: 110px;
     }
 
@@ -8311,10 +8312,7 @@ select:disabled {
         overflow: hidden;
     }
 
-    .app-mobile-nav a span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+    
 
     .app-mobile-nav a.active::after {
         position: absolute;
@@ -8326,13 +8324,12 @@ select:disabled {
         background: var(--theme-element-bg, linear-gradient(90deg, var(--app-accent), var(--app-cyan)));
         content: "";
         box-shadow: 0 0 9px var(--tone-b66b80-ap42);
+    display: none;
     }
 }
 
 @media (max-width: 380px) {
-    .app-mobile-nav {
-        padding: 5px 4px;
-    }
+    
 
     .app-mobile-nav a {
         min-height: 50px;
@@ -8749,16 +8746,9 @@ select:disabled {
     transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
 }
 
-#toast.toast.success {
-    --toast-accent: var(--app-green);
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 100% 0%, var(--tone-b66b80-ap11), transparent 45%),
-        var(--tone-0f1730-ap97));
-}
 
-#toast.toast.error {
-    --toast-accent: var(--app-red);
-}
+
+
 
 #toast.toast.show {
     transform: translateY(0) scale(1);
@@ -8787,6 +8777,7 @@ select:disabled {
 }
 
 #toastMessage {
+    display: flex;
     align-items: flex-start;
     gap: 10px;
 }
@@ -8959,9 +8950,7 @@ dialog::backdrop {
     box-shadow: var(--app-shadow-dialog) !important;
 }
 
-#toast.toast {
-    box-shadow: 0 12px 28px var(--tone-000000-ap28) !important;
-}
+
 
 .modern-secondary-button,
 .action-btn,
@@ -9268,6 +9257,8 @@ dialog::backdrop {
     .app-topbar > div:first-child {
         display: grid;
         grid-template-rows: auto auto auto;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 10px;
     }
 
     .app-topbar > div:first-child .app-mobile-logo {
@@ -9307,10 +9298,7 @@ dialog::backdrop {
         border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap28)));
     }
 
-    .app-mobile-logo img {
-        display: block;
-        object-fit: contain;
-    }
+    
 }
 
 /* =====================================================
@@ -9884,14 +9872,14 @@ dialog::backdrop {
 
 
 
-body {
-    background: var(--theme-element-bg, var(--app-bg));
-}
+
 
 body.auth-locked .auth-gate {
     background:
         var(--theme-element-bg, radial-gradient(circle at 50% 0, var(--tone-d5aa32-ap07), transparent 38%),
         var(--dhouse-black));
+    padding: 28px 20px !important;
+    align-items: center;
 }
 
 .auth-card,
@@ -9943,14 +9931,7 @@ body.auth-locked .auth-gate {
 
 
 
-.auth-primary-button,
-.modern-primary-button,
-#simpanPenjualanButton,
-.modal-actions .btn-primary,
-#editPenjualanModal .modal-actions .btn-primary,
-.export-confirm-yes {
-    box-shadow: 0 7px 18px var(--tone-916813-ap2) !important;
-}
+
 
 
 
@@ -9980,9 +9961,7 @@ body.auth-locked .auth-gate {
 
 
 
-.app-nav a.active::before {
-    box-shadow: none;
-}
+
 
 .app-sidebar-note,
 .app-topbar #databaseStatus.status,
@@ -10156,14 +10135,10 @@ body.auth-locked .auth-gate {
 
 
 
-.container > .card:hover {
-    box-shadow: 0 14px 38px var(--tone-000000-ap28);
-}
+
 
 /* Penutup warna spesifik dari komponen lama. */
-#penjualan .sales-total-card {
-    box-shadow: inset 3px 0 0 var(--dhouse-gold);
-}
+
 
 
 
@@ -10219,10 +10194,7 @@ body.auth-locked .auth-gate {
     --bs-table-color: var(--app-text-soft);
 }
 
-#catatan-penjualan .modern-sales-table tfoot th,
-#catatan-penjualan .modern-sales-table tfoot td {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap28)));
-}
+
 
 #catatan-penjualan .modern-sales-table .edit-history-btn:hover,
 #riwayat-transaksi .history-edit-transaction-btn:hover {
@@ -10322,6 +10294,7 @@ body.auth-locked .auth-gate {
 .modal-actions .btn-primary,
 #editPenjualanModal .modal-actions .btn-primary,
 .export-confirm-yes {
+    box-shadow: 0 7px 18px var(--tone-916813-ap2) !important;
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3))) !important;
     background: var(--theme-element-bg, var(--tone-6675df)) !important;
     color: var(--theme-ink, var(--tone-ffffff)) !important;
@@ -10568,7 +10541,9 @@ textarea {
 
 
 .app-nav a.active::before {
+    box-shadow: none;
     background: var(--theme-element-bg, var(--app-accent)) !important;
+    display: none !important;
 }
 
 .app-sidebar-note,
@@ -10585,9 +10560,7 @@ textarea {
     color: var(--theme-ink, var(--app-green)) !important;
 }
 
-.app-topbar {
-    backdrop-filter: blur(14px);
-}
+
 
 .app-topbar-eyebrow,
 .dashboard-kicker,
@@ -10624,6 +10597,7 @@ textarea {
 
 
 .container > .card:hover {
+    box-shadow: 0 14px 38px var(--tone-000000-ap28);
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-d9e0eb))) !important;
 }
 
@@ -10675,9 +10649,7 @@ textarea {
     text-align: left;
 }
 
-.dashboard-card .stat::after {
-    display: none !important;
-}
+
 
 .dashboard-card .stat small {
     color: var(--theme-ink, var(--app-muted)) !important;
@@ -10714,6 +10686,7 @@ textarea {
 
 .dashboard-card .sales-target-header {
     border-bottom-color: var(--theme-element-border, var(--theme-border, var(--tone-e9e2f3))) !important;
+    align-items: center;
 }
 
 .dashboard-card .sales-target-header h3 .ui-svg-icon {
@@ -10869,14 +10842,13 @@ textarea {
 }
 
 #penjualan .sales-total-card {
+    box-shadow: inset 3px 0 0 var(--dhouse-gold);
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-dce7ff))) !important;
     border-left: 5px solid var(--theme-element-border, var(--theme-border, var(--app-accent))) !important;
     background: var(--theme-element-bg, var(--editorial-blue-soft)) !important;
 }
 
-#penjualan .sales-total-card::after {
-    display: none !important;
-}
+
 
 #penjualan .sales-total-card > span {
     color: var(--theme-ink, var(--app-muted)) !important;
@@ -11109,6 +11081,7 @@ textarea {
 }
 
 #toast.toast.error {
+    --toast-accent: var(--app-red);
     border-left-color: var(--theme-element-border, var(--theme-border, var(--tone-ff6975))) !important;
     background: var(--theme-element-bg, var(--tone-102140)) !important;
 }
@@ -11167,13 +11140,7 @@ textarea {
     color: var(--theme-ink, var(--tone-112b67));
 }
 
-button:focus-visible,
-summary:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-    outline-color: var(--theme-element-border, var(--theme-border, var(--tone-2f67f6-ap72))) !important;
-}
+
 
 .app-shell,
 .header,
@@ -11286,9 +11253,7 @@ select:focus-visible {
     background: var(--theme-element-bg, var(--tone-ffffff)) !important;
 }
 
-.dashboard-card .sales-target-header {
-    align-items: center;
-}
+
 
 .dashboard-card .sales-target-summary {
     min-width: 220px;
@@ -11440,6 +11405,7 @@ select:focus-visible {
 
 #catatan-penjualan .modern-sales-table tfoot th,
 #catatan-penjualan .modern-sales-table tfoot td {
+    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap28)));
     background: var(--theme-element-bg, var(--tone-f3f6fa)) !important;
     color: var(--theme-ink, var(--app-text)) !important;
     white-space: nowrap;
@@ -11579,6 +11545,7 @@ select:focus-visible {
 ===================================================== */
 
 .app-topbar {
+    backdrop-filter: blur(14px);
     border-bottom-color: var(--theme-element-border, var(--theme-border, var(--tone-dce5f2))) !important;
     backdrop-filter: none !important;
 }
@@ -11602,9 +11569,7 @@ select:focus-visible {
     border-left-color: var(--theme-element-border, var(--theme-border, var(--app-border))) !important;
 }
 
-.app-nav a.active::before {
-    display: none !important;
-}
+
 
 .dashboard-card .target-brand-identity {
     grid-template-columns: 8px minmax(0, 1fr);
@@ -11760,10 +11725,7 @@ select:focus-visible {
         background-color: var(--theme-element-bg, var(--tone-062b47)) !important;
     }
 
-    .app-topbar > div:first-child {
-        grid-template-columns: 44px minmax(0, 1fr);
-        column-gap: 10px;
-    }
+    
 
     .app-mobile-logo {
         width: 44px;
@@ -11772,6 +11734,8 @@ select:focus-visible {
     }
 
     .app-mobile-logo img {
+    display: block;
+    object-fit: contain;
         border-radius: 0;
     }
 }
@@ -12031,11 +11995,13 @@ select:focus-visible {
     .app-sidebar .header-text h1 {
         font-size: 16px;
         line-height: 1.2;
+    color: var(--theme-ink, var(--tone-f8f8f2)) !important;
     }
 
     .app-sidebar .header-text p {
         font-size: 10px;
         line-height: 1.35;
+    color: var(--theme-ink, var(--tone-f4e5ea)) !important;
     }
 
     body > div[align="center"],
@@ -12045,15 +12011,9 @@ select:focus-visible {
 }
 
 /* Filter jenis transaksi di header Riwayat In/Out. */
-#riwayat-transaksi .modern-history-header {
-    position: relative;
-    z-index: 20;
-}
 
-#riwayat-transaksi .modern-history-table-wrapper {
-    position: relative;
-    z-index: 0;
-}
+
+
 
 #riwayat-transaksi .history-toolbar {
     display: flex;
@@ -12146,6 +12106,9 @@ select:focus-visible {
     padding: 12px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
     border-radius: 11px;
+    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
+    background: var(--theme-element-bg, var(--tone-fffef8));
+    box-shadow: 0 10px 22px var(--tone-35262c-ap15);
 }
 
 #riwayat-transaksi .history-filter-options label,
@@ -12264,13 +12227,9 @@ body.auth-locked .auth-gate {
         background: var(--theme-element-bg, var(--tone-35262c)) !important;
     }
 
-    .app-sidebar .header-text h1 {
-        color: var(--theme-ink, var(--tone-f8f8f2)) !important;
-    }
+    
 
-    .app-sidebar .header-text p {
-        color: var(--theme-ink, var(--tone-f4e5ea)) !important;
-    }
+    
 }
 
 .app-nav a {
@@ -12346,11 +12305,7 @@ body.auth-locked .auth-gate {
     background: var(--theme-element-bg, var(--tone-faf2f5)) !important;
 }
 
-#riwayat-transaksi .history-filter-options {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background: var(--theme-element-bg, var(--tone-fffef8));
-    box-shadow: 0 10px 22px var(--tone-35262c-ap15);
-}
+
 
 #riwayat-transaksi .history-filter-options button[aria-pressed="true"] {
     background: var(--theme-element-bg, var(--tone-faf2f5));
@@ -12585,6 +12540,7 @@ body.auth-locked .auth-gate {
 }
 
 #stok-barang .stock-pagination button:hover:not(:disabled):not(.active) {
+    transform: translateY(-1px);
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020))) !important;
     background: var(--theme-element-bg, var(--tone-f4e5ea)) !important;
     color: var(--theme-ink, var(--tone-650019)) !important;
@@ -13200,9 +13156,7 @@ body.auth-locked .auth-gate {
     #rekap-stok .stock-recap-pager {
         gap: 6px;
     }
-    #rekap-stok .stock-recap-pager button {
-        padding: 6px 9px;
-    }
+    
     #rekap-stok .stock-recap-legend {
         margin-top: 10px;
         line-height: 1.45;
@@ -13294,6 +13248,7 @@ body.auth-locked .auth-gate {
         font-size: 14px;
     }
     #rekap-stok .stock-recap-pager button {
+    padding: 6px 9px;
         min-height: 40px;
         font-size: 12px;
     }
@@ -13339,13 +13294,7 @@ body.auth-locked .auth-gate {
     min-width: 0;
 }
 
-#catatan-penjualan .sales-export-actions .modern-secondary-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    white-space: nowrap;
-}
+
 
 @media (max-width: 700px) {
     #catatan-penjualan .modern-sales-tools {
@@ -13371,6 +13320,8 @@ body.auth-locked .auth-gate {
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
         box-shadow: none;
         transform: none;
+    background: var(--theme-element-bg, var(--tone-800020));
+    color: var(--theme-ink, var(--tone-ffffff));
     }
 
     
@@ -13394,13 +13345,18 @@ body.auth-locked .auth-gate {
 
 /* Sales export uses the same teal as the Stock export action. */
 #catatan-penjualan .sales-export-actions .modern-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
     box-shadow: none;
+    background: var(--theme-element-bg, var(--tone-800020)) !important;
+    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020))) !important;
+    color: var(--theme-ink, var(--tone-ffffff)) !important;
 }
 
-#catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
-#catatan-penjualan .sales-export-actions .modern-secondary-button:active {
-    box-shadow: none;
-}
+
 
 #catatan-penjualan .sales-export-actions .modern-secondary-button .modern-export-leading-icon {
     border: 0 !important;
@@ -13417,10 +13373,7 @@ body.auth-locked .auth-gate {
         border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020)));
     }
 
-    #catatan-penjualan .sales-export-actions .modern-secondary-button {
-        background: var(--theme-element-bg, var(--tone-800020));
-        color: var(--theme-ink, var(--tone-ffffff));
-    }
+    
 
     
 
@@ -13432,14 +13385,11 @@ body.auth-locked .auth-gate {
 }
 
 /* Match Stock's Export control and keep file icons visible on mobile. */
-#catatan-penjualan .sales-export-actions .modern-secondary-button {
-    background: var(--theme-element-bg, var(--tone-800020)) !important;
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020))) !important;
-    color: var(--theme-ink, var(--tone-ffffff)) !important;
-}
+
 
 #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
 #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
+    box-shadow: none;
     background: var(--theme-element-bg, var(--tone-650019)) !important;
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-650019))) !important;
     color: var(--theme-ink, var(--tone-ffffff)) !important;
@@ -13605,6 +13555,7 @@ body.auth-locked .auth-gate {
     border: 0;
     background: var(--theme-element-bg, transparent);
     align-items: stretch;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 #stok-barang .stock-action-grid > button,
 #stok-barang .stock-action-grid > details,
@@ -13680,6 +13631,7 @@ body.auth-locked .auth-gate {
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
+    stroke: currentColor !important;
 }
 
 #stok-barang .stock-action-grid .stock-export-period > summary svg {
@@ -13763,6 +13715,7 @@ button:disabled {
     background: var(--theme-element-bg, transparent) !important;
     box-shadow: none !important;
     white-space: nowrap;
+    min-height: 36px;
 }
 #catatan-penjualan .sales-export-actions .export-excel-action,
 #stok-barang .stock-action-grid .export-excel-action {
@@ -13825,19 +13778,14 @@ button:disabled {
     color: var(--theme-ink, var(--tone-650019)) !important;
 }
 
-#stok-barang .stock-action-grid svg {
-    stroke: currentColor !important;
-}
+
 .app-nav a.active,
 .app-mobile-nav a.active {
     background: var(--theme-element-bg, transparent) !important;
     color: var(--theme-ink, var(--tone-650019)) !important;
     box-shadow: none !important;
 }
-#catatan-penjualan .sales-export-actions .modern-secondary-button,
-#stok-barang .stock-action-grid .stock-export-button {
-    min-height: 36px;
-}
+
 @media (max-width: 700px) {
     
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
@@ -14142,6 +14090,8 @@ button[aria-pressed="true"] {
     }
 
     .app-mobile-nav a span {
+    overflow: hidden;
+    text-overflow: ellipsis;
         display: block;
         max-width: 100%;
         margin: 0;
@@ -14149,9 +14099,7 @@ button[aria-pressed="true"] {
         white-space: nowrap;
     }
 
-    .app-mobile-nav a.active::after {
-        display: none;
-    }
+    
 }
 
 @media (max-width: 360px) {
@@ -14601,10 +14549,7 @@ button[aria-pressed="true"] {
 }
 
 /* Dhouse login and account password forms. */
-body.auth-locked .auth-gate {
-    padding: 28px 20px !important;
-    align-items: center;
-}
+
 .auth-gate .auth-card {
     width: min(420px, 100%);
     padding: 36px 32px !important;
@@ -14759,7 +14704,7 @@ body.auth-locked .auth-gate {
 }
 
 /* A single export action and native, accessible format choices. */
-#stok-barang .modern-header-actions.stock-action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
 #stok-barang .stock-action-grid .stock-export-action,
 #stok-barang .stock-action-grid .stock-export-action:is(:hover, :focus-visible) { background: var(--theme-element-bg, var(--tone-800020)) !important; border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020))) !important; color: var(--theme-ink, var(--tone-ffffff)) !important; }
 #exportFormatFields[hidden] { display: none; }
@@ -15305,9 +15250,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 
 /* Desktop: samakan ukuran tombol Catatan Penjualan dan beri jarak yang nyaman. */
 @media (min-width: 701px) {
-    #catatan-penjualan .sales-export-actions {
-        align-items: stretch;
-    }
+    
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
         height: 42px;
@@ -15330,9 +15273,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         flex: 0 0 190px;
     }
 
-    #catatan-penjualan .modern-sales-tools .modern-month-nav {
-        justify-content: space-between;
-    }
+    
 
     #catatan-penjualan .modern-sales-tools .modern-sales-filter .form-select {
         box-sizing: border-box;
@@ -15341,6 +15282,8 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         min-height: 42px;
         padding-right: 30px;
         text-overflow: ellipsis;
+    position: relative;
+    z-index: 2;
     }
 }
 
@@ -15359,6 +15302,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     }
 
     #catatan-penjualan .sales-export-actions {
+    align-items: stretch;
         display: grid;
         grid-column: 1 / -1;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -15403,6 +15347,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     }
 
     #catatan-penjualan .modern-sales-tools .modern-month-nav {
+    justify-content: space-between;
         grid-area: month;
         width: 100%;
         min-width: 0;
@@ -15419,10 +15364,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         overflow: visible;
     }
 
-    #catatan-penjualan .modern-sales-tools .modern-sales-filter .form-select {
-        position: relative;
-        z-index: 2;
-    }
+    
 
     #catatan-penjualan .sales-export-actions {
         grid-area: actions;
