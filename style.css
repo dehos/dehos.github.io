@@ -3403,29 +3403,17 @@ footer small {
 .sales-name-marquee {
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .sales-name-track {
-    display: inline-flex;
-    min-width: max-content;
     gap: 34px;
-    animation: salesNameScroll 11s linear infinite;
 }
 
 .sales-name-track > span {
     flex: 0 0 auto;
 }
 
-#penjualanTable th:nth-child(2),
-#penjualanTable td:nth-child(2) {
-    width: 150px;
-    min-width: 150px;
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: clip;
-}
+
 
 @media (max-width: 768px) {
     #stockTable {
@@ -3476,9 +3464,6 @@ footer small {
 
     #penjualanTable th:nth-child(2),
     #penjualanTable td:nth-child(2) {
-        width: 150px;
-        min-width: 150px;
-        max-width: 150px;
         overflow: hidden;
         text-overflow: clip;
     }
@@ -3551,8 +3536,6 @@ footer small {
 .sales-name-track {
     display: block;
     min-width: 0;
-    animation: none;
-    transform: none;
 }
 
 .sales-name-track > span:first-child {
@@ -3561,9 +3544,7 @@ footer small {
     word-break: normal;
 }
 
-.sales-name-track > span[aria-hidden="true"] {
-    display: none;
-}
+
 
 @media (max-width: 768px) {
     #penjualanTable th:nth-child(2),
@@ -3727,40 +3708,19 @@ footer small {
    HEADER — COMPACT BRAND GROUP
 ===================================================== */
 
-.header {
-    padding: 15px 20px;
-}
+
 
 .header-content {
     min-height: 52px;
-    gap: 12px;
 }
 
 .company-logo-shell {
-    display: grid;
     place-items: center;
-    flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap12)));
-    border-radius: 13px;
-    background:
-        var(--theme-element-bg, linear-gradient(
-            145deg,
-            var(--tone-ffffff-ap12),
-            var(--tone-ffffff-ap045)
-        ));
-    box-shadow:
-        inset 0 1px 0 var(--tone-ffffff-ap08),
-        0 7px 16px var(--tone-000000-ap15);
 }
 
 .company-logo-shell .company-logo {
-    width: 30px;
-    height: 30px;
     padding: 0;
     border: 0;
-    border-radius: 7px;
     background: var(--theme-element-bg, transparent);
     box-shadow: none;
 }
@@ -3801,15 +3761,10 @@ footer small {
     }
 
     .company-logo-shell {
-        width: 41px;
-        height: 41px;
         border-radius: 11px;
     }
 
-    .company-logo-shell .company-logo {
-        width: 27px;
-        height: 27px;
-    }
+    
 
     .header-text {
         gap: 2px;
@@ -4038,8 +3993,6 @@ footer small {
 
 #toastMessage {
     display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .toast-status-icon {
@@ -4181,10 +4134,6 @@ html {
 
 body {
     min-width: 320px;
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 82% 0, var(--tone-7b72ff-ap13), transparent 29%),
-        radial-gradient(circle at 55% 52%, var(--tone-b66b80-ap045), transparent 34%),
-        var(--app-bg));
     color: var(--theme-ink, var(--app-text-soft));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
@@ -4206,15 +4155,10 @@ body {
     flex-direction: column;
     padding: 20px 14px 16px;
     border-right: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background:
-        var(--theme-element-bg, linear-gradient(180deg, var(--tone-7b72ff-ap045), transparent 34%),
-        var(--app-sidebar));
 }
 
 .header {
     padding: 2px 7px 22px;
-    background: var(--theme-element-bg, transparent);
-    color: var(--theme-ink, var(--app-text));
 }
 
 .header-content {
@@ -4223,12 +4167,9 @@ body {
 
 .company-logo-shell {
     display: grid;
-    width: 38px;
-    height: 38px;
     flex: 0 0 auto;
     place-items: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap28)));
-    border-radius: 12px;
     background: var(--theme-element-bg, linear-gradient(135deg, var(--tone-7b72ff-ap24), var(--tone-b66b80-ap12)));
     box-shadow: 0 10px 28px var(--tone-1f2463-ap28);
 }
@@ -4259,7 +4200,6 @@ body {
 
 .app-nav::before {
     padding: 6px 11px 5px;
-    color: var(--theme-ink, var(--tone-7f90b4));
     content: "WORKSPACE";
     font-size: 10px;
     font-weight: 600;
@@ -4273,27 +4213,15 @@ body {
     align-items: center;
     gap: 11px;
     padding: 9px 11px;
-    border: 1px solid transparent;
-    border-radius: 11px;
-    color: var(--theme-ink, var(--app-muted));
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     transition: background-color .18s ease, border-color .18s ease, color .18s ease;
 }
 
-.app-nav a:hover,
-.app-nav a:focus-visible {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap18)));
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap09));
-    color: var(--theme-ink, var(--app-text));
-}
 
-.app-nav a.active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap26)));
-    background: var(--theme-element-bg, linear-gradient(90deg, var(--tone-7b72ff-ap22), var(--tone-7b72ff-ap08)));
-    color: var(--theme-ink, var(--app-text));
-}
+
+
 
 .app-nav a.active::before {
     position: absolute;
@@ -4302,9 +4230,7 @@ body {
     left: -15px;
     width: 3px;
     border-radius: 0 8px 8px 0;
-    background: var(--theme-element-bg, linear-gradient(180deg, var(--app-accent), var(--app-cyan)));
     content: "";
-    box-shadow: 0 0 14px var(--tone-7b72ff-ap65);
 }
 
 .app-nav .ui-svg-icon {
@@ -4339,13 +4265,9 @@ body {
     position: relative;
     z-index: 20;
     display: flex;
-    min-height: 96px;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px 25px 16px;
-    border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-050816-ap78));
     backdrop-filter: blur(15px);
 }
 
@@ -4362,7 +4284,6 @@ body {
 
 .app-topbar h2 {
     margin: 0;
-    color: var(--theme-ink, var(--app-text));
     font-size: 21px;
     font-weight: 700;
     letter-spacing: -.025em;
@@ -4370,7 +4291,6 @@ body {
 
 .app-topbar p {
     margin: 4px 0 0;
-    color: var(--theme-ink, var(--app-muted));
     font-size: 12px;
 }
 
@@ -4383,8 +4303,6 @@ body {
     padding: 8px 11px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap22)));
     border-radius: 11px;
-    background: var(--theme-element-bg, var(--tone-b66b80-ap08));
-    color: var(--theme-ink, var(--tone-f4e5ea));
     font-size: 12px;
     white-space: nowrap;
 }
@@ -4406,18 +4324,12 @@ body {
     padding: 8px 11px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ff6f91-ap2)));
     border-radius: 11px;
-    background: var(--theme-element-bg, var(--tone-ff6f91-ap07));
-    color: var(--theme-ink, var(--tone-ffadc0));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 11px;
     font-weight: 600;
 }
 
-.app-logout-button:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-ff6f91-ap42)));
-    background: var(--theme-element-bg, var(--tone-ff6f91-ap12));
-    color: var(--theme-ink, var(--tone-ffd5df));
-}
+
 
 .app-logout-button .ui-svg-icon {
     width: 15px;
@@ -4497,23 +4409,15 @@ body {
 .dashboard-card .stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
     margin: 0;
 }
 
 .dashboard-card .stat {
-    position: relative;
     display: grid;
     min-width: 0;
     min-height: 112px;
     align-content: space-between;
-    overflow: hidden;
     padding: 15px 16px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    border-radius: 14px;
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 100% 0, var(--tone-7b72ff-ap18), transparent 46%),
-        var(--tone-070d1f-ap54));
     box-shadow: none;
 }
 
@@ -4531,42 +4435,29 @@ body {
 .dashboard-card .stat small {
     position: relative;
     z-index: 1;
-    color: var(--theme-ink, var(--app-muted));
     font-size: 12px;
-    font-weight: 500;
 }
 
 .dashboard-card .stat strong {
     position: relative;
     z-index: 1;
-    color: var(--theme-ink, var(--app-text));
     font-size: 25px;
-    font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
 
-.dashboard-card .stat-primary {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap65)));
-}
 
-.dashboard-card .stat-success {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap65)));
-}
 
-.dashboard-card .stat-warning {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-f0bb4f-ap68)));
-}
+
+
+
 
 .dashboard-card .sales-target-section {
     margin-top: 17px;
     padding: 17px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    border-radius: 14px;
-    background: var(--theme-element-bg, var(--tone-060c1d-ap48));
 }
 
 .dashboard-card .sales-target-header {
-    align-items: center;
     margin-bottom: 15px;
 }
 
@@ -4580,9 +4471,7 @@ body {
     font-weight: 600;
 }
 
-.dashboard-card .sales-target-header h3 .ui-svg-icon {
-    color: var(--theme-ink, var(--app-cyan));
-}
+
 
 .dashboard-card .sales-target-header p,
 .dashboard-card .sales-target-summary span,
@@ -4592,33 +4481,24 @@ body {
 }
 
 .dashboard-card .sales-target-summary strong {
-    color: var(--theme-ink, var(--app-text));
     font-size: 15px;
     font-weight: 600;
 }
 
 .dashboard-card .target-brand-list {
-    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 22px;
 }
 
 .dashboard-card .target-brand-loading {
     grid-column: 1 / -1;
     padding: 18px;
     border-radius: 10px;
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap07));
-    color: var(--theme-ink, var(--app-muted));
     font-size: 12px;
 }
 
 .dashboard-card .target-brand-card {
-    display: grid;
     grid-template-rows: auto auto auto;
     justify-items: stretch;
-    min-width: 0;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
 }
 
 .dashboard-card .target-card-header {
@@ -4638,8 +4518,6 @@ body {
     justify-content: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap2)));
     border-radius: 8px;
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap09));
-    color: var(--theme-ink, var(--app-muted));
     font-size: 10px;
     font-weight: 600;
 }
@@ -4662,39 +4540,25 @@ body {
 }
 
 .dashboard-card .target-progress-track {
-    position: relative;
     display: block;
-    width: 100%;
-    height: 7px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: var(--theme-element-bg, var(--tone-a9b6d3-ap12));
 }
 
 .dashboard-card .target-progress-fill {
     position: absolute;
     inset: 0 auto 0 0;
-    width: calc(var(--progress) * 1%);
     min-width: 0;
-    border-radius: inherit;
-    background: var(--theme-element-bg, linear-gradient(90deg, var(--brand-color), color-mix(in srgb, var(--brand-color) 56%, var(--app-cyan))));
     box-shadow: 0 0 13px color-mix(in srgb, var(--brand-color) 42%, transparent);
 }
 
 .dashboard-card .target-progress-rainbow {
     width: 100%;
-    background: var(--theme-element-bg, linear-gradient(90deg, var(--tone-ef6f91), var(--tone-f0bb4f), var(--tone-b66b80), var(--tone-b66b80), var(--tone-7b72ff)));
 }
 
 .dashboard-card .target-card-values {
-    display: flex;
     width: 100%;
-    min-width: 0;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
     margin-top: 7px;
-    text-align: left;
 }
 
 .dashboard-card .target-card-values strong,
@@ -4710,10 +4574,7 @@ body {
     font-weight: 500;
 }
 
-.dashboard-card .target-card-values span {
-    color: var(--theme-ink, var(--app-muted));
-    font-size: 10px;
-}
+
 
 /* Dark foundation for existing sections; detailed redesign follows per stage. */
 .container > .card h2,
@@ -4759,7 +4620,6 @@ body {
     --bs-table-border-color: var(--app-border-soft);
     --bs-table-hover-bg: var(--tone-7b72ff-ap065);
     --bs-table-hover-color: var(--app-text);
-    color: var(--theme-ink, var(--app-text-soft));
 }
 
 .container .table-light,
@@ -4866,14 +4726,10 @@ body > footer {
     }
 
     .app-topbar {
-        min-height: 82px;
         align-items: flex-start;
-        padding: 16px 14px 13px;
     }
 
-    .app-topbar h2 {
-        font-size: 19px;
-    }
+    
 
     .app-topbar p {
         max-width: 190px;
@@ -4882,8 +4738,6 @@ body > footer {
 
     .app-topbar #databaseStatus.status {
         min-height: 34px;
-        max-width: 145px;
-        padding: 7px 9px;
         overflow: hidden;
         font-size: 10px;
         text-overflow: ellipsis;
@@ -4924,10 +4778,7 @@ body > footer {
         gap: 9px;
     }
 
-    .dashboard-card .stat {
-        min-height: 96px;
-        padding: 12px;
-    }
+    
 
     .dashboard-card .stat strong {
         font-size: 21px;
@@ -4942,7 +4793,6 @@ body > footer {
     }
 
     .dashboard-card .sales-target-header {
-        align-items: flex-start;
         gap: 12px;
     }
 
@@ -4966,29 +4816,15 @@ body > footer {
 
     .app-mobile-nav {
         position: fixed;
-        right: 10px;
         bottom: 10px;
-        left: 10px;
         z-index: 90;
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        padding: 6px;
-        border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-        border-radius: 15px;
-        background: var(--theme-element-bg, var(--tone-080d1e-ap96));
-        box-shadow: 0 18px 50px var(--tone-000000-ap48);
         backdrop-filter: blur(16px);
     }
 
     .app-mobile-nav a {
-        display: grid;
-        min-height: 52px;
         place-items: center;
-        gap: 2px;
-        border-radius: 10px;
         color: var(--theme-ink, var(--app-muted));
-        font-size: 9px;
-        font-weight: 500;
         text-decoration: none;
     }
 
@@ -5088,8 +4924,6 @@ body > footer {
     padding: 6px 9px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap2)));
     border-radius: 999px;
-    background: var(--theme-element-bg, var(--tone-b66b80-ap075));
-    color: var(--theme-ink, var(--tone-f4e5ea));
     font-size: 11px;
     font-weight: 500;
     white-space: nowrap;
@@ -5205,10 +5039,6 @@ body > footer {
     padding: 11px 14px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap3)));
     border-radius: 12px;
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 100% 0, var(--tone-b66b80-ap11), transparent 50%),
-        linear-gradient(145deg, var(--tone-7b72ff-ap16), var(--tone-070d1f-ap66)));
-    box-shadow: inset 3px 0 0 var(--app-accent);
 }
 
 #penjualan .sales-total-card::after {
@@ -5224,7 +5054,6 @@ body > footer {
     position: relative;
     z-index: 1;
     margin-bottom: 1px;
-    color: var(--theme-ink, var(--tone-b8c4dc));
     font-size: 10px;
     letter-spacing: .07em;
     text-transform: uppercase;
@@ -5233,7 +5062,6 @@ body > footer {
 #penjualan .sales-total-card strong {
     position: relative;
     z-index: 1;
-    color: var(--theme-ink, var(--app-text));
     font-size: 20px;
     font-weight: 700;
     letter-spacing: -.025em;
@@ -5252,7 +5080,6 @@ body > footer {
 #penjualan .sales-entry-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 14px;
     margin-top: 16px;
     padding-top: 15px;
@@ -5394,8 +5221,6 @@ body > footer {
 @media (max-width: 700px) {
     #penjualan .sales-entry-header {
         align-items: flex-start;
-        margin-bottom: 14px;
-        padding-bottom: 13px;
     }
 
     #penjualan .modern-title-icon {
@@ -5424,10 +5249,7 @@ body > footer {
         height: 14px;
     }
 
-    #penjualan .sales-entry-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px 8px;
-    }
+    
 
     #penjualan .sales-field label,
     #penjualan .sales-total-card > span {
@@ -5438,9 +5260,7 @@ body > footer {
     #penjualan .form-control,
     #penjualan input[type="text"],
     #penjualan input[type="number"] {
-        min-height: 39px;
         padding: 8px 9px;
-        font-size: 12px;
     }
 
     #penjualan .localized-date-display {
@@ -5448,14 +5268,9 @@ body > footer {
         font-size: 13px;
     }
 
-    #penjualan .sales-total-card {
-        min-height: 58px;
-        padding: 9px 11px;
-    }
+    
 
-    #penjualan .sales-total-card strong {
-        font-size: 17px;
-    }
+    
 
     #penjualan .sales-total-card small {
         font-size: 10px;
@@ -5464,24 +5279,14 @@ body > footer {
     #penjualan .sales-entry-footer {
         align-items: stretch;
         flex-direction: column;
-        gap: 9px;
-        margin-top: 13px;
-        padding-top: 12px;
     }
 
     #penjualan .sales-stock-info {
-        width: 100%;
-        min-height: 30px;
-        justify-content: center;
-        padding: 6px 9px;
         font-size: 10px;
-        text-align: center;
     }
 
     #penjualan #simpanPenjualanButton {
         width: 100%;
-        min-height: 41px;
-        font-size: 12px;
     }
 }
 
@@ -5529,8 +5334,6 @@ body > footer {
     place-items: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap22)));
     border-radius: 11px;
-    background: var(--theme-element-bg, linear-gradient(145deg, var(--tone-b66b80-ap15), var(--tone-7b72ff-ap11)));
-    color: var(--theme-ink, var(--tone-dfb7c4));
     box-shadow: 0 9px 24px var(--tone-0d3657-ap2);
 }
 
@@ -5555,11 +5358,7 @@ body > footer {
     font-weight: 400;
 }
 
-#stok-barang .modern-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+
 
 #stok-barang .modern-primary-button,
 #stok-barang .modern-export-menu > summary {
@@ -5579,7 +5378,6 @@ body > footer {
 
 #stok-barang .modern-primary-button {
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-accent)));
-    background: var(--theme-element-bg, linear-gradient(135deg, var(--app-accent), var(--tone-6258e8)));
     color: var(--theme-ink, var(--tone-ffffff));
     box-shadow: 0 9px 22px var(--tone-3c33af-ap23);
 }
@@ -5598,8 +5396,6 @@ body > footer {
 
 #stok-barang .modern-export-menu > summary {
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background: var(--theme-element-bg, var(--tone-070d1f-ap72));
-    color: var(--theme-ink, var(--app-text-soft));
     box-shadow: none;
     list-style: none;
 }
@@ -5617,7 +5413,6 @@ body > footer {
     place-items: center;
     border-radius: 7px;
     background: var(--theme-element-bg, var(--tone-b66b80-ap1));
-    color: var(--theme-ink, var(--tone-dfb7c4));
 }
 
 #stok-barang .modern-export-leading-icon svg,
@@ -5733,7 +5528,6 @@ body > footer {
     padding: 13px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     border-radius: 13px;
-    background: var(--theme-element-bg, var(--tone-060c1d-ap48));
 }
 
 #stok-barang .stock-filter-field {
@@ -5746,15 +5540,12 @@ body > footer {
     align-items: center;
     gap: 7px;
     margin: 0 0 6px;
-    color: var(--theme-ink, var(--app-muted));
     font-size: 11px;
-    font-weight: 500;
 }
 
 #stok-barang .search-label-icon {
     width: 14px;
     height: 14px;
-    color: var(--theme-ink, var(--tone-dfb7c4));
 }
 
 #stok-barang .form-control,
@@ -5763,8 +5554,6 @@ body > footer {
     padding: 8px 10px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
     border-radius: 10px;
-    background: var(--theme-element-bg, var(--tone-070d1f-ap74));
-    color: var(--theme-ink, var(--app-text-soft));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 12px;
 }
@@ -5794,7 +5583,6 @@ body > footer {
     width: 30px;
     height: 30px;
     border-radius: 8px;
-    color: var(--theme-ink, var(--app-muted));
 }
 
 #stok-barang .localized-date-picker-button:hover {
@@ -5811,7 +5599,6 @@ body > footer {
     overflow-x: auto;
     overflow-y: visible;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    border-radius: 13px;
     background: var(--theme-element-bg, var(--tone-060c1d-ap38));
     scrollbar-color: var(--tone-42557e) var(--tone-070d1f-ap6);
 }
@@ -5858,7 +5645,6 @@ body > footer {
 }
 
 #stok-barang .modern-stock-table tbody td {
-    padding: 11px 12px;
     border: 0;
     border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     background: var(--theme-element-bg, transparent);
@@ -5898,15 +5684,10 @@ body > footer {
 
 #stok-barang .modern-stock-table th:nth-child(4),
 #stok-barang .modern-stock-table td:nth-child(4) {
-    width: 150px;
     text-align: center;
 }
 
-#stok-barang .modern-stock-table #namaHeader:hover,
-#stok-barang .modern-stock-table #stokHeader:hover {
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap1));
-    color: var(--theme-ink, var(--tone-c0bcff));
-}
+
 
 #stok-barang #stockTable .stock-badge {
     display: inline-flex;
@@ -5914,7 +5695,6 @@ body > footer {
     min-height: 27px;
     align-items: center;
     justify-content: center;
-    padding: 4px 8px;
     border: 1px solid transparent;
     border-radius: 999px;
     font-size: 11px;
@@ -5941,20 +5721,12 @@ body > footer {
 }
 
 #stok-barang #stockTable .stock-action-group {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 3px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     border-radius: 9px;
-    background: var(--theme-element-bg, var(--tone-070d1f-ap62));
 }
 
 #stok-barang #stockTable .action-btn {
     display: inline-flex;
     min-width: 64px;
-    height: 30px;
     align-items: center;
     justify-content: center;
     gap: 5px;
@@ -6002,11 +5774,9 @@ body > footer {
 
 #stok-barang .stock-pagination-area {
     display: flex;
-    min-height: 40px;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 12px;
     padding-top: 11px;
     border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
 }
@@ -6032,37 +5802,24 @@ body > footer {
     padding: 0 8px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     border-radius: 8px;
-    background: var(--theme-element-bg, var(--tone-070d1f-ap62));
-    color: var(--theme-ink, var(--app-muted));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 11px;
     font-weight: 600;
-    box-shadow: none;
 }
 
 #stok-barang .stock-pagination button:hover:not(:disabled):not(.active) {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-3a4e78)));
-    background: var(--theme-element-bg, var(--tone-151f3f-ap85));
-    color: var(--theme-ink, var(--app-text));
     transform: translateY(-1px);
 }
 
 #stok-barang .stock-pagination button.active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-accent)));
-    background: var(--theme-element-bg, var(--app-accent));
-    color: var(--theme-ink, var(--tone-ffffff));
     box-shadow: 0 7px 18px var(--tone-3c33af-ap25);
 }
 
 #stok-barang .stock-pagination button:disabled {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7289b8-ap1)));
-    background: var(--theme-element-bg, var(--tone-a9b6d3-ap035));
-    color: var(--theme-ink, var(--tone-5f6d8a));
     opacity: 1;
 }
 
 #stok-barang .pagination-dots {
-    color: var(--theme-ink, var(--tone-7383a3));
     font-size: 11px;
 }
 
@@ -6089,9 +5846,7 @@ body > footer {
         line-height: 1.35;
     }
 
-    #stok-barang .modern-header-actions {
-        gap: 6px;
-    }
+    
 
     #stok-barang .modern-primary-button,
     #stok-barang .modern-export-menu > summary {
@@ -6175,7 +5930,6 @@ body > footer {
 
     #stok-barang .modern-stock-table th:nth-child(4),
     #stok-barang .modern-stock-table td:nth-child(4) {
-        width: 110px;
         padding-right: 3px;
         padding-left: 3px;
     }
@@ -6188,17 +5942,12 @@ body > footer {
     }
 
     #stok-barang #stockTable .stock-action-group {
-        width: 100%;
-        gap: 2px;
         padding: 2px;
     }
 
     #stok-barang #stockTable .action-btn {
-        min-width: 0;
-        height: 28px;
         flex: 1 1 0;
         gap: 3px;
-        padding: 4px 3px;
         font-size: 10px;
     }
 
@@ -6298,7 +6047,6 @@ body > footer {
     padding: 10px 11px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     border-radius: 10px;
-    background: var(--theme-element-bg, var(--tone-070d1f-ap58));
     color: var(--theme-ink, var(--app-muted));
     font-size: 12px;
     line-height: 1.45;
@@ -6443,8 +6191,6 @@ body > footer {
     place-items: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap26)));
     border-radius: 11px;
-    background: var(--theme-element-bg, linear-gradient(145deg, var(--tone-7b72ff-ap18), var(--tone-b66b80-ap08)));
-    color: var(--theme-ink, var(--tone-aaa5ff));
     box-shadow: 0 9px 24px var(--tone-14184c-ap22);
 }
 
@@ -6472,7 +6218,6 @@ body > footer {
 #catatan-penjualan .modern-sales-tools {
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
 #catatan-penjualan .modern-month-nav {
@@ -6596,7 +6341,6 @@ body > footer {
 #catatan-penjualan .sales-filter-control label .ui-svg-icon {
     width: 13px;
     height: 13px;
-    color: var(--theme-ink, var(--tone-dfb7c4));
 }
 
 #catatan-penjualan .modern-sales-filter .form-select {
@@ -6604,8 +6348,6 @@ body > footer {
     padding: 7px 34px 7px 10px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
     border-radius: 10px;
-    background-color: var(--theme-element-bg, var(--tone-070d1f-ap72));
-    color: var(--theme-ink, var(--app-text-soft));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 12px;
     box-shadow: none;
@@ -6618,10 +6360,7 @@ body > footer {
 
 #catatan-penjualan .modern-sales-table-wrapper {
     max-width: 100%;
-    overflow-x: auto;
-    overflow-y: visible;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    border-radius: 13px;
     background: var(--theme-element-bg, var(--tone-060c1d-ap38));
     scrollbar-color: var(--tone-42557e) var(--tone-070d1f-ap6);
 }
@@ -6778,11 +6517,7 @@ body > footer {
     color: var(--theme-ink, var(--tone-f4e5ea));
 }
 
-#catatan-penjualan .modern-sales-table .delete-history-btn:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-ff6f91-ap2)));
-    background: var(--theme-element-bg, var(--tone-ff6f91-ap09));
-    color: var(--theme-ink, var(--tone-ffc1ce));
-}
+
 
 #catatan-penjualan .modern-sales-table .edit-history-btn svg,
 #catatan-penjualan .modern-sales-table .delete-history-btn svg {
@@ -6806,8 +6541,6 @@ body > footer {
     padding: 11px 10px;
     border: 0;
     border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap24)));
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap08));
-    color: var(--theme-ink, var(--app-text-soft));
     font-size: 11px;
     font-weight: 600;
     vertical-align: middle;
@@ -6865,25 +6598,11 @@ body > footer {
         width: 100%;
     }
 
-    #catatan-penjualan .modern-sales-table,
-    #catatan-penjualan #penjualanTable {
-        min-width: 830px;
-    }
+    
 
-    #catatan-penjualan .modern-sales-table thead th,
-    #catatan-penjualan .modern-sales-table tbody td,
-    #catatan-penjualan .modern-sales-table tfoot th,
-    #catatan-penjualan .modern-sales-table tfoot td {
-        padding: 9px 7px;
-        font-size: 11px;
-    }
+    
 
-    #catatan-penjualan .modern-sales-table th:nth-child(2),
-    #catatan-penjualan .modern-sales-table td:nth-child(2) {
-        width: 220px;
-        min-width: 220px;
-        max-width: 220px;
-    }
+    
 }
 
 @media (max-width: 430px) {
@@ -7059,8 +6778,6 @@ body > footer {
     place-items: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap24)));
     border-radius: 11px;
-    background: var(--theme-element-bg, linear-gradient(145deg, var(--tone-b66b80-ap15), var(--tone-7b72ff-ap09)));
-    color: var(--theme-ink, var(--tone-dfb7c4));
     box-shadow: 0 9px 24px var(--tone-092749-ap22);
 }
 
@@ -7392,32 +7109,20 @@ body > footer {
 }
 
 #toast.toast {
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-    border-left: 3px solid var(--theme-element-border, var(--theme-border, var(--app-green)));
     background: var(--theme-element-bg, var(--tone-0f1730-ap96));
-    color: var(--theme-ink, var(--app-text-soft));
-    box-shadow: 0 18px 45px var(--tone-000000-ap34);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
 }
 
 #toast.toast.success {
     border-left-color: var(--theme-element-border, var(--theme-border, var(--app-green)));
-    background: var(--theme-element-bg, var(--tone-0f1730-ap96));
 }
 
-#toast.toast.error {
-    border-left-color: var(--theme-element-border, var(--theme-border, var(--app-red)));
-    background: var(--theme-element-bg, var(--tone-0f1730-ap96));
-}
 
-#toast.toast.success .toast-status-icon {
-    color: var(--theme-ink, var(--app-green));
-}
 
-#toast.toast.error .toast-status-icon {
-    color: var(--theme-ink, var(--app-red));
-}
+
+
+
 
 @media (max-width: 700px) {
     #riwayat-transaksi .modern-history-header {
@@ -7480,10 +7185,7 @@ body > footer {
    Accessibility, responsive polish, dan state visual
 ===================================================== */
 
-::selection {
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap36));
-    color: var(--theme-ink, var(--tone-ffffff));
-}
+
 
 .skip-link {
     position: fixed;
@@ -7526,10 +7228,7 @@ select:disabled {
     transition: border-color .18s ease, box-shadow .18s ease;
 }
 
-.container > .card:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7289b8-ap26)));
-    box-shadow: 0 20px 54px var(--tone-01040e-ap24);
-}
+
 
 .container .empty,
 .container .loading {
@@ -7556,7 +7255,6 @@ select:disabled {
     position: relative;
     overflow: hidden;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-070d1f-ap48));
 }
 
 .dashboard-card .target-brand-loading::after {
@@ -7565,7 +7263,6 @@ select:disabled {
     background: var(--theme-element-bg, linear-gradient(100deg, transparent 20%, var(--tone-7b72ff-ap12) 48%, transparent 76%));
     content: "";
     transform: translateX(-100%);
-    animation: appLoadingSweep 1.5s ease-in-out infinite;
 }
 
 @keyframes appLoadingSweep {
@@ -7586,32 +7283,18 @@ select:disabled {
 }
 
 .app-footer {
-    display: flex;
-    min-height: 60px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
     margin-left: 228px;
-    padding: 14px 25px 16px;
-    border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--app-bg));
-    color: var(--theme-ink, var(--app-muted));
-    text-align: center;
 }
 
 .app-footer-brand {
-    display: inline-flex;
     min-width: 0;
-    align-items: center;
-    justify-content: center;
     gap: 6px;
 }
 
 .app-footer-brand strong {
-    color: var(--theme-ink, var(--app-text-soft));
-    font-size: 12px;
-    font-weight: 600;
     white-space: nowrap;
 }
 
@@ -7623,9 +7306,6 @@ select:disabled {
 .app-footer-brand small,
 .app-footer-copyright {
     margin: 0;
-    color: var(--theme-ink, var(--app-muted));
-    font-size: 10px;
-    font-weight: 400;
 }
 
 .app-footer-copyright {
@@ -7646,7 +7326,6 @@ select:disabled {
 
     .app-topbar {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(110px, 145px);
         gap: 9px;
     }
 
@@ -7682,16 +7361,11 @@ select:disabled {
 
     .app-footer {
         display: grid;
-        min-height: 0;
         justify-items: center;
-        gap: 6px;
-        margin-left: 0;
-        padding: 14px 14px 20px;
         text-align: center;
     }
 
     .app-footer-brand {
-        width: 100%;
         justify-content: center;
     }
 
@@ -7783,12 +7457,7 @@ select:disabled {
     background: var(--theme-element-bg, transparent) !important;
 }
 
-#stok-barang .modern-stock-table tbody tr:hover > td,
-#catatan-penjualan .modern-sales-table tbody tr:hover > td,
-#riwayat-transaksi .modern-history-table tbody tr:hover > td {
-    background: var(--theme-element-bg, var(--tone-7b72ff-ap065)) !important;
-    color: var(--theme-ink, var(--app-text)) !important;
-}
+
 
 #stok-barang .modern-stock-table th:nth-child(4),
 #stok-barang .modern-stock-table td:nth-child(4) {
@@ -7874,22 +7543,16 @@ select:disabled {
 }
 
 @media (max-width: 700px) {
-    .app-mobile-nav {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
+    
 
     .app-mobile-nav a {
         position: relative;
-        min-width: 0;
         overflow: hidden;
     }
 
     .app-mobile-nav a span {
-        display: block;
-        max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .app-mobile-nav a.active::after {
