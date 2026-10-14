@@ -7857,8 +7857,6 @@ select:disabled {
     place-items: center;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap2)));
     border-radius: 14px;
-    background: var(--theme-element-bg, linear-gradient(145deg, var(--tone-b66b80-ap14), var(--tone-7b72ff-ap12)));
-    color: var(--theme-ink, var(--app-cyan));
     box-shadow: 0 12px 30px var(--tone-041731-ap28);
 }
 
@@ -7981,7 +7979,6 @@ select:disabled {
         var(--theme-element-bg, radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--toast-accent) 12%, transparent), transparent 45%),
         var(--tone-0f1730-ap97));
     color: var(--theme-ink, var(--app-text-soft));
-    box-shadow: 0 22px 55px var(--tone-000000-ap42);
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -8000,9 +7997,6 @@ select:disabled {
 
 #toast.toast.error {
     --toast-accent: var(--app-red);
-    background:
-        var(--theme-element-bg, radial-gradient(circle at 100% 0%, var(--tone-ff6f91-ap12), transparent 45%),
-        var(--tone-0f1730-ap97));
 }
 
 #toast.toast.show {
@@ -8014,8 +8008,6 @@ select:disabled {
     right: 0;
     bottom: 0;
     left: 0;
-    height: 2px;
-    background: var(--theme-element-bg, linear-gradient(90deg, var(--toast-accent), color-mix(in srgb, var(--toast-accent) 55%, white)));
     content: "";
     opacity: 0;
     transform: scaleX(1);
@@ -8314,17 +8306,12 @@ dialog::backdrop {
 
 .dashboard-card .target-brand-identity {
     display: grid;
-    grid-template-columns: 7px minmax(0, 1fr);
     align-items: center;
     gap: 9px;
     min-width: 0;
 }
 
 .dashboard-card .target-brand-indicator {
-    width: 7px;
-    height: 28px;
-    border-radius: 999px;
-    background: var(--theme-element-bg, var(--brand-color));
     box-shadow: 0 0 10px var(--tone-b66b80-ap12);
 }
 
@@ -8386,7 +8373,6 @@ dialog::backdrop {
     height: 7px;
     overflow: hidden;
     border-radius: 999px;
-    background: var(--theme-element-bg, var(--tone-a9b6d3-ap14));
 }
 
 .dashboard-card .target-progress-track::after {
@@ -8398,7 +8384,6 @@ dialog::backdrop {
     width: calc(var(--progress) * 1%);
     height: 100%;
     border-radius: inherit;
-    background: var(--theme-element-bg, var(--brand-color));
 }
 
 .dashboard-card .target-card-values {
@@ -8520,15 +8505,11 @@ dialog::backdrop {
 }
 
 @media (max-width: 700px) {
-    .app-topbar {
-        grid-template-columns: minmax(0, 1fr) 74px;
-    }
+    
 
     .app-topbar > div:first-child {
         display: grid;
-        grid-template-columns: 34px minmax(0, 1fr);
         grid-template-rows: auto auto auto;
-        column-gap: 10px;
     }
 
     .app-topbar > div:first-child .app-mobile-logo {
@@ -8541,9 +8522,7 @@ dialog::backdrop {
         grid-column: 2;
     }
 
-    .app-topbar-actions {
-        min-width: 74px;
-    }
+    
 
     .app-topbar #databaseStatus.status {
         width: 34px;
@@ -8565,25 +8544,13 @@ dialog::backdrop {
 
     .app-mobile-logo {
         display: grid;
-        width: 34px;
-        height: 34px;
         flex: 0 0 34px;
         place-items: center;
         border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-7b72ff-ap28)));
-        border-radius: 10px;
-        background:
-            var(--theme-element-bg, linear-gradient(
-                135deg,
-                var(--tone-7b72ff-ap22),
-                var(--tone-b66b80-ap1)
-            ));
     }
 
     .app-mobile-logo img {
         display: block;
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
         object-fit: contain;
     }
 }
@@ -8601,8 +8568,6 @@ dialog::backdrop {
     padding: 8px 12px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
     border-radius: 10px;
-    background: var(--theme-element-bg, var(--tone-070d1f-ap72));
-    color: var(--theme-ink, var(--app-text-soft));
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 11px;
     font-weight: 600;
@@ -8795,23 +8760,11 @@ dialog::backdrop {
     line-height: 1.25;
 }
 
-#importExcelModal .import-row-ready {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap22)));
-    background: var(--theme-element-bg, var(--tone-b66b80-ap1));
-    color: var(--theme-ink, var(--tone-f4e5ea));
-}
 
-#importExcelModal .import-row-skipped {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-f0bb4f-ap22)));
-    background: var(--theme-element-bg, var(--tone-f0bb4f-ap1));
-    color: var(--theme-ink, var(--tone-f7d99b));
-}
 
-#importExcelModal .import-row-invalid {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-ff6f91-ap23)));
-    background: var(--theme-element-bg, var(--tone-ff6f91-ap1));
-    color: var(--theme-ink, var(--tone-ffb3c3));
-}
+
+
+
 
 #importExcelModal .import-excel-empty {
     padding: 25px;
@@ -9245,9 +9198,6 @@ body.auth-locked .auth-gate {
 .container select,
 .modal-content input,
 .modal-content select {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background-color: var(--theme-element-bg, var(--tone-0d0d0f));
-    color: var(--theme-ink, var(--app-text));
     color-scheme: dark;
 }
 
@@ -9257,17 +9207,7 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-72726d));
 }
 
-.auth-form input:focus,
-.container .form-control:focus,
-.container .form-select:focus,
-.container input:focus,
-.container select:focus,
-.modal-content input:focus,
-.modal-content select:focus {
-    border-color: var(--theme-element-border, var(--theme-border, var(--dhouse-gold)));
-    background-color: var(--theme-element-bg, var(--tone-101012));
-    box-shadow: 0 0 0 3px var(--tone-d5aa32-ap11);
-}
+
 
 .auth-primary-button,
 .modern-primary-button,
@@ -9275,20 +9215,10 @@ body.auth-locked .auth-gate {
 .modal-actions .btn-primary,
 #editPenjualanModal .modal-actions .btn-primary,
 .export-confirm-yes {
-    border-color: var(--theme-element-border, var(--theme-border, var(--dhouse-gold))) !important;
-    background: var(--theme-element-bg, linear-gradient(135deg, var(--tone-e2b83f), var(--tone-b98a21))) !important;
-    color: var(--theme-ink, var(--tone-17140c)) !important;
     box-shadow: 0 7px 18px var(--tone-916813-ap2) !important;
 }
 
-.auth-primary-button:hover:not(:disabled),
-.modern-primary-button:hover,
-#simpanPenjualanButton:hover,
-.modal-actions .btn-primary:hover,
-.export-confirm-yes:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--dhouse-gold-bright))) !important;
-    background: var(--theme-element-bg, linear-gradient(135deg, var(--tone-edc957), var(--tone-c69527))) !important;
-}
+
 
 .auth-secondary-button,
 .modern-secondary-button,
@@ -9305,33 +9235,18 @@ body.auth-locked .auth-gate {
 .modern-export-menu > summary:hover,
 .modal-actions .btn-secondary:hover,
 .export-confirm-no:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--dhouse-gold))) !important;
-    background: var(--theme-element-bg, var(--tone-d9a928-ap11)) !important;
     color: var(--theme-ink, var(--app-text)) !important;
 }
 
-.app-sidebar {
-    background: var(--theme-element-bg, var(--app-sidebar));
-}
 
-.app-nav::before {
-    color: var(--theme-ink, var(--dhouse-gold-dark));
-}
 
-.app-nav a:hover,
-.app-nav a:focus-visible {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap23)));
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap085));
-}
 
-.app-nav a.active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap34)));
-    background: var(--theme-element-bg, var(--tone-d5aa32-ap11));
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
+
+
+
+
 
 .app-nav a.active::before {
-    background: var(--theme-element-bg, linear-gradient(180deg, var(--dhouse-gold-bright), var(--dhouse-gold-dark)));
     box-shadow: none;
 }
 
@@ -9344,30 +9259,18 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--dhouse-gold-bright));
 }
 
-.app-topbar {
-    background: var(--theme-element-bg, var(--tone-070708-ap92));
-}
 
-.app-logout-button {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-a43a4c-ap42)));
-    background: var(--theme-element-bg, var(--tone-7c2636-ap15));
-    color: var(--theme-ink, var(--tone-dc8090));
-}
 
-.app-logout-button:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--dhouse-maroon-bright)));
-    background: var(--theme-element-bg, var(--tone-7c2636-ap28));
-    color: var(--theme-ink, var(--tone-ffb1be));
-}
+
+
+
 
 .dashboard-card .stat {
     border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
     background: var(--theme-element-bg, var(--tone-151518));
 }
 
-.dashboard-card .stat::after {
-    display: none;
-}
+
 
 .dashboard-card .stat-primary,
 .dashboard-card .stat-success,
@@ -9383,18 +9286,12 @@ body.auth-locked .auth-gate {
 }
 
 .dashboard-card .target-card-rank {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap25)));
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap1));
     color: var(--theme-ink, var(--app-text-soft));
 }
 
-.dashboard-card .target-progress-track {
-    background: var(--theme-element-bg, var(--tone-ffffff-ap08));
-}
 
-.dashboard-card .target-progress-rainbow {
-    background: var(--theme-element-bg, linear-gradient(90deg, var(--dhouse-maroon), var(--tone-9d7419), var(--tone-ffd45d), var(--tone-ba851c), var(--dhouse-maroon)));
-}
+
+
 
 .container .table {
     --bs-table-hover-bg: var(--tone-e5b83b-ap055);
@@ -9420,8 +9317,6 @@ body.auth-locked .auth-gate {
 .modern-sales-table thead th,
 #riwayat-transaksi .modern-history-table thead th {
     border-bottom-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background: var(--theme-element-bg, var(--tone-101012));
-    color: var(--theme-ink, var(--app-muted));
 }
 
 .modern-data-table tbody td,
@@ -9447,97 +9342,41 @@ body.auth-locked .auth-gate {
 .modern-export-options,
 #saranBarang:not(:empty),
 .sales-suggestions:not(:empty) {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background: var(--theme-element-bg, var(--tone-141416));
     box-shadow: 0 18px 40px var(--tone-000000-ap42);
 }
 
-.modern-export-options button,
-.sales-suggestions .saran-item,
-#saranBarang .saran-item {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-141416));
-    color: var(--theme-ink, var(--app-text-soft));
-}
 
-.modern-export-options button:hover,
-.sales-suggestions .saran-item:hover,
-#saranBarang .saran-item:hover {
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap1));
-    color: var(--theme-ink, var(--app-text));
-}
 
-.modern-month-nav,
-#riwayat-transaksi .modern-history-month-nav {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-0d0d0f));
-}
+
+
+
 
 .modern-month-nav button,
 #riwayat-transaksi .modern-history-month-nav button {
     border-color: transparent;
-    background: var(--theme-element-bg, transparent);
-    color: var(--theme-ink, var(--app-muted));
 }
 
-.modern-month-nav button:hover:not(:disabled),
-#riwayat-transaksi .modern-history-month-nav button:hover:not(:disabled) {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap24)));
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap09));
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
 
-.modern-stock-table #stockTable .stock-action-group {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-0d0d0f));
-}
 
-.modern-stock-table #stockTable .stock-in-btn,
-#riwayat-transaksi .modern-history-table td.history-masuk {
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
 
-.modern-stock-table #stockTable .stock-out-btn,
-#riwayat-transaksi .modern-history-table td.history-laku,
-#riwayat-transaksi .modern-history-table td.history-keluar {
-    color: var(--theme-ink, var(--dhouse-maroon-bright));
-}
 
-.modern-stock-table #stockTable .stock-in-btn:hover {
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap12));
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
 
-.modern-stock-table #stockTable .stock-out-btn:hover {
-    background: var(--theme-element-bg, var(--tone-7c2636-ap25));
-    color: var(--theme-ink, var(--tone-e88a9a));
-}
 
-#stockTable .stock-badge.stock-habis {
-    background: var(--theme-element-bg, var(--tone-7c2636-ap26));
-    color: var(--theme-ink, var(--tone-e88a9a));
-}
 
-#stockTable .stock-badge.stock-menipis {
-    background: var(--theme-element-bg, var(--tone-9d7419-ap25));
-    color: var(--theme-ink, var(--tone-f1c553));
-}
 
-#stockTable .stock-badge.stock-aman {
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap14));
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
 
-.modern-sales-table .edit-history-btn,
-#riwayat-transaksi .history-edit-transaction-btn {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap23))) !important;
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap09)) !important;
-    color: var(--theme-ink, var(--dhouse-gold-bright)) !important;
-}
 
-.modern-sales-table .delete-history-btn {
-    color: var(--theme-ink, var(--dhouse-maroon-bright));
-}
+
+
+
+
+
+
+
+
+
+
+
 
 .modal,
 #editPenjualanModal {
@@ -9552,28 +9391,13 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--app-text-soft));
 }
 
-#toast.toast,
-#toast.toast.success {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    border-left-color: var(--theme-element-border, var(--theme-border, var(--dhouse-gold)));
-    background: var(--theme-element-bg, var(--tone-141417-ap98));
-    color: var(--theme-ink, var(--app-text));
-}
 
-#toast.toast.error {
-    border-left-color: var(--theme-element-border, var(--theme-border, var(--dhouse-maroon-bright)));
-    background: var(--theme-element-bg, var(--tone-141417-ap98));
-}
 
-.app-mobile-nav {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background: var(--theme-element-bg, var(--tone-0b0b0d-ap98));
-}
 
-.app-mobile-nav a.active {
-    background: var(--theme-element-bg, var(--tone-d5aa32-ap12));
-    color: var(--theme-ink, var(--dhouse-gold-bright));
-}
+
+
+
+
 
 .table-wrapper,
 .history-wrapper,
@@ -9597,34 +9421,20 @@ body.auth-locked .auth-gate {
     background: var(--theme-element-bg, var(--tone-6f6758));
 }
 
-::selection {
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap38));
-    color: var(--theme-ink, var(--tone-fff2c2));
-}
 
-button:focus-visible,
-summary:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-    outline-color: var(--theme-element-border, var(--theme-border, var(--tone-ffd45d-ap82)));
-}
+
+
 
 .container > .card:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-d5aa32-ap2)));
     box-shadow: 0 14px 38px var(--tone-000000-ap28);
 }
 
 /* Penutup warna spesifik dari komponen lama. */
 #penjualan .sales-total-card {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-151518));
     box-shadow: inset 3px 0 0 var(--dhouse-gold);
 }
 
-#penjualan .sales-total-card::after {
-    display: none;
-}
+
 
 #penjualan .sales-total-card > span,
 #editPenjualanModal #editPenjualanBarang {
@@ -9681,7 +9491,6 @@ select:focus-visible {
 #catatan-penjualan .modern-sales-table tfoot th,
 #catatan-penjualan .modern-sales-table tfoot td {
     border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-e5b83b-ap28)));
-    background: var(--theme-element-bg, var(--tone-e5b83b-ap09));
 }
 
 #catatan-penjualan .modern-sales-table .edit-history-btn:hover,
@@ -9766,12 +9575,7 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-98a3ff)) !important;
 }
 
-.modern-title-icon,
-#penjualan .modern-title-icon {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-8b85ff-ap25))) !important;
-    background: var(--theme-element-bg, var(--tone-8b85ff-ap1)) !important;
-    color: var(--theme-ink, var(--tone-aaa5ff)) !important;
-}
+
 
 #stok-barang .modern-title-icon {
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap25))) !important;
@@ -9785,11 +9589,7 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-8fbcff)) !important;
 }
 
-#riwayat-transaksi .modern-title-icon {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020-ap25))) !important;
-    background: var(--theme-element-bg, var(--tone-800020-ap1)) !important;
-    color: var(--theme-ink, var(--tone-dfb7c4)) !important;
-}
+
 
 .auth-heading > span,
 .app-topbar-eyebrow,
@@ -9798,35 +9598,11 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--app-cyan));
 }
 
-.dashboard-card .sales-target-header h3 .ui-svg-icon {
-    color: var(--theme-ink, var(--tone-aaa5ff));
-}
 
-.auth-form input,
-.container .form-control,
-.container .form-select,
-.container input[type="text"],
-.container input[type="number"],
-.container input[type="date"],
-.container select,
-.modal-content input,
-.modal-content select {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    background-color: var(--theme-element-bg, var(--tone-0d0e12));
-    color: var(--theme-ink, var(--app-text));
-}
 
-.auth-form input:focus,
-.container .form-control:focus,
-.container .form-select:focus,
-.container input:focus,
-.container select:focus,
-.modal-content input:focus,
-.modal-content select:focus {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-accent)));
-    background-color: var(--theme-element-bg, var(--tone-101116));
-    box-shadow: none;
-}
+
+
+
 
 .auth-primary-button,
 .modern-primary-button,
@@ -9839,14 +9615,7 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-ffffff)) !important;
 }
 
-.auth-primary-button:hover:not(:disabled),
-.modern-primary-button:hover,
-#simpanPenjualanButton:hover,
-.modal-actions .btn-primary:hover,
-.export-confirm-yes:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-8f9aff))) !important;
-    background: var(--theme-element-bg, var(--tone-7785eb)) !important;
-}
+
 
 .auth-secondary-button:hover:not(:disabled),
 .modern-secondary-button:hover,
@@ -9857,39 +9626,17 @@ body.auth-locked .auth-gate {
     background: var(--theme-element-bg, var(--tone-191b22)) !important;
 }
 
-.app-nav::before {
-    color: var(--theme-ink, var(--app-muted));
-}
 
-.app-nav a:hover,
-.app-nav a:focus-visible {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap2)));
-    background: var(--theme-element-bg, var(--tone-7180f3-ap07));
-}
 
-.app-nav a.active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap27)));
-    background: var(--theme-element-bg, var(--tone-7180f3-ap13));
-    color: var(--theme-ink, var(--tone-aeb7ff));
-}
 
-.app-nav a.active::before {
-    background: var(--theme-element-bg, var(--app-accent));
-}
 
-.app-sidebar-note,
-.app-topbar #databaseStatus.status,
-.dashboard-live-badge {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020-ap24)));
-    background: var(--theme-element-bg, var(--tone-800020-ap08));
-    color: var(--theme-ink, var(--tone-dfb7c4));
-}
 
-#penjualan .sales-entry-indicator {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap24)));
-    background: var(--theme-element-bg, var(--tone-7180f3-ap09));
-    color: var(--theme-ink, var(--tone-aeb7ff));
-}
+
+
+
+
+
+
 
 .dashboard-card .stat-primary {
     border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap7)));
@@ -9925,13 +9672,7 @@ body.auth-locked .auth-gate {
     background: var(--theme-element-bg, var(--tone-7180f3-ap055)) !important;
 }
 
-.modern-sales-table tfoot th,
-.modern-sales-table tfoot td,
-#catatan-penjualan .modern-sales-table tfoot th,
-#catatan-penjualan .modern-sales-table tfoot td {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap24)));
-    background: var(--theme-element-bg, var(--tone-7180f3-ap075));
-}
+
 
 .modern-export-options button:hover,
 .sales-suggestions .saran-item:hover,
@@ -9943,74 +9684,32 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-b7bfff));
 }
 
-.modern-stock-table #stockTable .stock-in-btn,
-#riwayat-transaksi .modern-history-table td.history-masuk {
-    color: var(--theme-ink, var(--app-green));
-}
 
-.modern-stock-table #stockTable .stock-out-btn,
-#riwayat-transaksi .modern-history-table td.history-laku,
-#riwayat-transaksi .modern-history-table td.history-keluar {
-    color: var(--theme-ink, var(--app-red));
-}
 
-.modern-stock-table #stockTable .stock-in-btn:hover {
-    background: var(--theme-element-bg, var(--tone-800020-ap12));
-    color: var(--theme-ink, var(--tone-dfb7c4));
-}
 
-.modern-stock-table #stockTable .stock-out-btn:hover {
-    background: var(--theme-element-bg, var(--tone-df687e-ap13));
-    color: var(--theme-ink, var(--tone-ef8ca0));
-}
 
-#stockTable .stock-badge.stock-aman {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020-ap2)));
-    background: var(--theme-element-bg, var(--tone-800020-ap12));
-    color: var(--theme-ink, var(--tone-dfb7c4));
-}
 
-#stockTable .stock-badge.stock-menipis {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-d7aa47-ap22)));
-    background: var(--theme-element-bg, var(--tone-d7aa47-ap12));
-    color: var(--theme-ink, var(--tone-e6c06d));
-}
 
-#stockTable .stock-badge.stock-habis {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-df687e-ap22)));
-    background: var(--theme-element-bg, var(--tone-df687e-ap13));
-    color: var(--theme-ink, var(--tone-ef8ca0));
-}
 
-.modern-sales-table .edit-history-btn,
-#riwayat-transaksi .history-edit-transaction-btn {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-b66b80-ap22))) !important;
-    background: var(--theme-element-bg, var(--tone-b66b80-ap08)) !important;
-    color: var(--theme-ink, var(--tone-dfb7c4)) !important;
-}
 
-.modern-sales-table .delete-history-btn {
-    color: var(--theme-ink, var(--app-red));
-}
 
-#toast.toast,
-#toast.toast.success {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border)));
-    border-left-color: var(--theme-element-border, var(--theme-border, var(--app-green)));
-}
 
-#toast.toast.error {
-    border-left-color: var(--theme-element-border, var(--theme-border, var(--app-red)));
-}
 
-.app-mobile-nav a.active {
-    background: var(--theme-element-bg, var(--tone-7180f3-ap13));
-    color: var(--theme-ink, var(--tone-b7bfff));
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 #stok-barang .modern-export-leading-icon,
 #stok-barang .search-label-icon {
-    background: var(--theme-element-bg, var(--tone-b66b80-ap09));
     color: var(--theme-ink, var(--tone-dfb7c4));
 }
 
@@ -10025,18 +9724,9 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-8fbcff));
 }
 
-::selection {
-    background: var(--theme-element-bg, var(--tone-7180f3-ap34));
-    color: var(--theme-ink, var(--tone-ffffff));
-}
 
-button:focus-visible,
-summary:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-    outline-color: var(--theme-element-border, var(--theme-border, var(--tone-7180f3-ap78)));
-}
+
+
 
 /* Hilangkan bayangan dekoratif, termasuk garis kuning pada Total Penjualan. */
 .app-shell,
@@ -10072,14 +9762,9 @@ select:focus-visible {
     box-shadow: none !important;
 }
 
-#penjualan .sales-total-card {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft)));
-    background: var(--theme-element-bg, var(--tone-15171c));
-}
 
-#penjualan .sales-total-card::after {
-    display: none !important;
-}
+
+
 
 .dashboard-live-badge > span,
 #riwayat-transaksi .modern-history-table td.history-masuk::before,
@@ -10088,24 +9773,9 @@ select:focus-visible {
     box-shadow: none !important;
 }
 
-.table-wrapper,
-.history-wrapper,
-.penjualan-wrapper,
-#stok-barang .modern-stock-table-wrapper,
-#catatan-penjualan .modern-sales-table-wrapper,
-#riwayat-transaksi .modern-history-table-wrapper {
-    scrollbar-color: var(--tone-60636e) var(--tone-0d0e12);
-}
 
-.table-wrapper::-webkit-scrollbar-thumb,
-.history-wrapper::-webkit-scrollbar-thumb,
-.penjualan-wrapper::-webkit-scrollbar-thumb,
-#stok-barang .modern-stock-table-wrapper::-webkit-scrollbar-thumb,
-#catatan-penjualan .modern-sales-table-wrapper::-webkit-scrollbar-thumb,
-#riwayat-transaksi .modern-history-table-wrapper::-webkit-scrollbar-thumb {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-0d0e12)));
-    background: var(--theme-element-bg, var(--tone-60636e));
-}
+
+
 
 
 /* =====================================================
@@ -10151,7 +9821,6 @@ html {
 body,
 body.auth-locked,
 body.auth-locked .auth-gate {
-    background: var(--theme-element-bg, var(--app-bg)) !important;
     color: var(--theme-ink, var(--app-text));
     color-scheme: light;
 }
@@ -10170,10 +9839,7 @@ textarea {
     background: var(--theme-element-bg, transparent) !important;
 }
 
-.app-sidebar {
-    border-right-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
-}
+
 
 .header {
     border-bottom-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
@@ -10206,7 +9872,6 @@ textarea {
 .company-logo-shell,
 .app-mobile-logo {
     border-color: var(--theme-element-border, var(--theme-border, var(--app-border))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
 }
 
 .app-nav::before {
@@ -10215,21 +9880,11 @@ textarea {
 
 .app-nav a {
     border-color: transparent !important;
-    color: var(--theme-ink, var(--tone-647086)) !important;
 }
 
-.app-nav a:hover,
-.app-nav a:focus-visible {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-dfe8ff))) !important;
-    background: var(--theme-element-bg, var(--tone-f4f7ff)) !important;
-    color: var(--theme-ink, var(--tone-204fc7)) !important;
-}
 
-.app-nav a.active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-dbe5ff))) !important;
-    background: var(--theme-element-bg, var(--editorial-blue-soft)) !important;
-    color: var(--theme-ink, var(--app-accent)) !important;
-}
+
+
 
 .app-nav a.active::before {
     background: var(--theme-element-bg, var(--app-accent)) !important;
@@ -10250,8 +9905,6 @@ textarea {
 }
 
 .app-topbar {
-    border-bottom-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
-    background: var(--theme-element-bg, var(--tone-f4f6fb-ap96)) !important;
     backdrop-filter: blur(14px);
 }
 
@@ -10265,20 +9918,11 @@ textarea {
 
 .app-topbar h2 {
     font-size: clamp(25px, 3vw, 38px);
-    line-height: 1.05;
 }
 
-.app-logout-button {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-f0cbd0))) !important;
-    background: var(--theme-element-bg, var(--tone-fff5f6)) !important;
-    color: var(--theme-ink, var(--tone-c73e4b)) !important;
-}
 
-.app-logout-button:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-e899a2))) !important;
-    background: var(--theme-element-bg, var(--tone-ffecef)) !important;
-    color: var(--theme-ink, var(--tone-a72e3b)) !important;
-}
+
+
 
 .card,
 .dashboard-card,
@@ -10296,10 +9940,7 @@ textarea {
     color: var(--theme-ink, var(--app-text-soft)) !important;
 }
 
-.container > .card,
-.dashboard-card {
-    border-radius: 20px !important;
-}
+
 
 .container > .card:hover {
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-d9e0eb))) !important;
@@ -10386,10 +10027,8 @@ textarea {
 }
 
 .dashboard-card .sales-target-section {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
     border-left: 5px solid var(--theme-element-border, var(--theme-border, var(--editorial-purple))) !important;
     border-radius: 16px !important;
-    background: var(--theme-element-bg, var(--tone-fbfaff)) !important;
 }
 
 .dashboard-card .sales-target-header {
@@ -10402,17 +10041,11 @@ textarea {
 
 .dashboard-card .sales-target-summary {
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-e5d8f5))) !important;
-    background: var(--theme-element-bg, var(--editorial-purple-soft)) !important;
 }
 
-.dashboard-card .sales-target-summary span,
-.dashboard-card .sales-target-summary small {
-    color: var(--theme-ink, var(--tone-796989)) !important;
-}
 
-.dashboard-card .sales-target-summary strong {
-    color: var(--theme-ink, var(--tone-58269a)) !important;
-}
+
+
 
 .dashboard-card .target-brand-loading {
     border-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
@@ -10804,34 +10437,21 @@ textarea {
     color: var(--theme-ink, var(--app-accent)) !important;
 }
 
-.app-mobile-nav {
-    border-color: var(--theme-element-border, var(--theme-border, var(--app-border))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff-ap98)) !important;
-}
+
 
 .app-mobile-nav a {
     color: var(--theme-ink, var(--tone-748095)) !important;
 }
 
-.app-mobile-nav a.active {
-    background: var(--theme-element-bg, var(--editorial-blue-soft)) !important;
-    color: var(--theme-ink, var(--app-accent)) !important;
-}
+
 
 .app-footer {
-    border-top-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
     color: var(--theme-ink, var(--app-text-soft)) !important;
-    text-align: center;
 }
 
-.app-footer-brand {
-    justify-content: center;
-}
 
-.app-footer-brand strong {
-    color: var(--theme-ink, var(--app-text)) !important;
-}
+
+
 
 .table-wrapper,
 .history-wrapper,
@@ -10912,17 +10532,11 @@ select:focus-visible {
 }
 
 @media (max-width: 700px) {
-    .app-topbar {
-        background: var(--theme-element-bg, var(--tone-ffffff-ap98)) !important;
-    }
+    
 
-    .app-topbar h2 {
-        font-size: 25px;
-    }
+    
 
-    .app-mobile-logo {
-        background: var(--theme-element-bg, var(--editorial-blue-soft)) !important;
-    }
+    
 
     .container > .card,
     .dashboard-card {
@@ -11013,13 +10627,7 @@ select:focus-visible {
     color: var(--theme-ink, var(--app-text)) !important;
 }
 
-#stok-barang .modern-header-actions {
-    gap: 0;
-    padding: 3px;
-    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-    border-radius: 12px;
-    background: var(--theme-element-bg, var(--tone-f6f8fc));
-}
+
 
 #stok-barang .modern-header-actions > button,
 #stok-barang .modern-header-actions > details > summary {
@@ -11040,11 +10648,7 @@ select:focus-visible {
     color: var(--theme-ink, var(--app-text-soft)) !important;
 }
 
-#stok-barang .modern-import-button:hover,
-#stok-barang .modern-export-menu > summary:hover {
-    background: var(--theme-element-bg, var(--tone-eaf0fb)) !important;
-    color: var(--theme-ink, var(--tone-244a9d)) !important;
-}
+
 
 #stok-barang .modern-primary-button {
     background: var(--theme-element-bg, var(--tone-244fbe)) !important;
@@ -11098,14 +10702,11 @@ select:focus-visible {
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border))) !important;
     border-top-color: var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
     border-radius: 0 0 13px 13px;
-    background: var(--theme-element-bg, var(--tone-f7f9fc));
 }
 
 #stok-barang .stock-pagination button,
 #catatan-penjualan .sales-pagination button {
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-d8dfeb))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
-    color: var(--theme-ink, var(--tone-526078)) !important;
 }
 
 #stok-barang .stock-pagination button:hover:not(:disabled):not(.active),
@@ -11149,18 +10750,12 @@ select:focus-visible {
 }
 
 #catatan-penjualan .modern-sales-table-wrapper {
-    max-height: 390px;
     margin-bottom: 0;
     overflow: auto;
     border-color: var(--theme-element-border, var(--theme-border, var(--app-border))) !important;
-    border-radius: 13px 13px 0 0 !important;
 }
 
-#catatan-penjualan .modern-sales-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-}
+
 
 #catatan-penjualan .modern-sales-table tfoot th,
 #catatan-penjualan .modern-sales-table tfoot td {
@@ -11232,8 +10827,6 @@ select:focus-visible {
 
     #stok-barang .modern-header-actions {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        width: 100%;
     }
 
     #stok-barang .modern-header-actions > button,
@@ -11263,11 +10856,7 @@ select:focus-visible {
         text-align: left;
     }
 
-    #catatan-penjualan .modern-sales-table-wrapper {
-        max-height: 350px;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+    
 
     #catatan-penjualan .modern-sales-table tfoot th,
     #catatan-penjualan .modern-sales-table tfoot td {
@@ -11310,13 +10899,10 @@ select:focus-visible {
 
 .app-topbar {
     border-bottom-color: var(--theme-element-border, var(--theme-border, var(--tone-dce5f2))) !important;
-    background: var(--theme-element-bg, var(--tone-f2f6fd)) !important;
     backdrop-filter: none !important;
 }
 
-.app-topbar-eyebrow {
-    color: var(--theme-ink, var(--tone-41679f)) !important;
-}
+
 
 .app-mobile-logo,
 .app-topbar #databaseStatus.status,
@@ -11402,9 +10988,7 @@ select:focus-visible {
 }
 
 @media (max-width: 700px) {
-    .app-topbar {
-        background: var(--theme-element-bg, var(--tone-f2f6fd)) !important;
-    }
+    
 
     .dashboard-card .target-brand-identity {
         grid-template-columns: 7px minmax(0, 1fr);
@@ -11426,19 +11010,10 @@ select:focus-visible {
 /* Final header and action overrides; kept last to supersede legacy themes. */
 .header,
 .app-topbar {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-9bc2de-ap18))) !important;
-    background-color: var(--theme-element-bg, var(--tone-062b47)) !important;
-    background-image:
-        radial-gradient(circle at 24% 18%, var(--tone-800020-ap28), transparent 42%),
-        repeating-linear-gradient(118deg, var(--tone-ffffff-ap025) 0 1px, transparent 1px 34px) !important;
-    color: var(--theme-ink, var(--tone-f7fbff)) !important;
     backdrop-filter: none !important;
 }
 
-.header h1,
-.app-topbar h2 {
-    color: var(--theme-ink, var(--tone-f8fbff)) !important;
-}
+
 
 .header p,
 .app-topbar p {
@@ -11446,9 +11021,7 @@ select:focus-visible {
 }
 
 .app-topbar-eyebrow {
-    color: var(--theme-ink, var(--tone-8fc9e9)) !important;
     font-size: 10px;
-    letter-spacing: .08em;
 }
 
 .company-logo-shell,
@@ -11469,27 +11042,13 @@ select:focus-visible {
     border-radius: 0;
 }
 
-.app-topbar #databaseStatus.status {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-dfb7c4-ap28))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff-ap09)) !important;
-    color: var(--theme-ink, var(--tone-f4e5ea)) !important;
-}
 
-.app-topbar #databaseStatus.status .database-status-icon {
-    color: var(--theme-ink, var(--tone-dfb7c4)) !important;
-}
 
-.app-logout-button {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-ffb7c1-ap3))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff-ap09)) !important;
-    color: var(--theme-ink, var(--tone-ffc4cc)) !important;
-}
 
-.app-logout-button:hover {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-ffcad1-ap48))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff-ap15)) !important;
-    color: var(--theme-ink, var(--tone-ffe4e8)) !important;
-}
+
+
+
+
 
 .modal-actions .btn-secondary,
 #transactionModal .modal-actions .btn-secondary,
@@ -11517,7 +11076,6 @@ select:focus-visible {
 
 @media (max-width: 700px) {
     .app-topbar {
-        grid-template-columns: minmax(0, 1fr) 74px;
         background-color: var(--theme-element-bg, var(--tone-062b47)) !important;
     }
 
@@ -11530,12 +11088,9 @@ select:focus-visible {
         width: 44px;
         height: 44px;
         flex-basis: 44px;
-        border-radius: 0;
     }
 
     .app-mobile-logo img {
-        width: 31px;
-        height: 31px;
         border-radius: 0;
     }
 }
@@ -11565,7 +11120,6 @@ select:focus-visible {
     gap: 8px;
     padding: 16px 24px 18px;
     border-top: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dce5f2))) !important;
-    background: var(--theme-element-bg, var(--tone-f8fafd)) !important;
     text-align: center;
 }
 
@@ -11640,15 +11194,9 @@ select:focus-visible {
 ===================================================== */
 
 /* Solid fallbacks for browsers without backdrop-filter. */
-.header,
-.app-topbar {
-    background-color: var(--theme-element-bg, var(--tone-062b47)) !important;
-}
 
-.app-mobile-nav {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-beccde-ap76))) !important;
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
-}
+
+
 
 /* Content gets glass-like transparency without GPU blur. */
 .card,
@@ -11750,8 +11298,6 @@ select:focus-visible {
     #stok-barang #stockTable .action-btn {
         width: 100%;
         min-width: 0;
-        height: 34px;
-        padding: 3px 2px;
     }
 
     #stok-barang #stockTable .action-btn span {
@@ -11772,10 +11318,8 @@ select:focus-visible {
 
     .app-sidebar .header {
         margin-bottom: 12px;
-        padding: 8px 8px 18px;
         overflow: visible;
         border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
-        background: var(--theme-element-bg, var(--tone-ffffff)) !important;
         background-image: none !important;
         color: var(--theme-ink, var(--app-text)) !important;
         backdrop-filter: none !important;
@@ -11804,13 +11348,11 @@ select:focus-visible {
     }
 
     .app-sidebar .header-text h1 {
-        color: var(--theme-ink, var(--app-text)) !important;
         font-size: 16px;
         line-height: 1.2;
     }
 
     .app-sidebar .header-text p {
-        color: var(--theme-ink, var(--app-muted)) !important;
         font-size: 10px;
         line-height: 1.35;
     }
@@ -11923,8 +11465,6 @@ select:focus-visible {
     padding: 12px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
     border-radius: 11px;
-    background: var(--theme-element-bg, var(--tone-ffffff));
-    box-shadow: 0 10px 24px var(--tone-0f172a-ap12);
 }
 
 #riwayat-transaksi .history-filter-options label,
@@ -12179,8 +11719,6 @@ body.auth-locked .auth-gate {
 
 .app-mobile-nav {
     border-color: var(--theme-element-border, var(--theme-border, var(--tone-e6d5dc))) !important;
-    background: var(--theme-element-bg, var(--tone-fffef8)) !important;
-    box-shadow: 0 5px 17px var(--tone-35262c-ap13) !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 }
@@ -12190,9 +11728,7 @@ body.auth-locked .auth-gate {
     color: var(--theme-ink, var(--tone-ffffff)) !important;
 }
 
-.app-mobile-nav a.active::after {
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
-}
+
 
 .app-footer {
     border-top-color: var(--theme-element-border, var(--theme-border, var(--tone-e6d5dc))) !important;
@@ -12294,7 +11830,6 @@ body.auth-locked .auth-gate {
 /* Stock actions use matching green pill buttons. */
 #stok-barang .modern-header-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
     gap: 8px;
     min-height: 44px;
@@ -12365,7 +11900,6 @@ body.auth-locked .auth-gate {
 @media (max-width: 700px) {
     #stok-barang .modern-header-actions {
         width: 100%;
-        gap: 5px;
     }
 
     #stok-barang .modern-header-actions > button,
@@ -12486,11 +12020,7 @@ body.auth-locked .auth-gate {
 }
 
 @media (max-width: 700px) {
-    #catatan-penjualan .modern-sales-tools {
-        display: grid;
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 38px;
-        gap: 6px;
-    }
+    
 
     #catatan-penjualan .modern-sales-tools .modern-month-nav {
         min-width: 0;
@@ -12528,7 +12058,6 @@ body.auth-locked .auth-gate {
     }
 
     #catatan-penjualan .modern-sales-tools .modern-secondary-button {
-        width: 38px;
         height: 38px;
         min-height: 38px;
         padding: 0;
@@ -12554,12 +12083,6 @@ body.auth-locked .auth-gate {
 
     #penjualan .sales-entry-grid {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        grid-template-areas:
-            "product product"
-            "brand brand"
-            "date date"
-            "qty price"
-            "total total";
         gap: 12px 10px;
     }
 
@@ -12589,7 +12112,6 @@ body.auth-locked .auth-gate {
     }
 
     #penjualan .sales-brand-field {
-        display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         gap: 9px;
@@ -12643,8 +12165,6 @@ body.auth-locked .auth-gate {
 
     #penjualan .sales-entry-footer {
         gap: 10px;
-        margin-top: 14px;
-        padding-top: 14px;
     }
 
     #penjualan #simpanPenjualanButton {
@@ -12902,18 +12422,13 @@ body.auth-locked .auth-gate {
 #rekap-stok .stock-recap-legend { margin: 15px 0 0; color: var(--theme-ink, var(--app-text-soft)); font-size: 11px; }
 @media (max-width: 700px) {
     #stok-barang .stock-recap-link { width: 100%; }
-    #rekap-stok .stock-recap-controls,
-    #rekap-stok .stock-recap-filters { gap: 9px; }
+    
     #rekap-stok .stock-recap-controls label { flex: 1 1 130px; }
     #rekap-stok .stock-recap-controls input { width: 100%; }
-    #rekap-stok .stock-recap-filters label { flex: 1 1 100%; }
+    
     #rekap-stok .stock-recap-filters input,
     #rekap-stok .stock-recap-filters select { width: 100%; }
-    #rekap-stok .stock-recap-table tr > :first-child {
-        width: 160px;
-        min-width: 160px;
-        max-width: 160px;
-    }
+    
     #rekap-stok .stock-recap-footer { align-items: flex-start; }
 }
 
@@ -12984,7 +12499,6 @@ body.auth-locked .auth-gate {
     #rekap-stok .stock-recap-controls label,
     #rekap-stok .stock-recap-filters label {
         min-width: 0;
-        font-size: 11px;
         line-height: 1.2;
     }
     #rekap-stok .stock-recap-controls input,
@@ -13025,7 +12539,6 @@ body.auth-locked .auth-gate {
         gap: 6px;
     }
     #rekap-stok .stock-recap-pager button {
-        min-height: 36px;
         padding: 6px 9px;
     }
     #rekap-stok .stock-recap-legend {
@@ -13092,10 +12605,7 @@ body.auth-locked .auth-gate {
     .dashboard-section-heading .modern-title-group p {
         display: none;
     }
-    #catatan-penjualan .modern-sales-tools {
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 40px;
-        gap: 7px;
-    }
+    
     #catatan-penjualan .modern-sales-tools .modern-month-nav,
     #catatan-penjualan .modern-sales-tools .modern-sales-filter,
     #catatan-penjualan .modern-sales-tools .form-select,
@@ -13164,7 +12674,6 @@ body.auth-locked .auth-gate {
 #catatan-penjualan .sales-export-actions {
     display: inline-flex;
     align-items: stretch;
-    gap: 5px;
     min-width: 0;
 }
 
@@ -13180,7 +12689,6 @@ body.auth-locked .auth-gate {
     #catatan-penjualan .modern-sales-tools {
         display: grid;
         grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-        gap: 5px 6px;
         align-items: stretch;
     }
 
@@ -13196,36 +12704,14 @@ body.auth-locked .auth-gate {
         min-height: 36px;
     }
 
-    #catatan-penjualan .sales-export-actions {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        width: 100%;
-        gap: 0;
-        overflow: hidden;
-        border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-        border-radius: 10px;
-        background: var(--theme-element-bg, var(--app-surface));
-    }
+    
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
-        width: 100%;
-        min-width: 0;
-        height: 34px;
-        min-height: 34px;
-        padding: 0 8px;
-        border: 0;
-        border-radius: 0;
-        background: var(--theme-element-bg, transparent);
-        color: var(--theme-ink, var(--app-text-soft));
-        font-size: 11px;
         box-shadow: none;
         transform: none;
     }
 
-    #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
-        border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border)));
-    }
+    
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button:hover {
         background: var(--theme-element-bg, var(--tone-f4e5ea));
@@ -13234,9 +12720,7 @@ body.auth-locked .auth-gate {
         transform: none;
     }
 
-    #catatan-penjualan .sales-export-actions .modern-secondary-button > span:last-child {
-        display: inline;
-    }
+    
 
     #catatan-penjualan .sales-export-actions .modern-export-leading-icon {
         width: 18px;
@@ -13248,17 +12732,11 @@ body.auth-locked .auth-gate {
 
 /* Sales export uses the same teal as the Stock export action. */
 #catatan-penjualan .sales-export-actions .modern-secondary-button {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020)));
-    background: var(--theme-element-bg, var(--tone-800020));
-    color: var(--theme-ink, var(--tone-ffffff));
     box-shadow: none;
 }
 
 #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
 #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
-    border-color: var(--theme-element-border, var(--theme-border, var(--tone-650019)));
-    background: var(--theme-element-bg, var(--tone-650019));
-    color: var(--theme-ink, var(--tone-ffffff));
     box-shadow: none;
 }
 
@@ -13275,19 +12753,14 @@ body.auth-locked .auth-gate {
 @media (max-width: 700px) {
     #catatan-penjualan .sales-export-actions {
         border-color: var(--theme-element-border, var(--theme-border, var(--tone-800020)));
-        border-radius: 999px;
-        background: var(--theme-element-bg, var(--tone-800020));
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
-        border: 0;
         background: var(--theme-element-bg, var(--tone-800020));
         color: var(--theme-ink, var(--tone-ffffff));
     }
 
-    #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
-        border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-ffffff-ap35)));
-    }
+    
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button:hover,
     #catatan-penjualan .sales-export-actions .modern-secondary-button:active {
@@ -13464,7 +12937,6 @@ body.auth-locked .auth-gate {
 /* Stock actions: three compact controls per row on all screen widths. */
 #stok-barang .modern-header-actions.stock-action-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
     width: 100%;
     padding: 0;
@@ -13543,15 +13015,11 @@ body.auth-locked .auth-gate {
     width: 16px !important;
     height: 16px !important;
     fill: none !important;
-    stroke: currentColor !important;
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
-#stok-barang .stock-action-grid .stock-import-csv-icon text {
-    fill: var(--theme-ink, var(--tone-ffffff)) !important;
-    stroke: none !important;
-}
+
 #stok-barang .stock-action-grid .stock-export-period > summary svg {
     color: var(--theme-ink, var(--app-text-soft)) !important;
 }
@@ -13694,10 +13162,7 @@ button:disabled {
 #stok-barang .stock-action-grid .stock-action-recap {
     color: var(--theme-ink, var(--tone-650019)) !important;
 }
-#stok-barang .stock-action-grid .stock-import-csv-icon text {
-    fill: currentColor !important;
-    stroke: none !important;
-}
+
 #stok-barang .stock-action-grid svg {
     stroke: currentColor !important;
 }
@@ -13712,13 +13177,9 @@ button:disabled {
     min-height: 36px;
 }
 @media (max-width: 700px) {
-    #catatan-penjualan .sales-export-actions {
-        display: flex;
-        gap: 5px;
-    }
+    
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
         flex: 1 1 0;
-        width: auto;
     }
     #stok-barang .stock-action-grid {
         gap: 3px 5px;
@@ -13830,10 +13291,7 @@ button[aria-pressed="true"],
     color: inherit !important;
     background: var(--theme-element-bg, transparent) !important;
 }
-#stok-barang .stock-action-grid .stock-import-csv-icon text {
-    fill: currentColor !important;
-    stroke: none !important;
-}
+
 #stok-barang .stock-action-grid .stock-export-button svg path,
 #catatan-penjualan .sales-export-actions .modern-secondary-button svg path {
     fill: none !important;
@@ -13982,9 +13440,7 @@ button[aria-pressed="true"] {
     fill: var(--theme-ink, var(--tone-ffffff)) !important;
     stroke: none !important;
 }
-.app-mobile-nav a.active::after {
-    background: var(--theme-element-bg, var(--tone-ffffff)) !important;
-}
+
 
 /* Give the five mobile navigation actions clear breathing room. */
 @media (max-width: 700px) {
@@ -13996,8 +13452,6 @@ button[aria-pressed="true"] {
         align-items: stretch;
         gap: 6px;
         padding: 8px;
-        border: 0 !important;
-        border-radius: 20px;
     }
 
     .app-mobile-nav a {
@@ -14572,7 +14026,7 @@ body.auth-locked .auth-gate {
 .app-topbar #accountPasswordButton:hover { background: var(--theme-element-bg, var(--tone-faf2f5)) !important; }
 .app-topbar #accountPasswordButton svg { stroke: currentColor !important; color: inherit !important; }
 @media (max-width: 700px) {
-    .app-topbar { grid-template-columns: minmax(0, 1fr) 114px; }
+    
     .app-topbar-actions { min-width: 114px; }
     .app-topbar #accountPasswordButton { width: 34px; min-height: 34px; flex: 0 0 34px; padding: 0; }
 }
@@ -15707,10 +15161,7 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 #dashboard .dashboard-section-heading h2 {
     font-size: 18px;
 }
-#dashboard .stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-}
+
 #dashboard .stat {
     grid-column: auto;
     min-height: 74px;
@@ -15854,15 +15305,12 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 /* Desktop: samakan ukuran tombol Catatan Penjualan dan beri jarak yang nyaman. */
 @media (min-width: 701px) {
     #catatan-penjualan .sales-export-actions {
-        gap: 10px;
         align-items: stretch;
     }
 
     #catatan-penjualan .sales-export-actions .modern-secondary-button {
-        box-sizing: border-box;
         height: 42px;
         min-height: 42px;
-        padding: 0 14px;
         justify-content: center;
         align-items: center;
     }
@@ -15903,9 +15351,6 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
 
     #catatan-penjualan .modern-sales-tools {
         display: grid;
-        grid-template-columns: 190px 190px;
-        justify-content: end;
-        align-items: center;
         gap: 8px;
         min-width: 0;
         max-width: 100%;
