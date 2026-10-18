@@ -6,7 +6,7 @@
     function toGruvboxColor(key, value) {
         const keyMatch = String(key).match(/^([0-9a-f]{6})/i);
         const valueMatch = String(value).match(/^#([0-9a-f]{6})$/i);
-        const rgbaMatch = String(value).match(/^rgba?\\(([^)]+)\\)$/i);
+        const rgbaMatch = String(value).match(/^rgba?\(([^)]+)\)$/i);
         const source = keyMatch ? keyMatch[1] : valueMatch ? valueMatch[1] : null;
         if (!source) return value;
 
