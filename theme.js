@@ -128,7 +128,7 @@
     palettes.violet = Object.fromEntries(
         Object.entries(palettes.tosca).map(([key, value]) => [key, toVioletColor(value)])
     );
-    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet" };
+    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet", gruvbox: "Gruvbox" };
     const storageKey = "dhouse-theme";
     let currentTheme = "tosca";
     const root = document.documentElement;
