@@ -35,10 +35,10 @@
 
         let hex;
         if (delta < 0.12) {
-            const tone = brightness > 0.9 ? "#fbf1c7"
-                : brightness > 0.76 ? "#ebdbb2"
-                : brightness > 0.6 ? "#d5c4a1"
-                : brightness > 0.43 ? "#a89984"
+            const tone = brightness > 0.9 ? "#f2eee3"
+                : brightness > 0.76 ? "#e5dfd1"
+                : brightness > 0.6 ? "#d2cabb"
+                : brightness > 0.43 ? "#a7a193"
                 : brightness > 0.28 ? "#665c54"
                 : brightness > 0.14 ? "#3c3836" : "#282828";
             hex = tone;
@@ -50,7 +50,7 @@
             } else if (hue < 42) {
                 bright = "#fe8019"; dark = "#d65d0e";
             } else if (hue < 70) {
-                bright = "#fabd2f"; dark = "#d79921";
+                bright = "#d8a657"; dark = "#b57614";
             } else if (hue < 165) {
                 bright = "#b8bb26"; dark = "#98971a";
             } else if (hue < 195) {
