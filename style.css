@@ -15455,3 +15455,84 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         font-size: clamp(20px, 6vw, 26px);
     }
 }
+
+
+/* Ubuntu Dark: force the main app surfaces to use a real dark scheme. */
+html[data-theme="ubuntuDark"] {
+    color-scheme: dark !important;
+    background: #211d2b !important;
+    --theme-element-bg: #302a3b;
+    --theme-element-border: #51465e;
+    --theme-ink: #f7f5f3;
+    --app-text: #f7f5f3;
+    --app-muted: #c8bfd3;
+}
+html[data-theme="ubuntuDark"] body,
+html[data-theme="ubuntuDark"] #app,
+html[data-theme="ubuntuDark"] main,
+html[data-theme="ubuntuDark"] .container,
+html[data-theme="ubuntuDark"] .container-fluid {
+    background-color: #211d2b !important;
+    color: #f7f5f3 !important;
+}
+html[data-theme="ubuntuDark"] .card,
+html[data-theme="ubuntuDark"] .header,
+html[data-theme="ubuntuDark"] .section,
+html[data-theme="ubuntuDark"] .stat,
+html[data-theme="ubuntuDark"] .modal-content,
+html[data-theme="ubuntuDark"] .account-menu-panel,
+html[data-theme="ubuntuDark"] .dropdown-menu,
+html[data-theme="ubuntuDark"] .table-responsive,
+html[data-theme="ubuntuDark"] .export-confirm-card,
+html[data-theme="ubuntuDark"] .app-message-card {
+    background-color: #302a3b !important;
+    color: #f7f5f3 !important;
+    border-color: #51465e !important;
+}
+html[data-theme="ubuntuDark"] input,
+html[data-theme="ubuntuDark"] select,
+html[data-theme="ubuntuDark"] textarea,
+html[data-theme="ubuntuDark"] .form-control,
+html[data-theme="ubuntuDark"] .form-select {
+    background-color: #211d2b !important;
+    color: #f7f5f3 !important;
+    border-color: #62566e !important;
+}
+html[data-theme="ubuntuDark"] input::placeholder,
+html[data-theme="ubuntuDark"] textarea::placeholder {
+    color: #b9b0c7 !important;
+}
+html[data-theme="ubuntuDark"] table,
+html[data-theme="ubuntuDark"] thead,
+html[data-theme="ubuntuDark"] tbody,
+html[data-theme="ubuntuDark"] tr,
+html[data-theme="ubuntuDark"] td,
+html[data-theme="ubuntuDark"] th {
+    background-color: #302a3b !important;
+    color: #f7f5f3 !important;
+    border-color: #51465e !important;
+}
+html[data-theme="ubuntuDark"] a,
+html[data-theme="ubuntuDark"] .text-dark,
+html[data-theme="ubuntuDark"] label,
+html[data-theme="ubuntuDark"] h1,
+html[data-theme="ubuntuDark"] h2,
+html[data-theme="ubuntuDark"] h3,
+html[data-theme="ubuntuDark"] h4,
+html[data-theme="ubuntuDark"] h5,
+html[data-theme="ubuntuDark"] p,
+html[data-theme="ubuntuDark"] small,
+html[data-theme="ubuntuDark"] .form-text {
+    color: #f7f5f3;
+}
+html[data-theme="ubuntuDark"] .btn-primary,
+html[data-theme="ubuntuDark"] .export-confirm-yes,
+html[data-theme="ubuntuDark"] .app-message-confirm {
+    background-color: #e95420 !important;
+    border-color: #e95420 !important;
+    color: #ffffff !important;
+}
+html[data-theme="ubuntuDark"] dialog {
+    background: transparent;
+    color: #f7f5f3;
+}
