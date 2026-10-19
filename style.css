@@ -15708,3 +15708,159 @@ html[data-theme="ubuntu"] .ubuntu-windowbar {
         transition: none;
     }
 }
+
+
+/* Ubuntu dark mode: use the existing dark palette foundation with Ubuntu accents. */
+html[data-theme="ubuntu-dark"] {
+    color-scheme: dark;
+    --app-bg: #242424;
+    --app-sidebar: #2d2d2d;
+    --app-surface: #303030;
+    --app-surface-raised: #383838;
+    --app-border: #4a4a4a;
+    --app-border-soft: #454545;
+    --app-text: #f5f5f5;
+    --app-text-soft: #e2e2e2;
+    --app-muted: #b6b6b6;
+    --app-accent: #e95420;
+    --app-accent-soft: rgba(233, 84, 32, .16);
+    --app-cyan: #f07b4d;
+    --app-green: #73ba68;
+    --app-red: #ff7777;
+    --app-yellow: #e5b83b;
+    --dhouse-black: #242424;
+    --dhouse-black-soft: #2d2d2d;
+    --dhouse-card: #303030;
+    --dhouse-gold: #e95420;
+    --dhouse-gold-bright: #ff8a5b;
+    --dhouse-gold-dark: #c74616;
+    --editorial-blue-soft: #303030;
+    --editorial-green-soft: #26372c;
+    --editorial-red-soft: #402727;
+    --editorial-amber-soft: #3d2b22;
+    --editorial-purple: #d7a0bf;
+    --editorial-purple-soft: #382d35;
+}
+
+html[data-theme="ubuntu-dark"] body {
+    color: var(--app-text-soft);
+    background: var(--app-bg);
+}
+
+html[data-theme="ubuntu-dark"] .app-sidebar {
+    background: #2d2d2d;
+    border-color: #484848;
+}
+
+html[data-theme="ubuntu-dark"] .app-topbar {
+    background: rgba(45, 45, 45, .96);
+    border-bottom: 1px solid #484848;
+}
+
+html[data-theme="ubuntu-dark"] .app-topbar-eyebrow,
+html[data-theme="ubuntu-dark"] .dashboard-kicker,
+html[data-theme="ubuntu-dark"] .auth-heading > span {
+    color: #ff8a5b;
+}
+
+html[data-theme="ubuntu-dark"] .app-sidebar-note {
+    background: #353535;
+    border-color: #4a4a4a;
+    color: #dedede;
+}
+
+html[data-theme="ubuntu-dark"] .container > .card,
+html[data-theme="ubuntu-dark"] .password-dialog {
+    background: #303030;
+    border-color: #4a4a4a;
+    color: #eeeeee;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+}
+
+html[data-theme="ubuntu-dark"] body.auth-locked .auth-gate {
+    background:
+        radial-gradient(circle at 50% 0, rgba(233, 84, 32, .16), transparent 42%),
+        #242424 !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-card {
+    overflow: hidden;
+    border-color: #4a4a4a !important;
+    background: #303030 !important;
+    color: #eeeeee;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, .28) !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-brand strong,
+html[data-theme="ubuntu-dark"] .auth-gate .auth-heading h1 {
+    color: #f5f5f5 !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-brand span,
+html[data-theme="ubuntu-dark"] .auth-gate .auth-heading p,
+html[data-theme="ubuntu-dark"] .auth-gate .auth-help,
+html[data-theme="ubuntu-dark"] .auth-gate .auth-field label {
+    color: #c6c6c6 !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-form input,
+html[data-theme="ubuntu-dark"] .password-dialog .auth-form input {
+    background: #242424 !important;
+    border-color: #555555 !important;
+    color: #f5f5f5 !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-form input:focus,
+html[data-theme="ubuntu-dark"] .password-dialog .auth-form input:focus {
+    border-color: #e95420 !important;
+    box-shadow: 0 0 0 3px rgba(233, 84, 32, .2) !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-primary-button,
+html[data-theme="ubuntu-dark"] .password-dialog .auth-primary-button {
+    background: #e95420 !important;
+    border-color: #e95420 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-primary-button:hover:not(:disabled),
+html[data-theme="ubuntu-dark"] .password-dialog .auth-primary-button:hover:not(:disabled) {
+    background: #c74616 !important;
+    border-color: #c74616 !important;
+}
+
+html[data-theme="ubuntu-dark"] .auth-gate .auth-text-button,
+html[data-theme="ubuntu-dark"] .password-dialog .auth-text-button {
+    color: #ff9c78 !important;
+}
+
+html[data-theme="ubuntu-dark"] .container .form-control,
+html[data-theme="ubuntu-dark"] .container .form-select,
+html[data-theme="ubuntu-dark"] .container input[type="text"],
+html[data-theme="ubuntu-dark"] .container input[type="number"],
+html[data-theme="ubuntu-dark"] .container input[type="date"],
+html[data-theme="ubuntu-dark"] .container select {
+    background-color: #242424;
+    border-color: #4a4a4a;
+    color: #f0f0f0;
+}
+
+html[data-theme="ubuntu-dark"] .container .table-light,
+html[data-theme="ubuntu-dark"] .container .table > thead {
+    --bs-table-bg: #383838;
+    --bs-table-color: #eeeeee;
+    --bs-table-border-color: #4a4a4a;
+    color: #eeeeee;
+}
+
+html[data-theme="ubuntu-dark"] .modal-content {
+    background: #303030;
+    border-color: #4a4a4a;
+    color: #eeeeee;
+}
+
+html[data-theme="ubuntu-dark"] .ubuntu-windowbar {
+    background: #303030;
+    border-bottom-color: #484848;
+    color: #eeeeee;
+}
