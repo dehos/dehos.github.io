@@ -164,11 +164,7 @@
     palettes.ubuntuLight = Object.fromEntries(
         Object.entries(palettes.tosca).map(([key, value]) => [key, toUbuntuColor(key, value, false)])
     );
-    palettes.ubuntuDark = Object.fromEntries(
-        Object.entries(palettes.tosca).map(([key, value]) => [key, toUbuntuColor(key, value, true)])
-    );
-
-    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet", gruvbox: "Gruvbox", ubuntuLight: "Ubuntu Terang", ubuntuDark: "Ubuntu Gelap" };
+    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet", gruvbox: "Gruvbox", ubuntuLight: "Ubuntu Terang" };
     const storageKey = "dhouse-theme";
     let currentTheme = "tosca";
     const root = document.documentElement;
@@ -182,10 +178,11 @@
     }
 
     function applyTheme(theme, persist = true) {
+        if (theme === "ubuntuDark") theme = "ubuntuLight";
         if (!Object.prototype.hasOwnProperty.call(palettes, theme)) theme = "tosca";
         currentTheme = theme;
         root.dataset.theme = theme;
-        root.style.colorScheme = theme === "ubuntuDark" ? "dark" : "light";
+        root.style.colorScheme = "light";
         Object.entries(palettes[theme]).forEach(([key, value]) => {
             root.style.setProperty("--tone-" + key, value);
         });
