@@ -140,9 +140,14 @@
         const saturation = max === 0 ? 0 : (max - min) / max;
         const brightness = (Math.max(...rgb) + Math.min(...rgb)) / 510;
         let output;
-        if (saturation > 0.16) {
-            const hueColor = dark ? "#f5793b" : "#e95420";
-            output = [1, 3, 5].map(offset => parseInt(hueColor.slice(offset, offset + 2), 16));
+        const isBrandAccent = source.startsWith("800020") || source.startsWith("4d0013");
+        if (isBrandAccent) {
+            const accent = dark ? "#f5793b" : "#e95420";
+            output = [1, 3, 5].map(offset => parseInt(accent.slice(offset, offset + 2), 16));
+        } else if (saturation > 0.16) {
+            // Preserve semantic colors such as success, warning and error.
+            if (valueMatch) return value;
+            return value;
         } else {
             const tone = dark
                 ? (brightness > 0.78 ? "#f7f5f3" : brightness > 0.48 ? "#d8d3cf" : brightness > 0.25 ? "#49434f" : "#2c2633")
