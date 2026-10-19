@@ -128,7 +128,42 @@
     palettes.violet = Object.fromEntries(
         Object.entries(palettes.tosca).map(([key, value]) => [key, toVioletColor(value)])
     );
-    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet", gruvbox: "Gruvbox" };
+    function toUbuntuColor(key, value, dark) {
+        const sourceMatch = String(key).match(/^([0-9a-f]{6})/i);
+        const valueMatch = String(value).match(/^#([0-9a-f]{6})$/i);
+        const rgbaMatch = String(value).match(/^rgba?\(([^)]+)\)$/i);
+        const source = sourceMatch ? sourceMatch[1] : valueMatch ? valueMatch[1] : null;
+        if (!source) return value;
+        const rgb = [0, 2, 4].map(offset => parseInt(source.slice(offset, offset + 2), 16));
+        const max = Math.max(...rgb) / 255;
+        const min = Math.min(...rgb) / 255;
+        const saturation = max === 0 ? 0 : (max - min) / max;
+        const brightness = (Math.max(...rgb) + Math.min(...rgb)) / 510;
+        let output;
+        if (saturation > 0.16) {
+            const hueColor = dark ? "#f5793b" : "#e95420";
+            output = [1, 3, 5].map(offset => parseInt(hueColor.slice(offset, offset + 2), 16));
+        } else {
+            const tone = dark
+                ? (brightness > 0.78 ? "#f7f5f3" : brightness > 0.48 ? "#d8d3cf" : brightness > 0.25 ? "#49434f" : "#2c2633")
+                : (brightness > 0.82 ? "#ffffff" : brightness > 0.58 ? "#f5f3f1" : brightness > 0.34 ? "#dedad6" : "#3d3330");
+            output = [1, 3, 5].map(offset => parseInt(tone.slice(offset, offset + 2), 16));
+        }
+        if (rgbaMatch) {
+            const channels = rgbaMatch[1].split(",").map(part => part.trim());
+            return `rgba(${output.join(", ")}, ${channels.length > 3 ? channels[3] : 1})`;
+        }
+        return "#" + output.map(channel => channel.toString(16).padStart(2, "0")).join("");
+    }
+
+    palettes.ubuntuLight = Object.fromEntries(
+        Object.entries(palettes.tosca).map(([key, value]) => [key, toUbuntuColor(key, value, false)])
+    );
+    palettes.ubuntuDark = Object.fromEntries(
+        Object.entries(palettes.tosca).map(([key, value]) => [key, toUbuntuColor(key, value, true)])
+    );
+
+    const names = { tosca: "Toska", maroon: "Marun", violet: "Violet", gruvbox: "Gruvbox", ubuntuLight: "Ubuntu Terang", ubuntuDark: "Ubuntu Gelap" };
     const storageKey = "dhouse-theme";
     let currentTheme = "tosca";
     const root = document.documentElement;
@@ -145,7 +180,7 @@
         if (!Object.prototype.hasOwnProperty.call(palettes, theme)) theme = "tosca";
         currentTheme = theme;
         root.dataset.theme = theme;
-        root.style.colorScheme = "light";
+        root.style.colorScheme = theme === "ubuntuDark" ? "dark" : "light";
         Object.entries(palettes[theme]).forEach(([key, value]) => {
             root.style.setProperty("--tone-" + key, value);
         });
