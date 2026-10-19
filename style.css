@@ -15860,6 +15860,7 @@ html[data-theme="ubuntu-dark"] .modal-content {
 }
 
 html[data-theme="ubuntu-dark"] .ubuntu-windowbar {
+    display: flex;
     background: #303030;
     border-bottom-color: #484848;
     color: #eeeeee;
