@@ -41,7 +41,51 @@
         "22c55e": "#2e8b57"
     });
 
-    const names = { tosca: "Toska", maroon: "Marun", ubuntu: "Ubuntu" };
+    // Ubuntu Gelap memakai fondasi palet gelap yang sudah ada, dengan aksen Ubuntu.
+    palettes["ubuntu-dark"] = Object.assign({}, palettes.maroon);
+    Object.assign(palettes["ubuntu-dark"], {
+        "800020": "#e95420",
+        "650019": "#c74616",
+        "945823": "#c74616",
+        "4d0013": "#8f2f10",
+        "80002030": "rgba(233, 84, 32, 0.18824)",
+        "7b72ff": "#e95420",
+        "5d54dc": "#c74616",
+        "847cff": "#e95420",
+        "b66b80": "#f07b4d",
+        "ff6f91": "#e95420",
+        "ff9cb2": "#f4a084",
+        "d5aa32": "#e95420",
+        "d9ae35": "#e95420",
+        "7180f3": "#e95420",
+        "98a3ff": "#f4a084",
+        "f0bb4f": "#e5b83b",
+        "b34457": "#c74616",
+        "7c2636": "#772953",
+        "f4e5ea": "#f3e9e5",
+        "dfb7c4": "#d6b0a4",
+        "faf2f5": "#282828",
+        "fffef9": "#252525",
+        "ffffff": "#ffffff",
+        "f9fafb": "#222222",
+        "f8fafc": "#222222",
+        "f3f4f6": "#303030",
+        "e5e7eb": "#414141",
+        "d1d5db": "#4b4b4b",
+        "eeeeee": "#414141",
+        "f2f2f2": "#303030",
+        "f4f6f8": "#252525",
+        "f4f6fb": "#252525",
+        "1f2937": "#eeeeee",
+        "35262c": "#eeeeee",
+        "514047": "#dddddd",
+        "806b72": "#bdbdbd",
+        "6b7280": "#bdbdbd",
+        "9ca3af": "#8f8f8f",
+        "e9cbd5": "#42312d"
+    });
+
+    const names = { tosca: "Toska", maroon: "Marun", ubuntu: "Ubuntu Terang", "ubuntu-dark": "Ubuntu Gelap" };
     const storageKey = "dhouse-theme";
     let currentTheme = "tosca";
     const root = document.documentElement;
@@ -58,7 +102,7 @@
         if (!Object.prototype.hasOwnProperty.call(palettes, theme)) theme = "tosca";
         currentTheme = theme;
         root.dataset.theme = theme;
-        root.style.colorScheme = "light";
+        root.style.colorScheme = theme === "ubuntu-dark" ? "dark" : "light";
         Object.entries(palettes[theme]).forEach(([key, value]) => {
             root.style.setProperty("--tone-" + key, value);
         });
