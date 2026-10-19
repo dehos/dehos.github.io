@@ -15455,3 +15455,256 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         font-size: clamp(20px, 6vw, 26px);
     }
 }
+
+
+/* =====================================================
+   UBUNTU THEME — CONSISTENT APP + LOGIN SURFACES
+   Visual-only overrides; existing theme and application logic stay intact.
+===================================================== */
+
+html[data-theme="ubuntu"] {
+    color-scheme: light;
+    --app-bg: #f1f1f1;
+    --app-sidebar: #ffffff;
+    --app-surface: #ffffff;
+    --app-surface-raised: #f7f7f7;
+    --app-border: #d5d5d5;
+    --app-border-soft: #e6e6e6;
+    --app-text: #2d2d2d;
+    --app-text-soft: #3d3d3d;
+    --app-muted: #686868;
+    --app-accent: #e95420;
+    --app-accent-soft: rgba(233, 84, 32, .10);
+    --app-cyan: #e95420;
+    --app-green: #2e8b57;
+    --app-red: #c62828;
+    --app-yellow: #c74616;
+    --dhouse-black: #f1f1f1;
+    --dhouse-black-soft: #f7f7f7;
+    --dhouse-card: #ffffff;
+    --dhouse-gold: #e95420;
+    --dhouse-gold-bright: #e95420;
+    --dhouse-gold-dark: #c74616;
+    --editorial-blue-soft: #f3f3f3;
+    --editorial-green-soft: #eaf4ee;
+    --editorial-red-soft: #fdeeee;
+    --editorial-amber-soft: #fff0e8;
+    --editorial-purple: #772953;
+    --editorial-purple-soft: #f6edf2;
+}
+
+html[data-theme="ubuntu"] body {
+    color: var(--app-text-soft);
+    background: var(--app-bg);
+}
+
+html[data-theme="ubuntu"] .app-sidebar {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+html[data-theme="ubuntu"] .app-topbar {
+    background: rgba(255, 255, 255, .96);
+    border-bottom: 1px solid #dddddd;
+}
+
+html[data-theme="ubuntu"] .app-topbar-eyebrow,
+html[data-theme="ubuntu"] .dashboard-kicker,
+html[data-theme="ubuntu"] .auth-heading > span {
+    color: #c74616;
+}
+
+html[data-theme="ubuntu"] .app-sidebar-note {
+    background: #f7f7f7;
+    border-color: #dddddd;
+    color: #555555;
+}
+
+html[data-theme="ubuntu"] .container > .card,
+html[data-theme="ubuntu"] .password-dialog {
+    background: #ffffff;
+    border-color: #dddddd;
+    color: #2d2d2d;
+    box-shadow: 0 8px 24px rgba(35, 35, 35, .07);
+}
+
+html[data-theme="ubuntu"] body.auth-locked .auth-gate {
+    background:
+        radial-gradient(circle at 50% 0, rgba(233, 84, 32, .11), transparent 42%),
+        #f1f1f1 !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-card {
+    overflow: hidden;
+    border-color: #dedede !important;
+    background: #ffffff !important;
+    color: #2d2d2d;
+    box-shadow: 0 18px 48px rgba(35, 35, 35, .10) !important;
+}
+
+html[data-theme="ubuntu"] .auth-brand strong,
+html[data-theme="ubuntu"] .auth-gate .auth-heading h1 {
+    color: #2d2d2d !important;
+}
+
+html[data-theme="ubuntu"] .auth-brand span,
+html[data-theme="ubuntu"] .auth-gate .auth-heading p,
+html[data-theme="ubuntu"] .auth-gate .auth-help,
+html[data-theme="ubuntu"] .auth-gate .auth-field label {
+    color: #666666 !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-form input,
+html[data-theme="ubuntu"] .password-dialog .auth-form input {
+    background: #ffffff !important;
+    border-color: #d3d3d3 !important;
+    color: #2d2d2d !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-form input:focus,
+html[data-theme="ubuntu"] .password-dialog .auth-form input:focus {
+    border-color: #e95420 !important;
+    box-shadow: 0 0 0 3px rgba(233, 84, 32, .14) !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-primary-button,
+html[data-theme="ubuntu"] .password-dialog .auth-primary-button {
+    background: #e95420 !important;
+    border-color: #e95420 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-primary-button:hover:not(:disabled),
+html[data-theme="ubuntu"] .password-dialog .auth-primary-button:hover:not(:disabled) {
+    background: #c74616 !important;
+    border-color: #c74616 !important;
+}
+
+html[data-theme="ubuntu"] .auth-gate .auth-text-button,
+html[data-theme="ubuntu"] .password-dialog .auth-text-button {
+    color: #b74116 !important;
+}
+
+html[data-theme="ubuntu"] .container .form-control,
+html[data-theme="ubuntu"] .container .form-select,
+html[data-theme="ubuntu"] .container input[type="text"],
+html[data-theme="ubuntu"] .container input[type="number"],
+html[data-theme="ubuntu"] .container input[type="date"],
+html[data-theme="ubuntu"] .container select {
+    background-color: #ffffff;
+    border-color: #d5d5d5;
+    color: #2d2d2d;
+}
+
+html[data-theme="ubuntu"] .container .table-light,
+html[data-theme="ubuntu"] .container .table > thead {
+    --bs-table-bg: #f0f0f0;
+    --bs-table-color: #333333;
+    --bs-table-border-color: #dedede;
+    color: #333333;
+}
+
+html[data-theme="ubuntu"] .modal-content {
+    background: #ffffff;
+    border-color: #dddddd;
+    color: #2d2d2d;
+}
+
+html[data-theme="ubuntu"] .ubuntu-windowbar {
+    display: flex;
+}
+
+.ubuntu-windowbar {
+    display: none;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 14px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #dddddd;
+    color: #454545;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.ubuntu-window-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ubuntu-window-controls {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 7px;
+}
+
+.ubuntu-window-control {
+    display: grid;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    border: 1px solid transparent;
+    border-radius: 50%;
+}
+
+.ubuntu-window-control svg {
+    display: block;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: #333333;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ubuntu-window-control.is-minimize {
+    background: #e5b83b;
+}
+
+.ubuntu-window-control.is-maximize {
+    background: #73ba68;
+}
+
+.ubuntu-window-control.is-close {
+    background: #e95420;
+}
+
+.ubuntu-window-control.is-close svg {
+    stroke: #ffffff;
+}
+
+.auth-windowbar {
+    margin: -36px -32px 24px;
+    padding: 11px 14px;
+    border-radius: 23px 23px 0 0;
+}
+
+.app-windowbar {
+    min-height: 42px;
+}
+
+@media (max-width: 600px) {
+    .ubuntu-windowbar {
+        padding: 8px 11px;
+    }
+
+    .ubuntu-window-control {
+        width: 20px;
+        height: 20px;
+    }
+
+    .auth-windowbar {
+        margin: -28px -22px 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ubuntu-window-control {
+        transition: none;
+    }
+}
