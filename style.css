@@ -15456,83 +15456,66 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     }
 }
 
-
-/* Ubuntu Dark: force the main app surfaces to use a real dark scheme. */
-html[data-theme="ubuntuDark"] {
-    color-scheme: dark !important;
-    background: #211d2b !important;
-    --theme-element-bg: #302a3b;
-    --theme-element-border: #51465e;
-    --theme-ink: #f7f5f3;
-    --app-text: #f7f5f3;
-    --app-muted: #c8bfd3;
+/* Ubuntu-inspired window controls shown consistently across the site. */
+.auth-card { position: relative; }
+.ubuntu-window-controls {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    height: 16px;
 }
-html[data-theme="ubuntuDark"] body,
-html[data-theme="ubuntuDark"] #app,
-html[data-theme="ubuntuDark"] main,
-html[data-theme="ubuntuDark"] .container,
-html[data-theme="ubuntuDark"] .container-fluid {
-    background-color: #211d2b !important;
-    color: #f7f5f3 !important;
+.auth-card > .ubuntu-window-controls {
+    position: absolute;
+    top: 13px;
+    right: 16px;
 }
-html[data-theme="ubuntuDark"] .card,
-html[data-theme="ubuntuDark"] .header,
-html[data-theme="ubuntuDark"] .section,
-html[data-theme="ubuntuDark"] .stat,
-html[data-theme="ubuntuDark"] .modal-content,
-html[data-theme="ubuntuDark"] .account-menu-panel,
-html[data-theme="ubuntuDark"] .dropdown-menu,
-html[data-theme="ubuntuDark"] .table-responsive,
-html[data-theme="ubuntuDark"] .export-confirm-card,
-html[data-theme="ubuntuDark"] .app-message-card {
-    background-color: #302a3b !important;
-    color: #f7f5f3 !important;
-    border-color: #51465e !important;
+.app-topbar > .ubuntu-window-controls {
+    position: absolute;
+    top: 9px;
+    right: 57px;
+    z-index: 25;
 }
-html[data-theme="ubuntuDark"] input,
-html[data-theme="ubuntuDark"] select,
-html[data-theme="ubuntuDark"] textarea,
-html[data-theme="ubuntuDark"] .form-control,
-html[data-theme="ubuntuDark"] .form-select {
-    background-color: #211d2b !important;
-    color: #f7f5f3 !important;
-    border-color: #62566e !important;
+.ubuntu-window-control {
+    display: block;
+    width: 11px;
+    height: 11px;
+    flex: 0 0 11px;
+    border: 1px solid rgba(65, 35, 25, .22);
+    border-radius: 50%;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
 }
-html[data-theme="ubuntuDark"] input::placeholder,
-html[data-theme="ubuntuDark"] textarea::placeholder {
-    color: #b9b0c7 !important;
+.ubuntu-minimize { background: #f4bf50; }
+.ubuntu-maximize { background: #8ccf5f; }
+.ubuntu-close { background: #e95420; }
+.ubuntu-minimize::after {
+    display: block;
+    width: 5px;
+    height: 1px;
+    margin: 4px auto 0;
+    background: rgba(65, 35, 25, .72);
+    content: "";
 }
-html[data-theme="ubuntuDark"] table,
-html[data-theme="ubuntuDark"] thead,
-html[data-theme="ubuntuDark"] tbody,
-html[data-theme="ubuntuDark"] tr,
-html[data-theme="ubuntuDark"] td,
-html[data-theme="ubuntuDark"] th {
-    background-color: #302a3b !important;
-    color: #f7f5f3 !important;
-    border-color: #51465e !important;
+.ubuntu-maximize::after {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 2px auto 0;
+    border: 1px solid rgba(65, 35, 25, .65);
+    content: "";
 }
-html[data-theme="ubuntuDark"] a,
-html[data-theme="ubuntuDark"] .text-dark,
-html[data-theme="ubuntuDark"] label,
-html[data-theme="ubuntuDark"] h1,
-html[data-theme="ubuntuDark"] h2,
-html[data-theme="ubuntuDark"] h3,
-html[data-theme="ubuntuDark"] h4,
-html[data-theme="ubuntuDark"] h5,
-html[data-theme="ubuntuDark"] p,
-html[data-theme="ubuntuDark"] small,
-html[data-theme="ubuntuDark"] .form-text {
-    color: #f7f5f3;
+.ubuntu-close::after {
+    display: block;
+    margin-top: -1px;
+    color: rgba(65, 35, 25, .78);
+    content: "×";
+    font: 11px/11px Arial, sans-serif;
+    text-align: center;
 }
-html[data-theme="ubuntuDark"] .btn-primary,
-html[data-theme="ubuntuDark"] .export-confirm-yes,
-html[data-theme="ubuntuDark"] .app-message-confirm {
-    background-color: #e95420 !important;
-    border-color: #e95420 !important;
-    color: #ffffff !important;
-}
-html[data-theme="ubuntuDark"] dialog {
-    background: transparent;
-    color: #f7f5f3;
+@media (max-width: 700px) {
+    .app-topbar > .ubuntu-window-controls { top: 7px; right: 49px; gap: 5px; }
+    .app-topbar > .ubuntu-window-controls .ubuntu-window-control { width: 9px; height: 9px; flex-basis: 9px; }
+    .app-topbar > .ubuntu-window-controls .ubuntu-minimize::after { width: 4px; margin-top: 3px; }
+    .app-topbar > .ubuntu-window-controls .ubuntu-maximize::after { width: 3px; height: 3px; margin-top: 2px; }
+    .app-topbar > .ubuntu-window-controls .ubuntu-close::after { font-size: 9px; line-height: 9px; }
 }
