@@ -15589,69 +15589,125 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 
 .dashboard-chart-period {
     max-width: 100%;
-    margin-bottom: 4px;
-    padding: 4px 8px;
+    padding: 8px 12px;
     border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
-    border-radius: 8px;
+    border-radius: 12px;
     background: var(--theme-element-bg, var(--tone-fffef8));
     color: var(--theme-ink, var(--tone-35262c));
     font: inherit;
-    font-size: 11px;
+    font-size: 13px;
 }
 
-.dashboard-chart-bars {
+.dashboard-chart-total-row {
     display: flex;
-    align-items: stretch;
-    gap: 6px;
-    height: 176px;
-    padding-top: 4px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0 14px;
 }
-.dashboard-chart-bars[data-periode="30"] {
-    gap: 2px;
+.dashboard-chart-total-row > strong {
+    color: var(--theme-ink, var(--app-text));
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
 }
-.dashboard-bar {
-    display: grid;
-    flex: 1 1 0;
-    grid-template-rows: 14px minmax(0, 1fr) 16px;
-    justify-items: center;
-    gap: 4px;
-    min-width: 0;
+.dashboard-trend-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    white-space: nowrap;
 }
-.dashboard-bar-value {
+.dashboard-trend-badge[hidden] {
+    display: none;
+}
+.dashboard-trend-badge.is-up {
+    background: var(--editorial-green-soft, #e7f6ee);
+    color: var(--app-green, #15803d);
+}
+.dashboard-trend-badge.is-down {
+    background: var(--editorial-red-soft, #fdecec);
+    color: var(--app-red, #b42318);
+}
+.dashboard-trend-badge.is-flat {
+    background: var(--theme-element-bg, var(--tone-f4e5ea));
     color: var(--theme-ink, var(--app-muted));
-    font-size: 10px;
-    line-height: 14px;
+}
+
+.dashboard-chart-plot {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 10px;
+}
+.dashboard-chart-y {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+    padding: 9px 0;
+}
+.dashboard-chart-y span {
+    height: 18px;
+    color: var(--theme-ink, var(--app-muted));
+    font-size: 11px;
+    line-height: 18px;
+    text-align: right;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
-.dashboard-bar-track {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    width: 100%;
-    min-height: 0;
-    border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
-}
-.dashboard-bar-track i {
+.dashboard-chart-svg {
     display: block;
-    width: min(70%, 30px);
-    border-radius: 5px 5px 0 0;
-    background: var(--theme-element-border, var(--theme-border, var(--app-accent)));
-    opacity: .55;
-}
-.dashboard-bar.is-today .dashboard-bar-track i {
-    opacity: 1;
-}
-.dashboard-chart-bars[data-periode="30"] .dashboard-bar-track i {
     width: 100%;
-    border-radius: 3px 3px 0 0;
+    height: 180px;
+    overflow: visible;
 }
-.dashboard-bar em {
+.dashboard-chart-grid line {
+    stroke: var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
+    stroke-width: 1;
+    opacity: .7;
+    vector-effect: non-scaling-stroke;
+}
+.dashboard-chart-area {
+    fill: var(--theme-element-border, var(--theme-border, var(--app-accent)));
+    opacity: .12;
+}
+.dashboard-chart-line {
+    fill: none;
+    stroke: var(--theme-element-border, var(--theme-border, var(--app-accent)));
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+.dashboard-chart-hit rect {
+    fill: transparent;
+}
+.dashboard-chart-x {
+    position: relative;
+    grid-column: 2;
+    height: 20px;
+    margin-top: 6px;
+}
+.dashboard-chart-x span {
+    position: absolute;
+    top: 0;
     color: var(--theme-ink, var(--app-muted));
-    font-size: 10px;
-    font-style: normal;
-    line-height: 16px;
+    font-size: 11px;
+    line-height: 18px;
     white-space: nowrap;
+    transform: translateX(-50%);
+}
+.dashboard-chart-x span.is-first {
+    transform: none;
+}
+.dashboard-chart-x span.is-last {
+    transform: translateX(-100%);
 }
 
 .dashboard-lists {

@@ -11756,12 +11756,103 @@ function renderOmzetHariIniDashboard() {
     elemen.textContent = "Rp" + formatNumber(total);
 }
 
+function formatAngkaSvgDashboard(angka) {
+    return String(Math.round(angka * 100) / 100);
+}
+
+function buatKurvaHalusDashboard(titik) {
+    const jumlah = titik.length;
+
+    if (jumlah === 0) {
+        return "";
+    }
+
+    if (jumlah === 1) {
+        return "M" + formatAngkaSvgDashboard(titik[0].x) + " " +
+            formatAngkaSvgDashboard(titik[0].y);
+    }
+
+    const selisihX = [];
+    const kemiringan = [];
+
+    for (let i = 0; i < jumlah - 1; i++) {
+        selisihX[i] = titik[i + 1].x - titik[i].x;
+        kemiringan[i] = (titik[i + 1].y - titik[i].y) / selisihX[i];
+    }
+
+    const tangen = new Array(jumlah);
+    tangen[0] = kemiringan[0];
+    tangen[jumlah - 1] = kemiringan[jumlah - 2];
+
+    for (let i = 1; i < jumlah - 1; i++) {
+        tangen[i] = kemiringan[i - 1] * kemiringan[i] <= 0
+            ? 0
+            : (kemiringan[i - 1] + kemiringan[i]) / 2;
+    }
+
+    for (let i = 0; i < jumlah - 1; i++) {
+        if (kemiringan[i] === 0) {
+            tangen[i] = 0;
+            tangen[i + 1] = 0;
+            continue;
+        }
+
+        const a = tangen[i] / kemiringan[i];
+        const b = tangen[i + 1] / kemiringan[i];
+        const kuadrat = a * a + b * b;
+
+        if (kuadrat > 9) {
+            const faktor = 3 / Math.sqrt(kuadrat);
+            tangen[i] = faktor * a * kemiringan[i];
+            tangen[i + 1] = faktor * b * kemiringan[i];
+        }
+    }
+
+    let jalur = "M" + formatAngkaSvgDashboard(titik[0].x) + " " +
+        formatAngkaSvgDashboard(titik[0].y);
+
+    for (let i = 0; i < jumlah - 1; i++) {
+        const langkah = selisihX[i] / 3;
+
+        jalur += " C" +
+            formatAngkaSvgDashboard(titik[i].x + langkah) + " " +
+            formatAngkaSvgDashboard(titik[i].y + tangen[i] * langkah) + " " +
+            formatAngkaSvgDashboard(titik[i + 1].x - langkah) + " " +
+            formatAngkaSvgDashboard(titik[i + 1].y - tangen[i + 1] * langkah) + " " +
+            formatAngkaSvgDashboard(titik[i + 1].x) + " " +
+            formatAngkaSvgDashboard(titik[i + 1].y);
+    }
+
+    return jalur;
+}
+
+function hitungBatasYDashboard(maksimum) {
+    if (!(maksimum > 0)) {
+        return 1000000;
+    }
+
+    const kasar = maksimum / 4;
+    const pangkat = Math.pow(10, Math.floor(Math.log10(kasar)));
+    const pecahan = kasar / pangkat;
+
+    const langkah = [1, 2, 2.5, 5, 10].find(function(kandidat) {
+        return kandidat >= pecahan - 1e-9;
+    }) * pangkat;
+
+    return langkah * 4;
+}
+
 function renderGrafikPenjualanDashboard() {
     const wadah = document.getElementById("dashboardChart");
 
     if (!wadah) {
         return;
     }
+
+    const LEBAR = 600;
+    const TINGGI = 180;
+    const ATAS = 18;
+    const BAWAH = 162;
 
     const periode = dashboardExtraState.periode;
     const sekarang = new Date();
@@ -11805,60 +11896,119 @@ function renderGrafikPenjualanDashboard() {
         0
     );
 
-    const maksimum = Math.max(0, ...nilai);
+    const batasY = hitungBatasYDashboard(Math.max(0, ...nilai));
+    const jumlahHari = hari.length;
 
-    const batang = hari.map(function(tanggal, indeks) {
+    const titik = nilai.map(function(angka, indeks) {
+        return {
+            x: jumlahHari > 1
+                ? indeks * LEBAR / (jumlahHari - 1)
+                : LEBAR / 2,
+            y: BAWAH - (angka / batasY) * (BAWAH - ATAS)
+        };
+    });
+
+    const garis = buatKurvaHalusDashboard(titik);
+
+    const area = jumlahHari > 1
+        ? garis + " L" + LEBAR + " " + BAWAH + " L0 " + BAWAH + " Z"
+        : "";
+
+    let kisi = "";
+    let labelY = "";
+
+    for (let i = 0; i <= 4; i++) {
+        const y = ATAS + i * ((BAWAH - ATAS) / 4);
+
+        kisi += '<line x1="0" x2="' + LEBAR + '" y1="' + y +
+            '" y2="' + y + '"/>';
+
+        labelY += "<span>" +
+            escapeHTML(
+                formatRupiahSingkatDashboard(batasY / 4 * (4 - i))
+            ) + "</span>";
+    }
+
+    const lebarHit = LEBAR / jumlahHari;
+
+    const areaSentuh = hari.map(function(tanggal, indeks) {
         const tanggalLokal = parseTanggalDashboard(tanggal);
-
-        const labelHari = periode === 7
-            ? tanggalLokal.toLocaleDateString(
-                "id-ID",
-                { weekday: "short" }
-            )
-            : (
-                indeks % 5 === 0 || indeks === hari.length - 1
-                    ? String(tanggalLokal.getDate())
-                    : ""
-            );
-
-        const tinggi = maksimum > 0 && nilai[indeks] > 0
-            ? Math.max(4, Math.round(nilai[indeks] / maksimum * 100))
-            : 0;
 
         const keterangan = tanggalLokal.toLocaleDateString(
             "id-ID",
             { weekday: "long", day: "numeric", month: "long" }
-        ) + ": Rp" + formatNumber(nilai[indeks]);
+        ) + ": Rp " + formatNumber(nilai[indeks]);
 
-        const nilaiSingkat = periode === 7 && nilai[indeks] > 0
-            ? formatRupiahSingkatDashboard(nilai[indeks])
-            : "";
-
-        return '<div class="dashboard-bar' +
-            (indeks === hari.length - 1 ? " is-today" : "") +
-            '" role="listitem" title="' + escapeHTML(keterangan) +
-            '" aria-label="' + escapeHTML(keterangan) + '">' +
-            '<span class="dashboard-bar-value">' +
-            escapeHTML(nilaiSingkat) + "</span>" +
-            '<span class="dashboard-bar-track"><i style="height:' +
-            tinggi + '%"></i></span>' +
-            "<em>" + escapeHTML(labelHari) + "</em></div>";
+        return '<rect x="' + (indeks * lebarHit) + '" y="0" width="' +
+            lebarHit + '" height="' + TINGGI + '"><title>' +
+            escapeHTML(keterangan) + "</title></rect>";
     }).join("");
 
+    let labelX = "";
+
+    for (let indeks = 0; indeks < jumlahHari; indeks++) {
+        const tampil = periode === 7
+            ? true
+            : (jumlahHari - 1 - indeks) % 5 === 0;
+
+        if (!tampil) {
+            continue;
+        }
+
+        const tanggalLokal = parseTanggalDashboard(hari[indeks]);
+
+        const teks = periode === 7
+            ? tanggalLokal.toLocaleDateString(
+                "id-ID",
+                { weekday: "short" }
+            )
+            : tanggalLokal.toLocaleDateString(
+                "id-ID",
+                { day: "numeric", month: "short" }
+            );
+
+        const posisi = jumlahHari > 1
+            ? indeks / (jumlahHari - 1) * 100
+            : 50;
+
+        const kelas = indeks === 0
+            ? ' class="is-first"'
+            : (indeks === jumlahHari - 1 ? ' class="is-last"' : "");
+
+        labelX += "<span" + kelas + ' style="left:' +
+            formatAngkaSvgDashboard(posisi) + '%">' +
+            escapeHTML(teks) + "</span>";
+    }
+
+    const ringkasan = "Grafik omzet " + periode +
+        " hari terakhir, total Rp " + formatNumber(total);
+
     wadah.innerHTML =
-        '<div class="dashboard-chart-bars" role="list" data-periode="' +
-        periode + '">' + batang + "</div>";
+        '<div class="dashboard-chart-plot">' +
+        '<div class="dashboard-chart-y" aria-hidden="true">' +
+        labelY + "</div>" +
+        '<svg class="dashboard-chart-svg" viewBox="0 0 ' + LEBAR + " " +
+        TINGGI + '" preserveAspectRatio="none" role="img" aria-label="' +
+        escapeHTML(ringkasan) + '">' +
+        '<g class="dashboard-chart-grid">' + kisi + "</g>" +
+        (area ? '<path class="dashboard-chart-area" d="' + area + '"/>' : "") +
+        (garis ? '<path class="dashboard-chart-line" d="' + garis + '"/>' : "") +
+        '<g class="dashboard-chart-hit">' + areaSentuh + "</g>" +
+        "</svg>" +
+        '<div class="dashboard-chart-x" aria-hidden="true">' +
+        labelX + "</div></div>";
 
     const label = document.getElementById("dashboardChartLabel");
     const totalElemen = document.getElementById("dashboardChartTotal");
     const tren = document.getElementById("dashboardChartTrend");
 
     if (label) {
-        label.textContent = "Omzet " + periode + " hari terakhir";
+        label.textContent =
+            "Performa selama " + periode + " hari terakhir";
     }
 
     if (totalElemen) {
-        totalElemen.textContent = "Rp" + formatNumber(total);
+        totalElemen.textContent = "Rp " + formatNumber(total);
     }
 
     if (tren) {
@@ -11866,16 +12016,26 @@ function renderGrafikPenjualanDashboard() {
             const persen =
                 (total - totalSebelumnya) / totalSebelumnya * 100;
 
+            const arah = persen > 0 ? "is-up" : (persen < 0 ? "is-down" : "is-flat");
+
+            tren.hidden = false;
+            tren.className = "dashboard-trend-badge " + arah;
             tren.textContent =
-                (persen >= 0 ? "↗ " : "↘ ") +
+                (persen > 0 ? "↗ " : (persen < 0 ? "↘ " : "→ ")) +
                 Math.abs(persen).toLocaleString(
                     "id-ID",
                     { maximumFractionDigits: 1 }
-                ) + "% vs periode sebelumnya";
+                ) + "%";
+            tren.title = "Dibandingkan " + periode + " hari sebelumnya";
         } else if (total > 0) {
+            tren.hidden = false;
+            tren.className = "dashboard-trend-badge is-flat";
             tren.textContent = "Belum ada pembanding";
+            tren.title = "";
         } else {
-            tren.textContent = "Belum ada penjualan";
+            tren.hidden = true;
+            tren.textContent = "";
+            tren.title = "";
         }
     }
 }
