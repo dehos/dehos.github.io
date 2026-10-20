@@ -15455,3 +15455,83 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
         font-size: clamp(20px, 6vw, 26px);
     }
 }
+
+
+/* DEHOS DASHBOARD — RIGUX-INSPIRED PROFESSIONAL UI
+   Presentation-only overrides; application behavior remains in JS. */
+:root{color-scheme:light}
+body{background:#f4f6fa!important;color:#1f2937;-webkit-font-smoothing:antialiased}
+.app-shell{grid-template-columns:248px minmax(0,1fr);background:#f4f6fa!important}
+.app-sidebar{padding:24px 16px 16px;border-right:1px solid #e7ebf2!important;background:#fff!important;box-shadow:8px 0 28px #16223306}
+.header{padding:2px 7px 25px;border-bottom:1px solid #edf0f5;margin-bottom:18px}
+.header-content{gap:12px}
+.company-logo-shell{width:42px;height:42px;border-radius:12px;border:1px solid #e5e7f5!important;background:#f4f3ff!important;box-shadow:none!important}
+.company-logo{width:31px;height:31px;border-radius:8px;object-fit:contain}
+.header h1{font-size:17px;letter-spacing:-.45px;color:#20283a!important}.header p{font-size:10px;color:#8a94a6!important}
+.app-nav{gap:5px}.app-nav::before{padding:7px 11px 9px;color:#9aa4b5!important;font-size:9px;letter-spacing:.13em}
+.app-nav a{min-height:44px;padding:10px 12px;gap:11px;border:1px solid transparent!important;border-radius:10px;color:#6f7b8e!important;font-size:12px;font-weight:550}
+.app-nav a .ui-svg-icon{width:17px;height:17px;opacity:.9}
+.app-nav a:hover{background:#f7f8fc!important;color:#3d4658!important}
+.app-nav a.active{background:#f0efff!important;border-color:#e6e4ff!important;color:#4c43cb!important;font-weight:650}
+.app-nav a.active::before{display:block!important;left:-17px;top:9px;bottom:9px;width:3px;background:#5b52e8!important;box-shadow:none!important}
+.app-nav a.active span{text-decoration:none!important}
+.app-sidebar-note{margin-top:auto;border:1px solid #e6e4ff!important;border-radius:11px;background:#f7f6ff!important;color:#635bd0!important;font-size:10px}
+.app-workspace{min-width:0;background:#f4f6fa!important}
+.app-topbar{min-height:82px;padding:15px 32px;border-bottom:1px solid #e7ebf2!important;background:rgba(255,255,255,.94)!important;box-shadow:0 2px 12px #16223305!important;backdrop-filter:blur(14px)}
+.app-topbar-eyebrow{color:#8279e8!important;font-size:9px;letter-spacing:.13em;font-weight:700}
+.app-topbar h2{color:#20283a!important;font-size:clamp(22px,2vw,28px)!important;letter-spacing:-.8px;font-weight:750}
+.app-topbar p{color:#7c8799!important;font-size:11px}
+.app-topbar .account-menu #accountMenuPanel{border-color:#e6e9f1;border-radius:13px;background:#fff!important;box-shadow:0 16px 38px #16223321}
+.app-topbar .app-topbar-actions #accountMenuToggle{background:#f0efff!important;color:#5147db!important;border:1px solid #e4e1ff!important}
+.app-topbar .app-topbar-actions #accountMenuToggle svg{stroke:currentColor!important}
+.container{gap:17px;padding:28px 32px 38px}
+.container>.card,.auth-card,.modal-content,.export-confirm-card,.app-message-card{border:1px solid #e5e9f1!important;border-radius:14px!important;background:#fff!important;color:#263044!important;box-shadow:0 3px 12px #1b273c06,0 12px 28px #1b273c06!important}
+.container>.card{padding:22px!important}
+.modern-section-header,.dashboard-section-heading{margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #edf0f5}
+.modern-title-group{gap:12px}
+.modern-title-icon{width:38px!important;height:38px!important;flex-basis:38px!important;border-radius:11px!important;border:1px solid #e5e3ff!important;background:#f2f1ff!important;color:#5b52e8!important;box-shadow:none!important}
+.dashboard-section-heading h2,.modern-title-group h2,.modern-title-group h3,.history-header h3{color:#222b3d!important;font-size:15px;font-weight:750;letter-spacing:-.3px}
+.modern-title-group small,.dashboard-section-heading p{color:#7e899b!important;font-size:11px}
+#dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;overflow:visible;border:0!important;border-radius:0;background:transparent!important;box-shadow:none!important}
+#dashboard .stats .stat{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:15px;min-height:132px;padding:19px 20px;border:1px solid #e6eaf2!important;border-radius:13px!important;background:#fff!important;box-shadow:0 3px 12px #1b273c06!important;text-align:left;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+#dashboard .stats .stat:hover{transform:translateY(-2px);border-color:#d7d4ff!important;box-shadow:0 9px 22px #1b273c10!important}
+#dashboard .stats .stat+.stat{border-left:1px solid #e6eaf2!important}
+#dashboard .stats .stat small{min-height:0;color:#7b8698!important;font-size:11px;font-weight:600;line-height:1.45}
+#dashboard .stats .stat strong{color:#20283a!important;font-size:clamp(26px,3vw,34px);font-weight:750;letter-spacing:-1px;line-height:1.1}
+#dashboard .sales-target-section{margin-top:20px;padding:21px;border:1px solid #e6eaf2!important;border-radius:13px!important;background:#fff!important;box-shadow:0 3px 12px #1b273c05!important}
+#dashboard .sales-target-header{align-items:flex-start;gap:18px;margin-bottom:20px}
+#dashboard .sales-target-header h3{color:#253047!important;font-size:14px;font-weight:750}
+#dashboard .sales-target-header p,#dashboard .sales-target-summary span,#dashboard .sales-target-summary small{color:#7b8698!important;font-size:10px}
+#dashboard .sales-target-summary strong{color:#20283a!important;font-size:22px;font-weight:750;letter-spacing:-.5px}
+#dashboard .target-brand-list{gap:13px}
+.modern-data-table-wrapper,.modern-stock-table-wrapper,.modern-sales-table-wrapper,.history-wrapper,.table-wrapper{border:1px solid #e8ecf3!important;border-radius:10px!important;background:#fff!important}
+.modern-data-table thead th,.modern-stock-table thead th,.modern-history-table thead th,.modern-sales-table thead th{padding:12px 13px!important;background:#f7f8fc!important;color:#8a95a7!important;border-bottom:1px solid #e9edf4!important;font-size:9px!important;font-weight:700!important;letter-spacing:.035em;text-transform:uppercase}
+.modern-data-table tbody td,.modern-stock-table tbody td,.modern-history-table tbody td,.modern-sales-table tbody td{padding:12px 13px!important;border-bottom:1px solid #edf0f5!important;color:#465166!important;font-size:11px!important}
+.modern-data-table tbody tr:hover,.modern-stock-table tbody tr:hover,.modern-history-table tbody tr:hover,.modern-sales-table tbody tr:hover{background:#f8f9ff!important}
+input[type=text],input[type=number],input[type=date],select,textarea,.form-control,.form-select{border-color:#dfe5ee!important;border-radius:8px!important;background-color:#fff!important;color:#263044!important;box-shadow:none;font-size:12px}
+:where(button,input,select,textarea,a):focus-visible{outline:3px solid #b6b0ff!important;outline-offset:2px}
+.btn,.modern-primary-button,.modern-secondary-button,.sales-export-button{border-radius:9px!important;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease}
+.btn:hover,.modern-primary-button:hover,.modern-secondary-button:hover{transform:translateY(-1px)}
+#penjualan .sales-total-card,#penjualan .sales-entry-footer{border-radius:12px!important}
+#stok-barang .stock-filter-toolbar,#stok-barang .stock-action-grid,#rekap-stok .stock-recap-controls,#catatan-penjualan .modern-sales-tools,#riwayat-transaksi .history-filter-toolbar{gap:10px}
+.app-mobile-nav{border-top:1px solid #e5e9f1!important;background:rgba(255,255,255,.97)!important;box-shadow:0 -8px 24px #1622330f!important;backdrop-filter:blur(14px)!important}
+.app-mobile-nav a{color:#7a8597!important}.app-mobile-nav a.active{color:#5147db!important}.app-mobile-nav a.active::after{background:#5b52e8!important}
+.app-footer{border-top-color:#e5e9f1!important;background:#f4f6fa!important;color:#8a95a7!important}
+@media(max-width:1100px){.app-shell{grid-template-columns:224px minmax(0,1fr)}.container{padding:24px 22px 34px}.app-topbar{padding:14px 22px}}
+@media(max-width:700px){
+ .app-shell{display:block;background:#f4f6fa!important}.app-sidebar{display:none!important}
+ .app-topbar{min-height:75px;padding:13px 15px;gap:10px;background:rgba(255,255,255,.97)!important}
+ .app-topbar-eyebrow{font-size:8px}.app-topbar h2{font-size:22px!important}.app-topbar p{font-size:10px}
+ .container{gap:12px;padding:16px 12px 94px}.container>.card{padding:16px!important;border-radius:13px!important}
+ .modern-section-header,.dashboard-section-heading{margin-bottom:15px;padding-bottom:12px}
+ #dashboard .stats{gap:7px}
+ #dashboard .stats .stat{min-height:96px;gap:10px;padding:12px 10px;border-radius:10px!important}
+ #dashboard .stats .stat small{font-size:10px}
+ #dashboard .stats .stat strong{font-size:clamp(18px,5.5vw,24px)}
+ #dashboard .sales-target-section{margin-top:13px;padding:14px}
+ #dashboard .sales-target-header{flex-wrap:wrap;margin-bottom:15px}
+ .modern-data-table-wrapper,.modern-stock-table-wrapper,.modern-sales-table-wrapper{max-width:100%}
+ .app-mobile-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+/* END RIGUX-INSPIRED VISUAL OVERRIDES */
