@@ -15535,3 +15535,41 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
 /* END RIGUX-INSPIRED VISUAL OVERRIDES */
+
+
+/* Final mobile header control alignment: separate status from account action. */
+.app-topbar .app-topbar-actions #databaseStatus.status {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    flex: 0 0 38px !important;
+    border: 1px solid #bbebd0 !important;
+    border-radius: 50% !important;
+    background: #ecfdf3 !important;
+    color: #16834a !important;
+    box-shadow: none !important;
+}
+.app-topbar .app-topbar-actions #databaseStatus.status svg,
+.app-topbar .app-topbar-actions #databaseStatus.status svg * {
+    color: #16834a !important;
+    stroke: #16834a !important;
+}
+.app-topbar .app-topbar-actions #accountMenuToggle {
+    border: 1px solid #e1e5ef !important;
+    background: #f7f8fc !important;
+    color: #4b5568 !important;
+}
+.app-topbar .app-topbar-actions #accountMenuToggle svg,
+.app-topbar .app-topbar-actions #accountMenuToggle svg * {
+    stroke: #4b5568 !important;
+}
+@media (max-width: 700px) {
+    .app-topbar .app-topbar-actions #databaseStatus.status {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
+        flex-basis: 34px !important;
+    }
+}
