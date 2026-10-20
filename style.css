@@ -15575,3 +15575,161 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 }
 
  
+/* =====================================================
+   DASHBOARD WIDGETS
+   Extra stats, sales chart, recent sales, restock list.
+===================================================== */
+.dashboard-card .stats.dashboard-extra-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 12px;
+}
+.dashboard-card .dashboard-extra-stats .stat-warning {
+    grid-column: auto;
+}
+
+.dashboard-chart-period {
+    max-width: 100%;
+    margin-bottom: 4px;
+    padding: 4px 8px;
+    border: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
+    border-radius: 8px;
+    background: var(--theme-element-bg, var(--tone-fffef8));
+    color: var(--theme-ink, var(--tone-35262c));
+    font: inherit;
+    font-size: 11px;
+}
+
+.dashboard-chart-bars {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    height: 176px;
+    padding-top: 4px;
+}
+.dashboard-chart-bars[data-periode="30"] {
+    gap: 2px;
+}
+.dashboard-bar {
+    display: grid;
+    flex: 1 1 0;
+    grid-template-rows: 14px minmax(0, 1fr) 16px;
+    justify-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+.dashboard-bar-value {
+    color: var(--theme-ink, var(--app-muted));
+    font-size: 10px;
+    line-height: 14px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.dashboard-bar-track {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
+}
+.dashboard-bar-track i {
+    display: block;
+    width: min(70%, 30px);
+    border-radius: 5px 5px 0 0;
+    background: var(--theme-element-border, var(--theme-border, var(--app-accent)));
+    opacity: .55;
+}
+.dashboard-bar.is-today .dashboard-bar-track i {
+    opacity: 1;
+}
+.dashboard-chart-bars[data-periode="30"] .dashboard-bar-track i {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+}
+.dashboard-bar em {
+    color: var(--theme-ink, var(--app-muted));
+    font-size: 10px;
+    font-style: normal;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.dashboard-lists {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 16px;
+}
+.dashboard-lists > .sales-target-section {
+    min-width: 0;
+}
+@media (min-width: 900px) {
+    .dashboard-lists {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.dashboard-list-link {
+    flex: 0 0 auto;
+    color: var(--theme-ink, var(--app-accent));
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.dashboard-list {
+    display: grid;
+    gap: 0;
+}
+.dashboard-list-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-dfc5ce)));
+}
+.dashboard-list-row:last-child {
+    border-bottom: 0;
+}
+.dashboard-list-main,
+.dashboard-list-side {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+.dashboard-list-side {
+    flex: 0 0 auto;
+    text-align: right;
+}
+.dashboard-list-main strong {
+    overflow: hidden;
+    color: var(--theme-ink, var(--app-text));
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dashboard-list-side strong {
+    color: var(--theme-ink, var(--app-text));
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.dashboard-list-main small,
+.dashboard-list-side small {
+    color: var(--theme-ink, var(--app-muted));
+    font-size: 11px;
+}
+.dashboard-list-side strong.dashboard-stock-empty {
+    color: var(--app-red, #b42318);
+}
+.dashboard-list-more {
+    padding-top: 8px;
+    color: var(--theme-ink, var(--app-accent));
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}

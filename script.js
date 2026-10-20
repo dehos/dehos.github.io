@@ -11616,6 +11616,496 @@ async function loadDashboardSummary() {
     }
 }
 
+/* =====================================================
+   WIDGET DASHBOARD TAMBAHAN
+   Omzet hari ini, stok menipis, grafik penjualan,
+   transaksi terbaru, dan daftar perlu restock.
+===================================================== */
+
+const DASHBOARD_STOK_MENIPIS_BATAS = 5;
+const DASHBOARD_HARI_DATA = 60;
+const DASHBOARD_KOLOM_PENJUALAN =
+    "id, barang_id, brand, qty, harga, tanggal_pembelian";
+
+const dashboardExtraState = {
+    loading: null,
+    penjualan: [],
+    periode: 7,
+    siap: false,
+    pilihanPeriodeTerpasang: false
+};
+
+function formatTanggalLokalDashboard(tanggal) {
+    return tanggal.getFullYear() + "-" +
+        String(tanggal.getMonth() + 1).padStart(2, "0") + "-" +
+        String(tanggal.getDate()).padStart(2, "0");
+}
+
+function parseTanggalDashboard(nilai) {
+    const bagian = String(nilai || "")
+        .slice(0, 10)
+        .split("-")
+        .map(Number);
+
+    if (
+        bagian.length !== 3 ||
+        bagian.some(function(angka) {
+            return !Number.isFinite(angka);
+        })
+    ) {
+        return null;
+    }
+
+    return new Date(bagian[0], bagian[1] - 1, bagian[2]);
+}
+
+function getDaftarHariDashboard(jumlah, akhir) {
+    const hasil = [];
+
+    for (let i = jumlah - 1; i >= 0; i--) {
+        hasil.push(
+            formatTanggalLokalDashboard(
+                new Date(
+                    akhir.getFullYear(),
+                    akhir.getMonth(),
+                    akhir.getDate() - i
+                )
+            )
+        );
+    }
+
+    return hasil;
+}
+
+function formatRupiahSingkatDashboard(angka) {
+    const nilai = Number(angka) || 0;
+
+    if (nilai >= 1000000) {
+        return (nilai / 1000000).toLocaleString(
+            "id-ID",
+            { maximumFractionDigits: 1 }
+        ) + " jt";
+    }
+
+    if (nilai >= 1000) {
+        return Math.round(nilai / 1000).toLocaleString("id-ID") + " rb";
+    }
+
+    return formatNumber(nilai);
+}
+
+function totalPenjualanDashboard(item) {
+    return (Number(item?.qty) || 0) * (Number(item?.harga) || 0);
+}
+
+function tampilkanGalatDashboard(idElemen, pesan) {
+    const elemen = document.getElementById(idElemen);
+
+    if (elemen) {
+        elemen.innerHTML =
+            '<div class="target-brand-loading">' +
+            escapeHTML(pesan) +
+            "</div>";
+    }
+}
+
+async function fetchPenjualanDashboard(dariTanggal) {
+    const semua = [];
+    const ukuranHalaman = 1000;
+
+    for (let posisi = 0; ; posisi += ukuranHalaman) {
+        const { data, error } = await supabaseClient
+            .from("penjualan")
+            .select(DASHBOARD_KOLOM_PENJUALAN)
+            .gte("tanggal_pembelian", dariTanggal)
+            .order("tanggal_pembelian", { ascending: false })
+            .order("id", { ascending: false })
+            .range(posisi, posisi + ukuranHalaman - 1);
+
+        if (error) {
+            return { data: [], error };
+        }
+
+        const halaman = data || [];
+        semua.push(...halaman);
+
+        if (halaman.length < ukuranHalaman) {
+            return { data: semua, error: null };
+        }
+    }
+}
+
+function renderOmzetHariIniDashboard() {
+    const elemen = document.getElementById("omzetHariIni");
+
+    if (!elemen) {
+        return;
+    }
+
+    const hariIni = getTodayDate();
+
+    const total = dashboardExtraState.penjualan
+        .filter(function(item) {
+            return String(item.tanggal_pembelian || "")
+                .slice(0, 10) === hariIni;
+        })
+        .reduce(function(jumlah, item) {
+            return jumlah + totalPenjualanDashboard(item);
+        }, 0);
+
+    elemen.textContent = "Rp" + formatNumber(total);
+}
+
+function renderGrafikPenjualanDashboard() {
+    const wadah = document.getElementById("dashboardChart");
+
+    if (!wadah) {
+        return;
+    }
+
+    const periode = dashboardExtraState.periode;
+    const sekarang = new Date();
+
+    const hari = getDaftarHariDashboard(periode, sekarang);
+
+    const hariSebelumnya = getDaftarHariDashboard(
+        periode,
+        new Date(
+            sekarang.getFullYear(),
+            sekarang.getMonth(),
+            sekarang.getDate() - periode
+        )
+    );
+
+    const perTanggal = new Map();
+
+    dashboardExtraState.penjualan.forEach(function(item) {
+        const tanggal = String(item.tanggal_pembelian || "")
+            .slice(0, 10);
+
+        perTanggal.set(
+            tanggal,
+            (perTanggal.get(tanggal) || 0) +
+                totalPenjualanDashboard(item)
+        );
+    });
+
+    const nilai = hari.map(function(tanggal) {
+        return perTanggal.get(tanggal) || 0;
+    });
+
+    const total = nilai.reduce(function(jumlah, angka) {
+        return jumlah + angka;
+    }, 0);
+
+    const totalSebelumnya = hariSebelumnya.reduce(
+        function(jumlah, tanggal) {
+            return jumlah + (perTanggal.get(tanggal) || 0);
+        },
+        0
+    );
+
+    const maksimum = Math.max(0, ...nilai);
+
+    const batang = hari.map(function(tanggal, indeks) {
+        const tanggalLokal = parseTanggalDashboard(tanggal);
+
+        const labelHari = periode === 7
+            ? tanggalLokal.toLocaleDateString(
+                "id-ID",
+                { weekday: "short" }
+            )
+            : (
+                indeks % 5 === 0 || indeks === hari.length - 1
+                    ? String(tanggalLokal.getDate())
+                    : ""
+            );
+
+        const tinggi = maksimum > 0 && nilai[indeks] > 0
+            ? Math.max(4, Math.round(nilai[indeks] / maksimum * 100))
+            : 0;
+
+        const keterangan = tanggalLokal.toLocaleDateString(
+            "id-ID",
+            { weekday: "long", day: "numeric", month: "long" }
+        ) + ": Rp" + formatNumber(nilai[indeks]);
+
+        const nilaiSingkat = periode === 7 && nilai[indeks] > 0
+            ? formatRupiahSingkatDashboard(nilai[indeks])
+            : "";
+
+        return '<div class="dashboard-bar' +
+            (indeks === hari.length - 1 ? " is-today" : "") +
+            '" role="listitem" title="' + escapeHTML(keterangan) +
+            '" aria-label="' + escapeHTML(keterangan) + '">' +
+            '<span class="dashboard-bar-value">' +
+            escapeHTML(nilaiSingkat) + "</span>" +
+            '<span class="dashboard-bar-track"><i style="height:' +
+            tinggi + '%"></i></span>' +
+            "<em>" + escapeHTML(labelHari) + "</em></div>";
+    }).join("");
+
+    wadah.innerHTML =
+        '<div class="dashboard-chart-bars" role="list" data-periode="' +
+        periode + '">' + batang + "</div>";
+
+    const label = document.getElementById("dashboardChartLabel");
+    const totalElemen = document.getElementById("dashboardChartTotal");
+    const tren = document.getElementById("dashboardChartTrend");
+
+    if (label) {
+        label.textContent = "Omzet " + periode + " hari terakhir";
+    }
+
+    if (totalElemen) {
+        totalElemen.textContent = "Rp" + formatNumber(total);
+    }
+
+    if (tren) {
+        if (totalSebelumnya > 0) {
+            const persen =
+                (total - totalSebelumnya) / totalSebelumnya * 100;
+
+            tren.textContent =
+                (persen >= 0 ? "↗ " : "↘ ") +
+                Math.abs(persen).toLocaleString(
+                    "id-ID",
+                    { maximumFractionDigits: 1 }
+                ) + "% vs periode sebelumnya";
+        } else if (total > 0) {
+            tren.textContent = "Belum ada pembanding";
+        } else {
+            tren.textContent = "Belum ada penjualan";
+        }
+    }
+}
+
+function renderTransaksiTerbaruDashboard(daftar) {
+    const wadah = document.getElementById("dashboardRecentSales");
+
+    if (!wadah) {
+        return;
+    }
+
+    if (!daftar.length) {
+        wadah.innerHTML =
+            '<div class="target-brand-loading">Belum ada penjualan.</div>';
+        return;
+    }
+
+    const petaBarang = new Map(
+        dataBarang.map(function(barang) {
+            return [String(barang.id), barang];
+        })
+    );
+
+    wadah.innerHTML = daftar.map(function(item) {
+        const barang = petaBarang.get(String(item.barang_id));
+
+        const nama = barang?.nama || ("Barang #" + item.barang_id);
+
+        const tanggalLokal = parseTanggalDashboard(
+            item.tanggal_pembelian
+        );
+
+        const tanggal = tanggalLokal
+            ? tanggalLokal.toLocaleDateString(
+                "id-ID",
+                { day: "numeric", month: "short", year: "numeric" }
+            )
+            : "-";
+
+        return '<div class="dashboard-list-row">' +
+            '<div class="dashboard-list-main"><strong>' +
+            escapeHTML(nama) + "</strong><small>" +
+            escapeHTML(item.brand || "Tanpa Brand") + " · " +
+            escapeHTML(tanggal) + "</small></div>" +
+            '<div class="dashboard-list-side"><strong>Rp' +
+            formatNumber(totalPenjualanDashboard(item)) +
+            "</strong><small>" +
+            formatNumber(Number(item.qty) || 0) +
+            " unit</small></div></div>";
+    }).join("");
+}
+
+function hitungStokMenipisDashboard() {
+    const hariIni = getTodayDate();
+
+    return dataBarang
+        .map(function(barang) {
+            return {
+                barang: barang,
+                stok: Math.max(
+                    0,
+                    getRawCurrentStock(barang, hariIni)
+                )
+            };
+        })
+        .filter(function(item) {
+            return item.stok <= DASHBOARD_STOK_MENIPIS_BATAS;
+        })
+        .sort(function(a, b) {
+            return a.stok - b.stok ||
+                String(a.barang.nama || "").localeCompare(
+                    String(b.barang.nama || ""),
+                    "id"
+                );
+        });
+}
+
+function renderStokMenipisDashboard() {
+    const menipis = hitungStokMenipisDashboard();
+    const kartu = document.getElementById("stokMenipis");
+    const wadah = document.getElementById("dashboardLowStock");
+
+    if (kartu) {
+        kartu.textContent = formatNumber(menipis.length);
+    }
+
+    if (!wadah) {
+        return;
+    }
+
+    if (!menipis.length) {
+        wadah.innerHTML =
+            '<div class="target-brand-loading">Tidak ada barang yang perlu restock.</div>';
+        return;
+    }
+
+    const tampil = menipis.slice(0, 5);
+    const sisa = menipis.length - tampil.length;
+
+    wadah.innerHTML = tampil.map(function(item) {
+        const habis = item.stok === 0;
+
+        return '<div class="dashboard-list-row">' +
+            '<div class="dashboard-list-main"><strong>' +
+            escapeHTML(item.barang.nama || "-") + "</strong><small>" +
+            escapeHTML(item.barang.brand?.nama || "Tanpa Brand") +
+            "</small></div>" +
+            '<div class="dashboard-list-side"><strong class="' +
+            (habis ? "dashboard-stock-empty" : "dashboard-stock-low") +
+            '">' + (habis ? "Habis" : formatNumber(item.stok) + " unit") +
+            "</strong></div></div>";
+    }).join("") + (
+        sisa > 0
+            ? '<a class="dashboard-list-more" href="#stok-barang">+' +
+                formatNumber(sisa) + " barang lainnya</a>"
+            : ""
+    );
+}
+
+function pasangPilihanPeriodeDashboard() {
+    if (dashboardExtraState.pilihanPeriodeTerpasang) {
+        return;
+    }
+
+    const pilihan = document.getElementById("dashboardChartPeriod");
+
+    if (!pilihan) {
+        return;
+    }
+
+    pilihan.addEventListener("change", function() {
+        dashboardExtraState.periode =
+            Number(pilihan.value) === 30 ? 30 : 7;
+
+        if (dashboardExtraState.siap) {
+            renderGrafikPenjualanDashboard();
+        }
+    });
+
+    dashboardExtraState.pilihanPeriodeTerpasang = true;
+}
+
+async function loadDashboardExtras() {
+    if (dashboardExtraState.loading) {
+        return dashboardExtraState.loading;
+    }
+
+    dashboardExtraState.loading = (async function() {
+        try {
+            pasangPilihanPeriodeDashboard();
+
+            const dariTanggal = getDaftarHariDashboard(
+                DASHBOARD_HARI_DATA,
+                new Date()
+            )[0];
+
+            const [hasilPenjualan, hasilTerbaru, dataStokSiap] =
+                await Promise.all([
+                    fetchPenjualanDashboard(dariTanggal),
+                    supabaseClient
+                        .from("penjualan")
+                        .select(DASHBOARD_KOLOM_PENJUALAN)
+                        .order("tanggal_pembelian", { ascending: false })
+                        .order("id", { ascending: false })
+                        .limit(5),
+                    refreshCoreData().then(
+                        function() {
+                            return true;
+                        },
+                        function(error) {
+                            console.error(
+                                "ERROR DASHBOARD DATA STOK:",
+                                error
+                            );
+                            return false;
+                        }
+                    )
+                ]);
+
+            if (hasilPenjualan.error) {
+                console.error(
+                    "ERROR DASHBOARD PENJUALAN:",
+                    hasilPenjualan.error
+                );
+                tampilkanGalatDashboard(
+                    "dashboardChart",
+                    "Gagal memuat grafik penjualan."
+                );
+                const omzet = document.getElementById("omzetHariIni");
+                if (omzet) {
+                    omzet.textContent = "—";
+                }
+            } else {
+                dashboardExtraState.penjualan = hasilPenjualan.data;
+                dashboardExtraState.siap = true;
+                renderOmzetHariIniDashboard();
+                renderGrafikPenjualanDashboard();
+            }
+
+            if (hasilTerbaru.error) {
+                console.error(
+                    "ERROR DASHBOARD TRANSAKSI TERBARU:",
+                    hasilTerbaru.error
+                );
+                tampilkanGalatDashboard(
+                    "dashboardRecentSales",
+                    "Gagal memuat transaksi terbaru."
+                );
+            } else {
+                renderTransaksiTerbaruDashboard(hasilTerbaru.data || []);
+            }
+
+            if (dataStokSiap) {
+                renderStokMenipisDashboard();
+            } else {
+                tampilkanGalatDashboard(
+                    "dashboardLowStock",
+                    "Gagal memuat data stok."
+                );
+            }
+        } catch (error) {
+            console.error("ERROR DASHBOARD WIDGET:", error);
+        } finally {
+            dashboardExtraState.loading = null;
+        }
+    })();
+
+    return dashboardExtraState.loading;
+}
+
 async function ensureCoreData() {
     if (appDataLoadState.coreLoaded) {
         return;
@@ -11720,6 +12210,7 @@ async function loadSectionData(sectionId) {
     try {
         if (sectionId === "dashboard") {
             await loadDashboardSummary();
+            void loadDashboardExtras();
             return;
         }
 
