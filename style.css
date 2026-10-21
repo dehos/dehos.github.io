@@ -16039,3 +16039,175 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 .dashboard-negative-stock-row .dashboard-stock-empty {
     color: var(--app-red, #b42318);
 }
+
+
+/* =====================================================
+   DEHOS DASHBOARD — statistik utama & ringkasan penjualan
+   Scoped overrides: visual only, tanpa mengubah perilaku JS.
+===================================================== */
+.dashboard-card .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.dashboard-card .stat {
+    position: relative;
+    overflow: hidden;
+    min-height: 124px;
+    padding: 18px;
+    border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-border-soft))) !important;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px var(--tone-000000-ap045);
+}
+
+.dashboard-card .stat::before {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    left: 16px;
+    height: 3px;
+    border-radius: 0 0 4px 4px;
+    background: var(--dashboard-stat-accent, var(--app-accent));
+    content: "";
+}
+
+.dashboard-card .stat-primary {
+    --dashboard-stat-accent: var(--app-accent, #536dfe);
+}
+
+.dashboard-card .stat-success {
+    --dashboard-stat-accent: var(--app-green, #16845b);
+}
+
+.dashboard-card .stat-warning {
+    --dashboard-stat-accent: var(--app-orange, #d97706);
+}
+
+.dashboard-card .stat small {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: .01em;
+}
+
+.dashboard-card .stat strong {
+    margin-top: 12px;
+    font-size: 25px;
+    line-height: 1.2;
+    letter-spacing: -.025em;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-card .dashboard-stat-revenue strong {
+    font-size: clamp(17px, 1.7vw, 23px);
+}
+
+.dashboard-card .dashboard-sales-chart {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--theme-element-bg, var(--app-surface, #fff));
+    box-shadow: 0 4px 18px var(--tone-000000-ap045);
+}
+
+.dashboard-card .dashboard-sales-chart .sales-target-header {
+    align-items: center;
+    gap: 14px;
+}
+
+.dashboard-card .dashboard-sales-chart .sales-target-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -.015em;
+}
+
+.dashboard-card .dashboard-sales-chart .sales-target-header h3 .ui-svg-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--app-accent);
+}
+
+.dashboard-card .dashboard-sales-chart .sales-target-header p {
+    margin: 5px 0 0;
+    line-height: 1.5;
+}
+
+.dashboard-card .dashboard-sales-chart .dashboard-chart-period {
+    min-height: 38px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.dashboard-card .dashboard-sales-chart .dashboard-chart-total-row {
+    gap: 12px;
+    margin: 8px 0 16px;
+}
+
+.dashboard-card .dashboard-sales-chart .dashboard-chart-total-row > strong {
+    font-size: clamp(24px, 2.4vw, 30px);
+    letter-spacing: -.035em;
+}
+
+.dashboard-card .dashboard-sales-chart .dashboard-chart-plot {
+    padding-top: 6px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-card .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .dashboard-card .stat {
+        min-height: 108px;
+        padding: 15px;
+    }
+
+    .dashboard-card .dashboard-sales-chart {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-card .stats {
+        gap: 9px;
+    }
+
+    .dashboard-card .stat {
+        min-height: 100px;
+        padding: 13px 12px;
+        border-radius: 13px;
+    }
+
+    .dashboard-card .stat small {
+        font-size: 11px;
+    }
+
+    .dashboard-card .stat strong {
+        margin-top: 9px;
+        font-size: 21px;
+    }
+
+    .dashboard-card .dashboard-stat-revenue strong {
+        font-size: 16px;
+    }
+
+    .dashboard-card .dashboard-sales-chart {
+        padding: 14px 12px;
+        border-radius: 15px;
+    }
+
+    .dashboard-card .dashboard-sales-chart .sales-target-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-card .dashboard-sales-chart .sales-target-header h3 {
+        font-size: 15px;
+    }
+
+    .dashboard-card .dashboard-sales-chart .dashboard-chart-period {
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+}
