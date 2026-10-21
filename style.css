@@ -15997,3 +15997,12 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         margin: 0 !important;
     }
 }
+
+
+/* Add breathing room between the delete icon and the right edge on mobile. */
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-table th:nth-child(7),
+    #catatan-penjualan .modern-sales-table td:nth-child(7) {
+        padding-right: 12px !important;
+    }
+}
