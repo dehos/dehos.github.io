@@ -15937,3 +15937,38 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         margin: 0 1px !important;
     }
 }
+
+
+/* Mobile sales row actions: icon-only, transparent buttons with separation. */
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-table td:nth-child(7) {
+        white-space: nowrap !important;
+        padding-right: 5px !important;
+        padding-left: 5px !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) button,
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 24px !important;
+        width: 24px !important;
+        min-width: 24px !important;
+        max-width: 24px !important;
+        height: 28px !important;
+        margin: 0 3px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) button svg,
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .btn svg {
+        width: 16px !important;
+        height: 16px !important;
+        margin: 0 !important;
+    }
+}
