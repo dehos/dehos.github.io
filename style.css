@@ -16649,3 +16649,151 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     }
 }
 
+
+
+/* DEHOS DASHBOARD — PASS 3: unified shadcn-inspired tokens */
+#dashboard {
+    --dashboard-border: #e4e4e7;
+    --dashboard-muted: #71717a;
+    --dashboard-subtle: #a1a1aa;
+    --dashboard-foreground: #18181b;
+    --dashboard-accent: #4f46e5;
+    color: var(--dashboard-foreground) !important;
+}
+#dashboard .dashboard-section-heading {
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid #e4e4e7 !important;
+}
+#dashboard .modern-title-group {
+    gap: 11px !important;
+}
+#dashboard .modern-title-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border: 1px solid var(--dashboard-border) !important;
+    border-radius: 9px !important;
+    background: #fafafa !important;
+    color: #52525b !important;
+}
+#dashboard .dashboard-section-heading h2 {
+    color: var(--dashboard-foreground) !important;
+    font-size: 18px !important;
+    font-weight: 650 !important;
+    letter-spacing: -.035em !important;
+}
+#dashboard .stats .stat {
+    position: relative !important;
+    min-width: 0 !important;
+    min-height: 116px !important;
+    padding: 18px !important;
+    overflow: hidden !important;
+    border: 1px solid var(--dashboard-border) !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%) !important;
+}
+#dashboard .stats .stat::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 auto 0 0 !important;
+    width: 3px !important;
+    background: #a1a1aa !important;
+    opacity: .75 !important;
+}
+#dashboard .stats .stat-primary::before {
+    background: #6366f1 !important;
+}
+#dashboard .stats .stat-success::before {
+    background: #10b981 !important;
+}
+#dashboard .stats .stat-warning::before {
+    background: #f59e0b !important;
+}
+#dashboard .stats .stat small {
+    color: var(--dashboard-muted) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    letter-spacing: -.005em !important;
+    line-height: 1.45 !important;
+}
+#dashboard .stats .stat strong {
+    color: var(--dashboard-foreground) !important;
+    font-size: clamp(23px, 2.4vw, 30px) !important;
+    font-weight: 650 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -.045em !important;
+    font-variant-numeric: tabular-nums !important;
+    overflow-wrap: anywhere !important;
+}
+#dashboard .stats .dashboard-stat-revenue strong {
+    font-size: clamp(16px, 1.8vw, 23px) !important;
+    letter-spacing: -.04em !important;
+    white-space: nowrap !important;
+}
+#dashboard .sales-target-section {
+    border: 1px solid var(--dashboard-border) !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%) !important;
+}
+#dashboard .sales-target-header h3 {
+    color: #27272a !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: -.02em !important;
+}
+#dashboard .sales-target-header h3 .ui-svg-icon {
+    color: #71717a !important;
+    stroke-width: 1.7 !important;
+}
+#dashboard .sales-target-header p {
+    color: var(--dashboard-muted) !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+}
+#dashboard .sales-target-summary > span,
+#dashboard .sales-target-summary > small {
+    color: var(--dashboard-muted) !important;
+}
+#dashboard .dashboard-chart-period:hover {
+    border-color: #a1a1aa !important;
+    background-color: #fafafa !important;
+}
+#dashboard .dashboard-chart-period:focus-visible {
+    border-color: #818cf8 !important;
+    outline: 2px solid rgb(129 140 248 / 35%) !important;
+    outline-offset: 1px !important;
+}
+#dashboard .stats .stat:hover {
+    border-color: #d4d4d8 !important;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 5%) !important;
+}
+@media (max-width: 900px) {
+    #dashboard .stats .stat {
+        min-height: 108px !important;
+        padding: 16px !important;
+    }
+}
+@media (max-width: 600px) {
+    #dashboard .dashboard-section-heading {
+        padding-bottom: 13px !important;
+    }
+    #dashboard .modern-title-icon {
+        width: 33px !important;
+        height: 33px !important;
+    }
+    #dashboard .stats .stat {
+        min-height: 98px !important;
+        padding: 13px 12px 13px 15px !important;
+        border-radius: 9px !important;
+    }
+    #dashboard .stats .stat small {
+        font-size: 11px !important;
+    }
+    #dashboard .stats .stat strong {
+        font-size: clamp(20px, 5.5vw, 25px) !important;
+    }
+    #dashboard .stats .dashboard-stat-revenue strong {
+        font-size: clamp(12px, 3.4vw, 16px) !important;
+    }
+}
