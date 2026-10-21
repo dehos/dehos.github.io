@@ -16100,7 +16100,12 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 }
 
 .dashboard-card .dashboard-stat-revenue strong {
-    font-size: clamp(17px, 1.7vw, 23px);
+    display: block;
+    max-width: 100%;
+    font-size: clamp(12px, 1.25vw, 18px);
+    letter-spacing: -.045em;
+    white-space: nowrap;
+    overflow-wrap: normal;
 }
 
 .dashboard-card .dashboard-sales-chart {
@@ -16190,7 +16195,8 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     }
 
     .dashboard-card .dashboard-stat-revenue strong {
-        font-size: 16px;
+        font-size: clamp(11px, 3.4vw, 15px);
+        letter-spacing: -.05em;
     }
 
     .dashboard-card .dashboard-sales-chart {
