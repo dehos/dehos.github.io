@@ -17495,3 +17495,175 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         text-align: left !important;
     }
 }
+
+
+/* DEHOS accessibility pass — Performa Brand: readable type and uncluttered rows */
+#dashboard > .sales-target-section {
+    color: #27272a !important;
+    padding: 22px !important;
+}
+#dashboard > .sales-target-section > .sales-target-header {
+    align-items: flex-start !important;
+    gap: 20px !important;
+    margin-bottom: 18px !important;
+    padding-bottom: 16px !important;
+}
+#dashboard > .sales-target-section > .sales-target-header h3 {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    color: #18181b !important;
+}
+#dashboard > .sales-target-section > .sales-target-header h3 .ui-svg-icon {
+    width: 21px !important;
+    height: 21px !important;
+    flex: 0 0 21px !important;
+}
+#dashboard > .sales-target-section > .sales-target-header p {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #52525b !important;
+}
+#dashboard > .sales-target-section > .sales-target-header .sales-target-summary {
+    gap: 5px !important;
+}
+#dashboard > .sales-target-section > .sales-target-header .sales-target-summary > span,
+#dashboard > .sales-target-section > .sales-target-header .sales-target-summary > small {
+    color: #52525b !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+#dashboard > .sales-target-section > .sales-target-header .sales-target-summary > strong {
+    font-size: 19px !important;
+    line-height: 1.35 !important;
+    overflow-wrap: anywhere !important;
+}
+#dashboard #targetPenjualanList > .target-brand-card {
+    grid-template-columns: minmax(145px, .9fr) minmax(220px, 1.45fr) minmax(175px, 1fr) !important;
+    gap: 18px !important;
+    padding: 16px 5px !important;
+}
+#dashboard #targetPenjualanList .target-brand-name {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    color: #18181b !important;
+}
+#dashboard #targetPenjualanList .target-brand-note {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    color: #52525b !important;
+}
+#dashboard #targetPenjualanList .target-progress-caption {
+    gap: 12px !important;
+}
+#dashboard #targetPenjualanList .target-progress-caption span {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    color: #52525b !important;
+}
+#dashboard #targetPenjualanList .target-progress-caption strong,
+#dashboard #targetPenjualanList .target-progress-label {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    color: #27272a !important;
+}
+#dashboard #targetPenjualanList .target-progress-track {
+    height: 7px !important;
+    border-radius: 4px !important;
+}
+#dashboard #targetPenjualanList .target-card-values {
+    gap: 5px !important;
+}
+#dashboard #targetPenjualanList .target-card-values span {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    color: #52525b !important;
+}
+#dashboard #targetPenjualanList .target-card-values strong,
+#dashboard #targetPenjualanList .target-card-values .target-card-gap {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #27272a !important;
+    overflow-wrap: anywhere !important;
+}
+#dashboard #targetPenjualanList .target-brand-group-label {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    color: #52525b !important;
+}
+@media (max-width: 900px) {
+    #dashboard #targetPenjualanList > .target-brand-card {
+        grid-template-columns: minmax(130px, .8fr) minmax(180px, 1.2fr) minmax(145px, .9fr) !important;
+        gap: 12px !important;
+    }
+}
+@media (max-width: 700px) {
+    #dashboard > .sales-target-section {
+        padding: 17px !important;
+    }
+    #dashboard > .sales-target-section > .sales-target-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    #dashboard > .sales-target-section > .sales-target-header .sales-target-summary {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        justify-items: start !important;
+        text-align: left !important;
+        padding: 11px 12px !important;
+        border-radius: 8px !important;
+        background: #f8fafc !important;
+        border: 1px solid #e4e4e7 !important;
+    }
+    #dashboard > .sales-target-section > .sales-target-header .sales-target-summary > strong {
+        font-size: 18px !important;
+    }
+    #dashboard #targetPenjualanList > .target-brand-card {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 10px !important;
+        padding: 15px 2px !important;
+    }
+    #dashboard #targetPenjualanList .target-brand-identity,
+    #dashboard #targetPenjualanList .target-brand-progress,
+    #dashboard #targetPenjualanList .target-card-values {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        align-items: baseline !important;
+        gap: 5px 12px !important;
+        text-align: left !important;
+        padding: 9px 10px !important;
+        border: 1px solid #e4e4e7 !important;
+        border-radius: 8px !important;
+        background: #fafafa !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values span {
+        flex: 1 1 100% !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values strong,
+    #dashboard #targetPenjualanList .target-card-values .target-card-gap {
+        text-align: left !important;
+        font-size: 13px !important;
+    }
+}
+@media (max-width: 380px) {
+    #dashboard > .sales-target-section {
+        padding: 14px !important;
+    }
+    #dashboard #targetPenjualanList .target-brand-name {
+        font-size: 13px !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values strong,
+    #dashboard #targetPenjualanList .target-card-values .target-card-gap {
+        font-size: 12px !important;
+    }
+}
