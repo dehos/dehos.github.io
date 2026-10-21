@@ -11937,6 +11937,12 @@ function renderGrafikPenjualanDashboard() {
         ? garis + " L" + LEBAR + " " + BAWAH + " L0 " + BAWAH + " Z"
         : "";
 
+    const titikSVG = titik.map(function(titikSaatIni) {
+        return '<circle class="dashboard-chart-point" cx="' +
+            formatAngkaSvgDashboard(titikSaatIni.x) + '" cy="' +
+            formatAngkaSvgDashboard(titikSaatIni.y) + '" r="3.5"/>';
+    }).join("");
+
     let kisi = "";
     let labelY = "";
 
@@ -12013,10 +12019,15 @@ function renderGrafikPenjualanDashboard() {
         '<svg class="dashboard-chart-svg" viewBox="0 0 ' + LEBAR + " " +
         TINGGI + '" preserveAspectRatio="none" role="img" aria-label="' +
         escapeHTML(ringkasan) + '">' +
+        '<defs><linearGradient id="dashboardSalesAreaGradient" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="#6366f1" stop-opacity="0.28"/>' +
+        '<stop offset="95%" stop-color="#6366f1" stop-opacity="0.015"/>' +
+        '</linearGradient></defs>' +
         '<g class="dashboard-chart-grid">' + kisi + "</g>" +
         (area ? '<path class="dashboard-chart-area" d="' + area + '"/>' : "") +
         (garis ? '<path class="dashboard-chart-line" d="' + garis + '"/>' : "") +
         '<g class="dashboard-chart-hit">' + areaSentuh + "</g>" +
+        '<g class="dashboard-chart-points" aria-hidden="true">' + titikSVG + "</g>" +
         "</svg>" +
         '<div class="dashboard-chart-x" aria-hidden="true">' +
         labelX + "</div></div>";
