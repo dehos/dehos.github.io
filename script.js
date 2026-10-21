@@ -12138,12 +12138,7 @@ function hitungStokMenipisDashboard() {
 
 function renderStokMenipisDashboard() {
     const menipis = hitungStokMenipisDashboard();
-    const kartu = document.getElementById("stokMenipis");
     const wadah = document.getElementById("dashboardLowStock");
-
-    if (kartu) {
-        kartu.textContent = formatNumber(menipis.length);
-    }
 
     if (!wadah) {
         return;
@@ -12176,6 +12171,48 @@ function renderStokMenipisDashboard() {
                 formatNumber(sisa) + " barang lainnya</a>"
             : ""
     );
+}
+
+function renderBarangMinusDashboard() {
+    const wadah = document.getElementById("dashboardNegativeStock");
+
+    if (!wadah) {
+        return;
+    }
+
+    const hariIni = getTodayDate();
+    const daftarMinus = dataBarang
+        .map(function(barang) {
+            return {
+                barang: barang,
+                stok: getRawCurrentStock(barang, hariIni)
+            };
+        })
+        .filter(function(item) {
+            return item.stok < 0;
+        })
+        .sort(function(a, b) {
+            return a.stok - b.stok ||
+                String(a.barang.nama || "").localeCompare(
+                    String(b.barang.nama || ""),
+                    "id"
+                );
+        });
+
+    if (!daftarMinus.length) {
+        wadah.innerHTML =
+            '<div class="target-brand-loading">Tidak ada barang dengan stok minus.</div>';
+        return;
+    }
+
+    wadah.innerHTML = daftarMinus.map(function(item) {
+        return '<div class="dashboard-list-row dashboard-negative-stock-row">' +
+            '<div class="dashboard-negative-stock-name"><span aria-hidden="true">•</span><strong>' +
+            escapeHTML(item.barang.nama || "-") +
+            '</strong></div><div class="dashboard-list-side">' +
+            '<strong class="dashboard-stock-empty">' +
+            formatNumber(item.stok) + " unit</strong></div></div>";
+    }).join("");
 }
 
 function pasangPilihanPeriodeDashboard() {
@@ -12273,9 +12310,14 @@ async function loadDashboardExtras() {
 
             if (dataStokSiap) {
                 renderStokMenipisDashboard();
+                renderBarangMinusDashboard();
             } else {
                 tampilkanGalatDashboard(
                     "dashboardLowStock",
+                    "Gagal memuat data stok."
+                );
+                tampilkanGalatDashboard(
+                    "dashboardNegativeStock",
                     "Gagal memuat data stok."
                 );
             }
