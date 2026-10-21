@@ -17238,10 +17238,13 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     opacity: 1 !important;
 }
 #dashboard .dashboard-sales-chart .dashboard-chart-line {
-    stroke: #6366f1 !important;
-    stroke-width: 2.5 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
+    fill: none !important;
+    stroke: #4f46e5 !important;
+    stroke-width: 4.5px !important;
+    stroke-linecap: butt !important;
+    stroke-linejoin: miter !important;
+    stroke-miterlimit: 2 !important;
+    vector-effect: non-scaling-stroke !important;
 }
 #dashboard .dashboard-sales-chart .dashboard-chart-hit rect {
     cursor: crosshair !important;
