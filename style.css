@@ -15867,3 +15867,65 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         box-shadow: none !important;
     }
 }
+
+/* Final mobile corrections: prevent Rp overlap and add safe side spacing to tables. */
+@media (max-width: 700px) {
+    #penjualan .sales-price-field .harga-input-wrapper {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 0 10px 0 12px !important;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    #penjualan .sales-price-field .harga-prefix {
+        position: static !important;
+        inset: auto !important;
+        display: block !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        line-height: 1.2 !important;
+        white-space: nowrap;
+    }
+
+    #penjualan .sales-price-field #penjualanHarga {
+        display: block !important;
+        flex: 1 1 0 !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 8px 0 !important;
+        box-sizing: border-box !important;
+        text-indent: 0 !important;
+    }
+
+    #stok-barang .modern-stock-table-wrapper,
+    #catatan-penjualan .modern-sales-table-wrapper {
+        max-width: calc(100% - 12px) !important;
+        margin-right: 6px !important;
+        margin-left: 6px !important;
+        overflow-x: auto !important;
+        box-sizing: border-box !important;
+        border-radius: 12px;
+    }
+
+    #stok-barang .modern-stock-table {
+        min-width: 640px !important;
+    }
+
+    #stok-barang .modern-stock-table th:nth-child(4),
+    #stok-barang .modern-stock-table td:nth-child(4) {
+        width: 150px !important;
+        min-width: 150px !important;
+    }
+
+    #stok-barang #stockTable .stock-actions-cell {
+        padding-right: 10px !important;
+        padding-left: 8px !important;
+    }
+}
