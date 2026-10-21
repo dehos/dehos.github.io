@@ -1048,13 +1048,13 @@ function formatNominalTabel(number) {
     if (value >= 1000000) {
         return (value / 1000000).toLocaleString("id-ID", {
             maximumFractionDigits: 1
-        }) + " Juta";
+        }) + "Jt";
     }
 
-    if (value >= 10000) {
+    if (value >= 1000) {
         return (value / 1000).toLocaleString("id-ID", {
             maximumFractionDigits: 1
-        }) + " Ribu";
+        }) + "K";
     }
 
     return formatNumber(value);
