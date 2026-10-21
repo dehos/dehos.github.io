@@ -1037,6 +1037,29 @@ function formatNumber(number) {
     ).format(value);
 }
 
+/* Format nominal for the sales table; keep 1.000 unshortened. */
+function formatNominalTabel(number) {
+    const value = Number(number);
+
+    if (!Number.isFinite(value)) {
+        return "-";
+    }
+
+    if (value >= 1000000) {
+        return (value / 1000000).toLocaleString("id-ID", {
+            maximumFractionDigits: 1
+        }) + " Juta";
+    }
+
+    if (value >= 10000) {
+        return (value / 1000).toLocaleString("id-ID", {
+            maximumFractionDigits: 1
+        }) + " Ribu";
+    }
+
+    return formatNumber(value);
+}
+
 
 /*/*==================================
    FORMAT INPUT HARGA
@@ -7197,11 +7220,11 @@ async function loadPenjualan() {
                     </td>
 
                     <td class="text-end">
-                        Rp${formatNumber(harga)}
+                        Rp${formatNominalTabel(harga)}
                     </td>
 
                     <td class="text-end">
-                        Rp${formatNumber(total)}
+                        Rp${formatNominalTabel(total)}
                     </td>
 
                     <td>
