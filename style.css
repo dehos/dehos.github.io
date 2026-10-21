@@ -17240,7 +17240,7 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 #dashboard .dashboard-sales-chart .dashboard-chart-line {
     fill: none !important;
     stroke: #4f46e5 !important;
-    stroke-width: 4.5px !important;
+    stroke-width: 1.8px !important;
     stroke-linecap: butt !important;
     stroke-linejoin: miter !important;
     stroke-miterlimit: 2 !important;
