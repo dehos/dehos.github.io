@@ -16975,3 +16975,179 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         transition: none !important;
     }
 }
+
+
+/* DEHOS DASHBOARD — VISIBLE REFINEMENT: clearer hierarchy and stronger layout */
+#dashboard.card.dashboard-card {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 26px !important;
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 14px !important;
+    background: #fafafa !important;
+    box-shadow: 0 1px 3px rgb(24 24 27 / 4%) !important;
+}
+#dashboard .dashboard-section-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+    margin: 0 0 22px !important;
+    padding: 0 0 18px !important;
+    border-bottom: 1px solid #e4e4e7 !important;
+}
+#dashboard .modern-title-group {
+    align-items: center !important;
+    gap: 13px !important;
+}
+#dashboard .modern-title-icon {
+    flex: 0 0 42px !important;
+    width: 42px !important;
+    height: 42px !important;
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 11px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%) !important;
+}
+#dashboard .modern-title-icon .ui-svg-icon {
+    width: 19px !important;
+    height: 19px !important;
+}
+#dashboard .dashboard-section-heading h2 {
+    margin: 0 !important;
+    color: #18181b !important;
+    font-size: 22px !important;
+    font-weight: 650 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -.045em !important;
+}
+#dashboard .dashboard-heading-description {
+    margin: 5px 0 0 !important;
+    color: #71717a !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+}
+#dashboard .stats {
+    gap: 14px !important;
+    margin-bottom: 22px !important;
+}
+#dashboard .stats .stat {
+    min-height: 128px !important;
+    gap: 22px !important;
+    padding: 20px 19px 18px 22px !important;
+    border-color: #e4e4e7 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(24 24 27 / 3%) !important;
+}
+#dashboard .stats .stat::before {
+    display: block !important;
+    width: 4px !important;
+    border-radius: 0 3px 3px 0 !important;
+    opacity: 1 !important;
+}
+#dashboard .stats .stat-primary::before { background: #6366f1 !important; }
+#dashboard .stats .stat-success::before { background: #10b981 !important; }
+#dashboard .stats .stat-warning::before { background: #f59e0b !important; }
+#dashboard .stats .stat small {
+    font-size: 12px !important;
+    font-weight: 550 !important;
+}
+#dashboard .stats .stat strong {
+    font-size: clamp(25px, 2.5vw, 32px) !important;
+}
+#dashboard .stats .dashboard-stat-revenue strong {
+    font-size: clamp(15px, 1.65vw, 21px) !important;
+}
+#dashboard .sales-target-section {
+    margin-bottom: 18px !important;
+    padding: 22px !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(24 24 27 / 3%) !important;
+}
+#dashboard .dashboard-sales-chart {
+    padding: 22px !important;
+}
+#dashboard .dashboard-lists {
+    gap: 18px !important;
+}
+#dashboard .dashboard-lists > .sales-target-section {
+    padding: 20px !important;
+}
+#dashboard .target-brand-list {
+    gap: 12px !important;
+}
+#dashboard .target-brand-card {
+    border-radius: 10px !important;
+    background: #fff !important;
+}
+@media (max-width: 900px) {
+    #dashboard.card.dashboard-card {
+        padding: 20px !important;
+    }
+    #dashboard .stats {
+        gap: 10px !important;
+    }
+    #dashboard .stats .stat {
+        min-height: 112px !important;
+        padding: 16px 14px 15px 18px !important;
+    }
+}
+@media (max-width: 600px) {
+    #dashboard.card.dashboard-card {
+        padding: 14px !important;
+        border-radius: 11px !important;
+        background: #fafafa !important;
+    }
+    #dashboard .dashboard-section-heading {
+        align-items: flex-start !important;
+        margin-bottom: 16px !important;
+        padding-bottom: 14px !important;
+    }
+    #dashboard .modern-title-group {
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    #dashboard .modern-title-icon {
+        flex-basis: 36px !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 9px !important;
+    }
+    #dashboard .dashboard-section-heading h2 {
+        font-size: 19px !important;
+    }
+    #dashboard .dashboard-heading-description {
+        max-width: 260px !important;
+        font-size: 11px !important;
+    }
+    #dashboard .stats {
+        gap: 9px !important;
+        margin-bottom: 15px !important;
+    }
+    #dashboard .stats .stat {
+        min-height: 104px !important;
+        padding: 14px 10px 13px 14px !important;
+        gap: 14px !important;
+    }
+    #dashboard .stats .stat strong {
+        font-size: clamp(21px, 5.7vw, 27px) !important;
+    }
+    #dashboard .stats .dashboard-stat-revenue strong {
+        font-size: clamp(12px, 3.3vw, 16px) !important;
+    }
+    #dashboard .sales-target-section,
+    #dashboard .dashboard-sales-chart {
+        padding: 15px !important;
+        margin-bottom: 12px !important;
+    }
+    #dashboard .dashboard-lists > .sales-target-section {
+        padding: 15px !important;
+    }
+    #dashboard .target-brand-list {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 9px !important;
+    }
+}
