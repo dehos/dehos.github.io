@@ -16797,3 +16797,181 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         font-size: clamp(12px, 3.4vw, 16px) !important;
     }
 }
+
+
+/* DEHOS DASHBOARD — FINAL ADAPTATION: target progress, states and responsive finish */
+#dashboard .target-brand-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+}
+#dashboard .target-brand-card {
+    display: grid !important;
+    align-content: start !important;
+    gap: 13px !important;
+    min-width: 0 !important;
+    padding: 15px !important;
+    border: 1px solid #e4e4e7 !important;
+    border-bottom: 1px solid #e4e4e7 !important;
+    border-radius: 9px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%) !important;
+}
+#dashboard .target-brand-identity {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    min-width: 0 !important;
+}
+#dashboard .target-brand-indicator {
+    flex: 0 0 8px !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 3px !important;
+}
+#dashboard .target-brand-name {
+    display: block !important;
+    overflow-wrap: anywhere !important;
+    color: #27272a !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+}
+#dashboard .target-brand-progress {
+    gap: 8px !important;
+}
+#dashboard .target-progress-caption {
+    align-items: center !important;
+    gap: 8px !important;
+}
+#dashboard .target-progress-caption span {
+    color: #71717a !important;
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+}
+#dashboard .target-progress-caption strong,
+#dashboard .target-progress-label {
+    color: #3f3f46 !important;
+    font-size: 11px !important;
+    font-weight: 650 !important;
+    font-variant-numeric: tabular-nums !important;
+}
+#dashboard .target-progress-track {
+    height: 6px !important;
+    border-radius: 999px !important;
+    background: #f4f4f5 !important;
+}
+#dashboard .target-progress-fill {
+    border-radius: 999px !important;
+    transition: width .25s ease !important;
+}
+#dashboard .target-card-values {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #f0f0f2 !important;
+    text-align: left !important;
+}
+#dashboard .target-card-values span {
+    color: #71717a !important;
+    font-size: 10px !important;
+}
+#dashboard .target-card-values strong,
+#dashboard .target-card-values .target-card-gap {
+    max-width: 65% !important;
+    color: #3f3f46 !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+#dashboard .target-brand-group-label {
+    grid-column: 1 / -1 !important;
+    margin: 2px 0 0 !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #e4e4e7 !important;
+    color: #71717a !important;
+    font-size: 11px !important;
+}
+#dashboard .target-brand-loading {
+    min-width: 0 !important;
+    padding: 16px !important;
+    border: 1px dashed #d4d4d8 !important;
+    border-radius: 8px !important;
+    background: #fafafa !important;
+    color: #71717a !important;
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+}
+#dashboard .dashboard-list-row {
+    min-width: 0 !important;
+}
+#dashboard .dashboard-list-main {
+    min-width: 0 !important;
+}
+#dashboard .dashboard-list-main strong {
+    overflow-wrap: anywhere !important;
+}
+#dashboard .dashboard-list-side {
+    flex: 0 0 auto !important;
+    max-width: 48% !important;
+    text-align: right !important;
+}
+#dashboard .dashboard-list-side strong {
+    overflow-wrap: anywhere !important;
+}
+#dashboard .dashboard-list-side small {
+    white-space: nowrap !important;
+}
+#dashboard .dashboard-list-more {
+    text-align: center !important;
+    transition: background-color .15s ease, border-color .15s ease !important;
+}
+#dashboard .dashboard-list-link:focus-visible,
+#dashboard .dashboard-list-more:focus-visible,
+#dashboard .target-brand-card:focus-visible {
+    outline: 2px solid #818cf8 !important;
+    outline-offset: 3px !important;
+}
+#dashboard .target-brand-card:hover {
+    border-color: #d4d4d8 !important;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 4%) !important;
+}
+@media (max-width: 900px) {
+    #dashboard .target-brand-list {
+        gap: 10px !important;
+    }
+    #dashboard .target-brand-card {
+        padding: 13px !important;
+    }
+}
+@media (max-width: 600px) {
+    #dashboard .target-brand-list {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 9px !important;
+    }
+    #dashboard .target-brand-card {
+        gap: 11px !important;
+        padding: 13px !important;
+    }
+    #dashboard .target-progress-caption span {
+        font-size: 10px !important;
+    }
+    #dashboard .target-card-values {
+        padding-top: 9px !important;
+    }
+    #dashboard .dashboard-lists {
+        gap: 12px !important;
+    }
+    #dashboard .dashboard-list-side {
+        max-width: 45% !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #dashboard .target-progress-fill,
+    #dashboard .dashboard-list-more {
+        transition: none !important;
+    }
+}
