@@ -15963,6 +15963,12 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         border-radius: 0 !important;
         background: transparent !important;
         box-shadow: none !important;
+        color: #0d6efd !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) button:nth-of-type(2),
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .btn:nth-of-type(2) {
+        color: #dc3545 !important;
     }
 
     #catatan-penjualan .modern-sales-table td:nth-child(7) button svg,
