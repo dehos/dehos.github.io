@@ -15939,6 +15939,25 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 }
 
 
+/* Mobile sales row actions: visible colored icons, no button background. */
+@media (max-width: 700px) {
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .edit-history-btn {
+        color: #0d6efd !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .delete-history-btn {
+        color: #dc3545 !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .edit-history-btn svg {
+        stroke: #0d6efd !important;
+    }
+
+    #catatan-penjualan .modern-sales-table td:nth-child(7) .delete-history-btn svg {
+        stroke: #dc3545 !important;
+    }
+}
+
 /* Mobile sales row actions: icon-only, transparent buttons with separation. */
 @media (max-width: 700px) {
     #catatan-penjualan .modern-sales-table td:nth-child(7) {
