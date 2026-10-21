@@ -11931,17 +11931,15 @@ function renderGrafikPenjualanDashboard() {
         };
     });
 
-    const garis = buatKurvaHalusDashboard(titik);
+    const garis = titik.map(function(titikSaatIni, indeks) {
+        return (indeks === 0 ? "M" : "L") +
+            formatAngkaSvgDashboard(titikSaatIni.x) + " " +
+            formatAngkaSvgDashboard(titikSaatIni.y);
+    }).join(" ");
 
     const area = jumlahHari > 1
         ? garis + " L" + LEBAR + " " + BAWAH + " L0 " + BAWAH + " Z"
         : "";
-
-    const titikSVG = titik.map(function(titikSaatIni) {
-        return '<circle class="dashboard-chart-point" cx="' +
-            formatAngkaSvgDashboard(titikSaatIni.x) + '" cy="' +
-            formatAngkaSvgDashboard(titikSaatIni.y) + '" r="3.5"/>';
-    }).join("");
 
     let kisi = "";
     let labelY = "";
@@ -12027,7 +12025,7 @@ function renderGrafikPenjualanDashboard() {
         (area ? '<path class="dashboard-chart-area" d="' + area + '"/>' : "") +
         (garis ? '<path class="dashboard-chart-line" d="' + garis + '"/>' : "") +
         '<g class="dashboard-chart-hit">' + areaSentuh + "</g>" +
-        '<g class="dashboard-chart-points" aria-hidden="true">' + titikSVG + "</g>" +
+
         "</svg>" +
         '<div class="dashboard-chart-x" aria-hidden="true">' +
         labelX + "</div></div>";
