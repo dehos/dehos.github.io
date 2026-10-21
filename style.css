@@ -17243,15 +17243,6 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     stroke-linecap: round !important;
     stroke-linejoin: round !important;
 }
-#dashboard .dashboard-sales-chart .dashboard-chart-points {
-    pointer-events: none !important;
-}
-#dashboard .dashboard-sales-chart .dashboard-chart-point {
-    fill: #ffffff !important;
-    stroke: #6366f1 !important;
-    stroke-width: 2 !important;
-    vector-effect: non-scaling-stroke !important;
-}
 #dashboard .dashboard-sales-chart .dashboard-chart-hit rect {
     cursor: crosshair !important;
 }
