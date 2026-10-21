@@ -17738,3 +17738,38 @@ html[data-theme="adminlte"] .app-nav::before { display: none !important; }
 html[data-theme="adminlte"] .app-nav a.active { font-weight: 600; }
 html[data-theme="adminlte"] .app-nav a.active::before,
 html[data-theme="adminlte"] .app-nav a.active::after { display: none !important; }
+
+/* AdminLTE: kartu Ringkasan Penjualan sampai Perlu Restock */
+html[data-theme="adminlte"] #dashboard .sales-target-section {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 6px !important;
+    background: #fff !important;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2) !important;
+}
+html[data-theme="adminlte"] #dashboard > .sales-target-section { border-top: 3px solid #0d6efd !important; }
+html[data-theme="adminlte"] #dashboard .dashboard-lists > .sales-target-section:nth-child(1) { border-top: 3px solid #0d6efd !important; }
+html[data-theme="adminlte"] #dashboard .dashboard-lists > .sales-target-section:nth-child(2) { border-top: 3px solid #dc3545 !important; }
+html[data-theme="adminlte"] #dashboard .dashboard-lists > .sales-target-section:nth-child(3) { border-top: 3px solid #ffc107 !important; }
+
+/* grafik garis biru */
+html[data-theme="adminlte"] #dashboard .dashboard-sales-chart .dashboard-chart-line { stroke: #0d6efd !important; }
+html[data-theme="adminlte"] #dashboardSalesAreaGradient stop { stop-color: #0d6efd; }
+
+/* progress brand lebih tebal dan membulat (warna brand tetap) */
+html[data-theme="adminlte"] #dashboard .target-progress-track { height: 10px !important; border-radius: 5px !important; background: #e9ecef !important; }
+html[data-theme="adminlte"] #dashboard .target-progress-fill { border-radius: 5px !important; }
+
+/* badge status */
+html[data-theme="adminlte"] #dashboard .dashboard-list-side strong.dashboard-stock-empty {
+    border-color: #dc3545 !important; background: #dc3545 !important; color: #fff !important; border-radius: 4px !important;
+}
+html[data-theme="adminlte"] #dashboard .dashboard-list-side strong.dashboard-stock-low {
+    border-color: #ffc107 !important; background: #ffc107 !important; color: #212529 !important; border-radius: 4px !important;
+}
+
+/* daftar dan tombol */
+html[data-theme="adminlte"] #dashboard .dashboard-list-row:hover { background: #f4f6f9 !important; }
+html[data-theme="adminlte"] #dashboard .dashboard-list-more {
+    border-color: #0d6efd !important; color: #0d6efd !important; border-radius: 6px !important; text-align: center;
+}
+html[data-theme="adminlte"] #dashboard .dashboard-list-more:hover { background: #0d6efd !important; color: #fff !important; border-color: #0d6efd !important; }
