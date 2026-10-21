@@ -15789,3 +15789,66 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     text-decoration: underline;
     text-underline-offset: 2px;
 }
+
+
+/* Mobile polish: emphasize sale price and give action controls breathing room. */
+@media (max-width: 700px) {
+    #penjualan .sales-price-field .harga-input-wrapper {
+        min-height: 48px;
+        overflow: hidden;
+        border: 1px solid var(--theme-element-border, var(--theme-border, var(--app-accent)));
+        border-radius: 12px;
+        background: var(--theme-element-bg, var(--tone-faf2f5));
+    }
+
+    #penjualan .sales-price-field .harga-prefix {
+        padding-left: 12px;
+        color: var(--theme-ink, var(--app-accent));
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    #penjualan .sales-price-field #penjualanHarga {
+        min-width: 0;
+        min-height: 46px;
+        padding: 8px 10px 8px 6px;
+        border: 0 !important;
+        background: transparent !important;
+        color: var(--theme-ink, var(--app-text)) !important;
+        font-size: 16px !important;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+    }
+
+    #penjualan .sales-entry-footer {
+        padding: 0 2px;
+    }
+
+    #penjualan #simpanPenjualanButton {
+        width: 100%;
+        min-height: 48px;
+        justify-content: center;
+        margin: 0;
+    }
+
+    #stok-barang .modern-stock-table tbody td.stock-actions-cell {
+        padding-right: 12px !important;
+        padding-left: 8px !important;
+    }
+
+    #stok-barang #stockTable .stock-action-group {
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 5px;
+        min-width: max-content;
+        padding-right: 2px;
+    }
+
+    #stok-barang #stockTable .action-btn {
+        flex: 0 0 auto;
+        min-width: 58px;
+        padding-right: 6px;
+        padding-left: 6px;
+        white-space: nowrap;
+    }
+}
