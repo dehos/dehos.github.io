@@ -15580,7 +15580,7 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
    Extra stats, sales chart, recent sales, restock list.
 ===================================================== */
 .dashboard-card .stats.dashboard-extra-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     margin-top: 12px;
 }
 .dashboard-card .dashboard-extra-stats .stat-warning {
@@ -16014,4 +16014,28 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         position: relative !important;
         left: -7px !important;
     }
+}
+
+
+/* Barang minus dashboard: follow the active theme tokens. */
+.dashboard-negative-stock-section .dashboard-negative-stock-name {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+}
+.dashboard-negative-stock-name > span {
+    flex: 0 0 auto;
+    color: var(--app-red, #b42318);
+    font-weight: 900;
+}
+.dashboard-negative-stock-name > strong {
+    overflow: hidden;
+    color: var(--theme-ink, var(--app-text));
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dashboard-negative-stock-row .dashboard-stock-empty {
+    color: var(--app-red, #b42318);
 }
