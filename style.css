@@ -17151,3 +17151,124 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         gap: 9px !important;
     }
 }
+
+
+/* DEHOS sales chart — Tremor-inspired visual polish (chart only) */
+#dashboard .dashboard-sales-chart {
+    background: #ffffff !important;
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 1px 2px rgb(24 24 27 / 3%) !important;
+}
+#dashboard .dashboard-sales-chart .sales-target-header {
+    border-bottom: 0 !important;
+    padding-bottom: 4px !important;
+}
+#dashboard .dashboard-sales-chart .sales-target-header h3 {
+    color: #18181b !important;
+    letter-spacing: -.02em !important;
+}
+#dashboard .dashboard-sales-chart #dashboardChartLabel {
+    color: #71717a !important;
+    font-size: 12px !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-total-row {
+    margin: 2px 0 14px !important;
+    gap: 10px !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-total-row > strong {
+    color: #18181b !important;
+    font-size: clamp(25px, 3vw, 32px) !important;
+    font-weight: 650 !important;
+    letter-spacing: -.045em !important;
+    line-height: 1.15 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-trend-badge {
+    padding: 3px 8px !important;
+    border: 1px solid transparent !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-trend-badge.is-up {
+    color: #15803d !important;
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-trend-badge.is-down {
+    color: #b91c1c !important;
+    background: #fef2f2 !important;
+    border-color: #fecaca !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-trend-badge.is-flat {
+    color: #52525b !important;
+    background: #f4f4f5 !important;
+    border-color: #e4e4e7 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-period {
+    border-color: #e4e4e7 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #3f3f46 !important;
+    font-weight: 500 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-plot {
+    padding: 14px 4px 0 0 !important;
+    border-top: 1px solid #f4f4f5 !important;
+    column-gap: 12px !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-y {
+    padding: 8px 0 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-y span,
+#dashboard .dashboard-sales-chart .dashboard-chart-x span {
+    color: #a1a1aa !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    font-variant-numeric: tabular-nums !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-grid line {
+    stroke: #e4e4e7 !important;
+    stroke-width: 1 !important;
+    stroke-dasharray: 3 5 !important;
+    opacity: .8 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-area {
+    fill: url(#dashboardSalesAreaGradient) !important;
+    opacity: 1 !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-line {
+    stroke: #6366f1 !important;
+    stroke-width: 2.5 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-points {
+    pointer-events: none !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-point {
+    fill: #ffffff !important;
+    stroke: #6366f1 !important;
+    stroke-width: 2 !important;
+    vector-effect: non-scaling-stroke !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-hit rect {
+    cursor: crosshair !important;
+}
+#dashboard .dashboard-sales-chart .dashboard-chart-x {
+    margin-top: 8px !important;
+}
+@media (max-width: 600px) {
+    #dashboard .dashboard-sales-chart {
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+    #dashboard .dashboard-sales-chart .dashboard-chart-plot {
+        column-gap: 8px !important;
+        padding-top: 12px !important;
+    }
+    #dashboard .dashboard-sales-chart .dashboard-chart-y span,
+    #dashboard .dashboard-sales-chart .dashboard-chart-x span {
+        font-size: 9px !important;
+    }
+}
