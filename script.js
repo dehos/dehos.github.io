@@ -6882,39 +6882,7 @@ function renderTargetPenjualan(
    LOAD PENJUALAN
 ===================================================== */
 
-let abaikanPerubahanRentangTanggalPenjualan = false;
-
-function getRentangTanggalPenjualan() {
-    const input = document.getElementById("filterRentangTanggal");
-    const tanggal = input?._flatpickr?.selectedDates || [];
-    if (tanggal.length !== 2) {
-        return { tanggalMulai: "", tanggalAkhir: "", aktif: false };
-    }
-    const formatISO = function(nilai) {
-        return nilai.getFullYear() + "-" +
-            String(nilai.getMonth() + 1).padStart(2, "0") + "-" +
-            String(nilai.getDate()).padStart(2, "0");
-    };
-    return {
-        tanggalMulai: formatISO(tanggal[0]),
-        tanggalAkhir: formatISO(tanggal[1]),
-        aktif: true
-    };
-}
-
-function bersihkanRentangTanggalPenjualan() {
-    const input = document.getElementById("filterRentangTanggal");
-    if (input?._flatpickr) {
-        input._flatpickr.clear();
-    } else {
-        const bulan = document.getElementById("filterBulan");
-        if (bulan) bulan.value = getBulanPenjualanSekarang();
-        updateNavigasiBulanPenjualan();
-        loadPenjualan();
-    }
-}
-
-async function fetchPenjualanLengkap(bulan, brand, tanggalMulai = "", tanggalAkhir = "") {
+async function fetchPenjualanLengkap(bulan, brand) {
     const semua = [];
     const ukuranHalaman = 500;
 
@@ -6925,25 +6893,13 @@ async function fetchPenjualanLengkap(bulan, brand, tanggalMulai = "", tanggalAkh
             .order("tanggal_pembelian", { ascending: false })
             .order("id", { ascending: false });
 
-        if (!tanggalMulai && !tanggalAkhir && /^\d{4}-\d{2}$/.test(bulan)) {
+        if (/^\d{4}-\d{2}$/.test(bulan)) {
             const [tahun, nomorBulan] = bulan.split("-").map(Number);
             const berikutnya = new Date(tahun, nomorBulan, 1);
             const batas = berikutnya.getFullYear() + "-" +
                 String(berikutnya.getMonth() + 1).padStart(2, "0") + "-01";
             query = query.gte("tanggal_pembelian", bulan + "-01")
                 .lt("tanggal_pembelian", batas);
-        }
-
-        if (/^\d{4}-\d{2}-\d{2}$/.test(tanggalMulai) &&
-            /^\d{4}-\d{2}-\d{2}$/.test(tanggalAkhir) &&
-            tanggalMulai <= tanggalAkhir) {
-            const hariSesudahAkhir = new Date(tanggalAkhir + "T00:00:00");
-            hariSesudahAkhir.setDate(hariSesudahAkhir.getDate() + 1);
-            const batasEksklusif = hariSesudahAkhir.getFullYear() + "-" +
-                String(hariSesudahAkhir.getMonth() + 1).padStart(2, "0") + "-" +
-                String(hariSesudahAkhir.getDate()).padStart(2, "0");
-            query = query.gte("tanggal_pembelian", tanggalMulai)
-                .lt("tanggal_pembelian", batasEksklusif);
         }
 
         if (brand) {
@@ -6989,15 +6945,17 @@ async function loadPenjualan() {
     }
 
 
-    const rentangTanggal = getRentangTanggalPenjualan();
-    const bulan = rentangTanggal.aktif
-        ? ""
-        : document.getElementById("filterBulan")?.value || "";
-    const brand = document.getElementById("filterBrand")?.value || "";
+    const bulan =
+        document.getElementById(
+            "filterBulan"
+        )?.value || "";
 
-    const { data, error } = await fetchPenjualanLengkap(
-        bulan, brand, rentangTanggal.tanggalMulai, rentangTanggal.tanggalAkhir
-    );
+    const brand =
+        document.getElementById(
+            "filterBrand"
+        )?.value || "";
+
+    const { data, error } = await fetchPenjualanLengkap(bulan, brand);
 
     if (error) {
 
@@ -7058,19 +7016,15 @@ async function loadPenjualan() {
 
     updateNavigasiBulanPenjualan();
 
-    if (!rentangTanggal.aktif) {
-        renderTargetPenjualan(data || [], bulan);
-    }
+    renderTargetPenjualan(
+        data || [],
+        bulan
+    );
+
 
     const hasil =
         (data || []).filter(
             function(item) {
-                const tanggalItem = String(item.tanggal_pembelian || "").slice(0, 10);
-                if (rentangTanggal.aktif &&
-                    (tanggalItem < rentangTanggal.tanggalMulai ||
-                     tanggalItem > rentangTanggal.tanggalAkhir)) {
-                    return false;
-                }
 
                 if (
                     bulan &&
@@ -7081,8 +7035,10 @@ async function loadPenjualan() {
                         bulan
                     )
                 ) {
+
                     return false;
                 }
+
 
                 if (
                     brand &&
@@ -7162,9 +7118,9 @@ async function loadPenjualan() {
                 >
                     Tidak ada penjualan pada
                     ${escapeHTML(
-                        rentangTanggal.aktif
-                            ? rentangTanggal.tanggalMulai + " s.d. " + rentangTanggal.tanggalAkhir
-                            : formatBulanPenjualan(bulan)
+                        formatBulanPenjualan(
+                            bulan
+                        )
                     )}
                 </td>
             </tr>
@@ -7820,13 +7776,6 @@ async function ubahBulanPenjualan(
         bulanInput.value ||
         getBulanPenjualanSekarang();
 
-    const pemilihTanggal = document.getElementById("filterRentangTanggal");
-    if (pemilihTanggal?._flatpickr && pemilihTanggal._flatpickr.selectedDates.length) {
-        abaikanPerubahanRentangTanggalPenjualan = true;
-        pemilihTanggal._flatpickr.clear();
-        abaikanPerubahanRentangTanggalPenjualan = false;
-    }
-
     const bagian =
         bulanAktif.split("-");
 
@@ -8027,35 +7976,14 @@ async function initFilterPenjualan() {
     );
 
     brand.value =
-        daftarBrand.includes(brandSaatIni) ? brandSaatIni : "";
-
-    const pemilihTanggal = document.getElementById("filterRentangTanggal");
-    if (pemilihTanggal && typeof flatpickr === "function" && !pemilihTanggal._flatpickr) {
-        flatpickr(pemilihTanggal, {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            altInput: true,
-            altFormat: "j F Y",
-            locale: flatpickr.l10ns.id || "default",
-            allowInput: false,
-            disableMobile: true,
-            onChange: function(tanggalTerpilih) {
-                if (abaikanPerubahanRentangTanggalPenjualan) return;
-                const bulanInput = document.getElementById("filterBulan");
-                if (tanggalTerpilih.length === 2) {
-                    if (bulanInput) bulanInput.value = "";
-                    updateNavigasiBulanPenjualan();
-                    loadPenjualan();
-                } else if (tanggalTerpilih.length === 0) {
-                    if (bulanInput) bulanInput.value = getBulanPenjualanSekarang();
-                    updateNavigasiBulanPenjualan();
-                    loadPenjualan();
-                }
-            }
-        });
-    }
+        daftarBrand.includes(
+            brandSaatIni
+        )
+            ? brandSaatIni
+            : "";
 
     updateNavigasiBulanPenjualan();
+
     await loadPenjualan();
 }
 
@@ -10955,12 +10883,9 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
     );
     if (!disetujui) return null;
 
-    const rentangTanggal = getRentangTanggalPenjualan();
-    const bulan = rentangTanggal.aktif ? "" : document.getElementById("filterBulan")?.value || "";
+    const bulan = document.getElementById("filterBulan")?.value || "";
     const brand = document.getElementById("filterBrand")?.value || "";
-    const { data, error } = await fetchPenjualanLengkap(
-        bulan, brand, rentangTanggal.tanggalMulai, rentangTanggal.tanggalAkhir
-    );
+    const { data, error } = await fetchPenjualanLengkap(bulan, brand);
     if (error) {
         console.error("ERROR EXPORT PENJUALAN:", error);
         showAppAlert("Gagal mengambil seluruh data penjualan untuk export.");
@@ -11000,19 +10925,13 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
 
     let namaFile = "Penjualan";
     if (brand) namaFile += "-" + brand;
-    if (rentangTanggal.aktif) {
-        namaFile += "-" + rentangTanggal.tanggalMulai + "-sd-" + rentangTanggal.tanggalAkhir;
-    } else if (bulan) {
-        namaFile += "-" + bulan;
-    }
+    if (bulan) namaFile += "-" + bulan;
     const [tahun, nomorBulan] = bulan.split("-").map(Number);
-    const judul = rentangTanggal.aktif
-        ? rentangTanggal.tanggalMulai + " s.d. " + rentangTanggal.tanggalAkhir
-        : /^\d{4}-\d{2}$/.test(bulan)
-            ? new Date(tahun, nomorBulan - 1, 1).toLocaleDateString(
-                "id-ID", { month: "long" }
-            ) + ", " + tahun
-            : "Semua Periode";
+    const judul = /^\d{4}-\d{2}$/.test(bulan)
+        ? new Date(tahun, nomorBulan - 1, 1).toLocaleDateString(
+            "id-ID", { month: "long" }
+        ) + ", " + tahun
+        : "Semua Periode";
     return { grup, namaFile, bulan, brand, judul };
 }
 
