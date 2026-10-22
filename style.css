@@ -17838,3 +17838,17 @@ html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.stat
 }
 html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.status.error svg,
 html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.status.error svg * { color: #fff !important; stroke: #fff !important; }
+
+
+/* Date Range Picker untuk filter halaman Penjualan */
+.sales-date-range-control { display: flex; flex-direction: column; gap: 5px; min-width: min(100%, 270px); }
+.sales-date-range-control > label { margin: 0; color: var(--bs-secondary-color, #6c757d); font-size: .76rem; font-weight: 600; }
+.sales-date-range-input-wrap { display: flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 9px; border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 8px; background: var(--bs-body-bg, #fff); }
+.sales-date-range-input-wrap > svg { width: 17px; height: 17px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 1.7; }
+.sales-date-range-input-wrap input { width: 100%; min-width: 0; padding: 7px 0; border: 0; outline: 0; background: transparent; color: var(--bs-body-color, #212529); font: inherit; font-size: .82rem; }
+.sales-date-range-input-wrap button { flex: 0 0 auto; border: 0; background: transparent; color: var(--bs-secondary-color, #6c757d); font-size: 1.35rem; line-height: 1; cursor: pointer; }
+.sales-date-range-input-wrap button:hover { color: var(--bs-danger, #dc3545); }
+.sales-date-range-input-wrap:focus-within { border-color: var(--bs-primary, #0d6efd); box-shadow: 0 0 0 .15rem rgba(13, 110, 253, .12); }
+.flatpickr-calendar { z-index: 1090 !important; font-family: inherit; }
+.flatpickr-calendar .flatpickr-day.selected, .flatpickr-calendar .flatpickr-day.startRange, .flatpickr-calendar .flatpickr-day.endRange { background: var(--bs-primary, #0d6efd); border-color: var(--bs-primary, #0d6efd); }
+@media (max-width: 767.98px) { .sales-date-range-control { width: 100%; min-width: 0; } .sales-date-range-input-wrap { min-height: 42px; } }
