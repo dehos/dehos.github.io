@@ -6,9 +6,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #0f172a;
+  background: #f8fafc;
 }
 
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button { cursor: pointer; }
+button, a, select { -webkit-tap-highlight-color: transparent; }
+button, select { cursor: pointer; }
+a { text-decoration: none; }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid #64748b; outline-offset: 2px; }
+::selection { background: #cbd5e1; color: #0f172a; }
