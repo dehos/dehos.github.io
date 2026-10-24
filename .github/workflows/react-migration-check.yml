@@ -1,0 +1,31 @@
+name: React migration build check
+
+on:
+  pull_request:
+    paths:
+      - "migration/react-vite/**"
+      - ".github/workflows/react-migration-check.yml"
+  push:
+    branches:
+      - "migration/react-vite-foundation"
+    paths:
+      - "migration/react-vite/**"
+      - ".github/workflows/react-migration-check.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: migration/react-vite
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build production bundle
+        run: npm run build
