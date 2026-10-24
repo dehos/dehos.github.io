@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/* Token warna dipetakan ke variabel CSS agar tema bisa diganti lewat atribut data-theme. */
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-muted: var(--muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-bright: var(--primary-bright);
+  --color-primary-soft: var(--primary-soft);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-fg: var(--sidebar-fg);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --radius-card: 14px;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 4px 16px rgb(16 24 40 / 0.05);
+  --shadow-pop: 0 12px 40px rgb(16 24 40 / 0.18);
+}
+
+/* TOSKA (default) */
+:root,
+[data-theme="tosca"] {
+  --bg: #f4fbfb;
+  --surface: #ffffff;
+  --surface-2: #f9fefe;
+  --border: #dfefef;
+  --border-soft: #e9f4f4;
+  --fg: #0b3c3d;
+  --fg-soft: #2b5354;
+  --muted: #5f8283;
+  --primary: #118f91;
+  --primary-hover: #0d7476;
+  --primary-fg: #ffffff;
+  --primary-bright: #44dee1;
+  --primary-soft: rgb(68 222 225 / 0.12);
+  --sidebar: #ffffff;
+  --sidebar-fg: #2b5354;
+  --sidebar-hover: #f0fcfd;
+  --sidebar-border: #dfefef;
+}
+
+/* MARUN */
+[data-theme="maroon"] {
+  --bg: #fbf4f6;
+  --surface: #ffffff;
+  --surface-2: #fef9fa;
+  --border: #efdfe3;
+  --border-soft: #f4e9ec;
+  --fg: #3d0b17;
+  --fg-soft: #542b35;
+  --muted: #86626b;
+  --primary: #800020;
+  --primary-hover: #66001a;
+  --primary-fg: #ffffff;
+  --primary-bright: #e1446b;
+  --primary-soft: rgb(225 68 107 / 0.1);
+  --sidebar: #ffffff;
+  --sidebar-fg: #542b35;
+  --sidebar-hover: #fdf0f3;
+  --sidebar-border: #efdfe3;
+}
+
+/* ADMINLTE */
+[data-theme="adminlte"] {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-2: #f9fbfe;
+  --border: #dee6f0;
+  --border-soft: #e8eef5;
+  --fg: #1f2d3d;
+  --fg-soft: #293c56;
+  --muted: #627389;
+  --primary: #0d5abe;
+  --primary-hover: #0a4a9c;
+  --primary-fg: #ffffff;
+  --primary-bright: #3c87e9;
+  --primary-soft: rgb(60 135 233 / 0.12);
+  --sidebar: #343a40;
+  --sidebar-fg: #c2c7d0;
+  --sidebar-hover: rgb(255 255 255 / 0.08);
+  --sidebar-border: #4b545c;
+}
+
+/* Warna semantik tetap sama di semua tema agar status mudah dikenali. */
+:root {
+  --success: #15803d;
+  --success-soft: #e8f6ee;
+  --danger: #dc2626;
+  --danger-soft: #fdecec;
+  --warning: #b45309;
+  --warning-soft: #fff4dc;
+  --info: #1d4ed8;
+  --info-soft: #e8efff;
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary-bright);
+    outline-offset: 2px;
+  }
+  /* Angka di tabel rata sehingga mudah dibaca. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Animasi komponen Radix */
+@keyframes overlay-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(.96) } to { opacity: 1; transform: translate(-50%, -50%) scale(1) } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-4px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes spin { to { transform: rotate(360deg) } }
+.animate-overlay-in { animation: overlay-in .15s ease-out }
+.animate-pop-in { animation: pop-in .18s ease-out }
+.animate-sheet-in { animation: sheet-in .18s ease-out }
+.animate-menu-in { animation: menu-in .12s ease-out }
+.animate-toast-in { animation: toast-in .18s ease-out }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
