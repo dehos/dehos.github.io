@@ -29,3 +29,10 @@ jobs:
         run: npm install
       - name: Build production bundle
         run: npm run build
+
+      - name: Upload generated dependency lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-migration-package-lock
+          path: migration/react-vite/package-lock.json
+          if-no-files-found: error
