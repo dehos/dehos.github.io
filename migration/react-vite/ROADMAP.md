@@ -5,14 +5,14 @@ Last updated: 2026-10-25
 | Step | Scope | Status | Exit criteria |
 |---|---|---|---|
 | 1 | Audit current root app and deployment | In progress; dashboard data/behavior audit partially completed | Confirm entry files, Supabase usage, assets, deployment workflow, and remaining page behaviors |
-| 2 | React + Vite + Tailwind v4 + Radix + Supabase JS + Lucide scaffold | Scaffold merged; CI build verification pending; lockfile not yet committed | Successful dependency install and production build; commit lockfile |
+| 2 | React + Vite + Tailwind v4 + Radix + Supabase JS + Lucide scaffold | Scaffold merged; GitHub Actions build passed (run #9); lockfile generation/capture in progress | Successful dependency install and production build; commit lockfile |
 | 3 | Dashboard | Not started; existing dashboard behavior has been mapped | Implement React dashboard using verified legacy data semantics; match metrics, graph, brand performance, minus-stock list |
 | 4 | Penjualan | Not started | Preserve sale entry, filtering, exports, and historical records |
 | 5 | Stock and In Out | Not started | Preserve stock calculations, adjustments, history, and negative/PO behavior |
 | 6 | Regression testing and deployment cutover | Not started | Test all key flows, review deployment, switch production only after approval |
 
 ## Current next action
-Run the existing React migration build workflow against this branch/PR. Do not recreate the scaffold. After a successful build, add and commit the dependency lockfile, then begin the Dashboard React implementation.
+The foundation build has passed. The workflow now uploads the lockfile created by npm install; trigger the migration build on a migration-path PR, retrieve the artifact, commit package-lock.json, then begin Dashboard React implementation. Do not recreate the scaffold.
 
 ## Safety constraints
 - Keep root production files and current production deployment workflow untouched until cutover.
