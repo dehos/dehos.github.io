@@ -203,10 +203,9 @@ export default function App() {
       const name = item.brand || "Tanpa Brand";
       grouped.set(name, (grouped.get(name) || 0) + salesValue(item));
     });
-    return [...grouped.entries()].map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total);
-  }, [data.sales, today]);
+    return brandNames.map((name) => ({ name, total: grouped.get(name) || 0 })).sort((a, b) => b.total - a.total || a.name.localeCompare(b.name, "id"));
+  }, [data.sales, today, brandNames]);
   const totalBrandSales = brandSales.reduce((sum, item) => sum + item.total, 0);
-  const brandSalesByName = new Map(brandSales.map((item) => [item.name, item.total]));
   function openTargetSettings() {
     setTargetDraft(Object.fromEntries(brandNames.map((name) => [name, brandTargets[name] == null ? "" : String(brandTargets[name])])));
     setTargetMessage("");
