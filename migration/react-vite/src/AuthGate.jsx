@@ -31,9 +31,15 @@ export default function AuthGate({ children }) {
     }
 
     let active = true;
-    const recoveryLinkRequested = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery" ||
-      new URLSearchParams(window.location.search).get("type") === "recovery";
+    const recoveryHash = new URLSearchParams(window.location.hash.slice(1));
+    const recoveryQuery = new URLSearchParams(window.location.search);
+    const recoveryLinkRequested = recoveryHash.get("type") === "recovery" ||
+      recoveryQuery.get("type") === "recovery" || recoveryQuery.has("code");
     const verifySession = async (session) => {
+      if (recoverySessionActive.current) {
+        if (active) setAuth({ status: "recovery", message: "Tautan valid. Buat password baru untuk akun Anda." });
+        return;
+      }
       const id = ++verificationId.current;
       if (!session) {
         if (active) setAuth({ status: "signedOut", message: "" });
