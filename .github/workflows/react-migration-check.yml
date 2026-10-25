@@ -30,8 +30,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
+      - name: Resolve dependencies and generate lockfile
         run: npm install
+      - name: Verify clean lockfile installation
+        run: npm ci
       - name: Audit dependency vulnerabilities
         run: npm audit --audit-level=high
       - name: Run stock calculation regression tests
