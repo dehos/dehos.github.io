@@ -127,7 +127,7 @@ export default function AuthGate({ children }) {
     event.preventDefault();
     if (!supabase || busy) return;
     const email = loginId.trim();
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setAuth({ status: "reset", message: "Masukkan alamat email yang valid." });
       return;
     }
