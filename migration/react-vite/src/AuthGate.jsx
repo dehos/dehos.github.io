@@ -19,6 +19,11 @@ export default function AuthGate({ children }) {
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [changePasswordMessage, setChangePasswordMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const verificationId = useRef(0);
@@ -186,6 +191,45 @@ export default function AuthGate({ children }) {
     }
   }
 
+  async function handleAuthenticatedPasswordChange(event) {
+    event.preventDefault();
+    if (!supabase || busy) return;
+    const validation = validateAuthenticatedPasswordChange(currentPassword, newPassword, confirmNewPassword);
+    if (validation) {
+      setChangePasswordMessage(validation);
+      return;
+    }
+
+    setBusy(true);
+    setChangePasswordMessage("Memverifikasi password lama dan menyimpan perubahan...");
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+        current_password: currentPassword,
+      });
+      if (error) {
+        setChangePasswordMessage(passwordUpdateErrorMessage(error));
+        return;
+      }
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      setChangePasswordOpen(false);
+      const { error: signOutError } = await supabase.auth.signOut({ scope: "global" });
+      if (signOutError) {
+        setChangePasswordMessage("Password berhasil diperbarui. Keluar dari sesi lain dan masuk kembali jika memungkinkan.");
+        return;
+      }
+      setChangePasswordMessage("");
+      setAuth({ status: "signedOut", message: "Password berhasil diperbarui. Masuk kembali dengan password baru." });
+    } catch {
+      setChangePasswordMessage("Password belum dapat diperbarui. Periksa koneksi dan coba lagi.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleSignIn(event) {
     event.preventDefault();
     if (!supabase || busy) return;
@@ -258,12 +302,31 @@ export default function AuthGate({ children }) {
 
   if (auth.status === "ready") {
     return <div>
-      <div className="flex items-center justify-end gap-3 border-b border-slate-200 bg-white px-4 py-2 text-sm sm:px-6">
+      <div className="flex flex-wrap items-center justify-end gap-3 border-b border-slate-200 bg-white px-4 py-2 text-sm sm:px-6">
         <span className="inline-flex items-center gap-2 text-slate-600"><ShieldCheck size={16} />Admin terverifikasi</span>
+        <button type="button" onClick={() => { setChangePasswordMessage(""); setChangePasswordOpen(true); }} disabled={busy} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-60">
+          <KeyRound size={15} />Ganti password
+        </button>
         <button type="button" onClick={handleSignOut} disabled={busy} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-60">
           <LogOut size={15} />Keluar
         </button>
       </div>
+      {changePasswordMessage && !changePasswordOpen && <p role="status" className="mx-auto max-w-3xl px-4 py-3 text-sm text-amber-800">{changePasswordMessage}</p>}
+      {changePasswordOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4">
+        <section role="dialog" aria-modal="true" aria-labelledby="dehos-change-password-title" className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+          <div className="mb-4 flex items-start justify-between gap-3">
+            <div><h2 id="dehos-change-password-title" className="text-lg font-semibold">Ganti password</h2><p className="mt-1 text-sm text-slate-500">Verifikasi password saat ini untuk melindungi akun Anda.</p></div>
+            <button type="button" onClick={() => { setChangePasswordOpen(false); setCurrentPassword(""); setNewPassword(""); setConfirmNewPassword(""); setChangePasswordMessage(""); }} disabled={busy} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm disabled:opacity-60">Batal</button>
+          </div>
+          {changePasswordMessage && <p role="status" className="mb-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">{changePasswordMessage}</p>}
+          <form onSubmit={handleAuthenticatedPasswordChange} className="space-y-4">
+            <div><label htmlFor="dehos-current-password" className="mb-1.5 block text-sm font-medium">Password saat ini</label><input id="dehos-current-password" name="current-password" type="password" autoComplete="current-password" required value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200" /></div>
+            <div><label htmlFor="dehos-new-password" className="mb-1.5 block text-sm font-medium">Password baru</label><input id="dehos-new-password" name="new-password" type="password" autoComplete="new-password" minLength={8} required value={newPassword} onChange={(event) => setNewPassword(event.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200" /></div>
+            <div><label htmlFor="dehos-confirm-new-password" className="mb-1.5 block text-sm font-medium">Konfirmasi password baru</label><input id="dehos-confirm-new-password" name="confirm-new-password" type="password" autoComplete="new-password" minLength={8} required value={confirmNewPassword} onChange={(event) => setConfirmNewPassword(event.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2.5 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200" /></div>
+            <button type="submit" disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"><KeyRound size={17} />{busy ? "Menyimpan..." : "Perbarui password"}</button>
+          </form>
+        </section>
+      </div>}
       {children}
     </div>;
   }
