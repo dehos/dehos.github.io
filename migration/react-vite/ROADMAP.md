@@ -9,7 +9,7 @@ Last updated: 2026-10-25
 | 3 | Dashboard and authentication | Dashboard first pass merged in PR #36. Identity-specific admin check is present on this branch; user has directed that the authentication checkpoint be treated as passed for roadmap progression, but live test evidence is not independently available. Brand target settings remain browser-local; pure validation helper and four regression tests added in PR #50; CI passed (dependency audit, stock + brand-target tests, production build, artifact upload) | Target validation regression tests passed in CI; live auth, progress display against real data, and data-parity verification remain unverified until independently checked |
 | 4 | Penjualan | Merged in PR #43; React migration build check passed. Adds sale entry through existing `catat_penjualan_atomic`, month/brand/name filters, historical table, CSV export, and stock/pre-order result messaging. Edit/delete and Excel/PDF exports are not yet ported. | Verify RPC response and read policies in an authorized live session before treating data parity as verified |
 | 5 | Stock and In Out | Merged in PR #44; React migration build check passed. Adds dated stock balance, search, in/out/adjust form through existing `catat_transaksi_stok_atomic`, negative-stock/PO visibility, and month-filtered transaction history. No schema or root production changes. | Verify authorized live read/write behavior and balance parity before parity approval |
-| 6 | Regression testing and deployment cutover | PR #45 stock tests, PR #50 target-validation tests, and PR #53 six admin-identity regression tests passed in CI. The migration auth gate now fails closed unless returned admin data contains the exact session email. Full app/auth/RPC live regression and deployment cutover remain not started | Verify authorized live data behavior and GitHub Pages source/RLS policies in an authorized environment; review deployment; switch production only after approval |
+| 6 | Regression testing and deployment cutover | PR #45 stock tests, PR #50 target-validation tests, and PR #53 six admin-identity regression tests passed in CI. This stage now includes a controlled verification runbook in `VERIFICATION.md` and corrected auth documentation. Full app/auth/RPC live regression and deployment cutover remain NOT VERIFIED; documentation is not a substitute for live evidence | Execute the runbook with an authorized test account and approved environment; verify GitHub Pages source and RLS policies; review deployment; switch production only after explicit approval |
 
 ## Audit findings and next actions
 
@@ -30,6 +30,10 @@ Last updated: 2026-10-25
 - The CI workflow now runs `npm ci` after generating a lockfile with `npm install`, so CI checks that a clean install from that generated lockfile succeeds. The lockfile is still not committed; this is not yet equivalent to reproducible installs from a reviewed, version-controlled lockfile. Dashboard query/calculation parity and live auth still need independent verification.
 - Do not recreate the scaffold or reimplement the already-merged Dashboard UI.
 - PR #43 merged successfully; its build check completed successfully. This proves compilation only, not live Supabase parity.
+
+## Current next action
+
+- The immediate next step is to execute `VERIFICATION.md` in an authorized controlled preview. This repository-only pass cannot prove real-account login, effective RLS/grants, RPC behavior, live data parity, or GitHub Pages settings. Those items remain explicitly blocked until verified; do not mark stage 6 complete or cut over production based on CI alone.
 
 ## Safety constraints
 
