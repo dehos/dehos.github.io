@@ -34,7 +34,7 @@ jobs:
       - name: Install from committed lockfile
         if: hashFiles('migration/react-vite/package-lock.json') != ''
         run: npm ci
-      - name: Generate initial lockfile when absent
+      - name: Bootstrap install only for branches without a lockfile
         if: hashFiles('migration/react-vite/package-lock.json') == ''
         run: npm install
       - name: Audit dependency vulnerabilities
@@ -49,81 +49,3 @@ jobs:
           name: react-migration-package-lock
           path: migration/react-vite/package-lock.json
           if-no-files-found: error
-
-  commit-lockfile:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/migration/auth-identity-check'
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    defaults:
-      run:
-        working-directory: migration/react-vite
-    steps:
-      - name: Checkout isolated migration branch
-        uses: actions/checkout@v4
-        with:
-          ref: migration/auth-identity-check
-          persist-credentials: false
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Generate lockfile without running package scripts
-        run: npm install --package-lock-only --ignore-scripts
-      - name: Commit lockfile through GitHub API
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const path = 'migration/react-vite/package-lock.json';
-            const content = fs.readFileSync(path, 'utf8');
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const branch = 'heads/migration/auth-identity-check';
-
-            const ref = await github.rest.git.getRef({ owner, repo, ref: branch });
-            if (ref.data.object.sha !== context.sha) {
-              throw new Error('Migration branch advanced during lockfile generation; refusing to commit a potentially stale lockfile.');
-            }
-
-            let existingContent = null;
-            try {
-              const existing = await github.rest.repos.getContent({
-                owner, repo, path, ref: context.sha
-              });
-              if (existing.data.type === 'file') {
-                existingContent = Buffer.from(existing.data.content, 'base64').toString('utf8');
-              }
-            } catch (error) {
-              if (error.status !== 404) throw error;
-            }
-
-            if (existingContent === content) {
-              core.info('Committed lockfile already matches generated lockfile; no commit needed.');
-              return;
-            }
-
-            const parent = await github.rest.git.getCommit({
-              owner, repo, commit_sha: context.sha
-            });
-            const blob = await github.rest.git.createBlob({
-              owner, repo, content, encoding: 'utf-8'
-            });
-            const tree = await github.rest.git.createTree({
-              owner, repo,
-              base_tree: parent.data.tree.sha,
-              tree: [{ path, mode: '100644', type: 'blob', sha: blob.data.sha }]
-            });
-            const commit = await github.rest.git.createCommit({
-              owner, repo,
-              message: 'build(migration): commit dependency lockfile',
-              tree: tree.data.sha,
-              parents: [context.sha]
-            });
-            await github.rest.git.updateRef({
-              owner, repo, ref: branch,
-              sha: commit.data.sha,
-              force: false
-            });
-            core.info('Committed generated package-lock.json to the isolated migration branch.');
