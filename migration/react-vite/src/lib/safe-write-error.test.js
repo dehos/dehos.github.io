@@ -24,3 +24,17 @@ test("uses a generic fallback for missing and malformed errors", () => {
   assert.equal(safeWriteErrorMessage(null), "Operasi gagal. Silakan coba lagi.");
   assert.equal(safeWriteErrorMessage({ message: "sensitive provider text" }, "Periksa stok."), "Periksa stok.");
 });
+
+test("maps known business-rule failures to fixed messages without leaking provider text", () => {
+  const brand = safeWriteErrorMessage({ code: "P0001", message: "Barang ID 1260 belum memiliki brand aktif" });
+  assert.match(brand, /brand aktif/);
+  assert.doesNotMatch(brand, /1260|Barang ID/);
+  const stock = safeWriteErrorMessage({ code: "P0001", message: "Stok berubah menjadi -3. Periksa kembali sebelum menyimpan." });
+  assert.match(stock, /Stok barang berubah/);
+  assert.doesNotMatch(stock, /-3/);
+});
+
+test("keeps the generic business-rule message for unrecognized P0001 errors and ignores matching text on other codes", () => {
+  assert.match(safeWriteErrorMessage({ code: "P0001", message: "Data penjualan tidak valid" }), /aturan bisnis/);
+  assert.equal(safeWriteErrorMessage({ code: "XX000", message: "belum memiliki brand aktif" }, "Gagal."), "Gagal.");
+});
