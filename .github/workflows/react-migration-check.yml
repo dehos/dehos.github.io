@@ -1,5 +1,8 @@
 name: React migration build check
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths:
@@ -8,6 +11,7 @@ on:
   push:
     branches:
       - "migration/react-vite-foundation"
+      - "migration/auth-identity-check"
     paths:
       - "migration/react-vite/**"
       - ".github/workflows/react-migration-check.yml"
@@ -21,16 +25,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
+      - name: Install from committed lockfile
+        if: hashFiles('migration/react-vite/package-lock.json') != ''
+        run: npm ci
+      - name: Bootstrap install only for branches without a lockfile
+        if: hashFiles('migration/react-vite/package-lock.json') == ''
         run: npm install
+      - name: Audit dependency vulnerabilities
+        run: npm audit --audit-level=high
+      - name: Run regression tests
+        run: npm test
       - name: Build production bundle
         run: npm run build
-
-      - name: Upload generated dependency lockfile
+      - name: Upload dependency lockfile
         uses: actions/upload-artifact@v4
         with:
           name: react-migration-package-lock

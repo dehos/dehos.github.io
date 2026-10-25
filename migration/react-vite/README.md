@@ -35,7 +35,7 @@ The Dashboard makes read-only calls to the existing get_dashboard_summary RPC an
 
 ## Important authentication limitation
 
-The legacy root application requires a Supabase session and checks admin access via app_admins; username sign-in uses the login-username Edge Function. The React Dashboard is now wrapped by `src/AuthGate.jsx`. It restores the Supabase session, supports email/password login and the legacy `login-username` Edge Function, then checks `app_admins` using the same `select("email").limit(1)` pattern as the root app. Failed or unverifiable admin checks deny access and attempt to sign out. The shared Supabase client is reused to avoid multiple auth clients sharing browser storage. This client-side gate is not a replacement for Supabase RLS; database policies must continue to enforce access. Password recovery/change flows from the legacy app are not included in this first pass. A public/anon key alone does not provide access control; Supabase RLS must continue to enforce permissions.
+The legacy root application requires a Supabase session and checks admin access via app_admins; username sign-in uses the login-username Edge Function. The React Dashboard is now wrapped by `src/AuthGate.jsx`. It restores the Supabase session, supports email/password login and the legacy `login-username` Edge Function, then queries `app_admins` filtered to the exact current session email and independently verifies that the returned rows contain that exact email. Missing identity, mismatched rows, or query errors fail closed; failed identity checks attempt to sign out. The shared Supabase client is reused to avoid multiple auth clients sharing browser storage. This client-side gate is not a replacement for Supabase RLS; database policies must continue to enforce access. Password recovery/change flows from the legacy app are not included in this first pass. A public/anon key alone does not provide access control; Supabase RLS must continue to enforce permissions.
 
 ## Safety boundary
 
@@ -43,4 +43,4 @@ The existing production files at repository root are intentionally untouched. Th
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) for the current verified state and remaining work.
+See [ROADMAP.md](./ROADMAP.md) for the current verified state and remaining work. Use [VERIFICATION.md](./VERIFICATION.md) for the controlled, non-production checklist required before any cutover.
