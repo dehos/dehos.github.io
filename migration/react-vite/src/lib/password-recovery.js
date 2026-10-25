@@ -1,3 +1,11 @@
+export function validateAuthenticatedPasswordChange(currentPassword, newPassword, confirmation) {
+  if (typeof currentPassword !== "string" || !currentPassword) return "Masukkan password saat ini.";
+  if (typeof newPassword !== "string" || newPassword.length < 8) return "Password baru harus minimal 8 karakter.";
+  if (newPassword === currentPassword) return "Gunakan password baru yang berbeda dari password lama.";
+  if (newPassword !== confirmation) return "Konfirmasi password belum sama.";
+  return "";
+}
+
 export function validateRecoveryPassword(password, confirmation) {
   if (typeof password !== "string" || password.length < 8) return "Password baru harus minimal 8 karakter.";
   if (password !== confirmation) return "Konfirmasi password belum sama.";
