@@ -6,7 +6,8 @@
 --     owner's rights and bypasses row-level security. Verified in a rolled-back session on 2026-10-26:
 --     a signed-in NON-admin reads 0 rows from `barang` but 1,259 rows (item names and stock levels)
 --     from `v_stock`. Neither the legacy root app nor the React migration references `v_stock`.
---  2. `authenticated` holds TRUNCATE, TRIGGER and REFERENCES on every public table. TRUNCATE is not
+--  2. `authenticated` holds TRUNCATE, TRIGGER and REFERENCES on every public table that existed on
+--     2026-10-26 (the tables listed in the REVOKE below). TRUNCATE is not
 --     subject to RLS. The app needs only SELECT/INSERT/UPDATE/DELETE (all kept below).
 --
 -- Rolled-back verification (2026-10-26): this exact change was applied inside a transaction that always
@@ -15,6 +16,9 @@
 --   admin: v_stock 1,259 rows, barang 1,259 rows, get_dashboard_summary total_stok 5,660,
 --          catat_penjualan_atomic, edit_penjualan_atomic, catat_transaksi_stok_atomic and
 --          hapus_penjualan_atomic all succeeded; SELECT/INSERT/UPDATE/DELETE privileges unchanged.
+-- The post-change run is a record of what was observed; there is no script for it in this repository.
+-- Before applying, re-check the privilege list (tables created later are not covered, and REVOKE does not
+-- change default privileges; inspect pg_default_acl and consider ALTER DEFAULT PRIVILEGES).
 -- Not tested: the legacy root app in a browser (it does not use v_stock and only does DML, so no
 -- impact is expected, but test it first), Edge Function `login-username`, and the Android build.
 
