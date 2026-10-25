@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "./lib/supabase.js";
 import { calculateStockBalance } from "./lib/stock-balance.js";
 import { normalizeBrandTargets } from "./lib/brand-targets.js";
+import { serializeCsv } from "./lib/csv-export.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -241,8 +242,8 @@ function SalesPage({ onSaved, onBack }) {
           item.brand || "", item.qty, item.harga, salesValue(item)];
       }),
     ];
-    const csv = rows.map((row) => row.map((value) => '"' + String(value ?? "").replace(/"/g, '""') + '"').join(",")).join("\r\n");
-    const blob = new Blob(["\\uFEFF", csv], { type: "text/csv;charset=utf-8;" });
+    const csv = serializeCsv(rows);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
