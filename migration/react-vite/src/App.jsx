@@ -287,6 +287,155 @@ function SalesPage({ onSaved, onBack }) {
   </main>;
 }
 
+
+
+function stockBalanceAt(item, transactions, date) {
+  const startDate = String(item.tanggal_mulai || item.created_at || "").slice(0, 10);
+  let balance = !startDate || startDate <= date ? Number(item.stok_awal) || 0 : 0;
+  for (const row of transactions) {
+    if (Number(row.barang_id) !== Number(item.id) || String(row.tanggal || "").slice(0, 10) > date) continue;
+    const qty = Number(row.qty) || 0;
+    if (row.type === "masuk" || row.type === "adjust_masuk") balance += qty;
+    else if (row.type === "laku" || row.type === "adjust_keluar") balance -= qty;
+  }
+  return balance;
+}
+
+function StockPage({ onBack, onSaved }) {
+  const [goods, setGoods] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
+  const [month, setMonth] = useState(todayKey().slice(0, 7));
+  const [barangId, setBarangId] = useState("");
+  const [type, setType] = useState("masuk");
+  const [date, setDate] = useState(todayKey());
+  const [qty, setQty] = useState("1");
+  const [saving, setSaving] = useState(false);
+
+  async function loadStock() {
+    if (!supabase) {
+      setStatus("config");
+      setError("Koneksi Supabase belum dikonfigurasi.");
+      return;
+    }
+    setStatus("loading");
+    setError("");
+    try {
+      const [goodsRows, transactionRows] = await Promise.all([
+        fetchAll((start, end) => supabase.from("barang")
+          .select("id, nama, stok_awal, created_at, tanggal_mulai, brand:brand!barang_brand_id_fkey(id, nama, aktif)")
+          .order("nama", { ascending: true }).order("id", { ascending: true }).range(start, end)),
+        fetchAll((start, end) => supabase.from("transaksi")
+          .select("id, barang_id, tanggal, type, qty, created_at, penjualan_id")
+          .order("tanggal", { ascending: true }).order("id", { ascending: true }).range(start, end)),
+      ]);
+      setGoods(goodsRows.filter((item) => item.brand?.nama && item.brand?.aktif !== false));
+      setTransactions(transactionRows);
+      setStatus("ready");
+    } catch (loadError) {
+      console.error("DEHOS stock page load error:", loadError);
+      setError("Data stok/riwayat gagal dimuat. Periksa izin baca Supabase dan struktur tabel.");
+      setStatus("error");
+    }
+  }
+
+  useEffect(() => { void loadStock(); }, []);
+  const selectedGood = goods.find((item) => String(item.id) === barangId);
+  const currentBalance = selectedGood ? stockBalanceAt(selectedGood, transactions, date) : null;
+  const parsedQty = Number(qty);
+  const validQty = Number.isFinite(parsedQty) && (type === "adjust" ? parsedQty >= 0 : Number.isInteger(parsedQty) && parsedQty >= 1);
+  const canSave = status === "ready" && Boolean(selectedGood) && validQty && /^\\d{4}-\\d{2}-\\d{2}$/.test(date) && !saving &&
+    !(type === "adjust" && currentBalance === parsedQty) &&
+    !(type === "laku" && parsedQty > Math.max(0, currentBalance ?? 0));
+
+  const visibleGoods = goods.filter((item) => {
+    const term = search.trim().toLocaleLowerCase("id-ID");
+    return !term || String(item.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
+      String(item.brand?.nama || "").toLocaleLowerCase("id-ID").includes(term);
+  });
+  const visibleTransactions = transactions.filter((row) => {
+    const monthMatch = !/^\\d{4}-\\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
+    const good = goods.find((item) => Number(item.id) === Number(row.barang_id));
+    const term = search.trim().toLocaleLowerCase("id-ID");
+    return monthMatch && (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
+      String(row.type || "").toLocaleLowerCase("id-ID").includes(term));
+  }).slice().reverse();
+
+  async function submitTransaction(event) {
+    event.preventDefault();
+    if (!supabase || !canSave) return;
+    const actionName = type === "masuk" ? "Barang masuk" : type === "laku" ? "Barang keluar" : "Adjust stok";
+    const summary = type === "adjust"
+      ? "Stok tercatat: " + formatNumber(currentBalance) + " unit. Stok fisik baru: " + formatNumber(parsedQty) + " unit."
+      : actionName + ": " + formatNumber(parsedQty) + " unit.";
+    if (!window.confirm("Konfirmasi " + actionName.toLocaleLowerCase("id-ID") + "?\\n\\nBarang: " + selectedGood.nama +
+      "\\n" + summary + "\\nTanggal: " + date +
+      "\\n\\nTransaksi akan disimpan melalui proses atomik database yang sudah digunakan aplikasi lama.")) return;
+
+    setSaving(true);
+    setError("");
+    setNotice("");
+    try {
+      const { error: saveError } = await supabase.rpc("catat_transaksi_stok_atomic", {
+        p_barang_id: Number(barangId),
+        p_tanggal: date,
+        p_type: type,
+        p_qty: parsedQty,
+        p_expected_stock: currentBalance,
+      });
+      if (saveError) throw saveError;
+      setNotice(actionName + " berhasil dicatat.");
+      setQty(type === "adjust" ? String(parsedQty) : "1");
+      await loadStock();
+      if (onSaved) onSaved();
+    } catch (saveError) {
+      console.error("DEHOS stock transaction error:", saveError);
+      setError("Transaksi gagal disimpan: " + (saveError?.message || "silakan muat ulang dan periksa stok."));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const typeLabel = (value) => value === "masuk" ? "Masuk" : value === "laku" ? "Keluar (penjualan)" :
+    value === "adjust_masuk" || value === "adjust_keluar" ? "Adjust" : value || "—";
+
+  return <main className="min-h-screen bg-slate-50 text-slate-900">
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
+      <div><p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">Workspace / DEHOS</p><h1 className="mt-1 text-xl font-semibold tracking-tight">Stock & In Out</h1><p className="mt-1 text-sm text-slate-500">Saldo stok, barang masuk/keluar, penyesuaian, dan riwayat</p></div>
+      <div className="flex gap-2"><button type="button" onClick={onBack} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Dashboard</button><button type="button" onClick={() => void loadStock()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button></div>
+    </header>
+    <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-8">
+      {error && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
+      {notice && <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="mb-5"><h2 className="font-semibold">Catat In / Out / Adjust</h2><p className="mt-1 text-sm text-slate-500">Stok dihitung dari stok awal dan riwayat transaksi sampai tanggal yang dipilih. Penjualan lebih dari stok tetap mengikuti aturan pre-order pada modul Penjualan.</p></div>
+        <form onSubmit={submitTransaction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <label className="grid gap-1.5 text-sm font-medium">Jenis transaksi<select value={type} onChange={(event) => { setType(event.target.value); setQty(event.target.value === "adjust" && currentBalance !== null ? String(Math.max(0, currentBalance)) : "1"); }} className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal"><option value="masuk">Barang masuk</option><option value="laku">Barang keluar</option><option value="adjust">Adjust stok fisik</option></select></label>
+          <label className="grid gap-1.5 text-sm font-medium">Tanggal transaksi<input type="date" value={date} onChange={(event) => setDate(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Nama barang<select value={barangId} onChange={(event) => { setBarangId(event.target.value); if (type === "adjust") { const item = goods.find((row) => String(row.id) === event.target.value); setQty(item ? String(Math.max(0, stockBalanceAt(item, transactions, date))) : "0"); } }} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal"><option value="">Pilih barang...</option>{goods.map((item) => <option key={item.id} value={item.id}>{item.nama} · {item.brand?.nama}</option>)}</select></label>
+          <label className="grid gap-1.5 text-sm font-medium">{type === "adjust" ? "Stok fisik yang benar" : "Quantity"}<input type="number" min={type === "adjust" ? "0" : "1"} step="1" inputMode="numeric" value={qty} onChange={(event) => setQty(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal"/></label>
+          <div className="rounded-xl bg-slate-50 p-3"><span className="text-xs text-slate-500">Saldo stok pada tanggal transaksi</span><p className={"mt-1 text-lg font-semibold " + (currentBalance !== null && currentBalance < 0 ? "text-rose-700" : "text-slate-900")}>{currentBalance === null ? "Pilih barang" : formatNumber(currentBalance) + " unit"}</p><p className="mt-1 text-xs text-slate-500">Saldo sebelum transaksi baru disimpan.</p></div>
+          <div className="flex items-end"><button type="submit" disabled={!canSave} className="w-full rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{saving ? "Menyimpan..." : "Simpan transaksi"}</button></div>
+        </form>
+        {type === "laku" && selectedGood && parsedQty > Math.max(0, currentBalance ?? 0) && <p className="mt-3 text-sm text-rose-700">Jumlah keluar melebihi stok tersedia. Untuk penjualan yang menimbulkan pre-order, gunakan halaman Penjualan.</p>}
+        {type === "adjust" && selectedGood && currentBalance === parsedQty && <p className="mt-3 text-sm text-amber-700">Stok sudah sesuai; tidak ada perubahan yang perlu dicatat.</p>}
+      </section>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Daftar stok</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleGoods.length) + " barang" : "Memuat data..."}</p></div><label className="grid gap-1 text-xs text-slate-500">Cari barang / brand<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Ketik nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Stok Awal</th><th className="px-4 py-3 text-right">Stok Saat Ini</th><th className="px-4 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat stok...</td></tr> : status !== "ready" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Data stok belum tersedia.</td></tr> : visibleGoods.length ? visibleGoods.map((item) => { const balance = stockBalanceAt(item, transactions, todayKey()); return <tr key={item.id}><td className="px-4 py-3 font-medium">{item.nama}</td><td className="px-4 py-3">{item.brand?.nama || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.stok_awal)}</td><td className={"px-4 py-3 text-right font-semibold tabular-nums " + (balance < 0 ? "text-rose-700" : "text-slate-900")}>{formatNumber(balance)}</td><td className="px-4 py-3">{balance < 0 ? <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">Minus / PO</span> : balance === 0 ? <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Habis</span> : <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Tersedia</span>}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Barang tidak ditemukan.</td></tr>}</tbody></table></div>
+      </section>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Riwayat transaksi stok</h2><p className="mt-1 text-sm text-slate-500">Termasuk transaksi penjualan yang memengaruhi saldo stok</p></div><label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Jenis</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3">Sumber</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat riwayat...</td></tr> : visibleTransactions.length ? visibleTransactions.map((row) => { const item = goods.find((good) => Number(good.id) === Number(row.barang_id)); return <tr key={row.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(row.tanggal, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{item?.nama || ("Barang #" + row.barang_id)}</td><td className="px-4 py-3">{typeLabel(row.type)}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(row.qty)}</td><td className="px-4 py-3">{row.penjualan_id ? "Penjualan" : row.type === "laku" ? "Keluar manual" : "Manual"}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Tidak ada transaksi untuk bulan ini.</td></tr>}</tbody></table></div>
+      </section>
+      <footer className="border-t border-slate-200 py-4 text-xs text-slate-400">DEHOS · Modul Stock & In Out · terpisah dari website produksi</footer>
+    </div>
+  </main>;
+}
+
 export default function App() {
   const [period, setPeriod] = useState(7);
   const [activePage, setActivePage] = useState("dashboard");
@@ -404,6 +553,7 @@ export default function App() {
   const summary = data.summary || {};
 
   if (activePage === "sales") return <SalesPage onSaved={() => void loadDashboard()} onBack={() => setActivePage("dashboard")} />;
+  if (activePage === "stock") return <StockPage onSaved={() => void loadDashboard()} onBack={() => setActivePage("dashboard")} />;
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-slate-200 bg-white p-5 lg:block">
@@ -411,8 +561,8 @@ export default function App() {
       <nav className="mt-8 space-y-1 text-sm">
         <a href="#dashboard" onClick={(event) => { event.preventDefault(); setActivePage("dashboard"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "dashboard" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><ChartNoAxesCombined size={17} />Dashboard</a>
         <a href="#penjualan" onClick={(event) => { event.preventDefault(); setActivePage("sales"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "sales" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><ShoppingCart size={17} />Penjualan</a>
-        <a href="#stock" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-500"><Package size={17} />Stock</a>
-        <a href="#in-out" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-500"><ArrowDownUp size={17} />In Out</a>
+        <a href="#stock" onClick={(event) => { event.preventDefault(); setActivePage("stock"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "stock" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><Package size={17} />Stock</a>
+        <a href="#in-out" onClick={(event) => { event.preventDefault(); setActivePage("stock"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "stock" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><ArrowDownUp size={17} />In Out</a>
       </nav>
       <div className="absolute bottom-5 left-5 right-5 rounded-xl border border-slate-200 p-3 text-xs text-slate-500"><div className="mb-1 flex items-center gap-2 font-medium text-slate-700"><Database size={15} />Status koneksi</div>{data.status === "ready" ? "Database aktif · hanya baca" : data.status === "loading" ? "Menghubungkan..." : "Belum terhubung"}</div>
     </aside>
