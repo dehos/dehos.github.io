@@ -13,10 +13,10 @@ This directory is an isolated foundation for the gradual migration of dehos.gith
 ## Run locally
 
 ```sh
-
 npm install
 cp .env.example .env.local
 npm run dev
+npm test
 npm run build
 ```
 
@@ -33,9 +33,13 @@ The isolated React Dashboard currently includes:
 
 The Dashboard makes read-only calls to the existing get_dashboard_summary RPC and the existing penjualan, barang, and transaksi tables. It does not write data or change schema/RLS/auth. Its data calculations and relation names are not yet verified against live results.
 
-## Important authentication limitation
+## Authentication and test coverage
 
-The legacy root application requires a Supabase session and checks admin access via app_admins; username sign-in uses the login-username Edge Function. The React Dashboard is now wrapped by `src/AuthGate.jsx`. It restores the Supabase session, supports email/password login and the legacy `login-username` Edge Function, then checks `app_admins` using the same `select("email").limit(1)` pattern as the root app. Failed or unverifiable admin checks deny access and attempt to sign out. The shared Supabase client is reused to avoid multiple auth clients sharing browser storage. This client-side gate is not a replacement for Supabase RLS; database policies must continue to enforce access. Password recovery/change flows from the legacy app are not included in this first pass. A public/anon key alone does not provide access control; Supabase RLS must continue to enforce permissions.
+The legacy root application requires a Supabase session and checks admin access via app_admins; username sign-in uses the login-username Edge Function. The React Dashboard is wrapped by src/AuthGate.jsx. It restores the session, supports email/password login and the legacy username function, then checks app_admins before rendering the Dashboard. Failed or unverifiable admin checks deny access and attempt to sign out.
+
+Mocked unit tests in src/AuthGate.test.jsx cover missing Supabase configuration, no session, successful admin verification, an empty admin list, and an admin-query error. Run npm test to execute them. These tests do not connect to production and do not prove real credentials, Edge Function behavior, RLS, or data parity.
+
+The shared Supabase client is reused to avoid multiple auth clients sharing browser storage. This client-side gate is not a replacement for Supabase RLS; database policies must continue to enforce access. Password recovery/change flows from the legacy app are not included yet. A public/anon key alone does not provide access control.
 
 ## Safety boundary
 
@@ -43,4 +47,4 @@ The existing production files at repository root are intentionally untouched. Th
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) for the current verified state and remaining work.
+See ROADMAP.md for the current verified state and remaining work.
