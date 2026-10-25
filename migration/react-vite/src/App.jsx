@@ -124,6 +124,29 @@ export default function App() {
   const [period, setPeriod] = useState(7);
   const [data, setData] = useState({ status: "loading", summary: null, sales: [], recent: [], goods: [], transactions: [], error: "" });
   const [refreshedAt, setRefreshedAt] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [brandTargets, setBrandTargets] = useState({});
+  const [targetDraft, setTargetDraft] = useState({});
+  const [targetMessage, setTargetMessage] = useState("");
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("dehos.dashboard.brandTargets.v1");
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const valid = Object.fromEntries(
+          Object.entries(parsed).filter(([name, value]) =>
+            typeof name === "string" && Number.isFinite(Number(value)) && Number(value) >= 0
+          ).map(([name, value]) => [name, Number(value)])
+        );
+        setBrandTargets(valid);
+        setTargetDraft(Object.fromEntries(Object.entries(valid).map(([name, value]) => [name, String(value)])));
+      }
+    } catch {
+      setTargetMessage("Pengaturan target tersimpan tidak dapat dibaca. Target lama tidak diubah.");
+    }
+  }, []);
 
   async function loadDashboard() {
     if (!supabase) {
@@ -164,15 +187,53 @@ export default function App() {
   const totalStock = stockRows.reduce((sum, item) => sum + item.currentStock, 0);
   const negativeStock = stockRows.filter((item) => item.currentStock < 0).sort((a, b) => a.currentStock - b.currentStock || String(a.nama || "").localeCompare(String(b.nama || ""), "id"));
   const lowStock = stockRows.filter((item) => item.currentStock >= 0 && item.currentStock <= 5).sort((a, b) => a.currentStock - b.currentStock).slice(0, 5);
+  const brandNames = useMemo(() => {
+    const names = new Set();
+    data.goods.forEach((item) => {
+      if (item.brand?.nama) names.add(item.brand.nama);
+    });
+    data.sales.forEach((item) => {
+      if (item.brand) names.add(item.brand);
+    });
+    return [...names].sort((a, b) => a.localeCompare(b, "id"));
+  }, [data.goods, data.sales]);
   const brandSales = useMemo(() => {
     const grouped = new Map();
     data.sales.filter((item) => String(item.tanggal_pembelian || "").slice(0, 7) === today.slice(0, 7)).forEach((item) => {
       const name = item.brand || "Tanpa Brand";
       grouped.set(name, (grouped.get(name) || 0) + salesValue(item));
     });
-    return [...grouped.entries()].map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total).slice(0, 8);
+    return [...grouped.entries()].map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total);
   }, [data.sales, today]);
   const totalBrandSales = brandSales.reduce((sum, item) => sum + item.total, 0);
+  const brandSalesByName = new Map(brandSales.map((item) => [item.name, item.total]));
+  function openTargetSettings() {
+    setTargetDraft(Object.fromEntries(brandNames.map((name) => [name, brandTargets[name] == null ? "" : String(brandTargets[name])])));
+    setTargetMessage("");
+    setSettingsOpen(true);
+  }
+  function saveTargetSettings(event) {
+    event.preventDefault();
+    const next = {};
+    for (const name of brandNames) {
+      const raw = String(targetDraft[name] ?? "").trim();
+      if (!raw) continue;
+      const amount = Number(raw);
+      if (!Number.isFinite(amount) || amount < 0) {
+        setTargetMessage("Target harus berupa angka nol atau lebih. Periksa kembali input.");
+        return;
+      }
+      if (amount > 0) next[name] = amount;
+    }
+    try {
+      window.localStorage.setItem("dehos.dashboard.brandTargets.v1", JSON.stringify(next));
+      setBrandTargets(next);
+      setTargetMessage("");
+      setSettingsOpen(false);
+    } catch {
+      setTargetMessage("Pengaturan gagal disimpan di perangkat ini. Periksa ruang penyimpanan browser.");
+    }
+  }
   const summary = data.summary || {};
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
@@ -203,9 +264,9 @@ export default function App() {
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,1fr)]">
           {data.status === "loading" ? <LoadingPanel message="Memuat ringkasan penjualan..." /> : <SalesChart sales={data.sales} period={period} setPeriod={setPeriod} />}
           <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2"><TrendingUp size={18}/><h2 className="font-semibold">Performa Brand</h2></div><p className="mt-1 text-sm text-slate-500">Omzet bulan ini berdasarkan brand</p></div><Settings2 size={18} className="text-slate-400" /></div>
-            {data.status === "loading" ? <LoadingPanel message="Memuat performa brand..." /> : brandSales.length ? <div className="mt-5 space-y-4">{brandSales.map((item) => <div key={item.name}><div className="mb-1.5 flex items-center justify-between gap-3 text-sm"><span className="truncate font-medium">{item.name}</span><span className="shrink-0 text-slate-600">{formatMoney(item.total)}</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-slate-700" style={{ width: `${totalBrandSales ? (item.total / totalBrandSales) * 100 : 0}%` }} /></div></div>)}</div> : <p className="mt-5 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">Belum ada penjualan brand pada bulan ini.</p>}
-            <p className="mt-4 text-xs text-slate-400">Pengaturan target per brand akan dikerjakan pada tahap pengaturan dashboard.</p>
+            <div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2"><TrendingUp size={18}/><h2 className="font-semibold">Performa Brand</h2></div><p className="mt-1 text-sm text-slate-500">Omzet bulan ini dibandingkan target brand</p></div><button type="button" onClick={openTargetSettings} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50" aria-label="Atur target per brand"><Settings2 size={16}/>Atur target</button></div>
+            {data.status === "loading" ? <LoadingPanel message="Memuat performa brand..." /> : brandSales.length ? <div className="mt-5 space-y-4">{brandSales.map((item) => { const target = Number(brandTargets[item.name]) || 0; const progress = target > 0 ? Math.min(100, (item.total / target) * 100) : (totalBrandSales ? (item.total / totalBrandSales) * 100 : 0); return <div key={item.name}><div className="mb-1.5 flex items-center justify-between gap-3 text-sm"><span className="truncate font-medium">{item.name}</span><span className="shrink-0 text-right text-slate-600">{formatMoney(item.total)}</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${target > 0 && item.total >= target ? "bg-emerald-600" : "bg-slate-700"}`} style={{ width: `${progress}%` }} /></div><p className="mt-1 text-xs text-slate-500">{target > 0 ? `${Math.floor((item.total / target) * 100)}% dari target ${formatMoney(target)}` : `Belum ada target · ${totalBrandSales ? Math.round((item.total / totalBrandSales) * 100) : 0}% kontribusi omzet brand`}</p></div>; })}</div> : <p className="mt-5 rounded-xl bg-slate-50 p-4 text-sm text-slate-500">Belum ada penjualan brand pada bulan ini.</p>}
+            <p className="mt-4 text-xs text-slate-400">Target disimpan hanya di browser/perangkat ini dan tidak mengubah database Supabase.</p>
           </section>
         </div>
         <div className="grid gap-5 xl:grid-cols-2">
@@ -219,6 +280,16 @@ export default function App() {
         <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6"><div className="flex items-center justify-between gap-3"><div><h2 className="font-semibold">Stok Menipis</h2><p className="mt-1 text-sm text-slate-500">Barang dengan stok tersedia 0–5 unit</p></div><Package size={18} className="text-slate-400"/></div>
           {data.status === "loading" ? <LoadingPanel message="Memuat daftar stok..." /> : data.status !== "ready" ? <p className="mt-4 text-sm text-slate-500">Data stok belum tersedia.</p> : lowStock.length ? <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{lowStock.map((item) => <div key={item.id} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-3"><div className="min-w-0"><p className="truncate text-sm font-medium">{item.nama || "—"}</p><p className="text-xs text-slate-500">{item.brand?.nama || "Tanpa Brand"}</p></div><span className="shrink-0 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">{item.currentStock === 0 ? "Habis" : `${formatNumber(item.currentStock)} unit`}</span></div>)}</div> : <p className="mt-4 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">Tidak ada barang dengan stok menipis.</p>}
         </section>
+        {settingsOpen && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="brand-target-title" className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl sm:p-6">
+            <div className="flex items-start justify-between gap-3"><div><h2 id="brand-target-title" className="text-lg font-semibold">Target omzet per brand</h2><p className="mt-1 text-sm text-slate-500">Target bulanan dalam rupiah. Kosongkan atau isi 0 untuk menghapus target.</p></div><button type="button" onClick={() => setSettingsOpen(false)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm">Tutup</button></div>
+            {targetMessage && <p role="alert" className="mt-4 rounded-lg bg-rose-50 p-3 text-sm text-rose-800">{targetMessage}</p>}
+            <form onSubmit={saveTargetSettings} className="mt-5 space-y-3">
+              {brandNames.length ? brandNames.map((name) => <label key={name} className="grid gap-1.5 sm:grid-cols-[minmax(0,1fr)_190px] sm:items-center"><span className="text-sm font-medium">{name}</span><input type="number" min="0" step="1000" inputMode="numeric" value={targetDraft[name] ?? ""} onChange={(event) => setTargetDraft((current) => ({ ...current, [name]: event.target.value }))} placeholder="Contoh: 10000000" aria-label={`Target omzet ${name} dalam rupiah`} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"/></label>) : <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-500">Nama brand belum tersedia dari data yang dimuat.</p>}
+              <div className="flex justify-end gap-2 border-t border-slate-100 pt-4"><button type="button" onClick={() => setSettingsOpen(false)} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium">Batal</button><button type="submit" className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Simpan target</button></div>
+            </form>
+          </section>
+        </div>}
         <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 py-4 text-xs text-slate-400"><span>DEHOS · Workspace migrasi React</span><span className="inline-flex items-center gap-1"><ExternalLink size={12}/>Terpisah dari website produksi</span></footer>
       </div>
     </section>
