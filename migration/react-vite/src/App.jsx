@@ -150,7 +150,7 @@ function SalesPage({ onSaved, onBack }) {
         fetchAll((start, end) => {
           let query = supabase.from("penjualan").select("id, barang_id, brand, qty, harga, tanggal_pembelian")
             .order("tanggal_pembelian", { ascending: false }).order("id", { ascending: false });
-          if (/^\\d{4}-\\d{2}$/.test(month)) {
+          if (/^\d{4}-\d{2}$/.test(month)) {
             const [year, monthNumber] = month.split("-").map(Number);
             const nextMonth = new Date(year, monthNumber, 1);
             const nextKey = localDateKey(nextMonth);
@@ -189,7 +189,7 @@ function SalesPage({ onSaved, onBack }) {
   const parsedQty = Number(qty);
   const parsedPrice = Number(harga);
   const validSale = Boolean(selectedGood?.brand?.nama) && Number.isInteger(parsedQty) && parsedQty > 0 &&
-    Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\\d{4}-\\d{2}-\\d{2}$/.test(date);
+    Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\d{4}-\d{2}-\d{2}$/.test(date);
 
   async function submitSale(event) {
     event.preventDefault();
@@ -337,7 +337,7 @@ function StockPage({ onBack, onSaved }) {
   const currentBalance = selectedGood ? calculateStockBalance(selectedGood, transactions, date) : null;
   const parsedQty = Number(qty);
   const validQty = Number.isInteger(parsedQty) && (type === "adjust" ? parsedQty >= 0 : parsedQty >= 1);
-  const canSave = status === "ready" && Boolean(selectedGood) && validQty && /^\\d{4}-\\d{2}-\\d{2}$/.test(date) && !saving &&
+  const canSave = status === "ready" && Boolean(selectedGood) && validQty && /^\d{4}-\d{2}-\d{2}$/.test(date) && !saving &&
     !(type === "adjust" && currentBalance === parsedQty) &&
     !(type === "laku" && parsedQty > Math.max(0, currentBalance ?? 0));
 
@@ -347,7 +347,7 @@ function StockPage({ onBack, onSaved }) {
       String(item.brand?.nama || "").toLocaleLowerCase("id-ID").includes(term);
   });
   const visibleTransactions = transactions.filter((row) => {
-    const monthMatch = !/^\\d{4}-\\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
+    const monthMatch = !/^\d{4}-\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
     const good = goods.find((item) => Number(item.id) === Number(row.barang_id));
     const term = search.trim().toLocaleLowerCase("id-ID");
     return monthMatch && (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
