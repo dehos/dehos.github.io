@@ -6,7 +6,8 @@ const SAFE_WRITE_ERRORS = Object.freeze({
 });
 
 // Known business-rule failures raised by the database (SQLSTATE P0001). The provider text is
-// only matched, never rendered; the user sees the fixed message below.
+// only matched, never rendered; the user sees the fixed message below. These patterns are coupled to
+// the database message wording: if it changes, the generic P0001 message below is used (still safe).
 const KNOWN_BUSINESS_RULES = Object.freeze([
   [/belum memiliki brand aktif/i, "Barang ini belum memiliki brand aktif. Lengkapi brand barang terlebih dahulu."],
   [/stok berubah menjadi/i, "Stok barang berubah. Muat ulang data lalu periksa stok sebelum menyimpan."],

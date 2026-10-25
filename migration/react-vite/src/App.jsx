@@ -549,7 +549,7 @@ export default function App() {
     ...item,
     currentStock: stockForToday(item, data.transactions, today),
   })), [data.goods, data.transactions, today]);
-  const totalStock = stockRows.reduce((sum, item) => sum + item.currentStock, 0);
+  const totalStock = stockRows.reduce((sum, item) => sum + Math.max(0, item.currentStock), 0); // same rule as get_dashboard_summary (negatives excluded)
   const negativeStock = stockRows.filter((item) => item.currentStock < 0).sort((a, b) => a.currentStock - b.currentStock || String(a.nama || "").localeCompare(String(b.nama || ""), "id"));
   const lowStock = stockRows.filter((item) => item.currentStock >= 0 && item.currentStock <= 5).sort((a, b) => a.currentStock - b.currentStock).slice(0, 5);
   const brandNames = useMemo(() => {
