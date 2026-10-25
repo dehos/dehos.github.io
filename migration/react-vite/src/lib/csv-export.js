@@ -1,4 +1,4 @@
-const FORMULA_PREFIX = /^[\\t\\r\\n ]*[=+\\-@]/;
+const FORMULA_PREFIX = /^[\t\r\n ]*[=+\-@]/;
 
 /**
  * Serialize rows as UTF-8-friendly CSV while neutralizing spreadsheet formulas
