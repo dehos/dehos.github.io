@@ -5,6 +5,7 @@ import { normalizeBrandTargets } from "./lib/brand-targets.js";
 import { serializeCsv } from "./lib/csv-export.js";
 import { safeWriteErrorMessage } from "./lib/safe-write-error.js";
 import { paginateItems } from "./lib/pagination.js";
+import { matchesStockTransactionSearch } from "./lib/stock-search.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -372,8 +373,7 @@ function StockPage({ onBack, onSaved }) {
     const monthMatch = !/^\d{4}-\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
     const good = goods.find((item) => Number(item.id) === Number(row.barang_id));
     const term = search.trim().toLocaleLowerCase("id-ID");
-    return monthMatch && (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
-      String(row.type || "").toLocaleLowerCase("id-ID").includes(term));
+    return monthMatch && matchesStockTransactionSearch(row, good, term);
   }).slice().reverse();
   const goodsPageRows = useMemo(() => paginateItems(visibleGoods, goodsPage, 25), [visibleGoods, goodsPage]);
   const transactionPageRows = useMemo(() => paginateItems(visibleTransactions, transactionsPage, 25), [visibleTransactions, transactionsPage]);
