@@ -32,6 +32,8 @@ All four commands must pass. This verifies dependency installation, known depend
 - [ ] A valid non-admin account is denied; dashboard content remains hidden.
 - [ ] Missing session email, an empty/mismatched admin result, and an admin-query failure all deny access (fail closed).
 - [ ] Logout returns to the signed-out screen; refreshing while signed out does not reveal cached dashboard content.
+- [ ] Authenticated password change rejects an incorrect current password, enforces the configured minimum and confirmation, and never exposes provider internals.
+- [ ] After a successful password change, verify the current session and other sessions are revoked (or document the exact provider behavior if global sign-out fails).
 - [ ] Inspect browser network requests and built assets to confirm no service-role/secret key is present.
 
 ## Read-only data parity
