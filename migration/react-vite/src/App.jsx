@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "./lib/supabase.js";
+import { calculateStockBalance } from "./lib/stock-balance.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -149,7 +150,7 @@ function SalesPage({ onSaved, onBack }) {
         fetchAll((start, end) => {
           let query = supabase.from("penjualan").select("id, barang_id, brand, qty, harga, tanggal_pembelian")
             .order("tanggal_pembelian", { ascending: false }).order("id", { ascending: false });
-          if (/^\\d{4}-\\d{2}$/.test(month)) {
+          if (/^\d{4}-\d{2}$/.test(month)) {
             const [year, monthNumber] = month.split("-").map(Number);
             const nextMonth = new Date(year, monthNumber, 1);
             const nextKey = localDateKey(nextMonth);
@@ -188,7 +189,7 @@ function SalesPage({ onSaved, onBack }) {
   const parsedQty = Number(qty);
   const parsedPrice = Number(harga);
   const validSale = Boolean(selectedGood?.brand?.nama) && Number.isInteger(parsedQty) && parsedQty > 0 &&
-    Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\\d{4}-\\d{2}-\\d{2}$/.test(date);
+    Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\d{4}-\d{2}-\d{2}$/.test(date);
 
   async function submitSale(event) {
     event.preventDefault();
@@ -289,17 +290,6 @@ function SalesPage({ onSaved, onBack }) {
 
 
 
-function stockBalanceAt(item, transactions, date) {
-  const startDate = String(item.tanggal_mulai || item.created_at || "").slice(0, 10);
-  let balance = !startDate || startDate <= date ? Number(item.stok_awal) || 0 : 0;
-  for (const row of transactions) {
-    if (Number(row.barang_id) !== Number(item.id) || String(row.tanggal || "").slice(0, 10) > date) continue;
-    const qty = Number(row.qty) || 0;
-    if (row.type === "masuk" || row.type === "adjust_masuk") balance += qty;
-    else if (row.type === "laku" || row.type === "adjust_keluar") balance -= qty;
-  }
-  return balance;
-}
 
 function StockPage({ onBack, onSaved }) {
   const [goods, setGoods] = useState([]);
@@ -344,10 +334,10 @@ function StockPage({ onBack, onSaved }) {
 
   useEffect(() => { void loadStock(); }, []);
   const selectedGood = goods.find((item) => String(item.id) === barangId);
-  const currentBalance = selectedGood ? stockBalanceAt(selectedGood, transactions, date) : null;
+  const currentBalance = selectedGood ? calculateStockBalance(selectedGood, transactions, date) : null;
   const parsedQty = Number(qty);
   const validQty = Number.isInteger(parsedQty) && (type === "adjust" ? parsedQty >= 0 : parsedQty >= 1);
-  const canSave = status === "ready" && Boolean(selectedGood) && validQty && /^\\d{4}-\\d{2}-\\d{2}$/.test(date) && !saving &&
+  const canSave = status === "ready" && Boolean(selectedGood) && validQty && /^\d{4}-\d{2}-\d{2}$/.test(date) && !saving &&
     !(type === "adjust" && currentBalance === parsedQty) &&
     !(type === "laku" && parsedQty > Math.max(0, currentBalance ?? 0));
 
@@ -357,7 +347,7 @@ function StockPage({ onBack, onSaved }) {
       String(item.brand?.nama || "").toLocaleLowerCase("id-ID").includes(term);
   });
   const visibleTransactions = transactions.filter((row) => {
-    const monthMatch = !/^\\d{4}-\\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
+    const monthMatch = !/^\d{4}-\d{2}$/.test(month) || String(row.tanggal || "").slice(0, 7) === month;
     const good = goods.find((item) => Number(item.id) === Number(row.barang_id));
     const term = search.trim().toLocaleLowerCase("id-ID");
     return monthMatch && (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
@@ -415,7 +405,7 @@ function StockPage({ onBack, onSaved }) {
         <form onSubmit={submitTransaction} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <label className="grid gap-1.5 text-sm font-medium">Jenis transaksi<select value={type} onChange={(event) => { const nextType = event.target.value; setType(nextType); if (nextType !== "masuk") setDate(todayKey()); setQty(nextType === "adjust" && currentBalance !== null ? String(Math.max(0, currentBalance)) : "1"); }} className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal"><option value="masuk">Barang masuk</option><option value="laku">Barang keluar</option><option value="adjust">Adjust stok fisik</option></select></label>
           {type === "masuk" ? <label className="grid gap-1.5 text-sm font-medium">Tanggal barang masuk<input type="date" value={date} onChange={(event) => setDate(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal"/></label> : <div className="rounded-xl bg-slate-50 p-3"><span className="text-xs text-slate-500">Tanggal transaksi</span><p className="mt-1 text-sm font-medium">{dateLabel(todayKey(), { day: "2-digit", month: "2-digit", year: "numeric" })} (hari ini)</p></div>}
-          <label className="grid gap-1.5 text-sm font-medium">Nama barang<select value={barangId} onChange={(event) => { setBarangId(event.target.value); if (type === "adjust") { const item = goods.find((row) => String(row.id) === event.target.value); setQty(item ? String(Math.max(0, stockBalanceAt(item, transactions, date))) : "0"); } }} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal"><option value="">Pilih barang...</option>{goods.map((item) => <option key={item.id} value={item.id}>{item.nama} · {item.brand?.nama}</option>)}</select></label>
+          <label className="grid gap-1.5 text-sm font-medium">Nama barang<select value={barangId} onChange={(event) => { setBarangId(event.target.value); if (type === "adjust") { const item = goods.find((row) => String(row.id) === event.target.value); setQty(item ? String(Math.max(0, calculateStockBalance(item, transactions, date))) : "0"); } }} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal"><option value="">Pilih barang...</option>{goods.map((item) => <option key={item.id} value={item.id}>{item.nama} · {item.brand?.nama}</option>)}</select></label>
           <label className="grid gap-1.5 text-sm font-medium">{type === "adjust" ? "Stok fisik yang benar" : "Quantity"}<input type="number" min={type === "adjust" ? "0" : "1"} step="1" inputMode="numeric" value={qty} onChange={(event) => setQty(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal"/></label>
           <div className="rounded-xl bg-slate-50 p-3"><span className="text-xs text-slate-500">Saldo stok pada tanggal transaksi</span><p className={"mt-1 text-lg font-semibold " + (currentBalance !== null && currentBalance < 0 ? "text-rose-700" : "text-slate-900")}>{currentBalance === null ? "Pilih barang" : formatNumber(currentBalance) + " unit"}</p><p className="mt-1 text-xs text-slate-500">Saldo sebelum transaksi baru disimpan.</p></div>
           <div className="flex items-end"><button type="submit" disabled={!canSave} className="w-full rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{saving ? "Menyimpan..." : "Simpan transaksi"}</button></div>
@@ -425,7 +415,7 @@ function StockPage({ onBack, onSaved }) {
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Daftar stok</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleGoods.length) + " barang" : "Memuat data..."}</p></div><label className="grid gap-1 text-xs text-slate-500">Cari barang / brand<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Ketik nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
-        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Stok Awal</th><th className="px-4 py-3 text-right">Stok Saat Ini</th><th className="px-4 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat stok...</td></tr> : status !== "ready" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Data stok belum tersedia.</td></tr> : visibleGoods.length ? visibleGoods.map((item) => { const balance = stockBalanceAt(item, transactions, todayKey()); return <tr key={item.id}><td className="px-4 py-3 font-medium">{item.nama}</td><td className="px-4 py-3">{item.brand?.nama || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.stok_awal)}</td><td className={"px-4 py-3 text-right font-semibold tabular-nums " + (balance < 0 ? "text-rose-700" : "text-slate-900")}>{formatNumber(balance)}</td><td className="px-4 py-3">{balance < 0 ? <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">Minus / PO</span> : balance === 0 ? <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Habis</span> : <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Tersedia</span>}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Barang tidak ditemukan.</td></tr>}</tbody></table></div>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Stok Awal</th><th className="px-4 py-3 text-right">Stok Saat Ini</th><th className="px-4 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat stok...</td></tr> : status !== "ready" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Data stok belum tersedia.</td></tr> : visibleGoods.length ? visibleGoods.map((item) => { const balance = calculateStockBalance(item, transactions, todayKey()); return <tr key={item.id}><td className="px-4 py-3 font-medium">{item.nama}</td><td className="px-4 py-3">{item.brand?.nama || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.stok_awal)}</td><td className={"px-4 py-3 text-right font-semibold tabular-nums " + (balance < 0 ? "text-rose-700" : "text-slate-900")}>{formatNumber(balance)}</td><td className="px-4 py-3">{balance < 0 ? <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">Minus / PO</span> : balance === 0 ? <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Habis</span> : <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Tersedia</span>}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Barang tidak ditemukan.</td></tr>}</tbody></table></div>
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Riwayat transaksi stok</h2><p className="mt-1 text-sm text-slate-500">Termasuk transaksi penjualan yang memengaruhi saldo stok</p></div><label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
