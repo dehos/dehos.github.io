@@ -38,7 +38,9 @@ Last updated: 2026-10-25
 
 ## Current next action
 
-- A repository-only usability step adds pagination to the three long read-only tables without changing Supabase queries, write RPCs, or export scope. The next operational gate remains the controlled-preview run in `VERIFICATION.md`. It cannot be executed from repository CI alone: this session has no authorized preview URL/test accounts or approved disposable write fixture. Therefore live authentication, RLS/grants, RPC behavior, data parity, and Pages source remain BLOCKED—not assumed passed. The repository-only follow-up added `supabase-config-guard.test.js` to guard that browser code only references the public anon key and fails closed when configuration is absent. Once an authorized preview and test fixture are supplied, resume the runbook. Keep edit/delete blocked and Excel/PDF/import queued behind verified data parity and compatibility tests; no Supabase or production changes.
+- PR #62's repository-only pagination step is complete and merged into `migration/auth-identity-check`; do not repeat it. The next gate is the controlled-preview run in `VERIFICATION.md`. Repository CI cannot prove live Auth, RLS/grants, RPC behavior, data parity, or GitHub Pages source settings.
+- **Blocked prerequisites:** an authorized isolated preview URL, an admin test account and a separate non-admin test account, and (before any write test) an explicitly approved disposable/reversible fixture with a cleanup owner. These are not available in this session. Do not use production as a substitute or attempt writes without approval.
+- Until those prerequisites are supplied, keep the React app isolated and do not change `main`, production root files, Supabase schema/data/RLS/Auth, Edge Functions/RPCs, or Pages settings. Keep sales/stock edit-delete, Excel/PDF exports, and import deferred until data parity and backend invariants are verified.
 
 ## Safety constraints
 
