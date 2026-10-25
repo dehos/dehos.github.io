@@ -14,12 +14,12 @@ test("quotes delimiters, quotes, and embedded line breaks", () => {
 });
 
 test("neutralizes spreadsheet formula prefixes in text cells", () => {
-  assert.ok(csv.includes("\"' \t=HYPERLINK("));
+  const csv = serializeCsv([["Nama"], ["=1+1"], ["+SUM(A1:A2)"], ["-cmd"], ["@SUM(1,2)"], [" \t=HYPERLINK(\"https://example.invalid\")"]]);
   assert.ok(csv.includes("\"'=1+1\""));
   assert.ok(csv.includes("\"'+SUM(A1:A2)\""));
   assert.ok(csv.includes("\"'-cmd\""));
   assert.ok(csv.includes("\"'@SUM(1,2)\""));
-  assert.ok(csv.includes("\"' \t=HYPERLINK(\"\"https://example.invalid\"")\""));
+  assert.ok(csv.includes("\"' \t=HYPERLINK("));
 });
 
 test("preserves actual numeric values, including negative numbers", () => {
