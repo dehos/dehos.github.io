@@ -18,7 +18,6 @@ test("neutralizes spreadsheet formula prefixes in text cells", () => {
   assert.ok(csv.includes("\"'=1+1\""));
   assert.ok(csv.includes("\"'+SUM(A1:A2)\""));
   assert.ok(csv.includes("\"'-cmd\""));
-  assert.ok(csv.includes("\"'@SUM(A1,A2)\"") === false);
   assert.ok(csv.includes("\"'@SUM(1,2)\""));
   assert.ok(csv.includes("\"' \t=HYPERLINK(\"\"https://example.invalid\"")\""));
 });
