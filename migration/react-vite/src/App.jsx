@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "./lib/supabase.js";
 import { calculateStockBalance } from "./lib/stock-balance.js";
+import { normalizeBrandTargets } from "./lib/brand-targets.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -441,15 +442,9 @@ export default function App() {
       const saved = window.localStorage.getItem("dehos.dashboard.brandTargets.v1");
       if (!saved) return;
       const parsed = JSON.parse(saved);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-        const valid = Object.fromEntries(
-          Object.entries(parsed).filter(([name, value]) =>
-            typeof name === "string" && Number.isFinite(Number(value)) && Number(value) >= 0
-          ).map(([name, value]) => [name, Number(value)])
-        );
-        setBrandTargets(valid);
-        setTargetDraft(Object.fromEntries(Object.entries(valid).map(([name, value]) => [name, String(value)])));
-      }
+      const valid = normalizeBrandTargets(parsed);
+      setBrandTargets(valid);
+      setTargetDraft(Object.fromEntries(Object.entries(valid).map(([name, value]) => [name, String(value)])));
     } catch {
       setTargetMessage("Pengaturan target tersimpan tidak dapat dibaca. Target lama tidak diubah.");
     }
