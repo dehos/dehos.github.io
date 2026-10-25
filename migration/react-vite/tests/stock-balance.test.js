@@ -30,6 +30,16 @@ test("ignores transactions for other items and transactions after the selected d
   assert.equal(calculateStockBalance(item, transactions, "2026-01-03"), 6);
 });
 
+test("counts signed 'adjust' movements recorded by catat_transaksi_stok_atomic", () => {
+  const item = { id: 4, stok_awal: 10, created_at: "2026-01-01" };
+  const transactions = [
+    { barang_id: 4, tanggal: "2026-01-02", type: "adjust", qty: -4 },
+    { barang_id: 4, tanggal: "2026-01-03", type: "adjust", qty: 2 },
+  ];
+  assert.equal(calculateStockBalance(item, transactions, "2026-01-03"), 8);
+  assert.equal(calculateStockBalance(item, transactions, "2026-01-02"), 6);
+});
+
 test("preserves negative balances for pre-order visibility", () => {
   const item = { id: 2, stok_awal: 1, created_at: "2026-01-01" };
   const transactions = [{ barang_id: 2, tanggal: "2026-01-02", type: "laku", qty: 4 }];

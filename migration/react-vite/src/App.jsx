@@ -57,6 +57,7 @@ function stockForToday(item, transactions, today) {
     const qty = Number(transaction.qty) || 0;
     if (type === "masuk" || type === "adjust_masuk") stock += qty;
     if (type === "laku" || type === "adjust_keluar") stock -= qty;
+    if (type === "adjust") stock += qty;
   }
   return stock;
 }
@@ -451,7 +452,7 @@ function StockPage({ onBack, onSaved }) {
   }
 
   const typeLabel = (value) => value === "masuk" ? "Masuk" : value === "laku" ? "Keluar (penjualan)" :
-    value === "adjust_masuk" || value === "adjust_keluar" ? "Adjust" : value || "—";
+    value === "adjust" || value === "adjust_masuk" || value === "adjust_keluar" ? "Adjust" : value || "—";
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
@@ -624,7 +625,7 @@ export default function App() {
         <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="text-base font-semibold">Statistik Utama</h2><p className="mt-1 text-sm text-slate-500">Pantau stok dan omzet dalam satu tampilan.</p></div><span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs text-slate-500 ring-1 ring-slate-200"><CalendarDays size={14}/>{dateLabel(today, { day: "numeric", month: "long", year: "numeric" })}</span></div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           <StatCard icon={Boxes} label="Total Barang" value={data.status === "ready" ? formatNumber(summary.total_barang ?? data.goods.length) : "—"} hint="Jumlah jenis barang" />
-          <StatCard icon={Package} label="Total Stok" value={data.status === "ready" ? formatNumber(summary.total_stok ?? totalStock) : "—"} hint="Termasuk saldo stok negatif" tone="blue" />
+          <StatCard icon={Package} label="Total Stok" value={data.status === "ready" ? formatNumber(summary.total_stok ?? totalStock) : "—"} hint="Stok negatif tidak dihitung" tone="blue" />
           <StatCard icon={TrendingUp} label="Omzet Hari Ini" value={data.status === "ready" ? formatMoney(omzetToday) : "—"} hint="Berdasarkan catatan penjualan" tone="green" />
         </div>
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(300px,1fr)]">
