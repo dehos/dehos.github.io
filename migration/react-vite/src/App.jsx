@@ -3,6 +3,7 @@ import { supabase } from "./lib/supabase.js";
 import { calculateStockBalance } from "./lib/stock-balance.js";
 import { normalizeBrandTargets } from "./lib/brand-targets.js";
 import { serializeCsv } from "./lib/csv-export.js";
+import { safeWriteErrorMessage } from "./lib/safe-write-error.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -227,7 +228,7 @@ function SalesPage({ onSaved, onBack }) {
       if (onSaved) onSaved();
     } catch (saveError) {
       console.error("DEHOS save sale error:", saveError);
-      setError("Penjualan gagal disimpan: " + (saveError?.message || "silakan coba lagi."));
+      setError("Penjualan gagal disimpan: " + safeWriteErrorMessage(saveError, "Silakan coba lagi."));
     } finally {
       setSaving(false);
     }
@@ -385,7 +386,7 @@ function StockPage({ onBack, onSaved }) {
       if (onSaved) onSaved();
     } catch (saveError) {
       console.error("DEHOS stock transaction error:", saveError);
-      setError("Transaksi gagal disimpan: " + (saveError?.message || "silakan muat ulang dan periksa stok."));
+      setError("Transaksi gagal disimpan: " + safeWriteErrorMessage(saveError, "Silakan muat ulang dan periksa stok."));
     } finally {
       setSaving(false);
     }
