@@ -186,7 +186,7 @@ function SalesPage({ onSaved, onBack }) {
   }, [items, goods, brandFilter, search]);
   const selectedGood = goods.find((item) => String(item.id) === barangId);
   const parsedQty = Number(qty);
-  const parsedPrice = Number(String(harga).replace(/\\./g, ""));
+  const parsedPrice = Number(harga);
   const validSale = Boolean(selectedGood?.brand?.nama) && Number.isInteger(parsedQty) && parsedQty > 0 &&
     Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\\d{4}-\\d{2}-\\d{2}$/.test(date);
 
