@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LogIn, LogOut, ShieldCheck, AlertTriangle, RefreshCw } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./lib/supabase.js";
+import { hasMatchingAdminIdentity } from "./lib/admin-identity.js";
 
 const initialState = { status: "checking", message: "" };
 
@@ -57,7 +58,7 @@ export default function AuthGate({ children }) {
           .limit(1);
 
         if (!active || id !== verificationId.current) return;
-        if (error || !Array.isArray(data) || data.length === 0) {
+        if (!hasMatchingAdminIdentity(sessionEmail, data, error)) {
           await supabase.auth.signOut();
           if (active) setAuth({
             status: "denied",
