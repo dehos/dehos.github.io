@@ -120,8 +120,176 @@ function LoadingPanel({ message }) {
   return <div className="flex min-h-24 items-center gap-3 rounded-xl bg-slate-50 px-4 py-5 text-sm text-slate-500"><RefreshCw size={16} className="animate-spin" />{message}</div>;
 }
 
+
+function SalesPage({ onSaved, onBack }) {
+  const [items, setItems] = useState([]);
+  const [goods, setGoods] = useState([]);
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState("");
+  const [month, setMonth] = useState(todayKey().slice(0, 7));
+  const [brandFilter, setBrandFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [date, setDate] = useState(todayKey());
+  const [barangId, setBarangId] = useState("");
+  const [qty, setQty] = useState("1");
+  const [harga, setHarga] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState("");
+
+  async function loadSales() {
+    if (!supabase) {
+      setStatus("config");
+      setError("Koneksi Supabase belum dikonfigurasi.");
+      return;
+    }
+    setStatus("loading");
+    setError("");
+    try {
+      const [salesRows, goodsResult] = await Promise.all([
+        fetchAll((start, end) => {
+          let query = supabase.from("penjualan").select("id, barang_id, brand, qty, harga, tanggal_pembelian")
+            .order("tanggal_pembelian", { ascending: false }).order("id", { ascending: false });
+          if (/^\\d{4}-\\d{2}$/.test(month)) {
+            const [year, monthNumber] = month.split("-").map(Number);
+            const nextMonth = new Date(year, monthNumber, 1);
+            const nextKey = localDateKey(nextMonth);
+            query = query.gte("tanggal_pembelian", month + "-01").lt("tanggal_pembelian", nextKey);
+          }
+          return query.range(start, end);
+        }),
+        fetchAll((start, end) => supabase.from("barang")
+          .select("id, nama, stok_awal, created_at, tanggal_mulai, brand:brand!barang_brand_id_fkey(id, nama, aktif)")
+          .order("nama", { ascending: true }).order("id", { ascending: true }).range(start, end)),
+      ]);
+      setItems(salesRows);
+      setGoods(goodsResult.filter((item) => item.brand?.nama && item.brand?.aktif !== false));
+      setStatus("ready");
+    } catch (loadError) {
+      console.error("DEHOS sales page load error:", loadError);
+      setError("Data penjualan gagal dimuat. Periksa izin baca Supabase dan struktur tabel.");
+      setStatus("error");
+    }
+  }
+
+  useEffect(() => { void loadSales(); }, [month]);
+
+  const brands = useMemo(() => [...new Set(items.map((item) => item.brand).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "id")), [items]);
+  const visibleItems = useMemo(() => {
+    const term = search.trim().toLocaleLowerCase("id-ID");
+    return items.filter((item) => {
+      const good = goods.find((row) => Number(row.id) === Number(item.barang_id));
+      return (!brandFilter || item.brand === brandFilter) &&
+        (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
+          String(item.brand || "").toLocaleLowerCase("id-ID").includes(term));
+    });
+  }, [items, goods, brandFilter, search]);
+  const selectedGood = goods.find((item) => String(item.id) === barangId);
+  const parsedQty = Number(qty);
+  const parsedPrice = Number(harga);
+  const validSale = Boolean(selectedGood?.brand?.nama) && Number.isInteger(parsedQty) && parsedQty > 0 &&
+    Number.isFinite(parsedPrice) && parsedPrice >= 0 && /^\\d{4}-\\d{2}-\\d{2}$/.test(date);
+
+  async function submitSale(event) {
+    event.preventDefault();
+    if (!supabase || saving || !validSale) return;
+    const total = parsedQty * parsedPrice;
+    const confirmed = window.confirm(
+      "Catat penjualan ini?\\n\\nBarang: " + selectedGood.nama +
+      "\\nBrand: " + selectedGood.brand.nama +
+      "\\nQuantity: " + formatNumber(parsedQty) +
+      "\\nTotal: " + formatMoney(total) +
+      "\\n\\nStok dan pre-order akan dihitung oleh proses database yang sudah digunakan aplikasi lama."
+    );
+    if (!confirmed) return;
+    setSaving(true);
+    setNotice("");
+    setError("");
+    try {
+      const { data: result, error: saveError } = await supabase.rpc("catat_penjualan_atomic", {
+        p_barang_id: Number(barangId),
+        p_brand: selectedGood.brand.nama,
+        p_qty: parsedQty,
+        p_harga: parsedPrice,
+        p_tanggal_pembelian: date,
+      });
+      if (saveError) throw saveError;
+      setNotice(Number(result?.preorder_setelah) > 0
+        ? "Penjualan tersimpan. Pre-order setelah transaksi: " + formatNumber(Number(result.preorder_setelah)) + " unit."
+        : "Penjualan berhasil dicatat.");
+      setBarangId("");
+      setQty("1");
+      setHarga("");
+      await loadSales();
+      if (onSaved) onSaved();
+    } catch (saveError) {
+      console.error("DEHOS save sale error:", saveError);
+      setError("Penjualan gagal disimpan: " + (saveError?.message || "silakan coba lagi."));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function exportCsv() {
+    const rows = [
+      ["Tanggal", "Nama Barang", "Brand", "Quantity", "Harga", "Total"],
+      ...visibleItems.map((item) => {
+        const good = goods.find((row) => Number(row.id) === Number(item.barang_id));
+        return [String(item.tanggal_pembelian || "").slice(0, 10), good?.nama || ("Barang #" + item.barang_id),
+          item.brand || "", item.qty, item.harga, salesValue(item)];
+      }),
+    ];
+    const csv = rows.map((row) => row.map((value) => '"' + String(value ?? "").replace(/"/g, '""') + '"').join(",")).join("\r\n");
+    const blob = new Blob(["\\uFEFF", csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "dehos-penjualan-" + month + ".csv";
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return <main className="min-h-screen bg-slate-50 text-slate-900">
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
+      <div><p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">Workspace / DEHOS</p><h1 className="mt-1 text-xl font-semibold tracking-tight">Penjualan</h1><p className="mt-1 text-sm text-slate-500">Pencatatan penjualan dan riwayat transaksi</p></div>
+      <div className="flex gap-2"><button type="button" onClick={onBack} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Dashboard</button><button type="button" onClick={() => void loadSales()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button><button type="button" onClick={exportCsv} disabled={status !== "ready" || visibleItems.length === 0} className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-40">Ekspor CSV</button></div>
+    </header>
+    <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-8">
+      {(error || status === "config") && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
+      {notice && <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="mb-5"><h2 className="font-semibold">Catat penjualan</h2><p className="mt-1 text-sm text-slate-500">Penyimpanan memakai RPC atomik aplikasi lama agar pengurangan stok dan pre-order tetap mengikuti aturan database.</p></div>
+        <form onSubmit={submitSale} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <label className="grid gap-1.5 text-sm font-medium">Tanggal pembelian<input type="date" value={date} onChange={(event) => setDate(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Nama barang<select value={barangId} onChange={(event) => setBarangId(event.target.value)} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal outline-none focus:border-slate-500"><option value="">Pilih barang...</option>{goods.map((item) => <option key={item.id} value={item.id}>{item.nama} · {item.brand?.nama}</option>)}</select></label>
+          <label className="grid gap-1.5 text-sm font-medium">Brand<input readOnly value={selectedGood?.brand?.nama || ""} placeholder="Otomatis dari barang" className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 font-normal"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Quantity<input type="number" min="1" step="1" inputMode="numeric" value={qty} onChange={(event) => setQty(event.target.value)} required className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Harga per unit (Rp)<input type="number" min="0" step="1" inputMode="numeric" value={harga} onChange={(event) => setHarga(event.target.value)} required placeholder="Masukkan harga" className="rounded-lg border border-slate-300 px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <div className="flex flex-col justify-end rounded-xl bg-slate-50 p-3"><span className="text-xs text-slate-500">Total penjualan</span><strong className="mt-1 text-lg">{formatMoney(validSale ? parsedQty * parsedPrice : 0)}</strong></div>
+          <div className="sm:col-span-2 xl:col-span-3 flex justify-end"><button type="submit" disabled={!validSale || saving || status === "loading"} className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{saving ? "Menyimpan..." : "Catat penjualan"}</button></div>
+        </form>
+      </section>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="font-semibold">Riwayat penjualan</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleItems.length) + " catatan ditampilkan" : "Memuat catatan..."}</p></div><div className="grid w-full gap-2 sm:w-auto sm:grid-cols-3">
+          <label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
+          <label className="grid gap-1 text-xs text-slate-500">Brand<select value={brandFilter} onChange={(event) => setBrandFilter(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"><option value="">Semua brand</option>{brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}</select></label>
+          <label className="grid gap-1 text-xs text-slate-500">Cari barang<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
+        </div></div>
+        <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
+          <table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3 text-right">Harga</th><th className="px-4 py-3 text-right">Total</th></tr></thead>
+            <tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Memuat riwayat penjualan...</td></tr> : visibleItems.length ? visibleItems.map((item) => { const good = goods.find((row) => Number(row.id) === Number(item.barang_id)); return <tr key={item.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(item.tanggal_pembelian, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{good?.nama || ("Barang #" + item.barang_id)}</td><td className="px-4 py-3">{item.brand || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.qty)}</td><td className="px-4 py-3 text-right tabular-nums">{formatMoney(item.harga)}</td><td className="px-4 py-3 text-right font-medium tabular-nums">{formatMoney(salesValue(item))}</td></tr>; }) : <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Tidak ada catatan untuk filter ini.</td></tr>}</tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-slate-400">Riwayat lama tetap dibaca dari Supabase. Pengubahan/penghapusan catatan dan ekspor Excel/PDF belum termasuk tahap ini.</p>
+      </section>
+      <footer className="border-t border-slate-200 py-4 text-xs text-slate-400">DEHOS · Modul Penjualan migrasi React · terpisah dari website produksi</footer>
+    </div>
+  </main>;
+}
+
 export default function App() {
   const [period, setPeriod] = useState(7);
+  const [activePage, setActivePage] = useState("dashboard");
   const [data, setData] = useState({ status: "loading", summary: null, sales: [], recent: [], goods: [], transactions: [], error: "" });
   const [refreshedAt, setRefreshedAt] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -235,12 +403,14 @@ export default function App() {
   }
   const summary = data.summary || {};
 
+  if (activePage === "sales") return <SalesPage onSaved={() => void loadDashboard()} onBack={() => setActivePage("dashboard")} />;
+
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-slate-200 bg-white p-5 lg:block">
       <div className="flex items-center gap-3 px-1 py-3"><div className="rounded-xl bg-slate-900 p-2 text-white"><Boxes size={22} /></div><div><p className="font-semibold tracking-tight">DEHOS</p><p className="text-xs text-slate-500">Pencatatan stok & penjualan</p></div></div>
       <nav className="mt-8 space-y-1 text-sm">
-        <a href="#dashboard" className="flex items-center gap-3 rounded-lg bg-slate-100 px-3 py-2.5 font-medium"><ChartNoAxesCombined size={17} />Dashboard</a>
-        <a href="#penjualan" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-500"><ShoppingCart size={17} />Penjualan</a>
+        <a href="#dashboard" onClick={(event) => { event.preventDefault(); setActivePage("dashboard"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "dashboard" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><ChartNoAxesCombined size={17} />Dashboard</a>
+        <a href="#penjualan" onClick={(event) => { event.preventDefault(); setActivePage("sales"); }} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${activePage === "sales" ? "bg-slate-100 font-medium text-slate-900" : "text-slate-500"}`}><ShoppingCart size={17} />Penjualan</a>
         <a href="#stock" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-500"><Package size={17} />Stock</a>
         <a href="#in-out" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-500"><ArrowDownUp size={17} />In Out</a>
       </nav>
