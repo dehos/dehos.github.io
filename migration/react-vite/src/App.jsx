@@ -391,13 +391,49 @@ function StockPage({ onBack, onSaved }) {
     }
   }
 
+  function downloadCsv(rows, filename) {
+    const csv = serializeCsv(rows);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportStockCsv() {
+    const rows = [
+      ["ID Barang", "Nama Barang", "Brand", "Stok Awal", "Stok Saat Ini", "Status"],
+      ...visibleGoods.map((item) => {
+        const balance = calculateStockBalance(item, transactions, todayKey());
+        return [item.id, item.nama || "", item.brand?.nama || "", Number(item.stok_awal) || 0,
+          balance, balance < 0 ? "Minus / PO" : balance === 0 ? "Habis" : "Tersedia"];
+      }),
+    ];
+    downloadCsv(rows, "dehos-stok-" + todayKey() + ".csv");
+  }
+
+  function exportStockHistoryCsv() {
+    const rows = [
+      ["ID Transaksi", "Tanggal", "ID Barang", "Nama Barang", "Jenis", "Quantity", "Sumber"],
+      ...visibleTransactions.map((row) => {
+        const item = goods.find((good) => Number(good.id) === Number(row.barang_id));
+        return [row.id, String(row.tanggal || "").slice(0, 10), row.barang_id,
+          item?.nama || ("Barang #" + row.barang_id), typeLabel(row.type), Number(row.qty) || 0,
+          row.penjualan_id ? "Penjualan" : row.type === "laku" ? "Keluar manual" : "Manual"];
+      }),
+    ];
+    downloadCsv(rows, "dehos-riwayat-stok-" + month + ".csv");
+  }
+
   const typeLabel = (value) => value === "masuk" ? "Masuk" : value === "laku" ? "Keluar (penjualan)" :
     value === "adjust_masuk" || value === "adjust_keluar" ? "Adjust" : value || "—";
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
       <div><p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">Workspace / DEHOS</p><h1 className="mt-1 text-xl font-semibold tracking-tight">Stock & In Out</h1><p className="mt-1 text-sm text-slate-500">Saldo stok, barang masuk/keluar, penyesuaian, dan riwayat</p></div>
-      <div className="flex gap-2"><button type="button" onClick={onBack} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Dashboard</button><button type="button" onClick={() => void loadStock()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button></div>
+      <div className="flex flex-wrap gap-2"><button type="button" onClick={onBack} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Dashboard</button><button type="button" onClick={() => void loadStock()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button><button type="button" onClick={exportStockCsv} disabled={status !== "ready" || visibleGoods.length === 0} className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-40">Ekspor stok CSV</button><button type="button" onClick={exportStockHistoryCsv} disabled={status !== "ready" || visibleTransactions.length === 0} className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-40">Ekspor riwayat CSV</button></div>
     </header>
     <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-8">
       {error && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
