@@ -43,7 +43,8 @@ Using the same authorized admin account and the same date range in the legacy ap
 - [ ] Dashboard item count, stock totals, today's sales, brand totals, recent sales, low-stock items, and negative-stock/pre-order indicators.
 - [ ] Sales page monthly totals, filters, historical rows, and CSV export against the legacy app.
 - [ ] Stock balance for a few known items across opening stock, incoming transactions, sales, adjustments, and a chosen historical date.
-- [ ] Pagination does not omit records or double-count totals.
+- [ ] Pagination shows at most 25 rows per page, disables previous/next at boundaries, resets to page 1 when month/brand/search filters change, and does not omit or double-count records.
+- [ ] Sales CSV export includes the complete filtered result set, not only the currently visible page.
 - [ ] Loading, empty, missing configuration, and query-error states are explicit and do not substitute fabricated metrics.
 
 Record differences and investigate before approving parity. A successful build or mocked test is not evidence of parity.
