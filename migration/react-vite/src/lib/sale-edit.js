@@ -11,11 +11,21 @@ export function isRealIsoDate(value) {
   return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
 }
 
-const positiveInteger = (value) => Number.isInteger(Number(value)) && Number(value) > 0 && String(value).trim() !== "";
+// Ids come from the database as numbers (or digit strings); reject booleans, arrays, hex, exponents and
+// anything beyond the safe integer range, so a value can never be silently coerced to another row id.
+const positiveInteger = (value) => {
+  if (typeof value === "number") return Number.isSafeInteger(value) && value > 0;
+  return typeof value === "string" && /^[0-9]+$/.test(value) && Number.isSafeInteger(Number(value)) && Number(value) > 0;
+};
 
-function parseNumber(raw) {
-  if (raw === null || raw === undefined || String(raw).trim() === "") return Number.NaN;
-  return Number(raw);
+const MAX_QTY = 1_000_000;
+const MAX_HARGA = 1_000_000_000_000;
+
+// Plain decimal text only (no exponent, hex, sign or Infinity); surrounding whitespace is ignored.
+function parseDecimal(raw) {
+  if (typeof raw !== "string" && typeof raw !== "number") return Number.NaN;
+  const text = String(raw).trim();
+  return /^[0-9]+(\.[0-9]+)?$/.test(text) ? Number(text) : Number.NaN;
 }
 
 /**
@@ -28,10 +38,10 @@ export function buildEditSaleParams(item, form) {
   const brand = typeof item.brand === "string" ? item.brand.trim() : "";
   if (!brand) return { ok: false, reason: "Penjualan ini tidak memiliki brand, sehingga tidak dapat diubah dari sini." };
 
-  const qty = parseNumber(form?.qty);
-  if (!Number.isInteger(qty) || qty < 1) return { ok: false, reason: "Quantity harus bilangan bulat minimal 1." };
-  const harga = parseNumber(form?.harga);
-  if (!Number.isFinite(harga) || harga < 0) return { ok: false, reason: "Harga tidak boleh kosong atau negatif." };
+  const qty = parseDecimal(form?.qty);
+  if (!Number.isSafeInteger(qty) || qty < 1 || qty > MAX_QTY) return { ok: false, reason: "Quantity harus bilangan bulat antara 1 dan 1.000.000." };
+  const harga = parseDecimal(form?.harga);
+  if (!Number.isFinite(harga) || harga < 0 || harga > MAX_HARGA) return { ok: false, reason: "Harga harus berupa angka nol atau lebih (maksimal 1 triliun)." };
   const tanggal = typeof form?.tanggal === "string" ? form.tanggal : "";
   if (!isRealIsoDate(tanggal)) return { ok: false, reason: "Tanggal pembelian tidak valid." };
 

@@ -267,14 +267,23 @@ function SalesPage({ onSaved, onBack }) {
   async function submitEdit(event) {
     event.preventDefault();
     if (!supabase || busyId !== null || !editing) return;
+    const current = items.find((row) => Number(row.id) === Number(editing.id));
+    if (!current || Number(current.qty) !== Number(editing.qty) || Number(current.harga) !== Number(editing.harga) ||
+      String(current.tanggal_pembelian || "").slice(0, 10) !== String(editing.tanggal_pembelian || "").slice(0, 10)) {
+      setEditing(null);
+      setError("Data penjualan ini sudah berubah atau tidak lagi tampil. Muat ulang lalu buka Ubah kembali.");
+      return;
+    }
     const built = buildEditSaleParams(editing, editForm);
     if (!built.ok) { setError(built.reason); return; }
     if (!built.changed) { setNotice("Tidak ada perubahan untuk disimpan."); setEditing(null); return; }
     const good = goods.find((row) => Number(row.id) === Number(editing.barang_id));
     const confirmed = window.confirm(
       "Simpan perubahan penjualan ini?\n\nBarang: " + (good?.nama || ("Barang #" + editing.barang_id)) +
+      "\nTanggal: " + String(editing.tanggal_pembelian || "").slice(0, 10) + " -> " + built.params.p_tanggal_pembelian +
       "\nQuantity: " + formatNumber(editing.qty) + " -> " + formatNumber(built.params.p_qty) +
-      "\nTotal: " + formatMoney(built.params.p_qty * built.params.p_harga) +
+      "\nHarga: " + formatMoney(editing.harga) + " -> " + formatMoney(built.params.p_harga) +
+      "\nTotal baru: " + formatMoney(built.params.p_qty * built.params.p_harga) +
       "\n\nStok dan pre-order dihitung ulang oleh proses database."
     );
     if (!confirmed) return;
@@ -368,7 +377,7 @@ function SalesPage({ onSaved, onBack }) {
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="font-semibold">Riwayat penjualan</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleItems.length) + " catatan ditampilkan" : "Memuat catatan..."}</p></div><div className="grid w-full gap-2 sm:w-auto sm:grid-cols-3">
-          <label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
+          <label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => { setMonth(event.target.value || todayKey().slice(0, 7)); setEditing(null); }} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
           <label className="grid gap-1 text-xs text-slate-500">Brand<select value={brandFilter} onChange={(event) => setBrandFilter(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"><option value="">Semua brand</option>{brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}</select></label>
           <label className="grid gap-1 text-xs text-slate-500">Cari barang<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
         </div></div>

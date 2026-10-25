@@ -57,3 +57,35 @@ test("delete parameters contain only a validated sale id", () => {
   assert.equal(buildDeleteSaleParams({ id: -3 }).ok, false);
   assert.equal(buildDeleteSaleParams(undefined).ok, false);
 });
+
+test("rejects exponent, hex, signed, Infinity, and oversized numbers", () => {
+  for (const qty of ["1e3", "0x10", "+5", "1e300", "1000001", "9007199254740993"]) {
+    assert.equal(buildEditSaleParams(sale, { ...form, qty }).ok, false, "qty " + qty);
+  }
+  for (const harga of ["1e3", "0x10", "+5", "Infinity", "1000000000001"]) {
+    assert.equal(buildEditSaleParams(sale, { ...form, harga }).ok, false, "harga " + harga);
+  }
+});
+
+test("accepts whitespace-padded plain numbers and the documented limits", () => {
+  const padded = buildEditSaleParams(sale, { qty: " 5 ", harga: " 2500 ", tanggal: "2026-10-21" });
+  assert.equal(padded.ok, true);
+  assert.equal(padded.params.p_qty, 5);
+  assert.equal(padded.params.p_harga, 2500);
+  assert.equal(buildEditSaleParams(sale, { ...form, qty: "1000000", harga: "1000000000000" }).ok, true);
+});
+
+test("rejects non-string dates and ids that could be coerced to another row", () => {
+  for (const tanggal of [20261021, new Date("2026-10-21"), null]) {
+    assert.equal(buildEditSaleParams(sale, { ...form, tanggal }).ok, false);
+  }
+  for (const id of [true, [5], "0x10", "1e2", 2 ** 53, "9007199254740993"]) {
+    assert.equal(buildEditSaleParams({ ...sale, id }, form).ok, false, "id " + String(id));
+    assert.equal(buildDeleteSaleParams({ id }).ok, false, "delete id " + String(id));
+  }
+});
+
+test("compares against a full timestamp in tanggal_pembelian", () => {
+  const stamped = { ...sale, tanggal_pembelian: "2026-10-20T00:00:00+00:00" };
+  assert.equal(buildEditSaleParams(stamped, { qty: "4", harga: "1000", tanggal: "2026-10-20" }).changed, false);
+});
