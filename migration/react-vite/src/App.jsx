@@ -121,7 +121,7 @@ function LoadingPanel({ message }) {
 }
 
 
-function SalesPage({ onSaved }) {
+function SalesPage({ onSaved, onBack }) {
   const [items, setItems] = useState([]);
   const [goods, setGoods] = useState([]);
   const [status, setStatus] = useState("loading");
@@ -162,7 +162,7 @@ function SalesPage({ onSaved }) {
           .order("nama", { ascending: true }).order("id", { ascending: true }).range(start, end)),
       ]);
       setItems(salesRows);
-      setGoods(goodsResult.filter((item) => item.brand?.nama));
+      setGoods(goodsResult.filter((item) => item.brand?.nama && item.brand?.aktif !== false));
       setStatus("ready");
     } catch (loadError) {
       console.error("DEHOS sales page load error:", loadError);
@@ -252,7 +252,7 @@ function SalesPage({ onSaved }) {
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
       <div><p className="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">Workspace / DEHOS</p><h1 className="mt-1 text-xl font-semibold tracking-tight">Penjualan</h1><p className="mt-1 text-sm text-slate-500">Pencatatan penjualan dan riwayat transaksi</p></div>
-      <div className="flex gap-2"><button type="button" onClick={() => void loadSales()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button><button type="button" onClick={exportCsv} disabled={status !== "ready" || visibleItems.length === 0} className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-40">Ekspor CSV</button></div>
+      <div className="flex gap-2"><button type="button" onClick={onBack} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Dashboard</button><button type="button" onClick={() => void loadSales()} className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium hover:bg-slate-50">Muat ulang</button><button type="button" onClick={exportCsv} disabled={status !== "ready" || visibleItems.length === 0} className="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-40">Ekspor CSV</button></div>
     </header>
     <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-8">
       {(error || status === "config") && <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
@@ -403,7 +403,7 @@ export default function App() {
   }
   const summary = data.summary || {};
 
-  if (activePage === "sales") return <SalesPage onSaved={() => void loadDashboard()} />;
+  if (activePage === "sales") return <SalesPage onSaved={() => void loadDashboard()} onBack={() => setActivePage("dashboard")} />;
 
   return <main className="min-h-screen bg-slate-50 text-slate-900">
     <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-slate-200 bg-white p-5 lg:block">
