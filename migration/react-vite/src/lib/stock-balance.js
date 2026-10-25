@@ -6,6 +6,7 @@ export function calculateStockBalance(item, transactions, date) {
     const qty = Number(row.qty) || 0;
     if (row.type === "masuk" || row.type === "adjust_masuk") balance += qty;
     else if (row.type === "laku" || row.type === "adjust_keluar") balance -= qty;
+    else if (row.type === "adjust") balance += qty;
   }
   return balance;
 }
