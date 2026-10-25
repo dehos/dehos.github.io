@@ -1,16 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "./lib/supabase.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
   TrendingUp, ChevronDown, ExternalLink, Settings2
 } from "lucide-react";
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
 
 const formatNumber = (value) => (Number(value) || 0).toLocaleString("id-ID");
 const formatMoney = (value) => new Intl.NumberFormat("id-ID", {
