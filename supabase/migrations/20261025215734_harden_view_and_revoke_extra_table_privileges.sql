@@ -1,5 +1,7 @@
--- Recorded after being applied to the live project on 2026-10-26 with the owner's approval
--- (version 20261025215734 in supabase_migrations). Idempotent: safe to re-run.
+-- Recorded after being applied to the live project on 2026-10-26 04:57 WIB (= 2026-10-25 21:57 UTC, hence the
+-- version) with the owner's approval. Idempotent on the live schema: safe to re-run there. It assumes the
+-- pre-existing live tables and view; this repository has no baseline migration that creates them, so it is
+-- not a from-scratch schema (the earliest migration already assumes the same).
 -- Fixes: public.v_stock bypassed RLS (a signed-in non-admin could read every item and stock level), and
 -- `authenticated` held TRUNCATE/TRIGGER/REFERENCES (TRUNCATE is not subject to RLS) on the app tables.
 -- SELECT/INSERT/UPDATE/DELETE are unchanged. Verified after applying: non-admin v_stock rows 0, TRUNCATE
