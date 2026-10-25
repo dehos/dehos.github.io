@@ -27,9 +27,10 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Run isolated auth gate tests
+        run: npm test
       - name: Build production bundle
         run: npm run build
-
       - name: Upload generated dependency lockfile
         uses: actions/upload-artifact@v4
         with:
