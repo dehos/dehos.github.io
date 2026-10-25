@@ -36,9 +36,24 @@ export default function AuthGate({ children }) {
 
       if (active) setAuth({ status: "checking", message: "Memeriksa hak akses admin..." });
       try {
+        // A session alone is not proof that this specific user is an admin.
+        // Fail closed when the session has no email that can be checked.
+        const sessionEmail = session.user?.email?.trim();
+        if (!sessionEmail) {
+          await supabase.auth.signOut();
+          if (active && id === verificationId.current) {
+            setAuth({
+              status: "denied",
+              message: "Email akun tidak tersedia untuk verifikasi admin. Akses ditolak.",
+            });
+          }
+          return;
+        }
+
         const { data, error } = await supabase
           .from("app_admins")
           .select("email")
+          .eq("email", sessionEmail)
           .limit(1);
 
         if (!active || id !== verificationId.current) return;
