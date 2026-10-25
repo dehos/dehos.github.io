@@ -39,6 +39,10 @@ test("maps weak and reused password errors to safe user messages", () => {
   assert.match(passwordUpdateErrorMessage({ code: "weak_password" }), /lebih kuat/);
 });
 
+test("maps failed current-password verification without exposing provider details", () => {
+  assert.match(passwordUpdateErrorMessage({ code: "reauthentication_not_valid" }), /Password saat ini tidak cocok/);
+});
+
 test("does not expose provider error internals", () => {
   const message = passwordUpdateErrorMessage({ message: "internal database detail", code: "unexpected" });
   assert.match(message, /Periksa koneksi/);
