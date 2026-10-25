@@ -6,6 +6,7 @@ import { serializeCsv } from "./lib/csv-export.js";
 import { safeWriteErrorMessage } from "./lib/safe-write-error.js";
 import { paginateItems } from "./lib/pagination.js";
 import { matchesStockTransactionSearch } from "./lib/stock-search.js";
+import { buildEditSaleParams, buildDeleteSaleParams } from "./lib/sale-edit.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -155,6 +156,9 @@ function SalesPage({ onSaved, onBack }) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [salesPage, setSalesPage] = useState(1);
+  const [editing, setEditing] = useState(null);
+  const [editForm, setEditForm] = useState({ qty: "", harga: "", tanggal: "" });
+  const [busyId, setBusyId] = useState(null);
 
   async function loadSales() {
     if (!supabase) {
@@ -217,11 +221,11 @@ function SalesPage({ onSaved, onBack }) {
     if (!supabase || saving || !validSale) return;
     const total = parsedQty * parsedPrice;
     const confirmed = window.confirm(
-      "Catat penjualan ini?\\n\\nBarang: " + selectedGood.nama +
-      "\\nBrand: " + selectedGood.brand.nama +
-      "\\nQuantity: " + formatNumber(parsedQty) +
-      "\\nTotal: " + formatMoney(total) +
-      "\\n\\nStok dan pre-order akan dihitung oleh proses database yang sudah digunakan aplikasi lama."
+      "Catat penjualan ini?\n\nBarang: " + selectedGood.nama +
+      "\nBrand: " + selectedGood.brand.nama +
+      "\nQuantity: " + formatNumber(parsedQty) +
+      "\nTotal: " + formatMoney(total) +
+      "\n\nStok dan pre-order akan dihitung oleh proses database yang sudah digunakan aplikasi lama."
     );
     if (!confirmed) return;
     setSaving(true);
@@ -249,6 +253,86 @@ function SalesPage({ onSaved, onBack }) {
       setError("Penjualan gagal disimpan: " + safeWriteErrorMessage(saveError, "Silakan coba lagi."));
     } finally {
       setSaving(false);
+    }
+  }
+
+  function startEdit(item) {
+    if (busyId !== null) return;
+    setNotice("");
+    setError("");
+    setEditing(item);
+    setEditForm({ qty: String(item.qty ?? ""), harga: String(item.harga ?? ""), tanggal: String(item.tanggal_pembelian || "").slice(0, 10) });
+  }
+
+  async function submitEdit(event) {
+    event.preventDefault();
+    if (!supabase || busyId !== null || !editing) return;
+    const current = items.find((row) => Number(row.id) === Number(editing.id));
+    if (!current || Number(current.qty) !== Number(editing.qty) || Number(current.harga) !== Number(editing.harga) ||
+      String(current.tanggal_pembelian || "").slice(0, 10) !== String(editing.tanggal_pembelian || "").slice(0, 10)) {
+      setEditing(null);
+      setError("Data penjualan ini sudah berubah atau tidak lagi tampil. Muat ulang lalu buka Ubah kembali.");
+      return;
+    }
+    const built = buildEditSaleParams(editing, editForm);
+    if (!built.ok) { setError(built.reason); return; }
+    if (!built.changed) { setNotice("Tidak ada perubahan untuk disimpan."); setEditing(null); return; }
+    const good = goods.find((row) => Number(row.id) === Number(editing.barang_id));
+    const confirmed = window.confirm(
+      "Simpan perubahan penjualan ini?\n\nBarang: " + (good?.nama || ("Barang #" + editing.barang_id)) +
+      "\nTanggal: " + String(editing.tanggal_pembelian || "").slice(0, 10) + " -> " + built.params.p_tanggal_pembelian +
+      "\nQuantity: " + formatNumber(editing.qty) + " -> " + formatNumber(built.params.p_qty) +
+      "\nHarga: " + formatMoney(editing.harga) + " -> " + formatMoney(built.params.p_harga) +
+      "\nTotal baru: " + formatMoney(built.params.p_qty * built.params.p_harga) +
+      "\n\nStok dan pre-order dihitung ulang oleh proses database."
+    );
+    if (!confirmed) return;
+    setBusyId(editing.id);
+    setNotice("");
+    setError("");
+    try {
+      const { data: result, error: saveError } = await supabase.rpc("edit_penjualan_atomic", built.params);
+      if (saveError) throw saveError;
+      setNotice(Number(result?.preorder_after) > 0
+        ? "Penjualan diperbarui. Pre-order setelah perubahan: " + formatNumber(Number(result.preorder_after)) + " unit."
+        : "Penjualan berhasil diperbarui.");
+      setEditing(null);
+      await loadSales();
+      if (onSaved) onSaved();
+    } catch (saveError) {
+      console.error("DEHOS edit sale error:", saveError);
+      setError("Penjualan gagal diperbarui: " + safeWriteErrorMessage(saveError, "Silakan muat ulang dan coba lagi."));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function deleteSale(item) {
+    if (!supabase || busyId !== null) return;
+    const built = buildDeleteSaleParams(item);
+    if (!built.ok) { setError(built.reason); return; }
+    const good = goods.find((row) => Number(row.id) === Number(item.barang_id));
+    const confirmed = window.confirm(
+      "Hapus penjualan ini?\n\nBarang: " + (good?.nama || ("Barang #" + item.barang_id)) +
+      "\nQuantity: " + formatNumber(item.qty) + "\nTotal: " + formatMoney(salesValue(item)) +
+      "\n\nCatatan penjualan dan transaksi stok terkait akan dihapus, sehingga stok dikembalikan. Tindakan ini tidak dapat dibatalkan."
+    );
+    if (!confirmed) return;
+    setBusyId(item.id);
+    setNotice("");
+    setError("");
+    try {
+      const { error: deleteError } = await supabase.rpc("hapus_penjualan_atomic", built.params);
+      if (deleteError) throw deleteError;
+      setNotice("Penjualan berhasil dihapus dan stok dikembalikan.");
+      if (editing && editing.id === item.id) setEditing(null);
+      await loadSales();
+      if (onSaved) onSaved();
+    } catch (deleteError) {
+      console.error("DEHOS delete sale error:", deleteError);
+      setError("Penjualan gagal dihapus: " + safeWriteErrorMessage(deleteError, "Silakan muat ulang dan coba lagi."));
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -293,17 +377,24 @@ function SalesPage({ onSaved, onBack }) {
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="font-semibold">Riwayat penjualan</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleItems.length) + " catatan ditampilkan" : "Memuat catatan..."}</p></div><div className="grid w-full gap-2 sm:w-auto sm:grid-cols-3">
-          <label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
+          <label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => { setMonth(event.target.value || todayKey().slice(0, 7)); setEditing(null); }} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
           <label className="grid gap-1 text-xs text-slate-500">Brand<select value={brandFilter} onChange={(event) => setBrandFilter(event.target.value)} className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"><option value="">Semua brand</option>{brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}</select></label>
           <label className="grid gap-1 text-xs text-slate-500">Cari barang<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label>
         </div></div>
+        {editing && <form onSubmit={submitEdit} className="mt-5 grid gap-4 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Ubah penjualan">
+          <div className="sm:col-span-2 xl:col-span-4 text-sm"><strong>Ubah penjualan #{editing.id}</strong><span className="ml-2 text-slate-600">{(goods.find((row) => Number(row.id) === Number(editing.barang_id))?.nama) || ("Barang #" + editing.barang_id)} · {editing.brand || "—"} (barang dan brand tidak dapat diubah dari sini)</span></div>
+          <label className="grid gap-1.5 text-sm font-medium">Tanggal pembelian<input type="date" value={editForm.tanggal} onChange={(event) => setEditForm({ ...editForm, tanggal: event.target.value })} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Quantity<input type="number" min="1" step="1" inputMode="numeric" value={editForm.qty} onChange={(event) => setEditForm({ ...editForm, qty: event.target.value })} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <label className="grid gap-1.5 text-sm font-medium">Harga per unit (Rp)<input type="number" min="0" step="1" inputMode="numeric" value={editForm.harga} onChange={(event) => setEditForm({ ...editForm, harga: event.target.value })} required className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal outline-none focus:border-slate-500"/></label>
+          <div className="flex items-end justify-end gap-2"><button type="button" onClick={() => setEditing(null)} disabled={busyId !== null} className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium disabled:opacity-40">Batal</button><button type="submit" disabled={busyId !== null} className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{busyId === editing.id ? "Menyimpan..." : "Simpan perubahan"}</button></div>
+        </form>}
         <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3 text-right">Harga</th><th className="px-4 py-3 text-right">Total</th></tr></thead>
-            <tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Memuat riwayat penjualan...</td></tr> : visibleItems.length ? salesPageRows.items.map((item) => { const good = goods.find((row) => Number(row.id) === Number(item.barang_id)); return <tr key={item.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(item.tanggal_pembelian, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{good?.nama || ("Barang #" + item.barang_id)}</td><td className="px-4 py-3">{item.brand || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.qty)}</td><td className="px-4 py-3 text-right tabular-nums">{formatMoney(item.harga)}</td><td className="px-4 py-3 text-right font-medium tabular-nums">{formatMoney(salesValue(item))}</td></tr>; }) : <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Tidak ada catatan untuk filter ini.</td></tr>}</tbody>
+          <table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3 text-right">Harga</th><th className="px-4 py-3 text-right">Total</th><th className="px-4 py-3 text-right">Aksi</th></tr></thead>
+            <tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="7" className="px-4 py-8 text-center text-slate-500">Memuat riwayat penjualan...</td></tr> : visibleItems.length ? salesPageRows.items.map((item) => { const good = goods.find((row) => Number(row.id) === Number(item.barang_id)); return <tr key={item.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(item.tanggal_pembelian, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{good?.nama || ("Barang #" + item.barang_id)}</td><td className="px-4 py-3">{item.brand || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.qty)}</td><td className="px-4 py-3 text-right tabular-nums">{formatMoney(item.harga)}</td><td className="px-4 py-3 text-right font-medium tabular-nums">{formatMoney(salesValue(item))}</td><td className="whitespace-nowrap px-4 py-3 text-right"><button type="button" onClick={() => startEdit(item)} disabled={busyId !== null} className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium hover:bg-slate-50 disabled:opacity-40" aria-label={"Ubah penjualan " + item.id}>Ubah</button><button type="button" onClick={() => void deleteSale(item)} disabled={busyId !== null} className="ml-2 rounded-md border border-rose-200 px-2.5 py-1 text-xs font-medium text-rose-700 hover:bg-rose-50 disabled:opacity-40" aria-label={"Hapus penjualan " + item.id}>{busyId === item.id ? "..." : "Hapus"}</button></td></tr>; }) : <tr><td colSpan="7" className="px-4 py-8 text-center text-slate-500">Tidak ada catatan untuk filter ini.</td></tr>}</tbody>
           </table>
         </div>
         <PaginationControls pagination={salesPageRows} onPageChange={setSalesPage} label="Halaman riwayat penjualan" />
-        <p className="mt-3 text-xs text-slate-400">Riwayat lama tetap dibaca dari Supabase. Pengubahan/penghapusan catatan dan ekspor Excel/PDF belum termasuk tahap ini.</p>
+        <p className="mt-3 text-xs text-slate-400">Riwayat lama tetap dibaca dari Supabase. Ekspor Excel/PDF belum termasuk tahap ini.</p>
       </section>
       <footer className="border-t border-slate-200 py-4 text-xs text-slate-400">DEHOS · Modul Penjualan migrasi React · terpisah dari website produksi</footer>
     </div>
@@ -387,9 +478,9 @@ function StockPage({ onBack, onSaved }) {
     const summary = type === "adjust"
       ? "Stok tercatat: " + formatNumber(currentBalance) + " unit. Stok fisik baru: " + formatNumber(parsedQty) + " unit."
       : actionName + ": " + formatNumber(parsedQty) + " unit.";
-    if (!window.confirm("Konfirmasi " + actionName.toLocaleLowerCase("id-ID") + "?\\n\\nBarang: " + selectedGood.nama +
-      "\\n" + summary + "\\nTanggal: " + date +
-      "\\n\\nTransaksi akan disimpan melalui proses atomik database yang sudah digunakan aplikasi lama.")) return;
+    if (!window.confirm("Konfirmasi " + actionName.toLocaleLowerCase("id-ID") + "?\n\nBarang: " + selectedGood.nama +
+      "\n" + summary + "\nTanggal: " + date +
+      "\n\nTransaksi akan disimpan melalui proses atomik database yang sudah digunakan aplikasi lama.")) return;
 
     setSaving(true);
     setError("");
