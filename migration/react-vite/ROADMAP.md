@@ -38,7 +38,8 @@ Last updated: 2026-10-25
 
 ## Current next action
 
-- PR #62's repository-only pagination step is complete and merged into `migration/auth-identity-check`; do not repeat it. The next gate is the controlled-preview run in `VERIFICATION.md`. Repository CI cannot prove live Auth, RLS/grants, RPC behavior, data parity, or GitHub Pages source settings.
+- PR #62's repository-only pagination step is complete and merged into `migration/auth-identity-check`; do not repeat it.
+- Stock transaction history search also matches the associated item's brand name (a read-only client-side filter); this does not change backend queries or write paths. The next gate is the controlled-preview run in `VERIFICATION.md`. Repository CI cannot prove live Auth, RLS/grants, RPC behavior, data parity, or GitHub Pages source settings.
 - **Blocked prerequisites:** an authorized isolated preview URL, an admin test account and a separate non-admin test account, and (before any write test) an explicitly approved disposable/reversible fixture with a cleanup owner. These are not available in this session. Do not use production as a substitute or attempt writes without approval.
 - Until those prerequisites are supplied, keep the React app isolated and do not change `main`, production root files, Supabase schema/data/RLS/Auth, Edge Functions/RPCs, or Pages settings. Keep sales/stock edit-delete, Excel/PDF exports, and import deferred until data parity and backend invariants are verified.
 
