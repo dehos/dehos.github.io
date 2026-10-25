@@ -4,6 +4,7 @@ import { calculateStockBalance } from "./lib/stock-balance.js";
 import { normalizeBrandTargets } from "./lib/brand-targets.js";
 import { serializeCsv } from "./lib/csv-export.js";
 import { safeWriteErrorMessage } from "./lib/safe-write-error.js";
+import { paginateItems } from "./lib/pagination.js";
 import {
   Boxes, ChartNoAxesCombined, ShoppingCart, Package, ArrowDownUp,
   RefreshCw, AlertTriangle, CircleCheck, Database, CalendarDays,
@@ -125,6 +126,18 @@ function LoadingPanel({ message }) {
 }
 
 
+function PaginationControls({ pagination, onPageChange, label }) {
+  if (pagination.pageCount <= 1) return null;
+  return <nav aria-label={label} className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
+    <span>Menampilkan {pagination.start}–{pagination.end} dari {pagination.total} catatan</span>
+    <div className="flex items-center gap-2">
+      <button type="button" onClick={() => onPageChange(pagination.page - 1)} disabled={pagination.page <= 1} className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium disabled:cursor-not-allowed disabled:opacity-40">Sebelumnya</button>
+      <span aria-live="polite">Halaman {pagination.page} dari {pagination.pageCount}</span>
+      <button type="button" onClick={() => onPageChange(pagination.page + 1)} disabled={pagination.page >= pagination.pageCount} className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium disabled:cursor-not-allowed disabled:opacity-40">Berikutnya</button>
+    </div>
+  </nav>;
+}
+
 function SalesPage({ onSaved, onBack }) {
   const [items, setItems] = useState([]);
   const [goods, setGoods] = useState([]);
@@ -139,6 +152,7 @@ function SalesPage({ onSaved, onBack }) {
   const [harga, setHarga] = useState("");
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
+  const [salesPage, setSalesPage] = useState(1);
 
   async function loadSales() {
     if (!supabase) {
@@ -176,6 +190,7 @@ function SalesPage({ onSaved, onBack }) {
   }
 
   useEffect(() => { void loadSales(); }, [month]);
+  useEffect(() => { setSalesPage(1); }, [month, brandFilter, search]);
 
   const brands = useMemo(() => [...new Set(items.map((item) => item.brand).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, "id")), [items]);
@@ -188,6 +203,7 @@ function SalesPage({ onSaved, onBack }) {
           String(item.brand || "").toLocaleLowerCase("id-ID").includes(term));
     });
   }, [items, goods, brandFilter, search]);
+  const salesPageRows = useMemo(() => paginateItems(visibleItems, salesPage, 25), [visibleItems, salesPage]);
   const selectedGood = goods.find((item) => String(item.id) === barangId);
   const parsedQty = Number(qty);
   const parsedPrice = Number(harga);
@@ -281,9 +297,10 @@ function SalesPage({ onSaved, onBack }) {
         </div></div>
         <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3 text-right">Harga</th><th className="px-4 py-3 text-right">Total</th></tr></thead>
-            <tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Memuat riwayat penjualan...</td></tr> : visibleItems.length ? visibleItems.map((item) => { const good = goods.find((row) => Number(row.id) === Number(item.barang_id)); return <tr key={item.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(item.tanggal_pembelian, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{good?.nama || ("Barang #" + item.barang_id)}</td><td className="px-4 py-3">{item.brand || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.qty)}</td><td className="px-4 py-3 text-right tabular-nums">{formatMoney(item.harga)}</td><td className="px-4 py-3 text-right font-medium tabular-nums">{formatMoney(salesValue(item))}</td></tr>; }) : <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Tidak ada catatan untuk filter ini.</td></tr>}</tbody>
+            <tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Memuat riwayat penjualan...</td></tr> : visibleItems.length ? salesPageRows.items.map((item) => { const good = goods.find((row) => Number(row.id) === Number(item.barang_id)); return <tr key={item.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(item.tanggal_pembelian, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{good?.nama || ("Barang #" + item.barang_id)}</td><td className="px-4 py-3">{item.brand || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.qty)}</td><td className="px-4 py-3 text-right tabular-nums">{formatMoney(item.harga)}</td><td className="px-4 py-3 text-right font-medium tabular-nums">{formatMoney(salesValue(item))}</td></tr>; }) : <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Tidak ada catatan untuk filter ini.</td></tr>}</tbody>
           </table>
         </div>
+        <PaginationControls pagination={salesPageRows} onPageChange={setSalesPage} label="Halaman riwayat penjualan" />
         <p className="mt-3 text-xs text-slate-400">Riwayat lama tetap dibaca dari Supabase. Pengubahan/penghapusan catatan dan ekspor Excel/PDF belum termasuk tahap ini.</p>
       </section>
       <footer className="border-t border-slate-200 py-4 text-xs text-slate-400">DEHOS · Modul Penjualan migrasi React · terpisah dari website produksi</footer>
@@ -307,6 +324,8 @@ function StockPage({ onBack, onSaved }) {
   const [date, setDate] = useState(todayKey());
   const [qty, setQty] = useState("1");
   const [saving, setSaving] = useState(false);
+  const [goodsPage, setGoodsPage] = useState(1);
+  const [transactionsPage, setTransactionsPage] = useState(1);
 
   async function loadStock() {
     if (!supabase) {
@@ -356,6 +375,9 @@ function StockPage({ onBack, onSaved }) {
     return monthMatch && (!term || String(good?.nama || "").toLocaleLowerCase("id-ID").includes(term) ||
       String(row.type || "").toLocaleLowerCase("id-ID").includes(term));
   }).slice().reverse();
+  const goodsPageRows = useMemo(() => paginateItems(visibleGoods, goodsPage, 25), [visibleGoods, goodsPage]);
+  const transactionPageRows = useMemo(() => paginateItems(visibleTransactions, transactionsPage, 25), [visibleTransactions, transactionsPage]);
+  useEffect(() => { setGoodsPage(1); setTransactionsPage(1); }, [search, month]);
 
   async function submitTransaction(event) {
     event.preventDefault();
@@ -454,11 +476,13 @@ function StockPage({ onBack, onSaved }) {
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Daftar stok</h2><p className="mt-1 text-sm text-slate-500">{status === "ready" ? formatNumber(visibleGoods.length) + " barang" : "Memuat data..."}</p></div><label className="grid gap-1 text-xs text-slate-500">Cari barang / brand<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Ketik nama barang..." className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
-        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Stok Awal</th><th className="px-4 py-3 text-right">Stok Saat Ini</th><th className="px-4 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat stok...</td></tr> : status !== "ready" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Data stok belum tersedia.</td></tr> : visibleGoods.length ? visibleGoods.map((item) => { const balance = calculateStockBalance(item, transactions, todayKey()); return <tr key={item.id}><td className="px-4 py-3 font-medium">{item.nama}</td><td className="px-4 py-3">{item.brand?.nama || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.stok_awal)}</td><td className={"px-4 py-3 text-right font-semibold tabular-nums " + (balance < 0 ? "text-rose-700" : "text-slate-900")}>{formatNumber(balance)}</td><td className="px-4 py-3">{balance < 0 ? <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">Minus / PO</span> : balance === 0 ? <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Habis</span> : <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Tersedia</span>}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Barang tidak ditemukan.</td></tr>}</tbody></table></div>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Brand</th><th className="px-4 py-3 text-right">Stok Awal</th><th className="px-4 py-3 text-right">Stok Saat Ini</th><th className="px-4 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat stok...</td></tr> : status !== "ready" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Data stok belum tersedia.</td></tr> : visibleGoods.length ? goodsPageRows.items.map((item) => { const balance = calculateStockBalance(item, transactions, todayKey()); return <tr key={item.id}><td className="px-4 py-3 font-medium">{item.nama}</td><td className="px-4 py-3">{item.brand?.nama || "—"}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(item.stok_awal)}</td><td className={"px-4 py-3 text-right font-semibold tabular-nums " + (balance < 0 ? "text-rose-700" : "text-slate-900")}>{formatNumber(balance)}</td><td className="px-4 py-3">{balance < 0 ? <span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700">Minus / PO</span> : balance === 0 ? <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Habis</span> : <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Tersedia</span>}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Barang tidak ditemukan.</td></tr>}</tbody></table></div>
+        <PaginationControls pagination={goodsPageRows} onPageChange={setGoodsPage} label="Halaman daftar stok" />
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
         <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-semibold">Riwayat transaksi stok</h2><p className="mt-1 text-sm text-slate-500">Termasuk transaksi penjualan yang memengaruhi saldo stok</p></div><label className="grid gap-1 text-xs text-slate-500">Bulan<input type="month" value={month} onChange={(event) => setMonth(event.target.value || todayKey().slice(0, 7))} className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"/></label></div>
-        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Jenis</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3">Sumber</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat riwayat...</td></tr> : visibleTransactions.length ? visibleTransactions.map((row) => { const item = goods.find((good) => Number(good.id) === Number(row.barang_id)); return <tr key={row.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(row.tanggal, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{item?.nama || ("Barang #" + row.barang_id)}</td><td className="px-4 py-3">{typeLabel(row.type)}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(row.qty)}</td><td className="px-4 py-3">{row.penjualan_id ? "Penjualan" : row.type === "laku" ? "Keluar manual" : "Manual"}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Tidak ada transaksi untuk bulan ini.</td></tr>}</tbody></table></div>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full min-w-[680px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-4 py-3">Tanggal</th><th className="px-4 py-3">Nama Barang</th><th className="px-4 py-3">Jenis</th><th className="px-4 py-3 text-right">Quantity</th><th className="px-4 py-3">Sumber</th></tr></thead><tbody className="divide-y divide-slate-100">{status === "loading" ? <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Memuat riwayat...</td></tr> : visibleTransactions.length ? transactionPageRows.items.map((row) => { const item = goods.find((good) => Number(good.id) === Number(row.barang_id)); return <tr key={row.id}><td className="whitespace-nowrap px-4 py-3">{dateLabel(row.tanggal, { day: "2-digit", month: "2-digit", year: "2-digit" })}</td><td className="px-4 py-3 font-medium">{item?.nama || ("Barang #" + row.barang_id)}</td><td className="px-4 py-3">{typeLabel(row.type)}</td><td className="px-4 py-3 text-right tabular-nums">{formatNumber(row.qty)}</td><td className="px-4 py-3">{row.penjualan_id ? "Penjualan" : row.type === "laku" ? "Keluar manual" : "Manual"}</td></tr>; }) : <tr><td colSpan="5" className="px-4 py-8 text-center text-slate-500">Tidak ada transaksi untuk bulan ini.</td></tr>}</tbody></table></div>
+        <PaginationControls pagination={transactionPageRows} onPageChange={setTransactionsPage} label="Halaman riwayat transaksi stok" />
       </section>
       <footer className="border-t border-slate-200 py-4 text-xs text-slate-400">DEHOS · Modul Stock & In Out · terpisah dari website produksi</footer>
     </div>
