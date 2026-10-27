@@ -3284,16 +3284,6 @@ dataHalaman.forEach(
                         ${getUiIconSvg("minus", "stock-action-icon")}
                         <span>Keluar</span>
                     </button>
-                    <button
-                        type="button"
-                        class="action-btn stock-adjust-btn"
-                        onclick="openTransaction(${Number(barang.id)}, 'adjust')"
-                        aria-label="Adjust stok ${escapeHTML(barang.nama)}"
-                        title="Sesuaikan stok fisik"
-                    >
-                        ${getUiIconSvg("edit", "stock-action-icon")}
-                        <span>Adjust</span>
-                    </button>
                 </div>
             </td>
             `;
