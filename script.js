@@ -3002,6 +3002,37 @@ function compareBarangSearchResults(
 
 
 /*/*==================================
+   ICON BRAND UNTUK LIST BARANG
+===================================================== */
+
+const BRAND_ICON_FILES =
+    Object.freeze({
+        dekkson: "icons/dekkson.png",
+        dekson: "icons/dekkson.png",
+        solid: "icons/solid.png",
+        belleza: "icons/belleza.png",
+        bellezza: "icons/belleza.png"
+    });
+
+function getBrandIconHtml(barang) {
+
+    const brandName =
+        normalizeSearchValue(
+            barang?.brand?.nama
+        );
+
+    const file =
+        BRAND_ICON_FILES[brandName];
+
+    if (!file) {
+        return "";
+    }
+
+    return `<img class="barang-brand-icon" src="${file}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`;
+}
+
+
+/*/*==================================
    UPDATE TABEL STOK
 ===================================================== */
 
@@ -3214,9 +3245,12 @@ dataHalaman.forEach(
             </td>
 
             <td>
-                ${escapeHTML(
-                    barang.nama
-                )}
+                <span class="barang-name-wrap">
+                    ${getBrandIconHtml(barang)}
+                    <span class="barang-name-text">${escapeHTML(
+                        barang.nama
+                    )}</span>
+                </span>
             </td>
 
             <td class="stock-cell">

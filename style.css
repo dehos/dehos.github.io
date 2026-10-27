@@ -17838,3 +17838,30 @@ html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.stat
 }
 html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.status.error svg,
 html[data-theme="adminlte"] .app-topbar .app-topbar-actions #databaseStatus.status.error svg * { color: #fff !important; stroke: #fff !important; }
+
+
+/* =====================================================
+   ICON BRAND DI LIST BARANG
+===================================================== */
+
+.barang-name-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.barang-brand-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.barang-name-text {
+    min-width: 0;
+}
