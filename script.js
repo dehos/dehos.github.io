@@ -3215,7 +3215,7 @@ dataHalaman.forEach(
     function(barang, index) {
 
         const stok =
-            getCurrentStock(
+            getRawCurrentStock(
                 barang
             );
 
