@@ -11934,11 +11934,6 @@ function renderGrafikPenjualanDashboard() {
         return;
     }
 
-    const LEBAR = 600;
-    const TINGGI = 180;
-    const ATAS = 18;
-    const BAWAH = 162;
-
     const periode = dashboardExtraState.periode;
     const sekarang = new Date();
 
@@ -11983,34 +11978,13 @@ function renderGrafikPenjualanDashboard() {
 
     const batasY = hitungBatasYDashboard(Math.max(0, ...nilai));
     const jumlahHari = hari.length;
-
-    const titik = nilai.map(function(angka, indeks) {
-        return {
-            x: jumlahHari > 1
-                ? indeks * LEBAR / (jumlahHari - 1)
-                : LEBAR / 2,
-            y: BAWAH - (angka / batasY) * (BAWAH - ATAS)
-        };
-    });
-
-    const garis = titik.map(function(titikSaatIni, indeks) {
-        return (indeks === 0 ? "M" : "L") +
-            formatAngkaSvgDashboard(titikSaatIni.x) + " " +
-            formatAngkaSvgDashboard(titikSaatIni.y);
-    }).join(" ");
-
-    const area = jumlahHari > 1
-        ? garis + " L" + LEBAR + " " + BAWAH + " L0 " + BAWAH + " Z"
-        : "";
+    const rapat = jumlahHari > 14;
 
     let kisi = "";
     let labelY = "";
 
     for (let i = 0; i <= 4; i++) {
-        const y = ATAS + i * ((BAWAH - ATAS) / 4);
-
-        kisi += '<line x1="0" x2="' + LEBAR + '" y1="' + y +
-            '" y2="' + y + '"/>';
+        kisi += "<i></i>";
 
         labelY += "<span>" +
             escapeHTML(
@@ -12018,19 +11992,32 @@ function renderGrafikPenjualanDashboard() {
             ) + "</span>";
     }
 
-    const lebarHit = LEBAR / jumlahHari;
-
-    const areaSentuh = hari.map(function(tanggal, indeks) {
+    const batang = hari.map(function(tanggal, indeks) {
         const tanggalLokal = parseTanggalDashboard(tanggal);
 
-        const keterangan = tanggalLokal.toLocaleDateString(
+        const judul = tanggalLokal.toLocaleDateString(
             "id-ID",
             { weekday: "long", day: "numeric", month: "long" }
-        ) + ": Rp " + formatNumber(nilai[indeks]);
+        );
 
-        return '<rect x="' + (indeks * lebarHit) + '" y="0" width="' +
-            lebarHit + '" height="' + TINGGI + '"><title>' +
-            escapeHTML(keterangan) + "</title></rect>";
+        const persen = Math.min(100, nilai[indeks] / batasY * 100);
+
+        const kelas = "dashboard-chart-col" +
+            (nilai[indeks] > 0 ? " has-value" : "") +
+            (indeks < jumlahHari * 0.25
+                ? " is-start"
+                : (indeks >= jumlahHari * 0.75 ? " is-end" : ""));
+
+        return '<div class="' + kelas + '" tabindex="0" role="img" ' +
+            'aria-label="' +
+            escapeHTML(judul + ": Rp " + formatNumber(nilai[indeks])) +
+            '" style="--bar-h:' + formatAngkaSvgDashboard(persen) + '%">' +
+            '<span class="dashboard-chart-bar"></span>' +
+            '<span class="dashboard-chart-tip" aria-hidden="true">' +
+            "<strong>" + escapeHTML(judul) + "</strong>" +
+            "<span><i></i>Omzet<b>Rp " +
+            escapeHTML(formatNumber(nilai[indeks])) +
+            "</b></span></span></div>";
     }).join("");
 
     let labelX = "";
@@ -12056,15 +12043,9 @@ function renderGrafikPenjualanDashboard() {
                 { day: "numeric", month: "short" }
             );
 
-        const posisi = jumlahHari > 1
-            ? indeks / (jumlahHari - 1) * 100
-            : 50;
+        const posisi = (indeks + 0.5) / jumlahHari * 100;
 
-        const kelas = indeks === 0
-            ? ' class="is-first"'
-            : (indeks === jumlahHari - 1 ? ' class="is-last"' : "");
-
-        labelX += "<span" + kelas + ' style="left:' +
+        labelX += '<span style="left:' +
             formatAngkaSvgDashboard(posisi) + '%">' +
             escapeHTML(teks) + "</span>";
     }
@@ -12076,19 +12057,11 @@ function renderGrafikPenjualanDashboard() {
         '<div class="dashboard-chart-plot">' +
         '<div class="dashboard-chart-y" aria-hidden="true">' +
         labelY + "</div>" +
-        '<svg class="dashboard-chart-svg" viewBox="0 0 ' + LEBAR + " " +
-        TINGGI + '" preserveAspectRatio="none" role="img" aria-label="' +
-        escapeHTML(ringkasan) + '">' +
-        '<defs><linearGradient id="dashboardSalesAreaGradient" x1="0" y1="0" x2="0" y2="1">' +
-        '<stop offset="0%" stop-color="#6366f1" stop-opacity="0.28"/>' +
-        '<stop offset="95%" stop-color="#6366f1" stop-opacity="0.015"/>' +
-        '</linearGradient></defs>' +
-        '<g class="dashboard-chart-grid">' + kisi + "</g>" +
-        (area ? '<path class="dashboard-chart-area" d="' + area + '"/>' : "") +
-        (garis ? '<path class="dashboard-chart-line" d="' + garis + '"/>' : "") +
-        '<g class="dashboard-chart-hit">' + areaSentuh + "</g>" +
-
-        "</svg>" +
+        '<div class="dashboard-chart-bars' + (rapat ? " is-dense" : "") +
+        '" role="group" aria-label="' + escapeHTML(ringkasan) + '">' +
+        '<div class="dashboard-chart-grid-lines" aria-hidden="true">' +
+        kisi + "</div>" +
+        '<div class="dashboard-chart-cols">' + batang + "</div></div>" +
         '<div class="dashboard-chart-x" aria-hidden="true">' +
         labelX + "</div></div>";
 
