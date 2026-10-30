@@ -11042,42 +11042,80 @@ function buatTeksRekapKemarin(data) {
 }
 let penyelesaiPilihanRekapTanggal = null;
 
-function pilihTanggalRekap() {
-    const dialog = document.getElementById("rekapTanggalDialog");
-    if (!dialog) return Promise.resolve(null);
-    if (penyelesaiPilihanRekapTanggal) {
-        penyelesaiPilihanRekapTanggal(null);
-        penyelesaiPilihanRekapTanggal = null;
+function tutupMenuRekapTanggal(hasil = null, kembalikanFokus = false) {
+    const menu = document.getElementById("rekapTanggalMenu");
+    const tombol = document.getElementById("salesYesterdayButton");
+    if (menu) menu.hidden = true;
+    if (tombol) {
+        tombol.setAttribute("aria-expanded", "false");
+        if (kembalikanFokus) tombol.focus();
     }
-    dialog.showModal();
+    if (penyelesaiPilihanRekapTanggal) {
+        const selesai = penyelesaiPilihanRekapTanggal;
+        penyelesaiPilihanRekapTanggal = null;
+        selesai(hasil);
+    }
+}
+
+function pilihTanggalRekap() {
+    const menu = document.getElementById("rekapTanggalMenu");
+    const tombol = document.getElementById("salesYesterdayButton");
+    if (!menu || !tombol) return Promise.resolve(null);
+    // Klik tombol lagi saat menu terbuka = tutup menu.
+    if (!menu.hidden) {
+        tutupMenuRekapTanggal(null);
+        return Promise.resolve(null);
+    }
+    menu.querySelectorAll("[data-rekap-days]").forEach(function(item) {
+        const tanggal = new Date();
+        tanggal.setDate(tanggal.getDate() - Number(item.dataset.rekapDays));
+        const label = item.querySelector(".sales-menu-date");
+        if (label) {
+            label.textContent = tanggal.toLocaleDateString(
+                "id-ID", { weekday: "short", day: "numeric", month: "short" }
+            );
+        }
+    });
+    menu.hidden = false;
+    tombol.setAttribute("aria-expanded", "true");
+    menu.querySelector("[data-rekap-days]")?.focus();
     return new Promise(function(resolve) {
         penyelesaiPilihanRekapTanggal = resolve;
     });
 }
 
-document.getElementById("rekapTanggalDialog")
+document.getElementById("rekapTanggalMenu")
     ?.addEventListener("click", function(event) {
-        const tombolTanggal = event.target.closest("[data-rekap-days]");
-        if (!tombolTanggal) return;
-        const mundur = Number(tombolTanggal.dataset.rekapDays);
-        const dialog = document.getElementById("rekapTanggalDialog");
-        if (dialog?.open) dialog.close();
-        if (penyelesaiPilihanRekapTanggal) {
-            penyelesaiPilihanRekapTanggal(mundur);
-            penyelesaiPilihanRekapTanggal = null;
-        }
+        const item = event.target.closest("[data-rekap-days]");
+        if (!item) return;
+        tutupMenuRekapTanggal(Number(item.dataset.rekapDays), true);
     });
 
-document.getElementById("rekapTanggalDialog")
-    ?.addEventListener("cancel", function(event) {
+document.addEventListener("click", function(event) {
+    const menu = document.getElementById("rekapTanggalMenu");
+    if (!menu || menu.hidden) return;
+    if (event.target.closest(".sales-menu")) return;
+    tutupMenuRekapTanggal(null);
+});
+
+document.addEventListener("keydown", function(event) {
+    const menu = document.getElementById("rekapTanggalMenu");
+    if (!menu || menu.hidden) return;
+    if (event.key === "Escape") {
         event.preventDefault();
-        const dialog = document.getElementById("rekapTanggalDialog");
-        if (dialog?.open) dialog.close();
-        if (penyelesaiPilihanRekapTanggal) {
-            penyelesaiPilihanRekapTanggal(null);
-            penyelesaiPilihanRekapTanggal = null;
-        }
-    });
+        tutupMenuRekapTanggal(null, true);
+    } else if (event.key === "Tab") {
+        tutupMenuRekapTanggal(null);
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        const items = Array.from(menu.querySelectorAll("[data-rekap-days]"));
+        const sekarang = items.indexOf(document.activeElement);
+        const tujuan = event.key === "ArrowDown"
+            ? (sekarang + 1) % items.length
+            : (sekarang <= 0 ? items.length - 1 : sekarang - 1);
+        items[tujuan].focus();
+    }
+});
 
 async function salinRekapKemarin() {
     const tombol = document.getElementById("salesYesterdayButton");

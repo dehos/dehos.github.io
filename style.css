@@ -17698,8 +17698,8 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 
 /* =====================================================
    CATATAN PENJUALAN — TATA LETAK & TOMBOL YANG JELAS
-   Atas: periode + brand. Bawah: rekap, salin, unduh.
-   Tombol aksi putih berbingkai; hanya "Unduh" yang solid.
+   Atas: periode + brand (sejajar, tanpa pembungkus tambahan).
+   Bawah/kanan: rekap, salin, unduh. Hanya "Unduh" yang solid.
    Ikon di baris: Edit = teal, Hapus = merah.
    Warna: Radix Colors (teal, slate, red). Hanya halaman ini.
 ===================================================== */
@@ -17714,21 +17714,12 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px 14px;
+    gap: 10px 8px;
     width: 100%;
     min-width: 0;
 }
 
-#catatan-penjualan .sales-filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-}
-
-#catatan-penjualan .sales-filters .modern-month-nav {
+#catatan-penjualan .sales-controls .modern-month-nav {
     display: flex;
     min-height: 40px;
     align-items: center;
@@ -17739,7 +17730,7 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     background: #fff;
 }
 
-#catatan-penjualan .sales-filters .modern-month-nav button {
+#catatan-penjualan .sales-controls .modern-month-nav button {
     display: inline-grid;
     width: 32px;
     height: 32px;
@@ -17752,26 +17743,26 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     box-shadow: none !important;
 }
 
-#catatan-penjualan .sales-filters .modern-month-nav button:hover:not(:disabled),
-#catatan-penjualan .sales-filters .modern-month-nav button:focus-visible:not(:disabled) {
+#catatan-penjualan .sales-controls .modern-month-nav button:hover:not(:disabled),
+#catatan-penjualan .sales-controls .modern-month-nav button:focus-visible:not(:disabled) {
     background: #e0f8f3 !important;
     color: #0d3d38 !important;
 }
 
-#catatan-penjualan .sales-filters .modern-month-nav button:disabled {
+#catatan-penjualan .sales-controls .modern-month-nav button:disabled {
     color: #8b8d98 !important;
     cursor: not-allowed;
     opacity: .55;
 }
 
-#catatan-penjualan .sales-filters .modern-month-nav button svg {
+#catatan-penjualan .sales-controls .modern-month-nav button svg {
     width: 16px;
     height: 16px;
     color: inherit !important;
     stroke: currentColor !important;
 }
 
-#catatan-penjualan .sales-filters .modern-month-nav strong {
+#catatan-penjualan .sales-controls .modern-month-nav strong {
     min-width: 116px;
     flex: 1 1 auto;
     color: #1c2024;
@@ -17781,17 +17772,15 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     white-space: nowrap;
 }
 
-#catatan-penjualan .sales-filters .modern-sales-filter {
-    display: block;
-    margin: 0;
-}
-
-#catatan-penjualan .sales-filters .modern-sales-filter .form-select {
+#catatan-penjualan .sales-controls > .sales-brand-select {
+    width: auto;
     min-width: 170px;
     min-height: 40px;
+    margin: 0;
     border: 1px solid #cdced6;
     border-radius: 10px;
     font-size: 12px;
+    box-shadow: none;
 }
 
 #catatan-penjualan .sales-actions {
@@ -17800,6 +17789,16 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     align-items: stretch;
     gap: 8px;
     min-width: 0;
+    margin-left: auto;
+}
+
+#catatan-penjualan .sales-menu {
+    position: relative;
+    display: flex;
+}
+
+#catatan-penjualan .sales-menu > .sales-action-btn {
+    flex: 1 1 auto;
 }
 
 #catatan-penjualan .sales-actions .sales-action-btn {
@@ -17835,6 +17834,18 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     stroke-linejoin: round;
 }
 
+#catatan-penjualan .sales-actions .sales-action-btn .sales-menu-caret {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    margin-left: -2px;
+    transition: transform .15s ease;
+}
+
+#catatan-penjualan .sales-actions .sales-action-btn[aria-expanded="true"] .sales-menu-caret {
+    transform: rotate(180deg);
+}
+
 #catatan-penjualan .sales-actions .sales-action-btn:hover,
 #catatan-penjualan .sales-actions .sales-action-btn:focus-visible {
     border-color: #83cdc1 !important;
@@ -17867,6 +17878,72 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     border-color: #0d3d38 !important;
     background: #0d3d38 !important;
     color: #fff !important;
+}
+
+/* Menu daftar tanggal untuk "Salin Rekap Harian" */
+#catatan-penjualan .sales-menu-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 40;
+    display: grid;
+    gap: 2px;
+    min-width: 220px;
+    max-width: calc(100vw - 32px);
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    border: 1px solid #cdced6;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(28, 32, 36, .16);
+}
+
+#catatan-penjualan .sales-menu-list[hidden] {
+    display: none;
+}
+
+#catatan-penjualan .sales-menu-list li {
+    margin: 0;
+    padding: 0;
+}
+
+#catatan-penjualan .sales-menu-list .sales-menu-item {
+    display: flex;
+    width: 100%;
+    min-height: 42px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #1c2024 !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+#catatan-penjualan .sales-menu-list .sales-menu-item small {
+    color: #60646c;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+#catatan-penjualan .sales-menu-list .sales-menu-item:hover,
+#catatan-penjualan .sales-menu-list .sales-menu-item:focus-visible {
+    background: #e0f8f3 !important;
+    color: #0d3d38 !important;
+}
+
+#catatan-penjualan .sales-menu-list .sales-menu-item:focus-visible {
+    outline: 2px solid #0d9b8a;
+    outline-offset: -2px;
 }
 
 #catatan-penjualan .sales-recap-heading button {
@@ -17936,30 +18013,25 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 @media (max-width: 700px) {
     #catatan-penjualan .sales-controls {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 10px;
-    }
-
-    #catatan-penjualan .sales-filters {
-        display: grid;
         grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
         gap: 8px;
     }
 
-    #catatan-penjualan .sales-filters .modern-month-nav strong {
+    #catatan-penjualan .sales-controls .modern-month-nav strong {
         min-width: 0;
         font-size: 11px;
     }
 
-    #catatan-penjualan .sales-filters .modern-sales-filter .form-select {
+    #catatan-penjualan .sales-controls > .sales-brand-select {
         width: 100%;
         min-width: 0;
     }
 
     #catatan-penjualan .sales-actions {
         display: grid;
+        grid-column: 1 / -1;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        margin-left: 0;
     }
 
     #catatan-penjualan .sales-actions .sales-action-btn {
@@ -17967,5 +18039,11 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         padding: 8px 10px;
         white-space: normal;
         text-align: center;
+    }
+
+    #catatan-penjualan .sales-menu-list {
+        right: 0;
+        left: auto;
+        min-width: min(220px, calc(100vw - 32px));
     }
 }
