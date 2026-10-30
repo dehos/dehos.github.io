@@ -942,6 +942,47 @@
 
 <section class="card dashboard-card app-page app-page-active" id="dashboard">
 
+    <div class="sales-target-section dashboard-sales-chart">
+        <div class="sales-target-header">
+            <div>
+                <h3>
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 20V10M12 20V4M19 20v-7"/>
+                    </svg>
+                    <span>Ringkasan Penjualan</span>
+                </h3>
+                <p id="dashboardChartLabel">
+                    Memuat grafik...
+                </p>
+            </div>
+
+            <div class="sales-target-summary">
+                <select id="dashboardChartPeriod" class="dashboard-chart-period" aria-label="Periode grafik penjualan">
+                    <option value="7">7 hari terakhir</option>
+                    <option value="30">30 hari terakhir</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="dashboard-chart-total-row">
+            <strong id="dashboardChartTotal">
+                —
+            </strong>
+            <span id="dashboardChartTrend" class="dashboard-trend-badge" hidden></span>
+        </div>
+
+        <div
+            id="dashboardChart"
+            class="dashboard-chart"
+            aria-live="polite"
+        >
+            <div class="target-brand-loading">
+                Memuat grafik penjualan...
+            </div>
+        </div>
+    </div>
+
+
     <div class="dashboard-section-heading modern-section-header">
         <div class="modern-title-group">
             <span class="modern-title-icon" aria-hidden="true">
@@ -1005,47 +1046,6 @@
             </strong>
         </div>
 
-    </div>
-
-
-    <div class="sales-target-section dashboard-sales-chart">
-        <div class="sales-target-header">
-            <div>
-                <h3>
-                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M5 20V10M12 20V4M19 20v-7"/>
-                    </svg>
-                    <span>Ringkasan Penjualan</span>
-                </h3>
-                <p id="dashboardChartLabel">
-                    Memuat grafik...
-                </p>
-            </div>
-
-            <div class="sales-target-summary">
-                <select id="dashboardChartPeriod" class="dashboard-chart-period" aria-label="Periode grafik penjualan">
-                    <option value="7">7 hari terakhir</option>
-                    <option value="30">30 hari terakhir</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="dashboard-chart-total-row">
-            <strong id="dashboardChartTotal">
-                —
-            </strong>
-            <span id="dashboardChartTrend" class="dashboard-trend-badge" hidden></span>
-        </div>
-
-        <div
-            id="dashboardChart"
-            class="dashboard-chart"
-            aria-live="polite"
-        >
-            <div class="target-brand-loading">
-                Memuat grafik penjualan...
-            </div>
-        </div>
     </div>
 
 
