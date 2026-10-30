@@ -47,7 +47,7 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
-    <link rel="stylesheet" href="style.css?v=20261030-1"> 
+    <link rel="stylesheet" href="style.css?v=20261030-2"> 
 </head>
 <body class="auth-locked">
 <section id="authGate" class="auth-gate" aria-labelledby="authTitle">
@@ -654,64 +654,65 @@
             </div>
         </div>
 
-        <div class="penjualan-header-tools modern-sales-tools">
-            <div
-                class="history-month-nav modern-month-nav"
-                aria-label="Navigasi bulan catatan penjualan"
-            >
-                <button
-                    type="button"
-                    id="penjualanPrevMonth"
-                    aria-label="Lihat bulan sebelumnya"
-                    onclick="ubahBulanPenjualan(-1)"
+        <div class="sales-controls">
+            <div class="sales-filters" role="group" aria-label="Pilih periode dan brand">
+                <div
+                    class="history-month-nav modern-month-nav"
+                    aria-label="Navigasi bulan catatan penjualan"
                 >
-                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m15 18-6-6 6-6"/>
-                </svg>
-            </button>
+                    <button
+                        type="button"
+                        id="penjualanPrevMonth"
+                        aria-label="Lihat bulan sebelumnya"
+                        title="Bulan sebelumnya"
+                        onclick="ubahBulanPenjualan(-1)"
+                    >
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
 
-                <strong id="penjualanMonthLabel" aria-live="polite" aria-atomic="true">
-                    Memuat bulan...
-                </strong>
+                    <strong id="penjualanMonthLabel" aria-live="polite" aria-atomic="true">
+                        Memuat bulan...
+                    </strong>
 
-                <button
-                    type="button"
-                    id="penjualanNextMonth"
-                    aria-label="Lihat bulan berikutnya"
-                    onclick="ubahBulanPenjualan(1)"
-                >
-                <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m9 18 6-6-6-6"/>
-                </svg>
-            </button>
+                    <button
+                        type="button"
+                        id="penjualanNextMonth"
+                        aria-label="Lihat bulan berikutnya"
+                        title="Bulan berikutnya"
+                        onclick="ubahBulanPenjualan(1)"
+                    >
+                        <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="penjualan-filter-row modern-sales-filter">
+                    <label class="visually-hidden" for="filterBrand">Filter brand</label>
+                    <select id="filterBrand" class="form-select form-select-sm" aria-label="Filter brand catatan penjualan">
+                        <option value="">Semua Brand</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="penjualan-filter-row modern-sales-filter">
-                <label class="visually-hidden" for="filterBrand">Filter brand</label>
-                <select id="filterBrand" class="form-select form-select-sm" aria-label="Filter brand catatan penjualan">
-                    <option value="">Semua Brand</option>
-                </select>
-            </div>
-
-            <div class="sales-export-actions" role="group" aria-label="Export catatan penjualan">
-                <button type="button" id="salesRecapButton" class="modern-secondary-button sales-export-button" onclick="tampilkanRekapPenjualan()" aria-controls="salesRecapPanel" aria-expanded="false">
+            <div class="sales-actions" role="group" aria-label="Rekap dan export catatan penjualan">
+                <button type="button" id="salesRecapButton" class="sales-action-btn" onclick="tampilkanRekapPenjualan()" aria-controls="salesRecapPanel" aria-expanded="false" title="Lihat total penjualan per brand untuk bulan dan brand yang dipilih">
                     <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M10 9v12M3 15h18"/></svg>
-                    <span>Tabel Rekap</span>
+                    <span>Rekap per Brand</span>
                 </button>
-                <button type="button" id="salesYesterdayButton" class="modern-secondary-button sales-export-button" onclick="salinRekapKemarin()" aria-label="Salin rekap penjualan kemarin ke Clipboard">
-                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
-                    <span>Recap Kemarin</span>
+                <button type="button" id="salesYesterdayButton" class="sales-action-btn" onclick="salinRekapKemarin()" title="Pilih tanggal (hari ini, kemarin, dst.), lalu salin rekap harinya ke Clipboard">
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    <span>Salin Rekap Harian</span>
                 </button>
-                <button type="button" id="salesCopyButton" class="modern-secondary-button sales-export-button" onclick="salinRekapPenjualan()" aria-label="Salin ke Clipboard sesuai filter penjualan">
+                <button type="button" id="salesCopyButton" class="sales-action-btn" onclick="salinRekapPenjualan()" title="Salin rekap bulan dan brand yang dipilih ke Clipboard">
                     <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3"/></svg>
-                    <span>Salin ke Clipboard</span>
+                    <span>Salin Rekap Bulanan</span>
                 </button>
-                <button type="button" id="salesExportButton" class="modern-secondary-button sales-export-button"
-                    onclick="openExportPenjualan()" aria-label="Export catatan penjualan" aria-haspopup="dialog">
-                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/>
-                    </svg>
-                    <span>Export</span>
+                <button type="button" id="salesExportButton" class="sales-action-btn sales-action-primary" onclick="openExportPenjualan()" aria-haspopup="dialog" title="Unduh catatan bulan dan brand yang dipilih sebagai file Excel atau PDF">
+                    <svg class="ui-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></svg>
+                    <span>Unduh Excel/PDF</span>
                 </button>
             </div>
         </div>
