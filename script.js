@@ -3276,13 +3276,13 @@ dataHalaman.forEach(
 
                     <button
                         type="button"
-                        class="action-btn stock-out-btn"
-                        onclick="openTransaction(${Number(barang.id)}, 'laku')"
-                        aria-label="Kurangi stok ${escapeHTML(barang.nama)}"
-                        title="Barang keluar"
+                        class="action-btn stock-adjust-btn"
+                        onclick="openTransaction(${Number(barang.id)}, 'adjust')"
+                        aria-label="Adjust stok ${escapeHTML(barang.nama)}"
+                        title="Adjust: samakan stok dengan jumlah fisik"
                     >
-                        ${getUiIconSvg("minus", "stock-action-icon")}
-                        <span>Keluar</span>
+                        ${getUiIconSvg("edit", "stock-action-icon")}
+                        <span>Adjust</span>
                     </button>
                 </div>
             </td>
