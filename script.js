@@ -3019,6 +3019,7 @@ const BRAND_ICON_FILES =
         violet: "icons/violet.png",
         roster: "icons/roster.png",
         trisensa: "icons/roster.png",
+        tsunami: "icons/tsunami.png",
         wallpanel: "icons/wallpanel.png",
         rona: "icons/wallpanel.png"
     });
