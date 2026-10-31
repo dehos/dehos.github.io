@@ -6983,6 +6983,24 @@ async function fetchPenjualanLengkap(bulan, brand) {
     }
 }
 
+function getBrandColorClass(namaBrand) {
+
+    const normal = normalizeSearchValue(namaBrand);
+    const kanonik = normalizeSearchValue(
+        getCanonicalTargetBrand(namaBrand)
+    );
+
+    if (normal === "dekkson" || normal === "dekson") return "brand-dekkson";
+    if (kanonik === "belleza") return "brand-belleza";
+    if (kanonik === "solid") return "brand-solid";
+    if (kanonik === "violet") return "brand-violet";
+    if (kanonik === "pjs handle") return "brand-pjs";
+    if (kanonik === "wallpanel") return "brand-rona";
+    if (kanonik === "roster") return "brand-roster";
+
+    return "";
+}
+
 async function loadPenjualan() {
 
     const tbody =
@@ -7270,7 +7288,7 @@ async function loadPenjualan() {
                                 <span>${escapeHTML(namaBarang)}</span>
                                 <span aria-hidden="true">${escapeHTML(namaBarang)}</span>
                             </span>
-                            <small class="sales-mobile-brand">
+                            <small class="sales-mobile-brand ${getBrandColorClass(item.brand)}">
                                 ${escapeHTML(item.brand || "-")}
                             </small>
                         </div>
@@ -7289,9 +7307,9 @@ async function loadPenjualan() {
                     </td>
 
                     <td>
-                        ${escapeHTML(
+                        <span class="sales-brand-text ${getBrandColorClass(item.brand)}">${escapeHTML(
                             item.brand || "-"
-                        )}
+                        )}</span>
                     </td>
 
                     <td class="text-center">

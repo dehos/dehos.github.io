@@ -18275,3 +18275,34 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     border-radius: 8px;
     background: #fff;
 }
+
+
+/* Catatan Penjualan — warna nama brand (Radix Colors) */
+#catatan-penjualan .modern-sales-table .sales-brand-text,
+#catatan-penjualan .modern-sales-table .sales-mobile-brand {
+    font-weight: 600;
+}
+
+#catatan-penjualan .modern-sales-table .brand-dekkson { color: #0d74ce !important; }
+#catatan-penjualan .modern-sales-table .brand-belleza { color: #218358 !important; }
+#catatan-penjualan .modern-sales-table .brand-solid   { color: #f76b15 !important; }
+#catatan-penjualan .modern-sales-table .brand-violet  { color: #8145b5 !important; }
+#catatan-penjualan .modern-sales-table .brand-pjs     { color: #ce2c31 !important; }
+
+/* Rona: biru ke kuning. Roster: biru ke hijau. Warna cadangan untuk browser lama. */
+#catatan-penjualan .modern-sales-table .brand-rona,
+#catatan-penjualan .modern-sales-table .brand-roster {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#catatan-penjualan .modern-sales-table .brand-rona {
+    color: #0d74ce !important;
+    background-image: linear-gradient(90deg, #0d74ce 0%, #0d74ce 35%, #e5a000 100%);
+}
+
+#catatan-penjualan .modern-sales-table .brand-roster {
+    color: #0d74ce !important;
+    background-image: linear-gradient(90deg, #0d74ce 0%, #0d74ce 35%, #30a46c 100%);
+}
