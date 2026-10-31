@@ -18202,3 +18202,63 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         transition: none;
     }
 }
+
+
+/* =====================================================
+   DASHBOARD — grafik dan 4 statistik menyatu jadi satu panel
+   (judul "Statistik Utama" dihapus; sudut dan garis disambung)
+===================================================== */
+#dashboard .sales-target-section.dashboard-sales-chart {
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+#dashboard .stats {
+    gap: 0 !important;
+    margin-top: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid #e4e4e7 !important;
+    border-top: 0 !important;
+    border-radius: 0 0 14px 14px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgb(24 24 27 / 3%) !important;
+}
+
+#dashboard .stats .stat {
+    min-height: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+#dashboard .stats .stat + .stat {
+    border-left: 1px solid #e4e4e7 !important;
+}
+
+@media (max-width: 900px) {
+    #dashboard .stats .stat + .stat {
+        border-left: 0 !important;
+    }
+
+    #dashboard .stats .stat:nth-child(even) {
+        border-left: 1px solid #e4e4e7 !important;
+    }
+
+    #dashboard .stats .stat:nth-child(n+3) {
+        border-top: 1px solid #e4e4e7 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    #dashboard .sales-target-section.dashboard-sales-chart {
+        margin-bottom: 0 !important;
+    }
+
+    #dashboard .stats {
+        margin-bottom: 15px !important;
+        border-radius: 0 0 12px 12px !important;
+    }
+}
