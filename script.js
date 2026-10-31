@@ -6404,7 +6404,7 @@ async function simpanPenjualan() {
    TARGET PENJUALAN BULANAN PER BRAND
 ===================================================== */
 
-const TARGET_PENJUALAN_BRAND =
+const TARGET_PENJUALAN_BRAND_DEFAULT =
     Object.freeze([
         {
             nama: "Belleza",
@@ -6452,6 +6452,93 @@ const TARGET_PENJUALAN_BRAND =
         }
     ]);
 
+/* Target aktif: nilai bawaan di atas, ditimpa data tabel target_penjualan_brand (Supabase). */
+let TARGET_PENJUALAN_BRAND =
+    TARGET_PENJUALAN_BRAND_DEFAULT.map(
+        function(item) {
+            return { nama: item.nama, target: item.target };
+        }
+    );
+
+let targetPenjualanPromise = null;
+let terakhirRenderTarget = null;
+
+function terapkanTargetPenjualan(baris) {
+
+    const peta = new Map();
+
+    (baris || []).forEach(
+        function(item) {
+
+            if (!item || typeof item.brand !== "string") {
+                return;
+            }
+
+            if (item.target === null) {
+                peta.set(item.brand, null);
+                return;
+            }
+
+            const angka = Number(item.target);
+
+            if (Number.isFinite(angka) && angka >= 0) {
+                peta.set(item.brand, angka);
+            }
+        }
+    );
+
+    TARGET_PENJUALAN_BRAND =
+        TARGET_PENJUALAN_BRAND_DEFAULT.map(
+            function(item) {
+                return {
+                    nama: item.nama,
+                    target: peta.has(item.nama)
+                        ? peta.get(item.nama)
+                        : item.target
+                };
+            }
+        );
+}
+
+function muatTargetPenjualan() {
+
+    if (targetPenjualanPromise) {
+        return targetPenjualanPromise;
+    }
+
+    targetPenjualanPromise =
+        (async function() {
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient
+                        .from("target_penjualan_brand")
+                        .select("brand, target");
+
+                if (error) {
+                    throw error;
+                }
+
+                terapkanTargetPenjualan(data);
+
+            } catch (error) {
+
+                // Tabel belum ada atau belum login: pakai nilai bawaan dan coba lagi nanti.
+                console.warn(
+                    "Target penjualan memakai nilai bawaan:",
+                    error
+                );
+
+                terapkanTargetPenjualan([]);
+                targetPenjualanPromise = null;
+            }
+        })();
+
+    return targetPenjualanPromise;
+}
+
+
 const TARGET_BRAND_COLORS =
     Object.freeze({
         Belleza: "#66bb6a",
@@ -6464,6 +6551,211 @@ const TARGET_BRAND_COLORS =
         Wallpanel: "#94a3b8",
         "Bak Mandi": "#b66b80",
         Morgan: "#f59e0b"
+    });
+
+/* ==================================
+   ATUR TARGET PENJUALAN (DASHBOARD)
+================================== */
+
+let targetEditBusy = false;
+
+function formatInputTarget(nilai) {
+
+    const angka =
+        String(nilai ?? "").replace(/\D/g, "");
+
+    return angka
+        ? formatNumber(Number(angka))
+        : "";
+}
+
+function bacaInputTarget(teks) {
+
+    const angka =
+        String(teks ?? "").replace(/\D/g, "");
+
+    return angka ? Number(angka) : null;
+}
+
+function setStatusTarget(pesan, jenis = "") {
+
+    const status =
+        document.getElementById("targetEditStatus");
+
+    if (!status) {
+        return;
+    }
+
+    status.textContent = pesan || "";
+    status.dataset.type = jenis;
+}
+
+function isiFormTarget(daftar) {
+
+    const grid =
+        document.getElementById("targetEditGrid");
+
+    if (!grid) {
+        return;
+    }
+
+    grid.innerHTML = daftar.map(
+        function(item, index) {
+
+            const id = "targetEditInput" + index;
+
+            return `
+                <div class="target-edit-row">
+                    <label for="${id}" class="target-edit-label">
+                        ${getBrandLogoHtml(item.nama, "target-edit-logo")}
+                        <span>${escapeHTML(item.nama)}</span>
+                    </label>
+                    <div class="target-edit-field">
+                        <span aria-hidden="true">Rp</span>
+                        <input
+                            type="text"
+                            id="${id}"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            maxlength="17"
+                            placeholder="Tanpa target"
+                            data-target-brand="${escapeHTML(item.nama)}"
+                            value="${item.target === null ? "" : formatNumber(item.target)}"
+                        >
+                    </div>
+                </div>
+            `;
+        }
+    ).join("");
+}
+
+function bukaDialogTarget() {
+
+    const dialog =
+        document.getElementById("targetEditDialog");
+
+    if (!dialog || targetEditBusy) {
+        return;
+    }
+
+    isiFormTarget(TARGET_PENJUALAN_BRAND);
+    setStatusTarget("");
+    dialog.showModal();
+
+    dialog.querySelector("input")?.focus();
+}
+
+function tutupDialogTarget() {
+
+    if (targetEditBusy) {
+        return;
+    }
+
+    document.getElementById("targetEditDialog")?.close();
+}
+
+function isiTargetDefault() {
+
+    isiFormTarget(TARGET_PENJUALAN_BRAND_DEFAULT);
+    setStatusTarget(
+        "Target bawaan terisi. Tekan Simpan untuk menerapkan.",
+        "info"
+    );
+}
+
+async function simpanTarget(event) {
+
+    event.preventDefault();
+
+    if (targetEditBusy) {
+        return;
+    }
+
+    const tombol =
+        document.getElementById("targetEditSubmit");
+
+    const baris =
+        Array.from(
+            document.querySelectorAll("#targetEditGrid input")
+        ).map(
+            function(input) {
+                return {
+                    brand: input.dataset.targetBrand,
+                    target: bacaInputTarget(input.value),
+                    updated_at: new Date().toISOString()
+                };
+            }
+        );
+
+    targetEditBusy = true;
+    tombol.disabled = true;
+    tombol.textContent = "Menyimpan...";
+    setStatusTarget("");
+
+    try {
+
+        const { error } =
+            await supabaseClient
+                .from("target_penjualan_brand")
+                .upsert(baris, { onConflict: "brand" });
+
+        if (error) {
+            throw error;
+        }
+
+        terapkanTargetPenjualan(baris);
+
+        if (terakhirRenderTarget) {
+            renderTargetPenjualan(...terakhirRenderTarget);
+        }
+
+        targetEditBusy = false;
+        document.getElementById("targetEditDialog").close();
+
+        showAppAlert(
+            "Target penjualan tersimpan dan berlaku untuk semua bulan.",
+            { title: "Target Tersimpan", type: "success" }
+        );
+
+    } catch (error) {
+
+        console.error("ERROR SIMPAN TARGET:", error);
+
+        const tabelHilang =
+            error?.code === "42P01" ||
+            error?.code === "PGRST205";
+
+        setStatusTarget(
+            tabelHilang
+                ? "Gagal menyimpan: tabel target belum dibuat di Supabase. Jalankan migrasi terlebih dahulu."
+                : "Gagal menyimpan target. Coba lagi.",
+            "error"
+        );
+
+    } finally {
+
+        targetEditBusy = false;
+        tombol.disabled = false;
+        tombol.textContent = "Simpan target";
+    }
+}
+
+document.getElementById("targetEditGrid")
+    ?.addEventListener("input", function(event) {
+
+        const input = event.target.closest("input");
+
+        if (input) {
+            input.value = formatInputTarget(input.value);
+        }
+    });
+
+document.getElementById("targetEditDialog")
+    ?.addEventListener("cancel", function(event) {
+
+        if (targetEditBusy) {
+            event.preventDefault();
+        }
     });
 
 function getCanonicalTargetBrand(
@@ -6555,6 +6847,9 @@ function renderTargetPenjualan(
     ) {
         return;
     }
+
+    terakhirRenderTarget =
+        [penjualan, bulan, tanggalTerakhir];
 
     const periode =
         bulan ||
@@ -7033,6 +7328,8 @@ async function loadPenjualan() {
         document.getElementById(
             "filterBrand"
         )?.value || "";
+
+    await muatTargetPenjualan();
 
     const { data, error } = await fetchPenjualanLengkap(bulan, brand);
 
@@ -11610,6 +11907,8 @@ async function loadDashboardSummary() {
 
     appDataLoadState.dashboardPromise =
         (async function() {
+            await muatTargetPenjualan();
+
             const bulan =
                 getBulanPenjualanSekarang();
 
