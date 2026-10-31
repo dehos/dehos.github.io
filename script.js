@@ -12061,7 +12061,6 @@ async function loadDashboardSummary() {
    transaksi terbaru, dan daftar perlu restock.
 ===================================================== */
 
-const DASHBOARD_STOK_MENIPIS_BATAS = 5;
 const DASHBOARD_HARI_DATA = 60;
 const DASHBOARD_KOLOM_PENJUALAN =
     "id, barang_id, brand, qty, harga, tanggal_pembelian";
@@ -12509,68 +12508,6 @@ function renderTransaksiTerbaruDashboard(daftar) {
     }).join("");
 }
 
-function hitungStokMenipisDashboard() {
-    const hariIni = getTodayDate();
-
-    return dataBarang
-        .map(function(barang) {
-            return {
-                barang: barang,
-                stok: Math.max(
-                    0,
-                    getRawCurrentStock(barang, hariIni)
-                )
-            };
-        })
-        .filter(function(item) {
-            return item.stok <= DASHBOARD_STOK_MENIPIS_BATAS;
-        })
-        .sort(function(a, b) {
-            return a.stok - b.stok ||
-                String(a.barang.nama || "").localeCompare(
-                    String(b.barang.nama || ""),
-                    "id"
-                );
-        });
-}
-
-function renderStokMenipisDashboard() {
-    const menipis = hitungStokMenipisDashboard();
-    const wadah = document.getElementById("dashboardLowStock");
-
-    if (!wadah) {
-        return;
-    }
-
-    if (!menipis.length) {
-        wadah.innerHTML =
-            '<div class="target-brand-loading">Tidak ada barang yang perlu restock.</div>';
-        return;
-    }
-
-    const tampil = menipis.slice(0, 5);
-    const sisa = menipis.length - tampil.length;
-
-    wadah.innerHTML = tampil.map(function(item) {
-        const habis = item.stok === 0;
-
-        return '<div class="dashboard-list-row">' +
-            '<div class="dashboard-list-main"><strong>' +
-            escapeHTML(item.barang.nama || "-") + "</strong><small>" +
-            escapeHTML(item.barang.brand?.nama || "Tanpa Brand") +
-            "</small></div>" +
-            '<div class="dashboard-list-side"><strong class="' +
-            (habis ? "dashboard-stock-empty" : "dashboard-stock-low") +
-            '">' + (habis ? "Habis" : formatNumber(item.stok) + " unit") +
-            "</strong></div></div>";
-    }).join("") + (
-        sisa > 0
-            ? '<a class="dashboard-list-more" href="#stok-barang">+' +
-                formatNumber(sisa) + " barang lainnya</a>"
-            : ""
-    );
-}
-
 function renderBarangMinusDashboard() {
     const wadah = document.getElementById("dashboardNegativeStock");
 
@@ -12707,13 +12644,8 @@ async function loadDashboardExtras() {
             }
 
             if (dataStokSiap) {
-                renderStokMenipisDashboard();
                 renderBarangMinusDashboard();
             } else {
-                tampilkanGalatDashboard(
-                    "dashboardLowStock",
-                    "Gagal memuat data stok."
-                );
                 tampilkanGalatDashboard(
                     "dashboardNegativeStock",
                     "Gagal memuat data stok."
