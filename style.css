@@ -18427,3 +18427,70 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         align-items: stretch;
     }
 }
+
+
+/* Dashboard — Performa Brand: kartu per brand lebih rapat (tidak terlalu jauh ke bawah) */
+#dashboard #targetPenjualanList > .target-brand-card {
+    grid-template-rows: auto !important;
+    row-gap: 0 !important;
+    column-gap: 18px !important;
+    padding: 9px 5px !important;
+}
+#dashboard #targetPenjualanList .target-card-values {
+    gap: 2px !important;
+}
+#dashboard #targetPenjualanList .target-brand-group-label {
+    margin-top: 4px !important;
+    padding-top: 10px !important;
+}
+@media (max-width: 900px) {
+    #dashboard #targetPenjualanList > .target-brand-card {
+        column-gap: 12px !important;
+    }
+}
+@media (max-width: 700px) {
+    /* Baris 1: logo + nama (kiri) dan sisa target (kanan). Baris 2: progress bar. */
+    #dashboard #targetPenjualanList > .target-brand-card {
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-template-rows: auto auto !important;
+        row-gap: 6px !important;
+        column-gap: 12px !important;
+        padding: 10px 2px !important;
+    }
+    #dashboard #targetPenjualanList .target-brand-identity {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        width: auto !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        display: grid !important;
+        justify-items: end !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        text-align: right !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values span {
+        flex: none !important;
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+    #dashboard #targetPenjualanList .target-card-values strong,
+    #dashboard #targetPenjualanList .target-card-values .target-card-gap {
+        text-align: right !important;
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+    }
+    #dashboard #targetPenjualanList .target-brand-progress {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        width: 100% !important;
+    }
+}
