@@ -3011,18 +3011,39 @@ const BRAND_ICON_FILES =
         dekson: "icons/dekkson.png",
         solid: "icons/solid.png",
         belleza: "icons/belleza.png",
-        bellezza: "icons/belleza.png"
+        bellezza: "icons/belleza.png",
+        "pjs handle": "icons/pjs-handle.png",
+        "vapely/wepe": "icons/vapely.png",
+        vapely: "icons/vapely.png",
+        wepe: "icons/vapely.png",
+        violet: "icons/violet.png",
+        roster: "icons/roster.png",
+        trisensa: "icons/roster.png",
+        wallpanel: "icons/wallpanel.png",
+        rona: "icons/wallpanel.png"
     });
+
+function getBrandIconFile(namaBrand) {
+
+    return (
+        BRAND_ICON_FILES[
+            normalizeSearchValue(namaBrand)
+        ] ||
+        BRAND_ICON_FILES[
+            normalizeSearchValue(
+                getCanonicalTargetBrand(namaBrand)
+            )
+        ] ||
+        ""
+    );
+}
 
 function getBrandIconHtml(barang) {
 
-    const brandName =
-        normalizeSearchValue(
+    const file =
+        getBrandIconFile(
             barang?.brand?.nama
         );
-
-    const file =
-        BRAND_ICON_FILES[brandName];
 
     if (!file) {
         return "";
@@ -3035,9 +3056,7 @@ function getBrandIconHtml(barang) {
 function getBrandLogoHtml(namaBrand, kelas) {
 
     const file =
-        BRAND_ICON_FILES[
-            normalizeSearchValue(namaBrand)
-        ];
+        getBrandIconFile(namaBrand);
 
     if (!file) {
         return "";
