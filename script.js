@@ -3032,6 +3032,21 @@ function getBrandIconHtml(barang) {
 }
 
 
+function getBrandLogoHtml(namaBrand, kelas) {
+
+    const file =
+        BRAND_ICON_FILES[
+            normalizeSearchValue(namaBrand)
+        ];
+
+    if (!file) {
+        return "";
+    }
+
+    return `<img class="${kelas}" src="${file}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`;
+}
+
+
 /*/*==================================
    UPDATE TABEL STOK
 ===================================================== */
@@ -6772,7 +6787,8 @@ function renderTargetPenjualan(
             card.innerHTML =
                 `
                 <div class="target-brand-identity">
-                    <span class="target-brand-indicator" aria-hidden="true"></span>
+                    ${getBrandLogoHtml(item.nama, "target-brand-logo") ||
+                        '<span class="target-brand-indicator" aria-hidden="true"></span>'}
                     <div>
                         <strong class="target-brand-name">
                             ${escapeHTML(item.nama)}
@@ -6863,7 +6879,8 @@ function renderTargetPenjualan(
             noTargetCard.innerHTML =
                 `
                 <div class="target-brand-identity">
-                    <span class="target-brand-indicator" aria-hidden="true"></span>
+                    ${getBrandLogoHtml(item.nama, "target-brand-logo") ||
+                        '<span class="target-brand-indicator" aria-hidden="true"></span>'}
                     <div>
                         <strong class="target-brand-name">
                             ${escapeHTML(item.nama)}
