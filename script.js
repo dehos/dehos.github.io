@@ -11345,8 +11345,13 @@ async function tampilkanRekapPenjualan() {
             tr.append(brand, total);
             rows.appendChild(tr);
         });
-        document.getElementById("salesRecapPeriod").textContent =
-            rekap.judul + " · " + (rekap.brand || "Semua brand");
+        document.getElementById("salesRecapTitle").textContent =
+            /^\d{4}-\d{2}$/.test(rekap.bulan)
+                ? "Rekap Penjualan Periode " + rekap.judul
+                : "Rekap Penjualan " + rekap.judul;
+        const keteranganBrand = document.getElementById("salesRecapPeriod");
+        keteranganBrand.textContent = rekap.brand || "";
+        keteranganBrand.hidden = !rekap.brand;
         panel.hidden = false;
         tombol.setAttribute("aria-expanded", "true");
         panel.scrollIntoView({ behavior: "smooth", block: "nearest" });

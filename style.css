@@ -18494,3 +18494,31 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         width: 100% !important;
     }
 }
+
+
+/* Catatan Penjualan — tombol tutup rekap: ikon × (Radix Cross2) */
+#catatan-penjualan .sales-recap-heading .sales-recap-close {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-height: 0;
+    padding: 0;
+    border-radius: 8px !important;
+}
+#catatan-penjualan .sales-recap-heading .sales-recap-close svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+    color: #1c2024 !important;
+}
+#catatan-penjualan .sales-recap-heading .sales-recap-close svg path {
+    fill: currentColor !important;
+    stroke: none !important;
+}
+#catatan-penjualan .sales-recap-heading .sales-recap-close:hover svg,
+#catatan-penjualan .sales-recap-heading .sales-recap-close:focus-visible svg {
+    color: #0d3d38 !important;
+}
