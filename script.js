@@ -12194,7 +12194,146 @@ function renderOmzetHariIniDashboard() {
             return jumlah + totalPenjualanDashboard(item);
         }, 0);
 
-    elemen.textContent = "Rp" + formatNumber(total);
+    elemen.textContent = formatRupiahRingkasStatDashboard(total);
+    elemen.title = "Rp" + formatNumber(total);
+}
+
+function formatRupiahRingkasStatDashboard(angka) {
+    const nilai = Number(angka) || 0;
+
+    if (nilai >= 1000000000) {
+        return "Rp" + (nilai / 1000000000).toLocaleString(
+            "id-ID",
+            { maximumFractionDigits: 2 }
+        ) + " M";
+    }
+
+    if (nilai >= 1000000) {
+        return "Rp" + (nilai / 1000000).toLocaleString(
+            "id-ID",
+            { maximumFractionDigits: 2 }
+        ) + " jt";
+    }
+
+    return "Rp" + formatNumber(nilai);
+}
+
+function isiCatatanStatDashboard(idElemen, arah, tebal, sisa) {
+    const elemen = document.getElementById(idElemen);
+
+    if (!elemen) {
+        return;
+    }
+
+    elemen.replaceChildren();
+
+    if (tebal) {
+        const b = document.createElement("b");
+        b.className = arah;
+        b.textContent = tebal;
+        elemen.appendChild(b);
+        elemen.appendChild(document.createTextNode(" "));
+    }
+
+    elemen.appendChild(document.createTextNode(sisa));
+}
+
+function renderPerbandinganKemarinDashboard() {
+    const hariIni = getTodayDate();
+    const sekarang = new Date();
+    const kemarin = formatTanggalLokalDashboard(
+        new Date(
+            sekarang.getFullYear(),
+            sekarang.getMonth(),
+            sekarang.getDate() - 1
+        )
+    );
+
+    // Omzet: dari data penjualan dashboard.
+    if (dashboardExtraState.siap) {
+        let omzetHariIni = 0;
+        let omzetKemarin = 0;
+
+        dashboardExtraState.penjualan.forEach(function(item) {
+            const tanggal = String(item.tanggal_pembelian || "")
+                .slice(0, 10);
+
+            if (tanggal === hariIni) {
+                omzetHariIni += totalPenjualanDashboard(item);
+            } else if (tanggal === kemarin) {
+                omzetKemarin += totalPenjualanDashboard(item);
+            }
+        });
+
+        if (omzetKemarin > 0) {
+            const persen =
+                (omzetHariIni - omzetKemarin) / omzetKemarin * 100;
+            const persenBulat = Math.round(persen);
+
+            if (persenBulat === 0) {
+                isiCatatanStatDashboard(
+                    "omzetHariIniNote", "flat", "", "Sama dengan kemarin"
+                );
+            } else {
+                isiCatatanStatDashboard(
+                    "omzetHariIniNote",
+                    persenBulat > 0 ? "up" : "down",
+                    (persenBulat > 0 ? "↗ " : "↘ ") +
+                        formatNumber(Math.abs(persenBulat)) + "%",
+                    "dari kemarin"
+                );
+            }
+        } else {
+            isiCatatanStatDashboard(
+                "omzetHariIniNote",
+                "flat",
+                "",
+                omzetHariIni > 0
+                    ? "Kemarin belum ada penjualan"
+                    : "Belum ada penjualan"
+            );
+        }
+    } else {
+        isiCatatanStatDashboard("omzetHariIniNote", "flat", "", "—");
+    }
+
+    // Transaksi: dari data transaksi yang sama dengan hitungan "Transaksi Hari Ini".
+    if (Array.isArray(transactions) && transactions.length) {
+        let jumlahHariIni = 0;
+        let jumlahKemarin = 0;
+
+        transactions.forEach(function(transaksi) {
+            const tanggal = String(transaksi.tanggal || "").slice(0, 10);
+
+            if (tanggal === hariIni) {
+                jumlahHariIni++;
+            } else if (tanggal === kemarin) {
+                jumlahKemarin++;
+            }
+        });
+
+        const selisih = jumlahHariIni - jumlahKemarin;
+
+        if (jumlahKemarin === 0 && jumlahHariIni === 0) {
+            isiCatatanStatDashboard(
+                "transaksiHariIniNote", "flat", "", "Belum ada transaksi"
+            );
+        } else if (selisih === 0) {
+            isiCatatanStatDashboard(
+                "transaksiHariIniNote", "flat", "", "Sama dengan kemarin"
+            );
+        } else {
+            isiCatatanStatDashboard(
+                "transaksiHariIniNote",
+                selisih > 0 ? "up" : "down",
+                (selisih > 0 ? "↗ " : "↘ ") +
+                    formatNumber(Math.abs(selisih)),
+                "dari kemarin"
+            );
+        }
+    } else {
+        isiCatatanStatDashboard("transaksiHariIniNote", "flat", "", "—");
+    }
 }
 
 function formatAngkaSvgDashboard(angka) {
@@ -12650,6 +12789,8 @@ async function loadDashboardExtras() {
                 renderOmzetHariIniDashboard();
                 renderGrafikPenjualanDashboard();
             }
+
+            renderPerbandinganKemarinDashboard();
 
             if (hasilTerbaru.error) {
                 console.error(

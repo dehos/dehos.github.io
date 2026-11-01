@@ -18586,3 +18586,118 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 @media (prefers-reduced-motion: reduce) {
     #dashboard .dashboard-chart-period-toggle button { transition: none; }
 }
+
+
+/* Dashboard — Statistik Utama: kartu terpisah dengan ikon dan keterangan */
+#dashboard .stats {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+}
+#dashboard .stats .stat {
+    all: unset !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+    padding: 14px !important;
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    box-shadow: 0 1px 2px rgb(24 24 27 / 3%) !important;
+}
+#dashboard .stats .stat::before,
+#dashboard .stats .stat::after {
+    display: none !important;
+    content: none !important;
+}
+#dashboard .stats .stat .stat-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+}
+#dashboard .stats .stat .stat-head small {
+    all: unset !important;
+    min-width: 0 !important;
+    color: #71717a !important;
+    font-family: inherit !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1.3 !important;
+}
+#dashboard .stats .stat .stat-icon {
+    flex: none !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: #a1a1aa !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.6 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+#dashboard .stats .stat .stat-icon * {
+    fill: none !important;
+    stroke: currentColor !important;
+}
+#dashboard .stats .stat > strong {
+    all: unset !important;
+    display: block !important;
+    color: #18181b !important;
+    font-family: inherit !important;
+    font-size: clamp(21px, 2.4vw, 25px) !important;
+    font-weight: 650 !important;
+    letter-spacing: -.03em !important;
+    line-height: 1.15 !important;
+    font-variant-numeric: tabular-nums !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+#dashboard .stats .stat > .stat-note {
+    all: unset !important;
+    display: block !important;
+    min-height: 1.3em !important;
+    color: #71717a !important;
+    font-family: inherit !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+}
+#dashboard .stats .stat > .stat-note b {
+    font-weight: 600 !important;
+}
+#dashboard .stats .stat > .stat-note b.up { color: #15803d !important; }
+#dashboard .stats .stat > .stat-note b.down { color: #b91c1c !important; }
+#dashboard .stats .stat > .stat-note b.flat { color: #52525b !important; }
+@media (max-width: 900px) {
+    #dashboard .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+    }
+}
+@media (max-width: 380px) {
+    #dashboard .stats .stat { padding: 12px !important; }
+    #dashboard .stats .stat > strong { font-size: 20px !important; }
+}
+@media (max-width: 480px) {
+    #dashboard .stats .stat { padding: 12px !important; }
+    #dashboard .stats .stat .stat-head small {
+        overflow: hidden !important;
+        font-size: 11px !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+}
+@media (max-width: 360px) {
+    #dashboard .stats .stat .stat-icon { display: none !important; }
+}
