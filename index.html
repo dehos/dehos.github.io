@@ -968,10 +968,10 @@
             </div>
 
             <div class="sales-target-summary">
-                <select id="dashboardChartPeriod" class="dashboard-chart-period" aria-label="Periode grafik penjualan">
-                    <option value="7">7 hari terakhir</option>
-                    <option value="30">30 hari terakhir</option>
-                </select>
+                <div id="dashboardChartPeriod" class="dashboard-chart-period-toggle" role="group" aria-label="Periode grafik penjualan">
+                    <button type="button" data-periode="7" aria-pressed="true">7 hari</button>
+                    <button type="button" data-periode="30" aria-pressed="false">30 hari</button>
+                </div>
             </div>
         </div>
 

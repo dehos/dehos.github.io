@@ -12564,9 +12564,27 @@ function pasangPilihanPeriodeDashboard() {
         return;
     }
 
-    pilihan.addEventListener("change", function() {
+    pilihan.addEventListener("click", function(event) {
+        const tombol = event.target.closest("button[data-periode]");
+
+        if (!tombol || !pilihan.contains(tombol)) {
+            return;
+        }
+
         dashboardExtraState.periode =
-            Number(pilihan.value) === 30 ? 30 : 7;
+            Number(tombol.dataset.periode) === 30 ? 30 : 7;
+
+        pilihan.querySelectorAll("button[data-periode]").forEach(
+            function(item) {
+                item.setAttribute(
+                    "aria-pressed",
+                    String(
+                        Number(item.dataset.periode) ===
+                            dashboardExtraState.periode
+                    )
+                );
+            }
+        );
 
         if (dashboardExtraState.siap) {
             renderGrafikPenjualanDashboard();
