@@ -6607,7 +6607,8 @@ function isiFormTarget(daftar) {
             return `
                 <div class="target-edit-row">
                     <label for="${id}" class="target-edit-label">
-                        ${getBrandLogoHtml(item.nama, "target-edit-logo")}
+                        ${getBrandLogoHtml(item.nama, "target-edit-logo") ||
+                            '<span class="target-edit-logo target-edit-logo-empty" aria-hidden="true"></span>'}
                         <span>${escapeHTML(item.nama)}</span>
                     </label>
                     <div class="target-edit-field">
