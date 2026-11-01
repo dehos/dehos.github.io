@@ -19279,6 +19279,33 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     #penjualan .qty-counter .qty-counter-btn:active {
         background: #f0f0f3 !important;
     }
+    #penjualan .qty-counter .qty-counter-btn {
+        position: relative;
+        align-self: stretch !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+    }
+    #penjualan .qty-counter .qty-counter-btn::before,
+    #penjualan .qty-counter .qty-counter-btn[data-qty-step="1"]::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 1px;
+        background: currentColor;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+    #penjualan .qty-counter .qty-counter-btn::before {
+        width: 12px;
+        height: 2px;
+    }
+    #penjualan .qty-counter .qty-counter-btn[data-qty-step="1"]::after {
+        width: 2px;
+        height: 12px;
+    }
     #penjualan .qty-counter input.form-control,
     #penjualan .qty-counter input.form-control-sm {
         flex: 1 1 auto !important;
