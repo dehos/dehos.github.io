@@ -1016,6 +1016,13 @@ function showToast(message, type = "success") {
 
 let sortMode = "nama";
 let stockSortAsc = false;
+
+/* Sortir Catatan Penjualan: hanya di memori, kembali ke bawaan saat halaman dimuat ulang. */
+let penjualanSort = {
+    kolom: "tanggal",
+    arah: "desc",
+    bawaan: true
+};
 let halamanStok = 1;
 const jumlahPerHalamanStok = 6;
 const jumlahTombolHalaman = 5;
@@ -7375,17 +7382,6 @@ async function loadPenjualan() {
     window.dataPenjualan =
         data || [];
 
-
-    const totalQtyEl =
-        document.getElementById(
-            "totalQtyPenjualan"
-        );
-
-    const totalPenjualanEl =
-        document.getElementById(
-            "totalPenjualan"
-        );
-
     if (!tbody) {
         return;
     }
@@ -7399,8 +7395,254 @@ async function loadPenjualan() {
     );
 
 
+    renderPenjualanTabel();
+
+}
+
+
+/* Peringkat brand mengikuti urutan brand di aplikasi (TARGET_PENJUALAN_BRAND).
+   Brand yang tidak dikenal ditaruh paling akhir. */
+function peringkatBrandPenjualan(namaBrand) {
+
+    const kanonik = normalizeSearchValue(
+        getCanonicalTargetBrand(namaBrand)
+    );
+
+    if (!kanonik) {
+        return TARGET_PENJUALAN_BRAND.length;
+    }
+
+    const posisi = TARGET_PENJUALAN_BRAND.findIndex(
+        function(item) {
+            return normalizeSearchValue(item.nama) === kanonik;
+        }
+    );
+
+    return posisi === -1
+        ? TARGET_PENJUALAN_BRAND.length
+        : posisi;
+}
+
+/* Urutan bawaan: tanggal terbaru, lalu brand A-Z, lalu data terbaru. */
+function bandingkanPenjualanBawaan(a, b) {
+    const perbandinganTanggal =
+        String(
+            b.tanggal_pembelian || ""
+        ).localeCompare(
+            String(
+                a.tanggal_pembelian || ""
+            )
+        );
+
+    if (perbandinganTanggal !== 0) {
+        return perbandinganTanggal;
+    }
+
+    const perbandinganBrand =
+        String(a.brand || "")
+            .trim()
+            .localeCompare(
+                String(b.brand || "")
+                    .trim(),
+                "id",
+                {
+                    sensitivity: "base"
+                }
+            );
+
+    if (perbandinganBrand !== 0) {
+        return perbandinganBrand;
+    }
+
+    return (
+        Number(b.id) || 0
+    ) - (
+        Number(a.id) || 0
+    );
+}
+
+function bandingkanPenjualan(a, b) {
+
+    if (penjualanSort.bawaan) {
+        return bandingkanPenjualanBawaan(a, b);
+    }
+
+    const tanggal = function(x, y) {
+        return String(x.tanggal_pembelian || "")
+            .localeCompare(String(y.tanggal_pembelian || ""));
+    };
+
+    const brand = function(x, y) {
+        const peringkatX = peringkatBrandPenjualan(x.brand);
+        const peringkatY = peringkatBrandPenjualan(y.brand);
+
+        if (peringkatX !== peringkatY) {
+            return peringkatX - peringkatY;
+        }
+
+        /* Brand yang sama atau beralias ke grup yang sama dianggap setara.
+           Hanya brand tak dikenal yang dibedakan menurut namanya. */
+        if (peringkatX < TARGET_PENJUALAN_BRAND.length) {
+            return 0;
+        }
+
+        return String(x.brand || "").trim().localeCompare(
+            String(y.brand || "").trim(),
+            "id",
+            { sensitivity: "base" }
+        );
+    };
+
+    const idBaru = function(x, y) {
+        return (Number(y.id) || 0) - (Number(x.id) || 0);
+    };
+
+    const arah = penjualanSort.arah === "asc" ? 1 : -1;
+
+    if (penjualanSort.kolom === "brand") {
+        return (
+            arah * brand(a, b) ||
+            tanggal(b, a) ||
+            idBaru(a, b)
+        );
+    }
+
+    return (
+        arah * tanggal(a, b) ||
+        brand(a, b) ||
+        idBaru(a, b)
+    );
+}
+
+function urutkanPenjualan(kolom) {
+
+    if (kolom !== "tanggal" && kolom !== "brand") {
+        return;
+    }
+
+    if (penjualanSort.kolom === kolom) {
+        penjualanSort.arah =
+            penjualanSort.arah === "asc" ? "desc" : "asc";
+    } else {
+        penjualanSort.kolom = kolom;
+        penjualanSort.arah = "asc";
+    }
+
+    penjualanSort.bawaan = false;
+
+    renderPenjualanTabel();
+}
+
+function updatePenjualanSortHeaders() {
+
+    const daftar = [
+        {
+            kolom: "tanggal",
+            header: "penjualanTanggalHeader",
+            nama: "Tanggal",
+            naik: "dari terlama",
+            turun: "dari terbaru"
+        },
+        {
+            kolom: "brand",
+            header: "penjualanBrandHeader",
+            nama: "Brand",
+            naik: "sesuai urutan brand",
+            turun: "kebalikan urutan brand"
+        }
+    ];
+
+    daftar.forEach(
+        function(item) {
+
+            const aktif = penjualanSort.kolom === item.kolom;
+            const naik = penjualanSort.arah === "asc";
+
+            const ikon = aktif
+                ? (naik ? "sortAscending" : "sortDescending")
+                : "sortNeutral";
+
+            const label = aktif
+                ? item.nama + " diurutkan " +
+                    (naik ? item.naik : item.turun)
+                : "Urutkan berdasarkan " + item.nama.toLowerCase();
+
+            const header = document.getElementById(item.header);
+
+            if (header) {
+                header.setAttribute(
+                    "aria-sort",
+                    aktif
+                        ? (naik ? "ascending" : "descending")
+                        : "none"
+                );
+            }
+
+            const tombolSortir = [
+                header?.querySelector(".sales-sort-button"),
+                document.querySelector(
+                    '.sales-sort-chip[data-sales-sort="' + item.kolom + '"]'
+                )
+            ];
+
+            tombolSortir.forEach(
+                function(tombol) {
+
+                    if (!tombol) {
+                        return;
+                    }
+
+                    tombol.setAttribute("aria-label", label);
+                    tombol.dataset.aktif = String(aktif);
+
+                    const svg = tombol.querySelector(".sales-sort-icon");
+
+                    if (svg) {
+                        svg.outerHTML =
+                            getUiIconSvg(ikon, "sales-sort-icon");
+                    }
+                }
+            );
+        }
+    );
+}
+
+/* Render tabel dari window.dataPenjualan tanpa mengambil ulang data. */
+function renderPenjualanTabel() {
+
+    const tbody =
+        document.getElementById(
+            "penjualanTable"
+        );
+
+    const totalQtyEl =
+        document.getElementById(
+            "totalQtyPenjualan"
+        );
+
+    const totalPenjualanEl =
+        document.getElementById(
+            "totalPenjualan"
+        );
+
+    const bulan =
+        document.getElementById(
+            "filterBulan"
+        )?.value || "";
+
+    const brand =
+        document.getElementById(
+            "filterBrand"
+        )?.value || "";
+
+    updatePenjualanSortHeaders();
+
+    if (!tbody) {
+        return;
+    }
+
     const hasil =
-        (data || []).filter(
+        (window.dataPenjualan || []).filter(
             function(item) {
 
                 if (
@@ -7438,44 +7680,7 @@ async function loadPenjualan() {
             }
         );
 
-    hasil.sort(
-        function(a, b) {
-            const perbandinganTanggal =
-                String(
-                    b.tanggal_pembelian || ""
-                ).localeCompare(
-                    String(
-                        a.tanggal_pembelian || ""
-                    )
-                );
-
-            if (perbandinganTanggal !== 0) {
-                return perbandinganTanggal;
-            }
-
-            const perbandinganBrand =
-                String(a.brand || "")
-                    .trim()
-                    .localeCompare(
-                        String(b.brand || "")
-                            .trim(),
-                        "id",
-                        {
-                            sensitivity: "base"
-                        }
-                    );
-
-            if (perbandinganBrand !== 0) {
-                return perbandinganBrand;
-            }
-
-            return (
-                Number(b.id) || 0
-            ) - (
-                Number(a.id) || 0
-            );
-        }
-    );
+    hasil.sort(bandingkanPenjualan);
 
 
     tbody.innerHTML = "";
@@ -7679,7 +7884,6 @@ async function loadPenjualan() {
                 totalPenjualan
             );
     }
-
 }
 /* ==================================
    EDIT PENJUALAN

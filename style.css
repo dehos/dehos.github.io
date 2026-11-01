@@ -19750,3 +19750,125 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         font-weight: 500;
     }
 }
+
+
+/* =====================================================
+   CATATAN PENJUALAN — TOMBOL URUT (Tanggal, Brand)
+   Desktop: tombol di header tabel. Mobile: chip di atas daftar.
+===================================================== */
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th .sales-sort-button {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    width: auto !important;
+    max-width: 100%;
+    min-height: 20px;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    font: inherit !important;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th .sales-sort-button:is(:hover, :focus-visible) {
+    background: transparent !important;
+    color: #1c2024 !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th .sales-sort-button:focus-visible {
+    outline: 2px solid #008573;
+    outline-offset: 3px;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th .sales-sort-icon {
+    flex: 0 0 13px;
+    width: 13px !important;
+    height: 13px !important;
+    color: #b9bbc6 !important;
+    stroke: currentColor !important;
+    transition: color .15s ease;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th .sales-sort-button:hover .sales-sort-icon {
+    color: #60646c !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th[aria-sort="ascending"] .sales-sort-button,
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th[aria-sort="descending"] .sales-sort-button {
+    color: #0d3d38 !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th[aria-sort="ascending"] .sales-sort-icon,
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th[aria-sort="descending"] .sales-sort-icon {
+    color: #008573 !important;
+}
+
+#catatan-penjualan .sales-sort-bar {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    #catatan-penjualan .sales-sort-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 10px;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    }
+
+    #catatan-penjualan .sales-sort-bar .sales-sort-bar-label {
+        color: #80838d;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        min-height: 32px;
+        padding: 0 12px !important;
+        border: 1px solid #e8e8ec !important;
+        border-radius: 999px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        color: #1c2024 !important;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip:is(:hover, :focus-visible) {
+        border-color: #cdced6 !important;
+        background: #fff !important;
+        color: #1c2024 !important;
+    }
+
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip[data-aktif="true"],
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip[data-aktif="true"]:is(:hover, :focus-visible) {
+        border-color: #ccf3ea !important;
+        background: #f3fbf9 !important;
+        color: #0d3d38 !important;
+        font-weight: 600;
+    }
+
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip .sales-sort-icon {
+        width: 13px !important;
+        height: 13px !important;
+        color: #b9bbc6 !important;
+        stroke: currentColor !important;
+    }
+
+    #catatan-penjualan .sales-sort-bar button.sales-sort-chip[data-aktif="true"] .sales-sort-icon {
+        color: #008573 !important;
+    }
+}
