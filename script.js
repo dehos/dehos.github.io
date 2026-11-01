@@ -1037,7 +1037,7 @@ function formatNumber(number) {
     ).format(value);
 }
 
-/* Format nominal for the sales table; keep 1.000 unshortened. */
+/* Format nominal ringkas (K/Jt) untuk kolom Total tabel penjualan. Kolom Harga memakai formatNumber. */
 function formatNominalTabel(number) {
     const value = Number(number);
 
@@ -7593,14 +7593,14 @@ async function loadPenjualan() {
                     </td>
 
                     <td class="text-center">
-                        ${formatNumber(qty)}
+                        <span class="sales-qty-chip">${formatNumber(qty)}</span>
                     </td>
 
-                    <td class="text-end">
-                        Rp${formatNominalTabel(harga)}
+                    <td class="text-end sales-price-cell">
+                        Rp${formatNumber(harga)}
                     </td>
 
-                    <td class="text-end">
+                    <td class="text-end sales-total-cell">
                         Rp${formatNominalTabel(total)}
                     </td>
 

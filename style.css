@@ -19372,3 +19372,381 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         font-weight: 500 !important;
     }
 }
+
+
+/* =====================================================
+   CATATAN PENJUALAN — REDESAIN TABEL
+   Dipasang paling akhir agar menggantikan aturan lama.
+   Desktop: tabel bersih dengan chip qty dan titik brand.
+   Mobile (<= 760px): setiap baris menjadi kartu dua baris.
+===================================================== */
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table {
+    width: 100%;
+    min-width: 780px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    color: #1c2024;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper {
+    max-height: min(68vh, 620px);
+    border: 1px solid #e8e8ec !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+}
+
+/* Header */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table thead th {
+    padding: 12px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid #e8e8ec !important;
+    background: #fafafb !important;
+    color: #80838d !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Sel */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td {
+    padding: 12px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid #f0f0f3 !important;
+    background: #fff !important;
+    color: #1c2024 !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+    vertical-align: middle;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr:last-child td {
+    border-bottom: 0 !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr:hover > td {
+    background: #fafefd !important;
+    color: #1c2024 !important;
+}
+
+/* Lebar & perataan kolom */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(1), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(1) { width: 108px; text-align: left !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(2), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(2) { width: auto; min-width: 0; max-width: none; text-align: left !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(3), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(3) { width: 68px; text-align: center !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(4), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(4) { width: 124px; text-align: right !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(5), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(5) { width: 112px; text-align: right !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(6), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(6) { width: 128px; text-align: left !important; }
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table th:nth-child(7), #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(7) { width: 92px; text-align: right !important; }
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(1) {
+    color: #60646c !important;
+    font-size: 12.5px !important;
+    font-variant-numeric: tabular-nums;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td:nth-child(2) {
+    font-weight: 500;
+}
+
+/* Qty sebagai chip */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-qty-chip {
+    display: inline-block;
+    min-width: 28px;
+    padding: 2px 9px;
+    border: 1px solid #ccf3ea;
+    border-radius: 999px;
+    background: #f3fbf9;
+    color: #0d3d38;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Harga redup, total tegas */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td.sales-price-cell {
+    color: #60646c !important;
+    font-variant-numeric: tabular-nums;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td.sales-total-cell {
+    color: #1c2024 !important;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Brand: titik warna + nama */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-brand-text {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-brand-text::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    -webkit-text-fill-color: initial;
+}
+
+/* Tombol aksi */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .edit-history-btn,
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .delete-history-btn {
+    display: inline-grid !important;
+    width: 30px !important;
+    height: 30px !important;
+    margin: 0 0 0 2px !important;
+    place-items: center;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #80838d !important;
+    box-shadow: none !important;
+    transition: background-color .12s ease, color .12s ease;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .edit-history-btn svg,
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .delete-history-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: inherit !important;
+    stroke: currentColor !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .edit-history-btn:is(:hover, :focus-visible) {
+    background: #e0f8f3 !important;
+    color: #008573 !important;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .delete-history-btn:is(:hover, :focus-visible) {
+    background: rgba(206, 44, 49, .09) !important;
+    color: #ce2c31 !important;
+}
+
+/* Footer total */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot th,
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot td {
+    padding: 13px 14px !important;
+    border: 0 !important;
+    border-top: 1px solid #ccf3ea !important;
+    background: #f3fbf9 !important;
+    color: #0d3d38 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    font-variant-numeric: tabular-nums;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot th {
+    letter-spacing: .06em;
+    font-size: 11px !important;
+}
+
+/* Baris kosong / memuat */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td[colspan] {
+    padding: 28px 14px !important;
+    color: #80838d !important;
+    text-align: center !important;
+}
+
+/* ---------- Mobile: baris menjadi kartu ---------- */
+@media (max-width: 760px) {
+    #catatan-penjualan .modern-sales-table-wrapper {
+        max-height: min(72vh, 640px);
+        overflow-x: hidden !important;
+        overflow-y: auto;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Header disembunyikan secara visual; teks tetap ada untuk pembaca layar. */
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr {
+        display: grid;
+        background: #fff !important;
+        grid-template-columns: 44px 34px minmax(0, 1fr) auto;
+        column-gap: 6px;
+        row-gap: 5px;
+        align-items: center;
+        padding: 12px 12px 11px 14px;
+        border-bottom: 1px solid #f0f0f3;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr:last-child {
+        border-bottom: 0;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr:hover > td {
+        background: transparent !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td {
+        display: block;
+        width: auto !important;
+        min-width: 0;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        font-size: 12px !important;
+        text-align: left !important;
+        white-space: nowrap;
+    }
+
+    /* Baris 1: nama (+ brand) dan aksi */
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(2) {
+        grid-column: 1 / 4;
+        grid-row: 1;
+        align-self: start;
+        font-size: 13px !important;
+        font-weight: 500;
+        line-height: 1.35;
+        white-space: normal;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(7) {
+        grid-column: 4;
+        grid-row: 1;
+        align-self: start;
+        text-align: right !important;
+        white-space: nowrap;
+    }
+
+    /* Baris 2: tanggal, qty, harga, total */
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(1) { grid-column: 1; grid-row: 2; font-size: 12px !important; }
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(3) { grid-column: 2; grid-row: 2; text-align: left !important; }
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(4) { grid-column: 3; grid-row: 2; font-size: 12px !important; text-align: left !important; }
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(5) {
+        grid-column: 4;
+        grid-row: 2;
+        font-size: 13px !important;
+        text-align: right !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td:nth-child(6) {
+        display: none;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody td[colspan] {
+        grid-column: 1 / -1;
+        grid-row: auto;
+        padding: 26px 8px !important;
+        text-align: center !important;
+        white-space: normal;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-date-desktop { display: none; }
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-date-mobile  { display: block; }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-name-marquee,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-name-track,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-name-track > span:first-child {
+        display: block;
+        width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-mobile-brand {
+        display: block;
+        margin-top: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-qty-chip {
+        min-width: 26px;
+        padding: 1px 7px;
+        font-size: 11.5px;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .edit-history-btn,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .delete-history-btn {
+        width: 28px !important;
+        height: 28px !important;
+        margin: -4px 0 0 0 !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .edit-history-btn svg,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table td .delete-history-btn svg {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    /* Footer total: satu baris, menempel di bawah */
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot {
+        position: sticky;
+        bottom: 0;
+        z-index: 3;
+        border-top: 1px solid #ccf3ea;
+        background: #f3fbf9;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot tr {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 11px 14px;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot th,
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot td {
+        position: static !important;
+        flex: 0 0 auto;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        border: 0 !important;
+        background: transparent !important;
+        font-size: 13px !important;
+        text-overflow: clip !important;
+        white-space: nowrap !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot th {
+        flex: 1 1 auto;
+        text-align: left !important;
+        font-size: 11px !important;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot td:empty {
+        display: none;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot td::after {
+        content: none;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tfoot #totalQtyPenjualan::after {
+        content: " pcs";
+        color: #60646c;
+        font-size: 11px;
+        font-weight: 500;
+    }
+}
