@@ -11346,9 +11346,7 @@ async function tampilkanRekapPenjualan() {
             rows.appendChild(tr);
         });
         document.getElementById("salesRecapTitle").textContent =
-            /^\d{4}-\d{2}$/.test(rekap.bulan)
-                ? "Rekap Penjualan Periode " + rekap.judul
-                : "Rekap Penjualan " + rekap.judul;
+            "Penjualan " + rekap.judul;
         const keteranganBrand = document.getElementById("salesRecapPeriod");
         keteranganBrand.textContent = rekap.brand || "";
         keteranganBrand.hidden = !rekap.brand;

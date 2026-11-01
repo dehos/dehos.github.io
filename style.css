@@ -18506,7 +18506,19 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     height: 32px;
     min-height: 0;
     padding: 0;
+    border: 0 !important;
     border-radius: 8px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+#catatan-penjualan .sales-recap-heading .sales-recap-close:hover,
+#catatan-penjualan .sales-recap-heading .sales-recap-close:focus-visible {
+    border: 0 !important;
+    background: transparent !important;
+}
+#catatan-penjualan .sales-recap-heading .sales-recap-close:focus-visible {
+    outline: 2px solid #0d9b8a;
+    outline-offset: 2px;
 }
 #catatan-penjualan .sales-recap-heading .sales-recap-close svg {
     display: block;
