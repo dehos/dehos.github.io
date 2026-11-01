@@ -12488,6 +12488,17 @@ function renderGrafikPenjualanDashboard() {
             ) + "</span>";
     }
 
+    let indeksPuncak = -1;
+
+    nilai.forEach(function(angka, indeks) {
+        if (
+            angka > 0 &&
+            (indeksPuncak < 0 || angka > nilai[indeksPuncak])
+        ) {
+            indeksPuncak = indeks;
+        }
+    });
+
     const batang = hari.map(function(tanggal, indeks) {
         const tanggalLokal = parseTanggalDashboard(tanggal);
 
@@ -12500,6 +12511,8 @@ function renderGrafikPenjualanDashboard() {
 
         const kelas = "dashboard-chart-col" +
             (nilai[indeks] > 0 ? " has-value" : "") +
+            (indeks === indeksPuncak ? " is-peak" : "") +
+            (indeks === jumlahHari - 1 ? " is-today" : "") +
             (indeks < jumlahHari * 0.25
                 ? " is-start"
                 : (indeks >= jumlahHari * 0.75 ? " is-end" : ""));
@@ -12508,7 +12521,13 @@ function renderGrafikPenjualanDashboard() {
             'aria-label="' +
             escapeHTML(judul + ": Rp " + formatNumber(nilai[indeks])) +
             '" style="--bar-h:' + formatAngkaSvgDashboard(persen) + '%">' +
-            '<span class="dashboard-chart-bar"></span>' +
+            '<span class="dashboard-chart-bar">' +
+            (indeks === indeksPuncak && !rapat
+                ? '<em class="dashboard-chart-peak" aria-hidden="true">' +
+                    escapeHTML(formatRupiahSingkatDashboard(nilai[indeks])) +
+                    "</em>"
+                : "") +
+            "</span>" +
             '<span class="dashboard-chart-tip" aria-hidden="true">' +
             "<strong>" + escapeHTML(judul) + "</strong>" +
             "<span><i></i>Omzet<b>Rp " +
@@ -12521,7 +12540,10 @@ function renderGrafikPenjualanDashboard() {
     for (let indeks = 0; indeks < jumlahHari; indeks++) {
         const tampil = periode === 7
             ? true
-            : (jumlahHari - 1 - indeks) % 5 === 0;
+            : (
+                (jumlahHari - 1 - indeks) % 5 === 0 &&
+                jumlahHari - 1 - indeks !== 5
+            );
 
         if (!tampil) {
             continue;
@@ -12541,7 +12563,13 @@ function renderGrafikPenjualanDashboard() {
 
         const posisi = (indeks + 0.5) / jumlahHari * 100;
 
-        labelX += '<span style="left:' +
+        labelX += "<span" +
+            (indeks === jumlahHari - 1
+                ? (periode === 7
+                    ? ' class="is-today"'
+                    : ' class="is-today is-last"')
+                : "") +
+            ' style="left:' +
             formatAngkaSvgDashboard(posisi) + '%">' +
             escapeHTML(teks) + "</span>";
     }
@@ -12571,7 +12599,21 @@ function renderGrafikPenjualanDashboard() {
     }
 
     if (totalElemen) {
-        totalElemen.textContent = "Rp " + formatNumber(total);
+        totalElemen.innerHTML =
+            '<span class="dashboard-chart-rp">Rp</span>' +
+            escapeHTML(formatNumber(total));
+    }
+
+    const labelTotal = document.getElementById("dashboardChartTotalLabel");
+    const catatanTren = document.getElementById("dashboardChartTrendNote");
+
+    if (labelTotal) {
+        labelTotal.textContent = "Total " + periode + " hari terakhir";
+    }
+
+    if (catatanTren) {
+        catatanTren.hidden = true;
+        catatanTren.textContent = "";
     }
 
     if (tren) {
@@ -12583,12 +12625,27 @@ function renderGrafikPenjualanDashboard() {
 
             tren.hidden = false;
             tren.className = "dashboard-trend-badge " + arah;
-            tren.textContent =
-                (persen > 0 ? "↗ " : (persen < 0 ? "↘ " : "→ ")) +
-                Math.abs(persen).toLocaleString(
-                    "id-ID",
-                    { maximumFractionDigits: 1 }
-                ) + "%";
+            const ikonTren = persen > 0
+                ? '<path d="M7 17 17 7M8 7h9v9"/>'
+                : (persen < 0
+                    ? '<path d="M7 7l10 10M17 8v9H8"/>'
+                    : '<path d="M5 12h14M13 6l6 6-6 6"/>');
+
+            tren.innerHTML =
+                '<svg class="dashboard-trend-icon" viewBox="0 0 24 24" aria-hidden="true">' +
+                ikonTren + "</svg>" +
+                escapeHTML(
+                    Math.abs(persen).toLocaleString(
+                        "id-ID",
+                        { maximumFractionDigits: 1 }
+                    ) + "%"
+                );
+
+            if (catatanTren) {
+                catatanTren.hidden = false;
+                catatanTren.textContent =
+                    "vs " + periode + " hari sebelumnya";
+            }
             tren.title = "Dibandingkan " + periode + " hari sebelumnya";
         } else if (total > 0) {
             tren.hidden = false;
