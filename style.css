@@ -19118,3 +19118,230 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         font-size: 11px !important;
     }
 }
+
+
+/* Halaman Jual (mobile) — tampilan bergaya Radix UI: kartu datar, field seragam, stepper menyatu.
+   Hanya CSS; markup dan JavaScript tidak berubah. */
+@media (max-width: 700px) {
+    #penjualan.card {
+        padding: 16px !important;
+        border: 1px solid #e0e1e6 !important;
+        border-radius: 12px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+    #penjualan .sales-entry-header {
+        padding-bottom: 14px !important;
+        margin-bottom: 16px !important;
+        border-bottom: 1px solid #e8e8ec !important;
+    }
+    #penjualan .sales-entry-header .modern-title-group {
+        align-items: center;
+        gap: 10px;
+    }
+    #penjualan .sales-entry-header .modern-title-icon {
+        width: 36px !important;
+        height: 36px !important;
+        border: 0 !important;
+        border-radius: 8px !important;
+        background: #e0f8f3 !important;
+        color: #008573 !important;
+    }
+    #penjualan .sales-entry-header .modern-title-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    #penjualan .sales-entry-header h3 {
+        color: #1c2024 !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        letter-spacing: -.01em !important;
+        line-height: 1.3 !important;
+    }
+    #penjualan .sales-entry-header .modern-title-group small {
+        display: block !important;
+        margin-top: 2px;
+        color: #60646c !important;
+        font-size: 12px !important;
+        line-height: 1.35;
+    }
+    #penjualan .sales-entry-grid {
+        gap: 14px 12px !important;
+    }
+    #penjualan .sales-field > label,
+    #penjualan .sales-date-heading > label {
+        margin: 0 0 6px !important;
+        color: #1c2024 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.3 !important;
+    }
+    #penjualan .sales-date-heading > label {
+        margin: 0 !important;
+    }
+    #penjualan .sales-date-heading {
+        margin-bottom: 6px !important;
+        align-items: center !important;
+    }
+
+    #penjualan .sales-field input.form-control,
+    #penjualan .sales-field input.form-control-sm {
+        height: 40px !important;
+        min-height: 40px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        padding-left: 12px !important;
+        border: 1px solid #cdced6 !important;
+        border-radius: 8px !important;
+        background-color: #fff !important;
+        box-shadow: none !important;
+        color: #1c2024 !important;
+        font-size: 15px !important;
+        letter-spacing: 0 !important;
+    }
+    #penjualan .sales-field input.form-control::placeholder {
+        color: #8b8d98 !important;
+        font-size: 15px !important;
+    }
+    #penjualan .sales-field input.form-control:focus,
+    #penjualan .sales-field input.form-control-sm:focus {
+        border-color: #008573 !important;
+        outline: 2px solid #008573 !important;
+        outline-offset: -2px !important;
+        box-shadow: none !important;
+    }
+    #penjualan #penjualanBarang {
+        padding-left: 36px !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b8d98' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: 12px 50% !important;
+        background-size: 16px 16px !important;
+    }
+    #penjualan .sales-readonly {
+        background-color: #f9f9fb !important;
+        color: #60646c !important;
+    }
+    #penjualan .localized-date-picker-button {
+        color: #60646c !important;
+    }
+
+    #penjualan #penjualanTodayButton {
+        height: 24px !important;
+        min-height: 0 !important;
+        padding: 0 10px !important;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: #f0f0f3 !important;
+        color: #60646c !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        box-shadow: none !important;
+    }
+    #penjualan #penjualanTodayButton[aria-pressed="true"] {
+        background: #e0f8f3 !important;
+        color: #0d3d38 !important;
+    }
+
+    #penjualan .qty-counter {
+        display: flex !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        height: 40px;
+        overflow: hidden;
+        border: 1px solid #cdced6;
+        border-radius: 8px;
+        background: #fff;
+    }
+    #penjualan .qty-counter:focus-within {
+        border-color: #008573;
+        outline: 2px solid #008573;
+        outline-offset: -2px;
+    }
+    #penjualan .qty-counter .qty-counter-btn {
+        flex: 0 0 38px !important;
+        width: 38px !important;
+        height: 100% !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #f9f9fb !important;
+        color: #1c2024 !important;
+        font-size: 18px !important;
+        box-shadow: none !important;
+    }
+    #penjualan .qty-counter .qty-counter-btn:first-child {
+        border-right: 1px solid #e0e1e6 !important;
+    }
+    #penjualan .qty-counter .qty-counter-btn:last-child {
+        border-left: 1px solid #e0e1e6 !important;
+    }
+    #penjualan .qty-counter .qty-counter-btn:active {
+        background: #f0f0f3 !important;
+    }
+    #penjualan .qty-counter input.form-control,
+    #penjualan .qty-counter input.form-control-sm {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        height: 100% !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        outline: 0 !important;
+        text-align: center !important;
+    }
+    #penjualan .harga-prefix {
+        color: #60646c !important;
+        font-size: 14px !important;
+    }
+    #penjualan .harga-input-wrapper input.form-control,
+    #penjualan .harga-input-wrapper input.form-control-sm {
+        padding-left: 38px !important;
+    }
+
+    #penjualan .sales-stock-info {
+        border-radius: 8px !important;
+        font-size: 12px !important;
+    }
+    #penjualan .sales-suggestions {
+        border: 1px solid #d9d9e0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 8px 24px rgb(28 32 36 / 10%) !important;
+        overflow: hidden;
+    }
+
+    #penjualan .sales-total-card {
+        padding: 12px 14px !important;
+        border: 1px solid #b8eae0 !important;
+        border-radius: 10px !important;
+        background: #f3fbf9 !important;
+        box-shadow: none !important;
+    }
+    #penjualan .sales-total-card > span {
+        color: #0d3d38 !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        text-transform: lowercase !important;
+    }
+    #penjualan .sales-total-card > span::first-letter {
+        text-transform: uppercase;
+    }
+    #penjualan .sales-total-card > strong {
+        color: #0d3d38 !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+    }
+    #penjualan .sales-total-card > small {
+        color: #2f6f66 !important;
+        font-size: 12px !important;
+    }
+
+    #penjualan #simpanPenjualanButton {
+        min-height: 44px !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+}
