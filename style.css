@@ -18717,3 +18717,100 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     padding-top: 6px !important;
     border-top: 0 !important;
 }
+
+
+/* Dashboard — header Performa Brand: ikon pensil di pojok kanan atas, target + pencapaian dua baris tanpa kotak */
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header {
+    position: relative !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    margin: 0 0 8px !important;
+    padding: 0 0 10px !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header h3 {
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header p {
+    margin: 2px 0 0 !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary {
+    display: grid !important;
+    grid-template-columns: auto !important;
+    justify-items: end !important;
+    align-content: start !important;
+    gap: 1px !important;
+    min-width: 0 !important;
+    width: auto !important;
+    margin: 0 38px 0 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-align: right !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary > span {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary > strong {
+    font-size: 18px !important;
+    line-height: 1.25 !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary > small {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary .target-edit-button {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 30px !important;
+    height: 30px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary .target-edit-button svg {
+    width: 15px !important;
+    height: 15px !important;
+}
+#dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary .target-edit-button > span {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+}
+@media (max-width: 700px) {
+    #dashboard > .sales-target-section.brand-performance-section > .sales-target-header {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        flex-wrap: wrap !important;
+        gap: 4px 10px !important;
+        padding-right: 38px !important;
+    }
+    #dashboard > .sales-target-section.brand-performance-section > .sales-target-header .sales-target-summary {
+        display: grid !important;
+        grid-template-columns: auto !important;
+        justify-items: start !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        text-align: left !important;
+    }
+}
