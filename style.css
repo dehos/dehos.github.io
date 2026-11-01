@@ -18701,3 +18701,19 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 @media (max-width: 360px) {
     #dashboard .stats .stat .stat-icon { display: none !important; }
 }
+
+
+/* Dashboard — Ringkasan Penjualan tanpa kotak sendiri (menyatu dengan kartu dashboard) */
+#dashboard.dashboard-card > .dashboard-sales-chart {
+    margin: 0 !important;
+    padding: 0 0 18px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+}
+#dashboard.dashboard-card > .dashboard-sales-chart .dashboard-chart-plot {
+    padding-top: 6px !important;
+    border-top: 0 !important;
+}
