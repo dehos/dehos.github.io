@@ -7368,6 +7368,8 @@ async function loadPenjualan() {
 
         window.dataPenjualan = [];
 
+        renderRekapPenjualan();
+
         renderTargetPenjualan(
             [],
             document.getElementById(
@@ -7396,6 +7398,8 @@ async function loadPenjualan() {
 
 
     renderPenjualanTabel();
+
+    renderRekapPenjualan();
 
 }
 
@@ -11580,55 +11584,335 @@ async function siapkanExportPenjualan(jenis, sudahDisetujui = false) {
 }
 
 
-function tutupRekapPenjualan() {
-    document.getElementById("salesRecapPanel").hidden = true;
-    const tombol = document.getElementById("salesRecapButton");
-    tombol.setAttribute("aria-expanded", "false");
-    tombol.focus();
-}
+/* ==================================
+   TAB DAFTAR | REKAP PER BRAND
+================================== */
 
-async function tampilkanRekapPenjualan() {
-    const tombol = document.getElementById("salesRecapButton");
-    const panel = document.getElementById("salesRecapPanel");
-    if (tombol.disabled) return;
-    tombol.disabled = true;
-    tombol.setAttribute("aria-busy", "true");
-    // Hide the previous result while retrieving the currently selected filters.
-    panel.hidden = true;
-    tombol.setAttribute("aria-expanded", "false");
-    try {
-        const rekap = await siapkanExportPenjualan("tabel", true);
-        if (!rekap) return;
-        const rows = document.getElementById("salesRecapRows");
-        rows.replaceChildren();
-        rekap.grup.forEach(grup => {
-            const tr = document.createElement("tr");
-            const brand = document.createElement("th");
-            brand.scope = "row";
-            brand.textContent = grup.brand;
-            const total = document.createElement("td");
-            total.textContent = "Rp" + formatNumber(
-                grup.items.reduce((jumlah, item) => jumlah + item.total, 0)
-            );
-            tr.append(brand, total);
-            rows.appendChild(tr);
-        });
-        document.getElementById("salesRecapTitle").textContent =
-            "Penjualan " + rekap.judul;
-        const keteranganBrand = document.getElementById("salesRecapPeriod");
-        keteranganBrand.textContent = rekap.brand || "";
-        keteranganBrand.hidden = !rekap.brand;
-        panel.hidden = false;
-        tombol.setAttribute("aria-expanded", "true");
-        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    } catch (error) {
-        console.error("ERROR TABEL REKAP:", error);
-        showAppAlert("Gagal menampilkan tabel rekap. Coba lagi.");
-    } finally {
-        tombol.disabled = false;
-        tombol.removeAttribute("aria-busy");
+let tabPenjualan = "daftar";
+
+function pilihTabPenjualan(tab) {
+
+    if (tab !== "daftar" && tab !== "rekap") {
+        return;
+    }
+
+    tabPenjualan = tab;
+
+    const rekap = tab === "rekap";
+
+    [
+        ["salesTabDaftar", !rekap],
+        ["salesTabRekap", rekap]
+    ].forEach(
+        function([id, aktif]) {
+
+            const tombol = document.getElementById(id);
+
+            if (tombol) {
+                tombol.setAttribute("aria-selected", String(aktif));
+                tombol.tabIndex = aktif ? 0 : -1;
+            }
+        }
+    );
+
+    const daftar = document.getElementById("salesListPanel");
+    const panelRekap = document.getElementById("salesRecapPanel");
+
+    /* Kartu ringkasan, kolom cari, dan urutan hanya berlaku untuk Daftar;
+       rekap selalu menghitung seluruh data bulan dan brand terpilih. */
+    document.querySelectorAll(
+        "#catatan-penjualan .sales-summary-cards, " +
+        "#catatan-penjualan .sales-search, " +
+        "#catatan-penjualan .sales-sort-bar"
+    ).forEach(
+        function(el) {
+            el.hidden = rekap;
+        }
+    );
+
+    if (daftar) daftar.hidden = rekap;
+    if (panelRekap) panelRekap.hidden = !rekap;
+
+    if (rekap) {
+        renderRekapPenjualan();
     }
 }
+
+document.querySelector("#catatan-penjualan .sales-tabs")
+    ?.addEventListener("keydown", function(event) {
+
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+            return;
+        }
+
+        event.preventDefault();
+
+        const tujuan = tabPenjualan === "daftar" ? "rekap" : "daftar";
+
+        pilihTabPenjualan(tujuan);
+
+        document.getElementById(
+            tujuan === "rekap" ? "salesTabRekap" : "salesTabDaftar"
+        )?.focus();
+    });
+
+/* Rekap dihitung dari data yang sudah dimuat untuk bulan dan brand terpilih,
+   jadi tidak perlu mengambil data lagi. */
+function renderRekapPenjualan() {
+
+    const rows = document.getElementById("salesRecapRows");
+
+    if (!rows) {
+        return;
+    }
+
+    const bulan =
+        document.getElementById("filterBulan")?.value || "";
+
+    const brandTerpilih =
+        document.getElementById("filterBrand")?.value || "";
+
+    const kelompok = new Map();
+
+    (window.dataPenjualan || []).forEach(
+        function(item) {
+
+            const nama =
+                String(item.brand || "").trim() || "Tanpa brand";
+
+            const kunci = nama.toLocaleLowerCase("id-ID");
+
+            if (!kelompok.has(kunci)) {
+                kelompok.set(kunci, {
+                    brand: nama,
+                    transaksi: 0,
+                    qty: 0,
+                    total: 0
+                });
+            }
+
+            const qty = Number(item.qty) || 0;
+            const harga = Number(item.harga) || 0;
+            const grup = kelompok.get(kunci);
+
+            grup.transaksi += 1;
+            grup.qty += qty;
+            grup.total += qty * harga;
+        }
+    );
+
+    /* Urutan brand mengikuti urutan brand aplikasi, sama seperti tombol urut. */
+    const daftar = [...kelompok.values()].sort(
+        function(a, b) {
+
+            return (
+                peringkatBrandPenjualan(a.brand) -
+                peringkatBrandPenjualan(b.brand)
+            ) || a.brand.localeCompare(b.brand, "id-ID");
+        }
+    );
+
+    const terbesar = daftar.reduce(
+        function(maks, grup) {
+            return Math.max(maks, grup.total);
+        },
+        0
+    );
+
+    rows.replaceChildren();
+
+    let totalTransaksi = 0;
+    let totalQty = 0;
+    let totalNilai = 0;
+
+    daftar.forEach(
+        function(grup) {
+
+            totalTransaksi += grup.transaksi;
+            totalQty += grup.qty;
+            totalNilai += grup.total;
+
+            const tr = document.createElement("tr");
+
+            const th = document.createElement("th");
+            th.scope = "row";
+
+            const batang = document.createElement("span");
+            batang.className = "sales-rekap-bar";
+            batang.setAttribute("aria-hidden", "true");
+            batang.style.width =
+                (terbesar > 0
+                    ? Math.max(4, Math.round(grup.total / terbesar * 72))
+                    : 4) + "px";
+
+            const nama = document.createElement("span");
+            nama.textContent = grup.brand;
+
+            th.append(batang, nama);
+
+            const sel = [
+                [formatNumber(grup.transaksi), "sales-rekap-col-trx"],
+                [formatNumber(grup.qty), ""],
+                ["Rp" + formatNumber(grup.total), ""]
+            ].map(
+                function([teks, kelas]) {
+
+                    const td = document.createElement("td");
+                    td.textContent = teks;
+
+                    if (kelas) {
+                        td.className = kelas;
+                    }
+
+                    return td;
+                }
+            );
+
+            tr.append(th, ...sel);
+            rows.appendChild(tr);
+        }
+    );
+
+    if (daftar.length === 0) {
+
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+
+        td.colSpan = 4;
+        td.className = "sales-rekap-empty";
+        td.textContent =
+            "Tidak ada penjualan pada " + formatBulanPenjualan(bulan);
+
+        tr.appendChild(td);
+        rows.appendChild(tr);
+    }
+
+    const setTeks = function(id, teks) {
+
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.textContent = teks;
+        }
+    };
+
+    setTeks("salesRecapTotalTrx", formatNumber(totalTransaksi));
+    setTeks("salesRecapTotalQty", formatNumber(totalQty));
+    setTeks("salesRecapTotal", "Rp" + formatNumber(totalNilai));
+
+    setTeks(
+        "salesRecapNote",
+        "Rekap " + formatBulanPenjualan(bulan) +
+            (brandTerpilih ? " · " + brandTerpilih : "") +
+            ". Mengikuti bulan dan filter brand di atas."
+    );
+}
+
+
+/* ==================================
+   MENU REKAP & EKSPOR
+================================== */
+
+function tutupMenuRekapEkspor(kembalikanFokus = false) {
+
+    const menu = document.getElementById("salesToolsMenu");
+    const tombol = document.getElementById("salesToolsButton");
+
+    /* Menutup daftar tanggal yang masih terbuka (jika ada). */
+    tutupMenuRekapTanggal(null);
+
+    if (menu) {
+        menu.hidden = true;
+    }
+
+    if (tombol) {
+        tombol.setAttribute("aria-expanded", "false");
+
+        if (kembalikanFokus) {
+            tombol.focus();
+        }
+    }
+}
+
+function toggleMenuRekapEkspor() {
+
+    const menu = document.getElementById("salesToolsMenu");
+    const tombol = document.getElementById("salesToolsButton");
+
+    if (!menu || !tombol) {
+        return;
+    }
+
+    if (!menu.hidden) {
+        tutupMenuRekapEkspor();
+        return;
+    }
+
+    menu.hidden = false;
+    tombol.setAttribute("aria-expanded", "true");
+    menu.querySelector(".sales-tools-item")?.focus();
+}
+
+async function jalankanAksiRekap(aksi) {
+
+    tutupMenuRekapEkspor(true);
+
+    if (aksi === "bulanan") {
+        await salinRekapPenjualan();
+    } else if (aksi === "export") {
+        await openExportPenjualan();
+    }
+}
+
+document.addEventListener("click", function(event) {
+
+    const menu = document.getElementById("salesToolsMenu");
+
+    if (!menu || menu.hidden) {
+        return;
+    }
+
+    if (event.target.closest(".sales-tools")) {
+        return;
+    }
+
+    tutupMenuRekapEkspor();
+});
+
+document.addEventListener("keydown", function(event) {
+
+    const menu = document.getElementById("salesToolsMenu");
+    const daftarTanggal = document.getElementById("rekapTanggalMenu");
+
+    /* Saat daftar tanggal terbuka, tombol keyboard ditangani olehnya. */
+    if (!menu || menu.hidden || (daftarTanggal && !daftarTanggal.hidden)) {
+        return;
+    }
+
+    if (event.key === "Escape") {
+        event.preventDefault();
+        tutupMenuRekapEkspor(true);
+    } else if (event.key === "Tab") {
+        tutupMenuRekapEkspor();
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+
+        event.preventDefault();
+
+        const items = Array.from(menu.children).filter(
+            function(el) {
+                return el.classList.contains("sales-tools-item");
+            }
+        );
+
+        const sekarang = items.indexOf(document.activeElement);
+
+        const tujuan = event.key === "ArrowDown"
+            ? (sekarang + 1) % items.length
+            : (sekarang <= 0 ? items.length - 1 : sekarang - 1);
+
+        items[tujuan].focus();
+    }
+});
 
 function buatTeksRekapPenjualan(rekap) {
     return rekap.grup.map(grup => {
@@ -11678,6 +11962,10 @@ function tutupMenuRekapTanggal(hasil = null, kembalikanFokus = false) {
         penyelesaiPilihanRekapTanggal = null;
         selesai(hasil);
     }
+    /* Tanggal sudah dipilih: tutup juga menu Rekap & Ekspor. */
+    if (hasil !== null) {
+        tutupMenuRekapEkspor(kembalikanFokus);
+    }
 }
 
 function pilihTanggalRekap() {
@@ -11717,7 +12005,7 @@ document.getElementById("rekapTanggalMenu")
 document.addEventListener("click", function(event) {
     const menu = document.getElementById("rekapTanggalMenu");
     if (!menu || menu.hidden) return;
-    if (event.target.closest(".sales-menu")) return;
+    if (event.target.closest(".sales-tools")) return;
     tutupMenuRekapTanggal(null);
 });
 

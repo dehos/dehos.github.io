@@ -15195,10 +15195,6 @@ input, select, textarea, progress { accent-color: var(--tone-800020); }
     #catatan-penjualan .sales-export-actions .modern-secondary-button + .modern-secondary-button {
         border-left: 1px solid var(--theme-element-border, var(--theme-border, var(--tone-650019))) !important;
     }
-
-    #catatan-penjualan #salesCopyButton span {
-        font-size: 9.5px;
-    }
 }
 
 
@@ -20231,4 +20227,354 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     border-radius: 10px;
     font-size: 12px;
     box-shadow: none;
+}
+
+
+/* =====================================================
+   CATATAN PENJUALAN — MENU "REKAP & EKSPOR" DAN TAB DAFTAR | REKAP
+   Menggantikan empat tombol aksi dan panel rekap lama.
+===================================================== */
+
+#catatan-penjualan .sales-tools {
+    position: relative;
+    min-width: 0;
+    margin-left: auto;
+}
+
+#catatan-penjualan .sales-tools .sales-tools-trigger {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    background: #008573 !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#catatan-penjualan .sales-tools .sales-tools-trigger:is(:hover, :focus-visible),
+#catatan-penjualan .sales-tools .sales-tools-trigger[aria-expanded="true"] {
+    background: #0d3d38 !important;
+    color: #fff !important;
+}
+
+#catatan-penjualan .sales-tools .sales-tools-trigger:focus-visible {
+    outline: 2px solid #0d9b8a;
+    outline-offset: 2px;
+}
+
+#catatan-penjualan .sales-tools svg {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#catatan-penjualan .sales-tools .sales-tools-caret {
+    width: 14px;
+    height: 14px;
+    transition: transform .15s ease;
+}
+
+#catatan-penjualan .sales-tools [aria-expanded="true"] > .sales-tools-caret {
+    transform: rotate(180deg);
+}
+
+#catatan-penjualan .sales-tools .sales-tools-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 40;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    padding: 6px;
+    border: 1px solid #e8e8ec;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(28, 32, 36, .14);
+}
+
+#catatan-penjualan .sales-tools .sales-tools-menu[hidden] {
+    display: none;
+}
+
+#catatan-penjualan .sales-tools-menu button.sales-tools-item {
+    display: flex !important;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    padding: 10px !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #1c2024 !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    text-align: left;
+    cursor: pointer;
+}
+
+#catatan-penjualan .sales-tools-menu button.sales-tools-item:is(:hover, :focus-visible) {
+    background: #f3fbf9 !important;
+    color: #1c2024 !important;
+}
+
+#catatan-penjualan .sales-tools-menu button.sales-tools-item:focus-visible {
+    outline: 2px solid #0d9b8a;
+    outline-offset: -2px;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-item > svg:first-child {
+    color: #008573 !important;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-item .sales-tools-caret {
+    margin-left: auto;
+    color: #80838d !important;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-text {
+    display: grid;
+    min-width: 0;
+    gap: 1px;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-text > span {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-text > small {
+    color: #80838d;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-sep {
+    height: 1px;
+    margin: 4px 6px;
+    background: #f0f0f3;
+}
+
+/* Daftar tanggal terbuka di dalam menu, bukan sebagai popup terpisah. */
+#catatan-penjualan .sales-tools-menu .sales-menu-list.sales-tools-dates {
+    position: static;
+    min-width: 0;
+    max-width: none;
+    margin: 2px 0 4px 18px;
+    padding: 2px 0 2px 8px;
+    border: 0;
+    border-left: 2px solid #ccf3ea;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-menu-list.sales-tools-dates[hidden] {
+    display: none;
+}
+
+#catatan-penjualan .sales-tools-menu .sales-tools-dates .sales-menu-item {
+    min-height: 38px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+/* Tab Daftar | Rekap per Brand */
+#catatan-penjualan .sales-tabs {
+    display: inline-flex;
+    gap: 2px;
+    margin: 0 0 12px;
+    padding: 3px;
+    border-radius: 10px;
+    background: #f0f0f3;
+}
+
+#catatan-penjualan .sales-tabs button.sales-tab {
+    padding: 7px 16px !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #60646c !important;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    cursor: pointer;
+}
+
+#catatan-penjualan .sales-tabs button.sales-tab:is(:hover, :focus-visible) {
+    background: transparent !important;
+    color: #1c2024 !important;
+}
+
+#catatan-penjualan .sales-tabs button.sales-tab:focus-visible {
+    outline: 2px solid #0d9b8a;
+    outline-offset: 1px;
+}
+
+#catatan-penjualan .sales-tabs button.sales-tab[aria-selected="true"],
+#catatan-penjualan .sales-tabs button.sales-tab[aria-selected="true"]:is(:hover, :focus-visible) {
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgba(28, 32, 36, .12) !important;
+    color: #0d3d38 !important;
+    font-weight: 600;
+}
+
+/* Atribut hidden harus menang atas aturan display lama. */
+#catatan-penjualan .modern-sales-table-wrapper[hidden],
+#catatan-penjualan .sales-sort-bar[hidden],
+#catatan-penjualan .sales-summary-cards[hidden],
+#catatan-penjualan .sales-search[hidden],
+#catatan-penjualan .sales-rekap-panel[hidden] {
+    display: none !important;
+}
+
+/* Tabel rekap per brand */
+#catatan-penjualan .sales-rekap-wrap {
+    overflow: hidden;
+    border: 1px solid #e8e8ec;
+    border-radius: 14px;
+    background: #fff;
+}
+
+#catatan-penjualan .sales-rekap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    color: #1c2024;
+}
+
+#catatan-penjualan .sales-rekap-table :is(th, td) {
+    padding: 12px 14px;
+    border: 0;
+    border-bottom: 1px solid #f0f0f3;
+    background: #fff;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+#catatan-penjualan .sales-rekap-table :is(th, td):first-child {
+    text-align: left;
+}
+
+#catatan-penjualan .sales-rekap-table thead th {
+    background: #fafafb;
+    border-bottom-color: #e8e8ec;
+    color: #80838d;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+#catatan-penjualan .sales-rekap-table tbody th {
+    font-weight: 500;
+}
+
+#catatan-penjualan .sales-rekap-table tbody tr:last-child :is(th, td) {
+    border-bottom: 0;
+}
+
+#catatan-penjualan .sales-rekap-table tbody td:last-child {
+    font-weight: 600;
+}
+
+#catatan-penjualan .sales-rekap-table tfoot :is(th, td) {
+    border-top: 1px solid #ccf3ea;
+    border-bottom: 0;
+    background: #f3fbf9;
+    color: #0d3d38;
+    font-weight: 700;
+}
+
+#catatan-penjualan .sales-rekap-table tfoot th {
+    font-size: 11px;
+    letter-spacing: .06em;
+}
+
+#catatan-penjualan .sales-rekap-table td.sales-rekap-empty {
+    padding: 28px 14px;
+    color: #80838d;
+    text-align: center;
+    white-space: normal;
+}
+
+#catatan-penjualan .sales-rekap-bar {
+    display: inline-block;
+    height: 6px;
+    margin-right: 10px;
+    border-radius: 3px;
+    background: #83cdc1;
+    vertical-align: middle;
+}
+
+#catatan-penjualan .sales-rekap-note {
+    margin: 10px 2px 0;
+    color: #80838d;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+}
+
+@media (max-width: 760px) {
+    #catatan-penjualan .sales-tools {
+        grid-column: 1 / -1;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #catatan-penjualan .sales-tools .sales-tools-trigger {
+        width: 100%;
+    }
+
+    #catatan-penjualan .sales-tools .sales-tools-menu {
+        right: 0;
+        left: 0;
+        width: auto;
+        max-width: none;
+    }
+
+    #catatan-penjualan .sales-tabs {
+        display: flex;
+    }
+
+    #catatan-penjualan .sales-tabs button.sales-tab {
+        flex: 1;
+    }
+
+    #catatan-penjualan .sales-rekap-table :is(th, td) {
+        padding: 11px 8px;
+        font-size: 12px;
+    }
+
+    #catatan-penjualan .sales-rekap-table :is(th, td):first-child {
+        padding-left: 12px;
+    }
+
+    #catatan-penjualan .sales-rekap-table :is(th, td):last-child {
+        padding-right: 12px;
+    }
+
+    #catatan-penjualan .sales-rekap-bar,
+    #catatan-penjualan .sales-rekap-col-trx {
+        display: none;
+    }
 }
