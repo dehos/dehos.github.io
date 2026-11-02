@@ -11723,15 +11723,20 @@ function renderRekapPenjualan() {
     let totalNilai = 0;
 
     daftar.forEach(
-        function(grup) {
+        function(grup, indeks) {
 
             totalTransaksi += grup.transaksi;
             totalNilai += grup.total;
 
             const tr = document.createElement("tr");
 
+            const nomor = document.createElement("td");
+            nomor.className = "sales-rekap-col-no";
+            nomor.textContent = String(indeks + 1);
+
             const th = document.createElement("th");
             th.scope = "row";
+            th.className = "sales-rekap-col-brand";
 
             const batang = document.createElement("span");
             batang.className = "sales-rekap-bar";
@@ -11748,7 +11753,7 @@ function renderRekapPenjualan() {
 
             const sel = [
                 [formatNumber(grup.transaksi), "sales-rekap-col-trx"],
-                ["Rp" + formatNumber(grup.total), ""]
+                ["Rp" + formatNumber(grup.total), "sales-rekap-col-total"]
             ].map(
                 function([teks, kelas]) {
 
@@ -11763,7 +11768,7 @@ function renderRekapPenjualan() {
                 }
             );
 
-            tr.append(th, ...sel);
+            tr.append(nomor, th, ...sel);
             rows.appendChild(tr);
         }
     );
@@ -11773,7 +11778,7 @@ function renderRekapPenjualan() {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
 
-        td.colSpan = 3;
+        td.colSpan = 4;
         td.className = "sales-rekap-empty";
         td.textContent =
             "Tidak ada penjualan pada " + formatBulanPenjualan(bulan);

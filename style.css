@@ -20458,7 +20458,7 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     width: 100%;
     border-collapse: collapse;
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     color: #1c2024;
 }
 
@@ -20472,15 +20472,25 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     white-space: nowrap;
 }
 
-#catatan-penjualan .sales-rekap-table :is(th, td):first-child {
+#catatan-penjualan .sales-rekap-table .sales-rekap-col-no,
+#catatan-penjualan .sales-rekap-table .sales-rekap-col-brand,
+#catatan-penjualan .sales-rekap-table .sales-rekap-col-total {
     text-align: left;
+}
+
+#catatan-penjualan .sales-rekap-table .sales-rekap-col-no {
+    width: 56px;
+}
+
+#catatan-penjualan .sales-rekap-table .sales-rekap-col-total {
+    padding-left: 28px;
 }
 
 #catatan-penjualan .sales-rekap-table thead th {
     background: #fafafb;
     border-bottom-color: #e8e8ec;
     color: #80838d;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: .06em;
     text-transform: uppercase;
@@ -20507,7 +20517,7 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 }
 
 #catatan-penjualan .sales-rekap-table tfoot th {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: .06em;
 }
 
@@ -20562,11 +20572,19 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 
     #catatan-penjualan .sales-rekap-table :is(th, td) {
         padding: 11px 8px;
-        font-size: 12px;
+        font-size: 13px;
     }
 
     #catatan-penjualan .sales-rekap-table :is(th, td):first-child {
         padding-left: 12px;
+    }
+
+    #catatan-penjualan .sales-rekap-table .sales-rekap-col-no {
+        width: 40px;
+    }
+
+    #catatan-penjualan .sales-rekap-table .sales-rekap-col-total {
+        padding-left: 8px;
     }
 
     #catatan-penjualan .sales-rekap-table :is(th, td):last-child {
