@@ -7846,7 +7846,7 @@ function renderPenjualanTabel() {
                     </td>
 
                     <td class="text-end sales-total-cell">
-                        Rp${formatNominalTabel(total)}
+                        Rp${formatNumber(total)}
                     </td>
 
                     <td>
