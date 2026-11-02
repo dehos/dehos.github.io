@@ -20185,3 +20185,50 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         background: #fff !important;
     }
 }
+
+
+/* Catatan Penjualan: kartu ringkasan dan kolom cari */
+#catatan-penjualan .sales-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+#catatan-penjualan .sales-summary-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    border: 1px solid var(--theme-element-border, #cdced6);
+    border-radius: 10px;
+    background: var(--theme-element-bg, #fff);
+}
+
+#catatan-penjualan .sales-summary-card span {
+    color: var(--theme-ink, #60646c);
+    font-size: 11px;
+}
+
+#catatan-penjualan .sales-summary-card strong {
+    overflow: hidden;
+    color: var(--theme-ink, #1c2024);
+    font-size: 16px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#catatan-penjualan .sales-search {
+    margin: 0 0 10px;
+}
+
+#catatan-penjualan .sales-search input {
+    width: 100%;
+    min-height: 40px;
+    border: 1px solid var(--theme-element-border, #cdced6);
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: none;
+}

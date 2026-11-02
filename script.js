@@ -7635,6 +7635,15 @@ function renderPenjualanTabel() {
             "filterBrand"
         )?.value || "";
 
+    const kataCari =
+        (
+            document.getElementById(
+                "salesSearchInput"
+            )?.value || ""
+        )
+            .trim()
+            .toLowerCase();
+
     updatePenjualanSortHeaders();
 
     if (!tbody) {
@@ -7674,6 +7683,33 @@ function renderPenjualanTabel() {
                 ) {
 
                     return false;
+                }
+
+                if (kataCari) {
+
+                    const barangCari =
+                        dataBarang.find(
+                            function(b) {
+
+                                return (
+                                    String(b.id) ===
+                                    String(item.barang_id)
+                                );
+                            }
+                        );
+
+                    if (
+                        !String(
+                            barangCari
+                                ? barangCari.nama
+                                : ""
+                        )
+                            .toLowerCase()
+                            .includes(kataCari)
+                    ) {
+
+                        return false;
+                    }
                 }
 
                 return true;
@@ -7882,6 +7918,33 @@ function renderPenjualanTabel() {
             "Rp" +
             formatNumber(
                 totalPenjualan
+            );
+    }
+
+    const ringkasanTotalEl =
+        document.getElementById(
+            "salesSummaryTotal"
+        );
+
+    const ringkasanJumlahEl =
+        document.getElementById(
+            "salesSummaryCount"
+        );
+
+    if (ringkasanTotalEl) {
+
+        ringkasanTotalEl.textContent =
+            "Rp" +
+            formatNumber(
+                totalPenjualan
+            );
+    }
+
+    if (ringkasanJumlahEl) {
+
+        ringkasanJumlahEl.textContent =
+            formatNumber(
+                hasil.length
             );
     }
 }

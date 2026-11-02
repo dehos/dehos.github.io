@@ -748,6 +748,22 @@
         </table>
     </section>
 
+    <div class="sales-summary-cards" id="salesSummaryCards" aria-live="polite">
+        <div class="sales-summary-card">
+            <span>Total penjualan</span>
+            <strong id="salesSummaryTotal">Rp0</strong>
+        </div>
+        <div class="sales-summary-card">
+            <span>Transaksi</span>
+            <strong id="salesSummaryCount">0</strong>
+        </div>
+    </div>
+
+    <div class="sales-search">
+        <label class="visually-hidden" for="salesSearchInput">Cari nama barang</label>
+        <input type="search" id="salesSearchInput" class="form-control form-control-sm" placeholder="Cari nama barang" autocomplete="off" oninput="renderPenjualanTabel()">
+    </div>
+
     <div class="sales-sort-bar" role="group" aria-label="Urutkan catatan penjualan">
         <span class="sales-sort-bar-label">Urutkan</span>
         <button type="button" class="sales-sort-chip" data-sales-sort="tanggal" data-aktif="true" onclick="urutkanPenjualan('tanggal')" aria-label="Tanggal diurutkan dari terbaru">
