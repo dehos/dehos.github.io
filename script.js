@@ -11796,9 +11796,8 @@ function renderRekapPenjualan() {
 
     setTeks(
         "salesRecapNote",
-        "Rekap " + formatBulanPenjualan(bulan) +
-            (brandTerpilih ? " · " + brandTerpilih : "") +
-            ". Mengikuti bulan dan filter brand di atas."
+        "Total Penjualan " + formatBulanPenjualan(bulan) +
+            " " + (brandTerpilih || "All Brand")
     );
 }
 
