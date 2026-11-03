@@ -20805,3 +20805,8 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         padding: 13px 14px;
     }
 }
+
+/* Dashboard: daftar tinggal Barang Minus, tampil satu kolom penuh */
+#dashboard .dashboard-lists {
+    grid-template-columns: minmax(0, 1fr) !important;
+}

@@ -13235,9 +13235,7 @@ function renderGrafikPenjualanDashboard() {
 }
 
 function renderTransaksiTerbaruDashboard(daftar, idWadah) {
-    const wadah = document.getElementById(
-        idWadah || "dashboardRecentSales"
-    );
+    const wadah = document.getElementById(idWadah);
 
     if (!wadah) {
         return;
@@ -13423,15 +13421,9 @@ async function loadDashboardExtras() {
                 new Date()
             )[0];
 
-            const [hasilPenjualan, hasilTerbaru, dataStokSiap] =
+            const [hasilPenjualan, dataStokSiap] =
                 await Promise.all([
                     fetchPenjualanDashboard(dariTanggal),
-                    supabaseClient
-                        .from("penjualan")
-                        .select(DASHBOARD_KOLOM_PENJUALAN)
-                        .order("tanggal_pembelian", { ascending: false })
-                        .order("id", { ascending: false })
-                        .limit(5),
                     refreshCoreData().then(
                         function() {
                             return true;
@@ -13467,19 +13459,6 @@ async function loadDashboardExtras() {
             }
 
             renderPerbandinganKemarinDashboard();
-
-            if (hasilTerbaru.error) {
-                console.error(
-                    "ERROR DASHBOARD TRANSAKSI TERBARU:",
-                    hasilTerbaru.error
-                );
-                tampilkanGalatDashboard(
-                    "dashboardRecentSales",
-                    "Gagal memuat transaksi terbaru."
-                );
-            } else {
-                renderTransaksiTerbaruDashboard(hasilTerbaru.data || []);
-            }
 
             if (dataStokSiap) {
                 renderBarangMinusDashboard();
