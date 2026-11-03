@@ -7842,11 +7842,11 @@ function renderPenjualanTabel() {
                     </td>
 
                     <td class="text-end sales-price-cell">
-                        Rp${formatNumber(harga)}
+                        <svg class="sales-money-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>Rp${formatNumber(harga)}
                     </td>
 
                     <td class="text-end sales-total-cell">
-                        Rp${formatNumber(total)}
+                        <svg class="sales-money-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>Rp${formatNumber(total)}
                     </td>
 
                     <td>

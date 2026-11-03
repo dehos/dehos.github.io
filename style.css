@@ -20711,3 +20711,39 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         display: none;
     }
 }
+
+/* Ikon Harga (label) dan Total (uang kertas). */
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-money-icon {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    vertical-align: -1px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-price-cell .sales-money-icon {
+    color: #008573;
+}
+
+#catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-total-cell .sales-money-icon {
+    color: #0f3d36;
+}
+
+@media (max-width: 759px) {
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-money-icon {
+        width: 11px;
+        height: 11px;
+        margin-right: 3px;
+    }
+}
+
+@media (max-width: 399px) {
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-money-icon {
+        display: none;
+    }
+}
