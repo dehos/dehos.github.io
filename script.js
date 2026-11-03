@@ -1510,8 +1510,27 @@ async function loadTransactions(render = true) {
             batasPerHalaman;
     }
 
+    // Database menyimpan adjust sebagai selisih bertanda (type "adjust").
+    // Ubah ke bentuk adjust_masuk / adjust_keluar agar seluruh perhitungan
+    // stok dan riwayat di aplikasi tetap sama dengan hitungan database.
     transactions =
-        semuaTransaksi;
+        semuaTransaksi.flatMap(function(transaction) {
+            if (transaction.type !== "adjust") {
+                return [transaction];
+            }
+
+            const selisih = Number(transaction.qty) || 0;
+
+            if (selisih === 0) {
+                return [];
+            }
+
+            return [{
+                ...transaction,
+                type: selisih > 0 ? "adjust_masuk" : "adjust_keluar",
+                qty: Math.abs(selisih)
+            }];
+        });
 
     if (render) {
         updateTable();
