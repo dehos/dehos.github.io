@@ -20747,3 +20747,61 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         display: none;
     }
 }
+
+/* ==================================
+   PENJUALAN: BARU DICATAT
+================================== */
+
+#penjualan .sales-recent-section {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border: 1px solid #e6eaf2;
+    border-radius: 12px;
+    background: #fff;
+}
+
+#penjualan .sales-recent-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+#penjualan .sales-recent-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+#penjualan .sales-recent-header small {
+    color: #71717a;
+    font-size: 12px;
+}
+
+#penjualan .sales-recent-section .dashboard-list-link {
+    color: var(--app-accent, #4f46e5);
+    font-size: 12px;
+    font-weight: 550;
+    text-decoration: none;
+}
+
+#penjualan .sales-recent-section .dashboard-list-link:hover {
+    text-decoration: underline;
+}
+
+#penjualan .sales-recent-section .dashboard-list-main strong {
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+#penjualan .sales-recent-section .dashboard-list-side {
+    max-width: 48%;
+}
+
+@media (max-width: 575px) {
+    #penjualan .sales-recent-section {
+        margin-top: 14px;
+        padding: 13px 14px;
+    }
+}

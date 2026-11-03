@@ -6382,6 +6382,8 @@ async function simpanPenjualan() {
 
     updateTable();
 
+    void muatTransaksiTerbaruPenjualan();
+
 
     inputPenjualanBarang.value = "";
 
@@ -13232,8 +13234,10 @@ function renderGrafikPenjualanDashboard() {
     }
 }
 
-function renderTransaksiTerbaruDashboard(daftar) {
-    const wadah = document.getElementById("dashboardRecentSales");
+function renderTransaksiTerbaruDashboard(daftar, idWadah) {
+    const wadah = document.getElementById(
+        idWadah || "dashboardRecentSales"
+    );
 
     if (!wadah) {
         return;
@@ -13278,6 +13282,48 @@ function renderTransaksiTerbaruDashboard(daftar) {
             formatNumber(Number(item.qty) || 0) +
             " unit</small></div></div>";
     }).join("");
+}
+
+let penjualanTerbaruRequestId = 0;
+
+async function muatTransaksiTerbaruPenjualan() {
+    if (!document.getElementById("penjualanRecentSales")) {
+        return;
+    }
+
+    const requestId = ++penjualanTerbaruRequestId;
+
+    try {
+        const hasil = await supabaseClient
+            .from("penjualan")
+            .select(DASHBOARD_KOLOM_PENJUALAN)
+            .order("tanggal_pembelian", { ascending: false })
+            .order("id", { ascending: false })
+            .limit(5);
+
+        if (requestId !== penjualanTerbaruRequestId) {
+            return;
+        }
+
+        if (hasil.error) {
+            throw hasil.error;
+        }
+
+        renderTransaksiTerbaruDashboard(
+            hasil.data || [],
+            "penjualanRecentSales"
+        );
+    } catch (error) {
+        if (requestId !== penjualanTerbaruRequestId) {
+            return;
+        }
+
+        console.error("ERROR TRANSAKSI TERBARU PENJUALAN:", error);
+        tampilkanGalatDashboard(
+            "penjualanRecentSales",
+            "Gagal memuat transaksi terbaru."
+        );
+    }
 }
 
 function renderBarangMinusDashboard() {
@@ -13580,6 +13626,9 @@ async function loadSectionData(sectionId) {
         ) {
             await refreshCoreData();
             if (sectionId === "rekap-stok") renderRekapStokLayar();
+            if (sectionId === "penjualan") {
+                void muatTransaksiTerbaruPenjualan();
+            }
         }
     } catch (error) {
         console.error(
