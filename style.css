@@ -20596,3 +20596,29 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
         display: none;
     }
 }
+
+
+/* Catatan Penjualan (mobile): ikon kalender di samping tanggal dd/mm */
+@media (max-width: 760px) {
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table tbody tr {
+        grid-template-columns: 62px 34px minmax(0, 1fr) auto;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-date-mobile {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    #catatan-penjualan .modern-sales-table-wrapper .modern-sales-table .sales-date-icon {
+        flex: 0 0 auto;
+        width: 12px;
+        height: 12px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        color: #80838d;
+    }
+}
