@@ -7838,7 +7838,7 @@ function renderPenjualanTabel() {
                     </td>
 
                     <td class="text-center">
-                        <span class="sales-qty-chip">${formatNumber(qty)}</span>
+                        <span class="sales-qty-chip"><svg class="sales-qty-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3.3 7.6 12 12.6l8.7-5M12 22.5v-10"/></svg>${formatNumber(qty)}</span>
                     </td>
 
                     <td class="text-end sales-price-cell">
