@@ -20811,35 +20811,60 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
     grid-template-columns: minmax(0, 1fr) !important;
 }
 
-/* Saran harga dari riwayat penjualan */
+/* Saran harga dari riwayat penjualan (gaya Radix, sama seperti chip urutan) */
 #penjualan .sales-price-suggest {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 #penjualan .sales-price-suggest[hidden] {
     display: none;
 }
 
-#penjualan .sales-price-suggest-chip {
-    border: 1px solid var(--app-border);
-    background: var(--app-surface-raised);
-    color: inherit;
-    border-radius: 999px;
-    padding: 3px 10px;
-    font-size: 12px;
-    line-height: 1.5;
+#penjualan .sales-price-suggest button.sales-price-suggest-chip {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 0 12px !important;
+    border: 1px solid #e8e8ec !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    color: #1c2024 !important;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
     cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
 }
 
-#penjualan .sales-price-suggest-chip small {
-    color: var(--app-muted);
-    margin-right: 4px;
+#penjualan .sales-price-suggest button.sales-price-suggest-chip small {
+    margin: 0;
+    color: #8b8d98;
+    font-size: 11.5px;
+    font-weight: 500;
 }
 
-#penjualan .sales-price-suggest-chip:hover,
-#penjualan .sales-price-suggest-chip:focus-visible {
-    border-color: currentColor;
+#penjualan .sales-price-suggest button.sales-price-suggest-chip:hover {
+    border-color: #cdced6 !important;
+    background: #fcfcfd !important;
+}
+
+#penjualan .sales-price-suggest button.sales-price-suggest-chip:focus-visible {
+    border-color: #ccf3ea !important;
+    background: #f3fbf9 !important;
+    color: #0d3d38 !important;
+    outline: 2px solid #008573;
+    outline-offset: 2px;
+}
+
+#penjualan .sales-price-suggest button.sales-price-suggest-chip:active {
+    border-color: #ccf3ea !important;
+    background: #f3fbf9 !important;
+    color: #0d3d38 !important;
 }
