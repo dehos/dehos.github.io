@@ -20810,3 +20810,36 @@ input[type=text],input[type=number],input[type=date],select,textarea,.form-contr
 #dashboard .dashboard-lists {
     grid-template-columns: minmax(0, 1fr) !important;
 }
+
+/* Saran harga dari riwayat penjualan */
+#penjualan .sales-price-suggest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+#penjualan .sales-price-suggest[hidden] {
+    display: none;
+}
+
+#penjualan .sales-price-suggest-chip {
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-raised);
+    color: inherit;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+#penjualan .sales-price-suggest-chip small {
+    color: var(--app-muted);
+    margin-right: 4px;
+}
+
+#penjualan .sales-price-suggest-chip:hover,
+#penjualan .sales-price-suggest-chip:focus-visible {
+    border-color: currentColor;
+}

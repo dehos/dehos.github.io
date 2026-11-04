@@ -5626,6 +5626,7 @@ function clearPenjualanBarang() {
         saranBarang.innerHTML = "";
     }
 
+    bersihkanSaranHarga();
     updatePenjualanBarangClear();
     updatePenjualanSummary();
     inputPenjualanBarang.focus();
@@ -5856,6 +5857,97 @@ function getSelectedPenjualanBarang() {
     );
 }
 
+/* Saran harga dari riwayat penjualan barang yang dipilih */
+function bersihkanSaranHarga() {
+    const box =
+        document.getElementById("penjualanHargaSuggest");
+
+    if (!box) return;
+
+    box.innerHTML = "";
+    box.hidden = true;
+}
+
+async function tampilkanSaranHarga(barangId) {
+    const box =
+        document.getElementById("penjualanHargaSuggest");
+
+    if (!box) return;
+
+    bersihkanSaranHarga();
+
+    if (!barangId) return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("penjualan")
+            .select("harga")
+            .eq("barang_id", Number(barangId))
+            .order("tanggal_pembelian", { ascending: false })
+            .order("id", { ascending: false })
+            .limit(20);
+
+        if (error || !data || !data.length) return;
+
+        // Abaikan hasil lama jika barang sudah berganti.
+        if (
+            String(inputPenjualanBarang?.dataset.id) !==
+            String(barangId)
+        ) {
+            return;
+        }
+
+        const daftar = data
+            .map(function(item) { return Number(item.harga); })
+            .filter(function(angka) { return angka > 0; });
+
+        if (!daftar.length) return;
+
+        const terakhir = daftar[0];
+        const hitung = new Map();
+
+        daftar.forEach(function(angka) {
+            hitung.set(angka, (hitung.get(angka) || 0) + 1);
+        });
+
+        const paling = Array.from(hitung.entries())
+            .sort(function(a, b) { return b[1] - a[1]; })[0][0];
+
+        const opsi = [{ label: "Terakhir", harga: terakhir }];
+
+        if (paling !== terakhir) {
+            opsi.push({ label: "Paling sering", harga: paling });
+        }
+
+        opsi.forEach(function(item) {
+            const tombol = document.createElement("button");
+
+            tombol.type = "button";
+            tombol.className = "sales-price-suggest-chip";
+            tombol.innerHTML =
+                "<small>" + item.label + "</small>Rp" +
+                formatNumber(item.harga);
+
+            tombol.addEventListener("click", function() {
+                if (!inputPenjualanHarga) return;
+
+                inputPenjualanHarga.value =
+                    new Intl.NumberFormat("id-ID").format(item.harga);
+                inputPenjualanHarga.dispatchEvent(
+                    new Event("input", { bubbles: true })
+                );
+                inputPenjualanHarga.focus();
+            });
+
+            box.appendChild(tombol);
+        });
+
+        box.hidden = false;
+    } catch (errorSaran) {
+        console.error("ERROR SARAN HARGA:", errorSaran);
+    }
+}
+
 function setPenjualanSaving(saving) {
     penjualanSedangDisimpan = saving;
 
@@ -6017,6 +6109,7 @@ if (
 if (inputPenjualanBrand) {
     inputPenjualanBrand.value = "";
 }
+            bersihkanSaranHarga();
             updatePenjualanBarangClear();
             updatePenjualanSummary();
 
@@ -6106,6 +6199,7 @@ if (inputPenjualanBrand) {
                                     "";
 
                                 updatePenjualanSummary();
+                                void tampilkanSaranHarga(item.id);
                                 inputPenjualanQty?.focus();
                             };
 
@@ -6405,6 +6499,7 @@ async function simpanPenjualan() {
         "saranBarang"
     ).innerHTML = "";
 
+    bersihkanSaranHarga();
     updatePenjualanBarangClear();
 
 
