@@ -12600,7 +12600,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
-        styles: { fontSize: 8, cellPadding: 1.5, minCellHeight: 6, overflow: "hidden" },
+        styles: { fontSize: 7.5, cellPadding: 0.5, minCellHeight: 4.2, overflow: "hidden" },
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
         columnStyles: {
             0: { cellWidth: 17, halign: "center" },
