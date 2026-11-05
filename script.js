@@ -12458,7 +12458,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 border: ["title", "subtitle", "spacer"].includes(jenis) ? undefined : border,
                 font: {
                     bold: jenis !== "item",
-                    sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : 11,
+                    sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : jenis === "brand" ? 9 : 8,
                     color: {
                         rgb: jenis === "header"
                             ? getAppThemeColor("#ffffff").slice(1).toUpperCase()
@@ -12600,7 +12600,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
-        styles: { fontSize: 7.5, cellPadding: 0.5, minCellHeight: 4.2, overflow: "hidden" },
+        styles: { fontSize: 7, cellPadding: 0.5, minCellHeight: 4.2, overflow: "hidden" },
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
         columnStyles: {
             0: { cellWidth: 17, halign: "center" },
