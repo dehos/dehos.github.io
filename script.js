@@ -12569,7 +12569,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
     const tinggi = Math.max(210, 38 + body.length * 8);
     const pdf = new window.jspdf.jsPDF({
-        orientation: "landscape", unit: "mm",
+        orientation: "portrait", unit: "mm",
         format: [297, tinggi], compress: true
     });
     if (typeof pdf.autoTable !== "function") {
