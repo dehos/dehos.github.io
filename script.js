@@ -12377,10 +12377,12 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
 
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        totalHarian.set(
-            item.tanggal,
-            (totalHarian.get(item.tanggal) || 0) + item.total
-        );
+        totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
+    });
+
+    const totalPerBrand = new Map();
+    semuaItem.forEach(item => {
+        totalPerBrand.set(item.brand, (totalPerBrand.get(item.brand) || 0) + item.total);
     });
 
     const baris = [
@@ -12398,23 +12400,25 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         hari.items.forEach((item, index) => {
             baris.push([
                 index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
-                item.nama,
-                item.brand,
-                item.qty,
-                item.harga,
-                item.total,
+                item.nama, item.brand, item.qty, item.harga, item.total,
                 index === 0 ? totalHarian.get(hari.tanggal) : ""
             ]);
             jenisBaris.push("item");
             totalSemua += item.total;
         });
-
         if (hari.items.length > 1) {
             gabunganTanggal.push(
                 { s: { r: awalTanggal, c: 0 }, e: { r: baris.length - 1, c: 0 } },
                 { s: { r: awalTanggal, c: 6 }, e: { r: baris.length - 1, c: 6 } }
             );
         }
+    });
+
+    baris.push(["", "TOTAL PER BRAND", "", "", "", "", ""]);
+    jenisBaris.push("brand-summary-title");
+    totalPerBrand.forEach((total, brand) => {
+        baris.push(["", "", "", "", "", "TOTAL " + brand, total]);
+        jenisBaris.push("brand-summary");
     });
 
     const barisTotal = baris.length;
@@ -12428,7 +12432,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     ];
     worksheet["!merges"] = gabunganTanggal.concat(
         jenisBaris.flatMap((jenis, r) =>
-            ["title", "subtitle"].includes(jenis)
+            ["title", "subtitle", "brand-summary-title"].includes(jenis)
                 ? [{ s: { r, c: 1 }, e: { r, c: 6 } }] : []
         ),
         [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 5 } }]
@@ -12446,15 +12450,12 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         left: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
         right: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } }
     };
-
     jenisBaris.forEach((jenis, r) => {
         for (let c = 0; c < 7; c++) {
-            const alamat = XLSX.utils.encode_cell({ r, c });
-            const cell = worksheet[alamat];
+            const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
             if (!cell) continue;
             cell.s = {
-                border: ["title", "subtitle", "spacer"].includes(jenis)
-                    ? undefined : border,
+                border: ["title", "subtitle", "spacer"].includes(jenis) ? undefined : border,
                 font: {
                     bold: jenis !== "item",
                     sz: jenis === "title" ? 16 : jenis === "subtitle" ? 10 : 11,
@@ -12469,9 +12470,11 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                     fgColor: {
                         rgb: jenis === "header"
                             ? getAppThemeColor("#800020").slice(1).toUpperCase()
-                            : jenis === "grand"
+                            : ["grand", "brand-summary-title"].includes(jenis)
                                 ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
-                                : getAppThemeColor("#ffffff").slice(1).toUpperCase()
+                                : jenis === "brand-summary"
+                                    ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
+                                    : getAppThemeColor("#ffffff").slice(1).toUpperCase()
                     }
                 },
                 alignment: {
@@ -12479,17 +12482,11 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                     horizontal: c === 3 ? "center" : c >= 4 ? "right" : "left"
                 }
             };
-            if (c >= 4 && typeof cell.v === "number") {
-                cell.z = '"Rp" #,##0';
-            }
+            if (c >= 4 && typeof cell.v === "number") cell.z = '"Rp" #,##0';
         }
     });
 
-    worksheet["!pageSetup"] = {
-        orientation: "landscape",
-        fitToWidth: 1,
-        fitToHeight: 1
-    };
+    worksheet["!pageSetup"] = { orientation: "landscape", fitToWidth: 1, fitToHeight: 1 };
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Penjualan");
     try {
@@ -12522,10 +12519,11 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
 
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        totalHarian.set(
-            item.tanggal,
-            (totalHarian.get(item.tanggal) || 0) + item.total
-        );
+        totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
+    });
+    const totalPerBrand = new Map();
+    semuaItem.forEach(item => {
+        totalPerBrand.set(item.brand, (totalPerBrand.get(item.brand) || 0) + item.total);
     });
 
     const body = [];
@@ -12535,11 +12533,8 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     kelompokTanggalExportPenjualan(semuaItem).forEach(hari => {
         hari.items.forEach((item, index) => {
             const row = {
-                1: item.nama,
-                2: item.brand,
-                3: String(item.qty),
-                4: rupiah(item.harga),
-                5: rupiah(item.total)
+                1: item.nama, 2: item.brand, 3: String(item.qty),
+                4: rupiah(item.harga), 5: rupiah(item.total)
             };
             if (index === 0) {
                 row[0] = {
@@ -12558,14 +12553,18 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         });
     });
 
-    body.push([{
-        content: "TOTAL SEMUA",
-        colSpan: 6,
-        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" }
-    }, {
-        content: rupiah(totalSemua),
-        styles: { fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" }
-    }]);
+    body.push([{ content: "TOTAL PER BRAND", colSpan: 7,
+        styles: { fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
+    totalPerBrand.forEach((total, brand) => {
+        body.push([{ content: "TOTAL " + brand, colSpan: 6,
+            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } },
+        { content: rupiah(total), styles: {
+            fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
+    });
+    body.push([{ content: "TOTAL SEMUA", colSpan: 6,
+        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } },
+    { content: rupiah(totalSemua), styles: {
+        fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
 
     // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
     const tinggi = Math.max(210, 38 + body.length * 8);
@@ -12598,12 +12597,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         styles: { fontSize: 8, cellPadding: 2.2, overflow: "linebreak" },
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255 },
         columnStyles: {
-            0: { cellWidth: 22 },
-            1: { cellWidth: "auto" },
-            2: { cellWidth: 27 },
-            3: { cellWidth: 14, halign: "center" },
-            4: { cellWidth: 30, halign: "right" },
-            5: { cellWidth: 30, halign: "right" },
+            0: { cellWidth: 22 }, 1: { cellWidth: "auto" },
+            2: { cellWidth: 27 }, 3: { cellWidth: 14, halign: "center" },
+            4: { cellWidth: 30, halign: "right" }, 5: { cellWidth: 30, halign: "right" },
             6: { cellWidth: 32, halign: "right" }
         }
     });
