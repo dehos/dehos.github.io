@@ -12595,6 +12595,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     pdf.autoTable({
         startY: 28,
         margin: { left: 10, right: 10, bottom: 10 },
+        tableWidth: 277,
         head: [["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
