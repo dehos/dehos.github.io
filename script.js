@@ -12372,7 +12372,11 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     );
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
+        const kunciHariBrand = JSON.stringify([item.brand, item.tanggal]);
+        totalHarian.set(
+            kunciHariBrand,
+            (totalHarian.get(kunciHariBrand) || 0) + item.total
+        );
     });
 
     const baris = [
@@ -12396,7 +12400,9 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 baris.push([
                     index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
                     item.nama, grup.brand, item.qty, item.harga, item.total,
-                    index === 0 ? totalHarian.get(hari.tanggal) : ""
+                    index === 0
+                        ? totalHarian.get(JSON.stringify([grup.brand, hari.tanggal]))
+                        : ""
                 ]);
                 jenisBaris.push("item");
                 subtotal += item.total;
@@ -12510,7 +12516,11 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     );
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
+        const kunciHariBrand = JSON.stringify([item.brand, item.tanggal]);
+        totalHarian.set(
+            kunciHariBrand,
+            (totalHarian.get(kunciHariBrand) || 0) + item.total
+        );
     });
 
     const body = [];
@@ -12535,7 +12545,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                         styles: { valign: "middle" }
                     };
                     row[6] = {
-                        content: rupiah(totalHarian.get(hari.tanggal)),
+                        content: rupiah(totalHarian.get(
+                            JSON.stringify([grup.brand, hari.tanggal])
+                        )),
                         rowSpan: hari.items.length,
                         styles: { valign: "middle", halign: "right", fontStyle: "bold" }
                     };
