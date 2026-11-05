@@ -12523,86 +12523,59 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         );
     });
 
+    const body = [];
     let totalSemua = 0;
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
-    const buatBodyTabel = (daftarGrup, sertakanTotalSemua = false) => {
-        const body = [];
-        let subtotalSemua = 0;
 
-        daftarGrup.forEach(grup => {
-            body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
-                styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
-            let subtotal = 0;
+    hasil.grup.forEach(grup => {
+        body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
+            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
+        let subtotal = 0;
 
-            kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
-                hari.items.forEach((item, index) => {
-                    const row = {
-                        1: item.nama,
-                        2: String(item.qty),
-                        3: rupiah(item.harga),
-                        4: rupiah(item.total)
+        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            hari.items.forEach((item, index) => {
+                const row = {
+                    1: item.nama,
+                    2: String(item.qty),
+                    3: rupiah(item.harga),
+                    4: rupiah(item.total)
+                };
+                if (index === 0) {
+                    row[0] = {
+                        content: formatTanggalExportPenjualan(hari.tanggal),
+                        rowSpan: hari.items.length,
+                        styles: { valign: "middle" }
                     };
-                    if (index === 0) {
-                        row[0] = {
-                            content: formatTanggalExportPenjualan(hari.tanggal),
-                            rowSpan: hari.items.length,
-                            styles: { valign: "middle" }
-                        };
-                        row[5] = {
-                            content: rupiah(totalHarian.get(
-                                JSON.stringify([grup.brand, hari.tanggal])
-                            )),
-                            rowSpan: hari.items.length,
-                            styles: { valign: "middle", halign: "right", fontStyle: "bold" }
-                        };
-                    }
-                    body.push(row);
-                    subtotal += item.total;
-                });
+                    row[5] = {
+                        content: rupiah(totalHarian.get(
+                            JSON.stringify([grup.brand, hari.tanggal])
+                        )),
+                        rowSpan: hari.items.length,
+                        styles: { valign: "middle", halign: "right", fontStyle: "bold" }
+                    };
+                }
+                body.push(row);
+                subtotal += item.total;
             });
-
-            body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
-                styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
-                    fontStyle: "bold" } },
-                { content: rupiah(subtotal), styles: {
-                    fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
-            subtotalSemua += subtotal;
         });
 
-        if (sertakanTotalSemua) {
-            body.push([{ content: "TOTAL SEMUA", colSpan: 5,
-                styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]),
-                    fontStyle: "bold" } },
-                { content: rupiah(subtotalSemua), styles: {
-                    fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
-        }
-        return body;
-    };
-
-    hasil.grup.forEach(grup => {
-        totalSemua += grup.items.reduce((jumlah, item) => jumlah + item.total, 0);
+        body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
+            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
+                fontStyle: "bold" } },
+            { content: rupiah(subtotal), styles: {
+                fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
+        totalSemua += subtotal;
     });
 
-    const jumlahItem = hasil.grup.reduce((jumlah, grup) => jumlah + grup.items.length, 0);
-    const batasKiri = jumlahItem / 2;
-    const grupKiri = [];
-    const grupKanan = [];
-    let jumlahKiri = 0;
-    hasil.grup.forEach(grup => {
-        if (jumlahKiri < batasKiri || grupKanan.length === 0) {
-            grupKiri.push(grup);
-            jumlahKiri += grup.items.length;
-        } else {
-            grupKanan.push(grup);
-        }
-    });
-    const bodyKiri = buatBodyTabel(grupKiri);
-    const bodyKanan = buatBodyTabel(grupKanan, true);
+    body.push([{ content: "TOTAL SEMUA", colSpan: 5,
+        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]),
+            fontStyle: "bold" } },
+        { content: rupiah(totalSemua), styles: {
+            fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
 
-    const tinggi = Math.max(210, 38 + Math.max(bodyKiri.length, bodyKanan.length) * 8);
     const pdf = new window.jspdf.jsPDF({
-        orientation: "portrait", unit: "mm",
-        format: [297, tinggi], compress: true
+        orientation: "landscape", unit: "mm",
+        format: "a4", compress: true
     });
     if (typeof pdf.autoTable !== "function") {
         showAppAlert("Library tabel PDF belum dimuat.");
@@ -12610,45 +12583,34 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     }
     try {
         const logo = await ambilLogoExportPenjualan();
-        pdf.addImage(logo, "PNG", 7, 7, 20, 14);
+        pdf.addImage(logo, "PNG", 10, 7, 20, 14);
     } catch (error) {
         console.error(error);
         showAppAlert("Gagal memuat logo untuk PDF.");
         return;
     }
     pdf.setFontSize(15);
-    pdf.text(hasil.judul, 32, 15);
+    pdf.text(hasil.judul, 35, 15);
     pdf.setFontSize(9);
-    pdf.text("CATATAN PENJUALAN", 32, 21);
-
-    const opsiTabel = {
+    pdf.text("CATATAN PENJUALAN", 35, 21);
+    pdf.autoTable({
         startY: 28,
-        tableWidth: 137.5,
+        margin: { left: 10, right: 10, bottom: 10 },
+        tableWidth: 277,
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
+        body,
         theme: "grid",
-        styles: { fontSize: 6.5, cellPadding: 1.2, overflow: "linebreak" },
+        styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255 },
         columnStyles: {
-            0: { cellWidth: 13, halign: "center" },
+            0: { cellWidth: 20, halign: "center" },
             1: { cellWidth: "auto" },
-            2: { cellWidth: 8, halign: "center" },
-            3: { cellWidth: "auto", halign: "right" },
-            4: { cellWidth: "auto", halign: "right" },
-            5: { cellWidth: "auto", halign: "right" }
-        },
-        pageBreak: "avoid"
-    };
-    pdf.autoTable({
-        ...opsiTabel,
-        margin: { left: 7, right: 152.5, bottom: 7 },
-        body: bodyKiri
+            2: { cellWidth: 15, halign: "center" },
+            3: { cellWidth: 38, halign: "right" },
+            4: { cellWidth: 38, halign: "right" },
+            5: { cellWidth: 42, halign: "right" }
+        }
     });
-    pdf.autoTable({
-        ...opsiTabel,
-        margin: { left: 152.5, right: 7, bottom: 7 },
-        body: bodyKanan
-    });
-
     simpanBlobExport(pdf.output("blob"), hasil.namaFile + ".pdf");
 }
 /* ==================================
