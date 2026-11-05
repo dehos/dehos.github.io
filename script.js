@@ -12529,7 +12529,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
 
     hasil.grup.forEach(grup => {
         body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
-            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
+            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold", halign: "center" } }]);
         let subtotal = 0;
 
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
@@ -12542,9 +12542,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 };
                 if (index === 0) {
                     row[0] = {
-                        content: formatTanggalExportPenjualan(hari.tanggal),
+                        content: formatTanggalExportPenjualan(hari.tanggal).slice(0, 5),
                         rowSpan: hari.items.length,
-                        styles: { valign: "middle" }
+                        styles: { valign: "middle", halign: "center", overflow: "hidden" }
                     };
                     row[5] = {
                         content: rupiah(totalHarian.get(
@@ -12590,9 +12590,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         return;
     }
     pdf.setFontSize(15);
-    pdf.text(hasil.judul, 35, 15);
+    pdf.text(hasil.judul, 105, 15, { align: "center" });
     pdf.setFontSize(9);
-    pdf.text("CATATAN PENJUALAN", 35, 21);
+    pdf.text("CATATAN PENJUALAN", 105, 21, { align: "center" });
     pdf.autoTable({
         startY: 28,
         margin: { left: 10, right: 10, bottom: 10 },
@@ -12600,8 +12600,8 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
-        styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
-        headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255 },
+        styles: { fontSize: 8, cellPadding: 1.5, minCellHeight: 6, overflow: "hidden" },
+        headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
         columnStyles: {
             0: { cellWidth: 17, halign: "center" },
             1: { cellWidth: "auto" },
