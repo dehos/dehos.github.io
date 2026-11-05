@@ -12369,20 +12369,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
 
     const semuaItem = hasil.grup.flatMap(grup =>
         grup.items.map(item => ({ ...item, brand: grup.brand }))
-    ).sort((a, b) =>
-        a.tanggal.localeCompare(b.tanggal) ||
-        a.brand.localeCompare(b.brand, "id-ID") ||
-        a.id - b.id
     );
-
     const totalHarian = new Map();
     semuaItem.forEach(item => {
         totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
-    });
-
-    const totalPerBrand = new Map();
-    semuaItem.forEach(item => {
-        totalPerBrand.set(item.brand, (totalPerBrand.get(item.brand) || 0) + item.total);
     });
 
     const baris = [
@@ -12392,37 +12382,41 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]
     ];
     const jenisBaris = ["title", "subtitle", "spacer", "header"];
-    const gabunganTanggal = [];
+    const gabungan = [];
     let totalSemua = 0;
 
-    kelompokTanggalExportPenjualan(semuaItem).forEach(hari => {
-        const awalTanggal = baris.length;
-        hari.items.forEach((item, index) => {
-            baris.push([
-                index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
-                item.nama, item.brand, item.qty, item.harga, item.total,
-                index === 0 ? totalHarian.get(hari.tanggal) : ""
-            ]);
-            jenisBaris.push("item");
-            totalSemua += item.total;
-        });
-        if (hari.items.length > 1) {
-            gabunganTanggal.push(
-                { s: { r: awalTanggal, c: 0 }, e: { r: baris.length - 1, c: 0 } },
-                { s: { r: awalTanggal, c: 6 }, e: { r: baris.length - 1, c: 6 } }
-            );
-        }
-    });
+    hasil.grup.forEach(grup => {
+        baris.push(["", grup.brand.toUpperCase(), "", "", "", "", ""]);
+        jenisBaris.push("brand");
+        let subtotal = 0;
 
-    baris.push(["", "TOTAL PER BRAND", "", "", "", "", ""]);
-    jenisBaris.push("brand-summary-title");
-    totalPerBrand.forEach((total, brand) => {
-        baris.push(["", "", "", "", "", "TOTAL " + brand, total]);
-        jenisBaris.push("brand-summary");
+        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            const awalTanggal = baris.length;
+            hari.items.forEach((item, index) => {
+                baris.push([
+                    index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
+                    item.nama, grup.brand, item.qty, item.harga, item.total,
+                    index === 0 ? totalHarian.get(hari.tanggal) : ""
+                ]);
+                jenisBaris.push("item");
+                subtotal += item.total;
+            });
+            if (hari.items.length > 1) {
+                gabungan.push(
+                    { s: { r: awalTanggal, c: 0 }, e: { r: baris.length - 1, c: 0 } },
+                    { s: { r: awalTanggal, c: 6 }, e: { r: baris.length - 1, c: 6 } }
+                );
+            }
+        });
+
+        baris.push(["", "", "", "", "", "TOTAL " + grup.brand,
+            { t: "n", v: subtotal }]);
+        jenisBaris.push("subtotal");
+        totalSemua += subtotal;
     });
 
     const barisTotal = baris.length;
-    baris.push(["", "", "", "", "", "TOTAL SEMUA", totalSemua]);
+    baris.push(["", "", "", "", "", "TOTAL SEMUA", { t: "n", v: totalSemua }]);
     jenisBaris.push("grand");
 
     const worksheet = XLSX.utils.aoa_to_sheet(baris);
@@ -12430,9 +12424,9 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         { wch: 13 }, { wch: 42 }, { wch: 18 }, { wch: 9 },
         { wch: 17 }, { wch: 18 }, { wch: 20 }
     ];
-    worksheet["!merges"] = gabunganTanggal.concat(
+    worksheet["!merges"] = gabungan.concat(
         jenisBaris.flatMap((jenis, r) =>
-            ["title", "subtitle", "brand-summary-title"].includes(jenis)
+            ["title", "subtitle", "brand"].includes(jenis)
                 ? [{ s: { r, c: 1 }, e: { r, c: 6 } }] : []
         ),
         [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 5 } }]
@@ -12441,7 +12435,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         hpt: jenis === "title" ? 28 :
             jenis === "subtitle" ? 19 :
             jenis === "spacer" ? 8 :
-            jenis === "header" ? 24 : 19
+            jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
     }));
 
     const border = {
@@ -12470,11 +12464,13 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                     fgColor: {
                         rgb: jenis === "header"
                             ? getAppThemeColor("#800020").slice(1).toUpperCase()
-                            : ["grand", "brand-summary-title"].includes(jenis)
-                                ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
-                                : jenis === "brand-summary"
-                                    ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
-                                    : getAppThemeColor("#ffffff").slice(1).toUpperCase()
+                            : jenis === "brand"
+                                ? getAppThemeColor("#f4e5ea").slice(1).toUpperCase()
+                                : jenis === "grand"
+                                    ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
+                                    : jenis === "subtotal"
+                                        ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
+                                        : getAppThemeColor("#ffffff").slice(1).toUpperCase()
                     }
                 },
                 alignment: {
@@ -12511,62 +12507,58 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
 
     const semuaItem = hasil.grup.flatMap(grup =>
         grup.items.map(item => ({ ...item, brand: grup.brand }))
-    ).sort((a, b) =>
-        a.tanggal.localeCompare(b.tanggal) ||
-        a.brand.localeCompare(b.brand, "id-ID") ||
-        a.id - b.id
     );
-
     const totalHarian = new Map();
     semuaItem.forEach(item => {
         totalHarian.set(item.tanggal, (totalHarian.get(item.tanggal) || 0) + item.total);
-    });
-    const totalPerBrand = new Map();
-    semuaItem.forEach(item => {
-        totalPerBrand.set(item.brand, (totalPerBrand.get(item.brand) || 0) + item.total);
     });
 
     const body = [];
     let totalSemua = 0;
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
 
-    kelompokTanggalExportPenjualan(semuaItem).forEach(hari => {
-        hari.items.forEach((item, index) => {
-            const row = {
-                1: item.nama, 2: item.brand, 3: String(item.qty),
-                4: rupiah(item.harga), 5: rupiah(item.total)
-            };
-            if (index === 0) {
-                row[0] = {
-                    content: formatTanggalExportPenjualan(hari.tanggal),
-                    rowSpan: hari.items.length,
-                    styles: { valign: "middle" }
+    hasil.grup.forEach(grup => {
+        body.push([{ content: grup.brand.toUpperCase(), colSpan: 7,
+            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold" } }]);
+        let subtotal = 0;
+
+        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            hari.items.forEach((item, index) => {
+                const row = {
+                    1: item.nama, 2: grup.brand, 3: String(item.qty),
+                    4: rupiah(item.harga), 5: rupiah(item.total)
                 };
-                row[6] = {
-                    content: rupiah(totalHarian.get(hari.tanggal)),
-                    rowSpan: hari.items.length,
-                    styles: { valign: "middle", halign: "right", fontStyle: "bold" }
-                };
-            }
-            body.push(row);
-            totalSemua += item.total;
+                if (index === 0) {
+                    row[0] = {
+                        content: formatTanggalExportPenjualan(hari.tanggal),
+                        rowSpan: hari.items.length,
+                        styles: { valign: "middle" }
+                    };
+                    row[6] = {
+                        content: rupiah(totalHarian.get(hari.tanggal)),
+                        rowSpan: hari.items.length,
+                        styles: { valign: "middle", halign: "right", fontStyle: "bold" }
+                    };
+                }
+                body.push(row);
+                subtotal += item.total;
+            });
         });
+
+        body.push([{ content: "TOTAL " + grup.brand, colSpan: 6,
+            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
+                fontStyle: "bold" } },
+            { content: rupiah(subtotal), styles: {
+                fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
+        totalSemua += subtotal;
     });
 
-    body.push([{ content: "TOTAL PER BRAND", colSpan: 7,
-        styles: { fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
-    totalPerBrand.forEach((total, brand) => {
-        body.push([{ content: "TOTAL " + brand, colSpan: 6,
-            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } },
-        { content: rupiah(total), styles: {
-            fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
-    });
     body.push([{ content: "TOTAL SEMUA", colSpan: 6,
-        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } },
-    { content: rupiah(totalSemua), styles: {
-        fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
+        styles: { halign: "right", fillColor: getAppThemeRGB([233, 203, 213]),
+            fontStyle: "bold" } },
+        { content: rupiah(totalSemua), styles: {
+            fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
 
-    // Tinggi halaman mengikuti jumlah baris supaya semua tetap satu halaman PDF.
     const tinggi = Math.max(210, 38 + body.length * 8);
     const pdf = new window.jspdf.jsPDF({
         orientation: "portrait", unit: "mm",
