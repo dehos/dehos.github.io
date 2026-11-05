@@ -12574,7 +12574,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             fillColor: getAppThemeRGB([233, 203, 213]), fontStyle: "bold" } }]);
 
     const pdf = new window.jspdf.jsPDF({
-        orientation: "landscape", unit: "mm",
+        orientation: "portrait", unit: "mm",
         format: "a4", compress: true
     });
     if (typeof pdf.autoTable !== "function") {
@@ -12596,19 +12596,19 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     pdf.autoTable({
         startY: 28,
         margin: { left: 10, right: 10, bottom: 10 },
-        tableWidth: 277,
+        tableWidth: 190,
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
         styles: { fontSize: 8, cellPadding: 2, overflow: "linebreak" },
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255 },
         columnStyles: {
-            0: { cellWidth: 20, halign: "center" },
+            0: { cellWidth: 17, halign: "center" },
             1: { cellWidth: "auto" },
-            2: { cellWidth: 15, halign: "center" },
-            3: { cellWidth: 38, halign: "right" },
-            4: { cellWidth: 38, halign: "right" },
-            5: { cellWidth: 42, halign: "right" }
+            2: { cellWidth: 12, halign: "center" },
+            3: { cellWidth: 32, halign: "right" },
+            4: { cellWidth: 32, halign: "right" },
+            5: { cellWidth: 36, halign: "right" }
         }
     });
     simpanBlobExport(pdf.output("blob"), hasil.namaFile + ".pdf");
