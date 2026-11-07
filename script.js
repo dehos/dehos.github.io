@@ -12378,15 +12378,13 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     });
 
     const kolom = ["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"];
-    const sisi = [[], []];
-    const tinggiSisi = [0, 0];
-    const jenisBarisSisi = [new Map(), new Map()];
+    const sisi = [[kolom], [kolom]];
+    const tinggiSisi = [1, 1];
+    const jenisBarisSisi = [new Map([[0, "header"]]), new Map([[0, "header"]])];
     const warnaHariSisi = [new Map(), new Map()];
     hasil.grup.forEach(grup => {
         const indeksSisi = tinggiSisi[0] <= tinggiSisi[1] ? 0 : 1;
         const baris = sisi[indeksSisi];
-        jenisBarisSisi[indeksSisi].set(baris.length, "header");
-        baris.push(kolom);
         jenisBarisSisi[indeksSisi].set(baris.length, "brand");
         baris.push(["", grup.brand.toUpperCase(), "", "", "", ""]);
         tinggiSisi[indeksSisi] += 2;
@@ -12443,13 +12441,6 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     });
     gabungan.push({ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 4 } });
 
-    barisSheet.unshift([], [], []);
-    gabungan.forEach(range => {
-        range.s.r += 3;
-        range.e.r += 3;
-    });
-    gabungan.push({ s: { r: 0, c: 2 }, e: { r: 2, c: 12 } });
-
     const worksheet = XLSX.utils.aoa_to_sheet(barisSheet);
     worksheet["!merges"] = gabungan;
     worksheet["!cols"] = Array.from({ length: 13 }, (_, c) => {
@@ -12457,20 +12448,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         const lebar = Math.max(5, ...kolomData.map(value => String(value).length + 1));
         return { wch: Math.min(c % 7 === 1 ? 24 : 13, lebar) };
     });
-    worksheet["!rows"] = [
-        { hpt: 18 },
-        { hpt: 18 },
-        { hpt: 18 },
-        ...Array.from({ length: barisSheet.length - 3 }, () => ({ hpt: 12 }))
-    ];
-    worksheet["C1"] = {
-        t: "s",
-        v: "Penjualan " + hasil.judul,
-        s: {
-            font: { bold: true, sz: 16, color: { rgb: getAppThemeColor("#35262c").slice(1).toUpperCase() } },
-            alignment: { horizontal: "center", vertical: "center" }
-        }
-    };
+    worksheet["!rows"] = Array.from({ length: barisSheet.length }, () => ({ hpt: 12 }));
 
     const border = {
         top: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
@@ -12479,11 +12457,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         right: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } }
     };
     barisSheet.forEach((row, r) => {
-        if (r < 3) return;
         for (let c = 0; c < 13; c++) {
             if (c === 6) continue;
             const sisiIndex = c < 6 ? 0 : 1;
-            const jenis = jenisBarisSisi[sisiIndex].get(r - 3) || "item";
+            const jenis = jenisBarisSisi[sisiIndex].get(r) || "item";
             const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
             if (!cell) continue;
             cell.s = {
@@ -12521,59 +12498,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     try {
         const data = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const blob = await createLandscapeExcelBlob(data, "landscape", 1);
-        const logo = document.querySelector(".auth-brand img");
-        if (logo?.complete && logo.naturalWidth) {
-            const canvasLogo = document.createElement("canvas");
-            canvasLogo.width = logo.naturalWidth;
-            canvasLogo.height = logo.naturalHeight;
-            canvasLogo.getContext("2d").drawImage(logo, 0, 0);
-            const logoBase64 = canvasLogo.toDataURL("image/png").split(",")[1];
-            const zip = await JSZip.loadAsync(await blob.arrayBuffer());
-            const sheetPath = "xl/worksheets/sheet1.xml";
-            let sheetXml = await zip.file(sheetPath).async("string");
-            const relsPath = "xl/worksheets/_rels/sheet1.xml.rels";
-            let relsXml = zip.file(relsPath)
-                ? await zip.file(relsPath).async("string")
-                : '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>';
-            if (!sheetXml.includes('xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"')) {
-                sheetXml = sheetXml.replace("<worksheet", '<worksheet xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"');
-            }
-            sheetXml = sheetXml.replace("</worksheet>", '<drawing r:id="rIdLogo"/></worksheet>');
-            relsXml = relsXml.replace("</Relationships>", '<Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/></Relationships>');
-            zip.file(sheetPath, sheetXml);
-            zip.file(relsPath, relsXml);
-            zip.file("xl/drawings/drawing1.xml",
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-                '<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
-                '<xdr:twoCellAnchor editAs="oneCell"><xdr:from><xdr:col>0</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>0</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from>' +
-                '<xdr:to><xdr:col>2</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>3</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to>' +
-                '<xdr:pic><xdr:nvPicPr><xdr:cNvPr id="1" name="Dhouse Logo"/><xdr:cNvPicPr><a:picLocks noChangeAspect="1"/></xdr:cNvPicPr></xdr:nvPicPr>' +
-                '<xdr:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill>' +
-                '<xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="533400" cy="381000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:twoCellAnchor></xdr:wsDr>');
-            zip.file("xl/drawings/_rels/drawing1.xml.rels",
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-                '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
-                '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/dhouse-logo.png"/>' +
-                '</Relationships>');
-            zip.file("xl/media/dhouse-logo.png", logoBase64, { base64: true });
-            const typesPath = "[Content_Types].xml";
-            let typesXml = await zip.file(typesPath).async("string");
-            if (!typesXml.includes('Extension="png"')) {
-                typesXml = typesXml.replace("</Types>", '<Default Extension="png" ContentType="image/png"/></Types>');
-            }
-            if (!typesXml.includes('/drawing1.xml')) {
-                typesXml = typesXml.replace("</Types>", '<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/></Types>');
-            }
-            zip.file(typesPath, typesXml);
-            const excelBlob = await zip.generateAsync({
-                type: "blob",
-                compression: "DEFLATE",
-                mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            });
-            simpanBlobExport(excelBlob, hasil.namaFile + ".xlsx");
-        } else {
-            simpanBlobExport(blob, hasil.namaFile + ".xlsx");
-        }
+        simpanBlobExport(blob, hasil.namaFile + ".xlsx");
     } catch (error) {
         console.error(error);
         showAppAlert("Gagal membuat file Excel.");
