@@ -12422,19 +12422,29 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     );
     const rowTotal = barisSheet[barisTotal] || (barisSheet[barisTotal] = []);
     rowTotal[0] = "TOTAL SEMUA";
-    rowTotal[1] = totalSemua;
+    rowTotal[5] = totalSemua;
     jenisBaris.set(barisTotal, "grand");
 
+    const gabungan = [];
+    sisi.forEach((data, sisiIndex) => {
+        data.forEach((row, index) => {
+            if (row !== kolom && row[1] && row.slice(2).every(value => value === "")) {
+                gabungan.push({
+                    s: { r: index, c: sisiIndex * 7 + 1 },
+                    e: { r: index, c: sisiIndex * 7 + 5 }
+                });
+            }
+        });
+    });
+    gabungan.push({ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 4 } });
+
     const worksheet = XLSX.utils.aoa_to_sheet(barisSheet);
+    worksheet["!merges"] = gabungan;
     worksheet["!cols"] = Array.from({ length: 13 }, (_, c) => {
         const kolomData = barisSheet.map(row => row[c] ?? "");
         const lebar = Math.max(5, ...kolomData.map(value => String(value).length + 1));
         return { wch: Math.min(c % 7 === 1 ? 24 : 13, lebar) };
     });
-    worksheet["!merges"] = [
-        { s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 5 } },
-        { s: { r: barisTotal, c: 7 }, e: { r: barisTotal, c: 12 } }
-    ];
 
     const border = {
         top: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
@@ -12549,7 +12559,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         return;
     }
     const header = [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]];
-    const ukuranFont = Math.max(2.5, Math.min(5, 260 / (Math.max(...tinggiSisi) + 1)));
+    const tinggiMaksimum = Math.max(...tinggiSisi);
+    const tinggiBaris = Math.max(1, Math.min(3.2, 200 / (tinggiMaksimum + 1)));
+    const ukuranFont = Math.max(1.5, Math.min(5, tinggiBaris * 1.35));
     sisi.forEach((body, index) => {
         pdf.autoTable({
             startY: 5,
@@ -12558,7 +12570,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             head: header,
             body,
             theme: "grid",
-            styles: { fontSize: ukuranFont, cellPadding: 0.35, minCellHeight: 2.8, overflow: "ellipsize" },
+            styles: { fontSize: ukuranFont, cellPadding: Math.max(0.08, tinggiBaris * 0.1), minCellHeight: tinggiBaris, overflow: "ellipsize" },
             pageBreak: "avoid",
             rowPageBreak: "avoid",
             headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
