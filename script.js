@@ -12589,12 +12589,12 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             rowPageBreak: "avoid",
             headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
             columnStyles: {
-                0: { cellWidth: 12, halign: "center" },
-                1: { cellWidth: 43 },
-                2: { cellWidth: 10, halign: "center" },
-                3: { cellWidth: 25, halign: "right" },
-                4: { cellWidth: 23, halign: "right" },
-                5: { cellWidth: 28, halign: "right" }
+                0: { cellWidth: 10, halign: "center" },
+                1: { cellWidth: 52 },
+                2: { cellWidth: 9, halign: "center" },
+                3: { cellWidth: 24, halign: "right" },
+                4: { cellWidth: 22, halign: "right" },
+                5: { cellWidth: 24, halign: "right" }
             },
             willDrawCell: data => {
                 if (data.section !== "body") return;
