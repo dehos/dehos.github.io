@@ -12369,76 +12369,59 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     const hasil = await siapkanExportPenjualan("Excel", sudahDisetujui);
     if (!hasil) return;
 
-    const semuaItem = hasil.grup.flatMap(grup =>
-        grup.items.map(item => ({ ...item, brand: grup.brand }))
-    );
+    const semuaItem = hasil.grup.flatMap(grup => grup.items)
+        .sort((a, b) => a.tanggal.localeCompare(b.tanggal));
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        const kunciHariBrand = JSON.stringify([item.brand, item.tanggal]);
-        totalHarian.set(
-            kunciHariBrand,
-            (totalHarian.get(kunciHariBrand) || 0) + item.total
+        totalHarian.set(item.tanggal,
+            (totalHarian.get(item.tanggal) || 0) + item.total
         );
     });
 
     const baris = [
-        ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]
+        ["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]
     ];
     const jenisBaris = ["header"];
     const warnaHariBaris = new Map();
     const gabungan = [];
     let totalSemua = 0;
 
-    hasil.grup.forEach(grup => {
-        baris.push(["", grup.brand.toUpperCase(), "", "", "", "", ""]);
-        jenisBaris.push("brand");
-        let subtotal = 0;
-
-        let indeksWarnaHari = 0;
-        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+    let indeksWarnaHari = 0;
+    kelompokTanggalExportPenjualan(semuaItem).forEach(hari => {
             const awalTanggal = baris.length;
             hari.items.forEach((item, index) => {
                 warnaHariBaris.set(baris.length, indeksWarnaHari % 2 === 1);
                 baris.push([
-                    index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
-                    item.nama, grup.brand, item.qty, item.harga, item.total,
-                    index === 0
-                        ? totalHarian.get(JSON.stringify([grup.brand, hari.tanggal]))
-                        : ""
+                    index === 0 ? formatTanggalExportPenjualan(hari.tanggal).slice(0, 5) : "",
+                    item.nama, item.qty, item.harga, item.total,
+                    index === 0 ? totalHarian.get(hari.tanggal) : ""
                 ]);
                 jenisBaris.push("item");
-                subtotal += item.total;
+                totalSemua += item.total;
             });
             indeksWarnaHari++;
             if (hari.items.length > 1) {
                 gabungan.push(
                     { s: { r: awalTanggal, c: 0 }, e: { r: baris.length - 1, c: 0 } },
-                    { s: { r: awalTanggal, c: 6 }, e: { r: baris.length - 1, c: 6 } }
+                    { s: { r: awalTanggal, c: 5 }, e: { r: baris.length - 1, c: 5 } }
                 );
             }
-        });
-
-        baris.push(["", "", "", "", "", "TOTAL " + grup.brand,
-            { t: "n", v: subtotal }]);
-        jenisBaris.push("subtotal");
-        totalSemua += subtotal;
     });
 
     const barisTotal = baris.length;
-    baris.push(["", "", "", "", "", "TOTAL SEMUA", { t: "n", v: totalSemua }]);
+    baris.push(["", "", "", "", "TOTAL SEMUA", { t: "n", v: totalSemua }]);
     jenisBaris.push("grand");
 
     const worksheet = XLSX.utils.aoa_to_sheet(baris);
-    worksheet["!cols"] = [
-        { wch: 13 }, { wch: 42 }, { wch: 18 }, { wch: 9 },
-        { wch: 17 }, { wch: 18 }, { wch: 20 }
-    ];
+    worksheet["!cols"] = Array.from({ length: 6 }, (_, c) => ({
+        wch: Math.min(60, Math.max(8, ...baris.map(row => String(row[c] ?? "").length + 2)))
+    }));
     worksheet["!merges"] = gabungan.concat(
         jenisBaris.flatMap((jenis, r) =>
             ["title", "subtitle", "brand"].includes(jenis)
                 ? [{ s: { r, c: 1 }, e: { r, c: 6 } }] : []
         ),
-        [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 5 } }]
+        [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 4 } }]
     );
 
 
@@ -12449,7 +12432,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         right: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } }
     };
     jenisBaris.forEach((jenis, r) => {
-        for (let c = 0; c < 7; c++) {
+        for (let c = 0; c < 6; c++) {
             const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
             if (!cell) continue;
             cell.s = {
@@ -12509,15 +12492,12 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     const hasil = await siapkanExportPenjualan("PDF", sudahDisetujui);
     if (!hasil) return;
 
-    const semuaItem = hasil.grup.flatMap(grup =>
-        grup.items.map(item => ({ ...item, brand: grup.brand }))
-    );
+    const semuaItem = hasil.grup.flatMap(grup => grup.items)
+        .sort((a, b) => a.tanggal.localeCompare(b.tanggal));
     const totalHarian = new Map();
     semuaItem.forEach(item => {
-        const kunciHariBrand = JSON.stringify([item.brand, item.tanggal]);
-        totalHarian.set(
-            kunciHariBrand,
-            (totalHarian.get(kunciHariBrand) || 0) + item.total
+        totalHarian.set(item.tanggal,
+            (totalHarian.get(item.tanggal) || 0) + item.total
         );
     });
 
@@ -12525,13 +12505,8 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     let totalSemua = 0;
     const rupiah = angka => "Rp " + angka.toLocaleString("id-ID");
 
-    hasil.grup.forEach(grup => {
-        body.push([{ content: grup.brand.toUpperCase(), colSpan: 6,
-            styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold", halign: "center" } }]);
-        let subtotal = 0;
-
-        let indeksWarnaHari = 0;
-        kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+    let indeksWarnaHari = 0;
+    kelompokTanggalExportPenjualan(semuaItem).forEach(hari => {
             const fillHari = indeksWarnaHari % 2 === 1
                 ? getAppThemeRGB([234, 242, 250])
                 : getAppThemeRGB([255, 255, 255]);
@@ -12550,24 +12525,16 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                     };
                     row[5] = {
                         content: rupiah(totalHarian.get(
-                            JSON.stringify([grup.brand, hari.tanggal])
+                            hari.tanggal
                         )),
                         rowSpan: hari.items.length,
                         styles: { valign: "middle", halign: "right", fontStyle: "bold", fillColor: fillHari }
                     };
                 }
                 body.push(row);
-                subtotal += item.total;
+                totalSemua += item.total;
             });
             indeksWarnaHari++;
-        });
-
-        body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
-            styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]),
-                fontStyle: "bold" } },
-            { content: rupiah(subtotal), styles: {
-                fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } }]);
-        totalSemua += subtotal;
     });
 
     body.push([{ content: "TOTAL SEMUA", colSpan: 5,
@@ -12603,12 +12570,12 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         rowPageBreak: "avoid",
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
         columnStyles: {
-            0: { cellWidth: 17, halign: "center" },
+            0: { cellWidth: "auto", halign: "center" },
             1: { cellWidth: "auto" },
-            2: { cellWidth: 12, halign: "center" },
-            3: { cellWidth: 32, halign: "right" },
-            4: { cellWidth: 32, halign: "right" },
-            5: { cellWidth: 36, halign: "right" }
+            2: { cellWidth: "auto", halign: "center" },
+            3: { cellWidth: "auto", halign: "right" },
+            4: { cellWidth: "auto", halign: "right" },
+            5: { cellWidth: "auto", halign: "right" }
         }
     });
     simpanBlobExport(pdf.output("blob"), hasil.namaFile + ".pdf");
