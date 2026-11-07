@@ -12596,10 +12596,10 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 4: { cellWidth: 22, halign: "right" },
                 5: { cellWidth: 24, halign: "right" }
             },
-            willDrawCell: data => {
+            didParseCell: data => {
                 if (data.section !== "body") return;
                 if (data.column.index === 0 || data.column.index === 5) {
-                    const fillHari = data.row.cells[1]?.styles?.fillColor;
+                    const fillHari = data.row.raw?.[1]?.styles?.fillColor;
                     if (fillHari) data.cell.styles.fillColor = fillHari;
                 }
             }
