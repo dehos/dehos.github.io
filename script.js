@@ -12488,9 +12488,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     try {
         const data = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const blob = await createLandscapeExcelBlob(data, "portrait", 1);
-        const logo = await ambilLogoExportPenjualan();
-        const denganLogo = await sisipLogoExcelPenjualan(blob, logo);
-        simpanBlobExport(denganLogo, hasil.namaFile + ".xlsx");
+        simpanBlobExport(blob, hasil.namaFile + ".xlsx");
     } catch (error) {
         console.error(error);
         showAppAlert("Gagal membuat file Excel.");
@@ -12575,19 +12573,11 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         showAppAlert("Library tabel PDF belum dimuat.");
         return;
     }
-    try {
-        const logo = await ambilLogoExportPenjualan();
-        pdf.addImage(logo, "PNG", 10, 7, 20, 14);
-    } catch (error) {
-        console.error(error);
-        showAppAlert("Gagal memuat logo untuk PDF.");
-        return;
-    }
-    const tinggiBaris = Math.max(1.5, Math.min(4.2, 270 / (body.length + 1)));
-    const ukuranFont = Math.max(2, Math.min(7, tinggiBaris * 1.5));
+    const tinggiBaris = Math.max(0.8, Math.min(4.2, 287 / (body.length + 1)));
+    const ukuranFont = Math.max(1, Math.min(7, tinggiBaris * 1.5));
     pdf.autoTable({
-        startY: 16,
-        margin: { top: 16, left: 5, right: 5, bottom: 5 },
+        startY: 5,
+        margin: { top: 5, left: 5, right: 5, bottom: 5 },
         tableWidth: 200,
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
