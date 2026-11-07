@@ -12571,15 +12571,28 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         showAppAlert("Library tabel PDF belum dimuat.");
         return;
     }
+    const logo = document.querySelector('.auth-brand img');
+    if (logo?.complete && logo.naturalWidth) {
+        const canvasLogo = document.createElement("canvas");
+        canvasLogo.width = logo.naturalWidth;
+        canvasLogo.height = logo.naturalHeight;
+        const contextLogo = canvasLogo.getContext("2d");
+        contextLogo.drawImage(logo, 0, 0);
+        pdf.addImage(canvasLogo.toDataURL("image/png"), "PNG", 5, 4, 14, 10);
+    }
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(14);
+    pdf.text("Penjualan " + hasil.judul, 148.5, 11, { align: "center" });
+
     const header = [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]];
     const tinggiMaksimum = Math.max(...tinggiSisi);
-    const tinggiBaris = Math.max(1, Math.min(3.2, 200 / (tinggiMaksimum + 1)));
+    const tinggiBaris = Math.max(1, Math.min(3.2, 185 / (tinggiMaksimum + 1)));
     const ukuranFont = Math.max(1.5, Math.min(5, tinggiBaris * 1.35));
     const posisiAkhirTabel = [];
     sisi.forEach((body, index) => {
         pdf.autoTable({
-            startY: 5,
-            margin: { top: 5, left: index === 0 ? 5 : 151, right: index === 0 ? 151 : 5, bottom: 5 },
+            startY: 18,
+            margin: { top: 18, left: index === 0 ? 5 : 151, right: index === 0 ? 151 : 5, bottom: 5 },
             tableWidth: 141,
             head: header,
             body,
