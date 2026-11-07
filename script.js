@@ -12547,9 +12547,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 };
                 if (index === 0) {
                     row[0] = { content: formatTanggalExportPenjualan(hari.tanggal).slice(0, 5),
-                        rowSpan: hari.items.length, styles: { fillColor: fillHari, valign: "middle", halign: "center", overflow: "hidden" } };
+                        rowSpan: hari.items.length, styles: { valign: "middle", halign: "center", overflow: "hidden" } };
                     row[5] = { content: rupiah(totalHarian.get(JSON.stringify([grup.brand, hari.tanggal]))),
-                        rowSpan: hari.items.length, styles: { fillColor: fillHari, valign: "middle", halign: "right", fontStyle: "bold" } };
+                        rowSpan: hari.items.length, styles: { valign: "middle", halign: "right", fontStyle: "bold" } };
                 }
                 body.push(row);
                 tinggiSisi[indeksSisi]++;
