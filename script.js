@@ -12385,7 +12385,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]
     ];
     const jenisBaris = ["header"];
-    const warnaHariBaris = [];
+    const warnaHariBaris = new Map();
     const gabungan = [];
     let totalSemua = 0;
 
@@ -12398,6 +12398,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
             const awalTanggal = baris.length;
             hari.items.forEach((item, index) => {
+                warnaHariBaris.set(baris.length, indeksWarnaHari % 2 === 1);
                 baris.push([
                     index === 0 ? formatTanggalExportPenjualan(hari.tanggal) : "",
                     item.nama, grup.brand, item.qty, item.harga, item.total,
@@ -12406,7 +12407,6 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                         : ""
                 ]);
                 jenisBaris.push("item");
-                warnaHariBaris.push(indeksWarnaHari % 2 === 1);
                 subtotal += item.total;
             });
             indeksWarnaHari++;
@@ -12474,7 +12474,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                                     ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
                                     : jenis === "subtotal"
                                         ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
-                                        : jenis === "item" && warnaHariBaris[r]
+                                        : jenis === "item" && warnaHariBaris.get(r)
                                             ? getAppThemeColor("#eaf2fa").slice(1).toUpperCase()
                                             : getAppThemeColor("#ffffff").slice(1).toUpperCase()
                     }
