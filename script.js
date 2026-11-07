@@ -12549,7 +12549,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 '<xdr:to><xdr:col>2</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>3</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:to>' +
                 '<xdr:pic><xdr:nvPicPr><xdr:cNvPr id="1" name="Dhouse Logo"/><xdr:cNvPicPr><a:picLocks noChangeAspect="1"/></xdr:cNvPicPr></xdr:nvPicPr>' +
                 '<xdr:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill>' +
-                '<xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="1333500" cy="952500"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:twoCellAnchor></xdr:wsDr>');
+                '<xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="533400" cy="381000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:twoCellAnchor></xdr:wsDr>');
             zip.file("xl/drawings/_rels/drawing1.xml.rels",
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
                 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
