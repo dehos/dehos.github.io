@@ -12385,6 +12385,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]
     ];
     const jenisBaris = ["header"];
+    const warnaHariBaris = [];
     const gabungan = [];
     let totalSemua = 0;
 
@@ -12393,6 +12394,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         jenisBaris.push("brand");
         let subtotal = 0;
 
+        let indeksWarnaHari = 0;
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
             const awalTanggal = baris.length;
             hari.items.forEach((item, index) => {
@@ -12404,8 +12406,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                         : ""
                 ]);
                 jenisBaris.push("item");
+                warnaHariBaris.push(indeksWarnaHari % 2 === 1);
                 subtotal += item.total;
             });
+            indeksWarnaHari++;
             if (hari.items.length > 1) {
                 gabungan.push(
                     { s: { r: awalTanggal, c: 0 }, e: { r: baris.length - 1, c: 0 } },
@@ -12470,7 +12474,9 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                                     ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
                                     : jenis === "subtotal"
                                         ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
-                                        : getAppThemeColor("#ffffff").slice(1).toUpperCase()
+                                        : jenis === "item" && warnaHariBaris[r]
+                                            ? getAppThemeColor("#eaf2fa").slice(1).toUpperCase()
+                                            : getAppThemeColor("#ffffff").slice(1).toUpperCase()
                     }
                 },
                 alignment: {
@@ -12524,31 +12530,36 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold", halign: "center" } }]);
         let subtotal = 0;
 
+        let indeksWarnaHari = 0;
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            const fillHari = indeksWarnaHari % 2 === 1
+                ? getAppThemeRGB([234, 242, 250])
+                : getAppThemeRGB([255, 255, 255]);
             hari.items.forEach((item, index) => {
                 const row = {
-                    1: item.nama,
-                    2: String(item.qty),
-                    3: rupiah(item.harga),
-                    4: rupiah(item.total)
+                    1: { content: item.nama, styles: { fillColor: fillHari } },
+                    2: { content: String(item.qty), styles: { fillColor: fillHari } },
+                    3: { content: rupiah(item.harga), styles: { fillColor: fillHari } },
+                    4: { content: rupiah(item.total), styles: { fillColor: fillHari } }
                 };
                 if (index === 0) {
                     row[0] = {
                         content: formatTanggalExportPenjualan(hari.tanggal).slice(0, 5),
                         rowSpan: hari.items.length,
-                        styles: { valign: "middle", halign: "center", overflow: "hidden" }
+                        styles: { valign: "middle", halign: "center", overflow: "hidden", fillColor: fillHari }
                     };
                     row[5] = {
                         content: rupiah(totalHarian.get(
                             JSON.stringify([grup.brand, hari.tanggal])
                         )),
                         rowSpan: hari.items.length,
-                        styles: { valign: "middle", halign: "right", fontStyle: "bold" }
+                        styles: { valign: "middle", halign: "right", fontStyle: "bold", fillColor: fillHari }
                     };
                 }
                 body.push(row);
                 subtotal += item.total;
             });
+            indeksWarnaHari++;
         });
 
         body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
