@@ -12414,12 +12414,12 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
 
     const worksheet = XLSX.utils.aoa_to_sheet(baris);
     worksheet["!cols"] = Array.from({ length: 6 }, (_, c) => ({
-        wch: Math.min(60, Math.max(8, ...baris.map(row => String(row[c] ?? "").length + 2)))
+        wch: Math.min(60, Math.max(8, ...baris.map(row => String(row[c] ?? "").length + (c >= 3 ? 7 : 2))))
     }));
     worksheet["!merges"] = gabungan.concat(
         jenisBaris.flatMap((jenis, r) =>
-            ["title", "subtitle", "brand"].includes(jenis)
-                ? [{ s: { r, c: 1 }, e: { r, c: 6 } }] : []
+            ["title", "subtitle"].includes(jenis)
+                ? [{ s: { r, c: 1 }, e: { r, c: 5 } }] : []
         ),
         [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 4 } }]
     );
@@ -12464,10 +12464,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 },
                 alignment: {
                     vertical: "center",
-                    horizontal: c === 3 ? "center" : c >= 4 ? "right" : "left"
+                    horizontal: c === 2 ? "center" : c >= 3 ? "right" : "left"
                 }
             };
-            if (c >= 4 && typeof cell.v === "number") cell.z = '"Rp" #,##0';
+            if (c >= 3 && typeof cell.v === "number") cell.z = '"Rp" #,##0';
         }
     });
 
