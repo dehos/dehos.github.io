@@ -12595,6 +12595,13 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 3: { cellWidth: 25, halign: "right" },
                 4: { cellWidth: 23, halign: "right" },
                 5: { cellWidth: 28, halign: "right" }
+            },
+            willDrawCell: data => {
+                if (data.section !== "body") return;
+                if (data.column.index === 0 || data.column.index === 5) {
+                    const fillHari = data.row.cells[1]?.styles?.fillColor;
+                    if (fillHari) data.cell.styles.fillColor = fillHari;
+                }
             }
         });
         posisiAkhirTabel.push(pdf.lastAutoTable?.finalY || 5);
