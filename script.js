@@ -8834,7 +8834,9 @@ function loadJsZipLibrary() {
 }
 
 async function createLandscapeExcelBlob(
-    excelData
+    excelData,
+    orientation = "landscape",
+    fitToHeight = 0
 ) {
     await loadJsZipLibrary();
 
@@ -8932,8 +8934,8 @@ async function createLandscapeExcelBlob(
                  * PENGATURAN CETAK:
                  *
                  * Paper: A4
-                 * Orientation: Landscape
-                 * Fit: 1 halaman lebar dan tinggi
+                 * Orientation: sesuai export
+                 * Fit: 1 halaman lebar dan tinggi sesuai parameter
                  * Page order: Down, then over
                  * Center horizontal dan vertical
                  */
@@ -8944,19 +8946,19 @@ async function createLandscapeExcelBlob(
     'verticalCentered="1"/>' +
 
     '<pageMargins ' +
-    'left="0.2" ' +
-    'right="0.2" ' +
-    'top="0.5" ' +
-    'bottom="0.15" ' +
-    'header="0.3" ' +
+    'left="0.25" ' +
+    'right="0.25" ' +
+    'top="0.25" ' +
+    'bottom="0.25" ' +
+    'header="0.1" ' +
     'footer="0.1"/>' +
 
     '<pageSetup ' +
     'paperSize="9" ' +
-    'orientation="landscape" ' +
+    'orientation="' + orientation + '" ' +
     'pageOrder="downThenOver" ' +
     'fitToWidth="1" ' +
-    'fitToHeight="0"/>';
+    'fitToHeight="' + fitToHeight + '"/>';
 
                 /*
                  * Masukkan pengaturan halaman ke XML.
@@ -12380,12 +12382,9 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     });
 
     const baris = [
-        ["", hasil.judul, "", "", "", "", ""],
-        ["", "CATATAN PENJUALAN", "", "", "", "", ""],
-        ["", "", "", "", "", "", ""],
         ["Tanggal", "Nama Barang", "Brand", "Qty", "Harga/Unit", "Total", "Total Harian"]
     ];
-    const jenisBaris = ["title", "subtitle", "spacer", "header"];
+    const jenisBaris = ["header"];
     const gabungan = [];
     let totalSemua = 0;
 
@@ -12437,12 +12436,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         ),
         [{ s: { r: barisTotal, c: 0 }, e: { r: barisTotal, c: 5 } }]
     );
-    worksheet["!rows"] = jenisBaris.map(jenis => ({
-        hpt: jenis === "title" ? 28 :
-            jenis === "subtitle" ? 19 :
-            jenis === "spacer" ? 8 :
-            jenis === "header" ? 24 : jenis === "brand" ? 22 : 19
-    }));
+
 
     const border = {
         top: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } },
@@ -12488,12 +12482,12 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         }
     });
 
-    worksheet["!pageSetup"] = { orientation: "landscape", fitToWidth: 1, fitToHeight: 1 };
+    worksheet["!pageSetup"] = { orientation: "portrait", fitToWidth: 1, fitToHeight: 1 };
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Penjualan");
     try {
         const data = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        const blob = await createLandscapeExcelBlob(data);
+        const blob = await createLandscapeExcelBlob(data, "portrait", 1);
         const logo = await ambilLogoExportPenjualan();
         const denganLogo = await sisipLogoExcelPenjualan(blob, logo);
         simpanBlobExport(denganLogo, hasil.namaFile + ".xlsx");
@@ -12589,18 +12583,23 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
         showAppAlert("Gagal memuat logo untuk PDF.");
         return;
     }
-    pdf.setFontSize(15);
-    pdf.text(hasil.judul, 105, 15, { align: "center" });
-    pdf.setFontSize(9);
-    pdf.text("CATATAN PENJUALAN", 105, 21, { align: "center" });
+    const tinggiBaris = Math.max(1.5, Math.min(4.2, 270 / (body.length + 1)));
+    const ukuranFont = Math.max(2, Math.min(7, tinggiBaris * 1.5));
     pdf.autoTable({
-        startY: 28,
-        margin: { left: 10, right: 10, bottom: 10 },
-        tableWidth: 190,
+        startY: 16,
+        margin: { top: 16, left: 5, right: 5, bottom: 5 },
+        tableWidth: 200,
         head: [["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"]],
         body,
         theme: "grid",
-        styles: { fontSize: 7, cellPadding: 0.5, minCellHeight: 4.2, overflow: "hidden" },
+        styles: {
+            fontSize: ukuranFont,
+            cellPadding: Math.max(0.1, tinggiBaris * 0.12),
+            minCellHeight: tinggiBaris,
+            overflow: "hidden"
+        },
+        pageBreak: "avoid",
+        rowPageBreak: "avoid",
         headStyles: { fillColor: getAppThemeRGB([128, 0, 32]), textColor: 255, halign: "center" },
         columnStyles: {
             0: { cellWidth: 17, halign: "center" },
