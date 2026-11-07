@@ -12380,14 +12380,23 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     const kolom = ["Tanggal", "Nama Barang", "Qty", "Harga/Unit", "Total", "Total Harian"];
     const sisi = [[], []];
     const tinggiSisi = [0, 0];
+    const jenisBarisSisi = [new Map(), new Map()];
+    const warnaHariSisi = [new Map(), new Map()];
     hasil.grup.forEach(grup => {
         const indeksSisi = tinggiSisi[0] <= tinggiSisi[1] ? 0 : 1;
         const baris = sisi[indeksSisi];
-        baris.push(kolom, ["", grup.brand.toUpperCase(), "", "", "", ""]);
+        jenisBarisSisi[indeksSisi].set(baris.length, "header");
+        baris.push(kolom);
+        jenisBarisSisi[indeksSisi].set(baris.length, "brand");
+        baris.push(["", grup.brand.toUpperCase(), "", "", "", ""]);
         tinggiSisi[indeksSisi] += 2;
         let subtotal = 0;
+        let indeksWarnaHari = 0;
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
+            const warnaAlternatif = indeksWarnaHari % 2 === 1;
             hari.items.forEach((item, index) => {
+                warnaHariSisi[indeksSisi].set(baris.length, warnaAlternatif);
+                jenisBarisSisi[indeksSisi].set(baris.length, "item");
                 baris.push([
                     index === 0 ? formatTanggalExportPenjualan(hari.tanggal).slice(0, 5) : "",
                     item.nama, item.qty, item.harga, item.total,
@@ -12396,25 +12405,21 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                 tinggiSisi[indeksSisi]++;
                 subtotal += item.total;
             });
+            indeksWarnaHari++;
         });
+        jenisBarisSisi[indeksSisi].set(baris.length, "subtotal");
         baris.push(["", "", "", "", "TOTAL " + grup.brand, subtotal]);
         tinggiSisi[indeksSisi]++;
     });
 
     const barisTotal = Math.max(sisi[0].length, sisi[1].length);
     const barisSheet = [];
-    const jenisBaris = new Map();
-    const warnaHariBaris = new Map();
     sisi.forEach((data, sisiIndex) => {
         data.forEach((row, index) => {
             const target = barisSheet[index] || (barisSheet[index] = []);
             row.forEach((value, c) => {
                 target[sisiIndex * 7 + c] = value;
             });
-            if (row === kolom) jenisBaris.set(index, "header");
-            else if (row[1] && row.slice(2).every(value => value === "")) jenisBaris.set(index, "brand");
-            else if (String(row[4] || "").startsWith("TOTAL ")) jenisBaris.set(index, "subtotal");
-            else if (row[0] || row[1] || row[2] !== undefined) jenisBaris.set(index, "item");
         });
     });
     const totalSemua = hasil.grup.reduce(
@@ -12423,7 +12428,7 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
     const rowTotal = barisSheet[barisTotal] || (barisSheet[barisTotal] = []);
     rowTotal[0] = "TOTAL SEMUA";
     rowTotal[5] = totalSemua;
-    jenisBaris.set(barisTotal, "grand");
+    jenisBarisSisi[0].set(barisTotal, "grand");
 
     const gabungan = [];
     sisi.forEach((data, sisiIndex) => {
@@ -12453,8 +12458,10 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
         right: { style: "thin", color: { rgb: getAppThemeColor("#dfc5ce").slice(1).toUpperCase() } }
     };
     barisSheet.forEach((row, r) => {
-        const jenis = jenisBaris.get(r) || "item";
         for (let c = 0; c < 13; c++) {
+            if (c === 6) continue;
+            const sisiIndex = c < 6 ? 0 : 1;
+            const jenis = jenisBarisSisi[sisiIndex].get(r) || "item";
             const cell = worksheet[XLSX.utils.encode_cell({ r, c })];
             if (!cell) continue;
             cell.s = {
@@ -12476,7 +12483,9 @@ async function exportPenjualanExcel(sudahDisetujui = false) {
                                 ? getAppThemeColor("#e9cbd5").slice(1).toUpperCase()
                                 : jenis === "subtotal"
                                     ? getAppThemeColor("#faf2f5").slice(1).toUpperCase()
-                                    : getAppThemeColor("#ffffff").slice(1).toUpperCase() }
+                                    : jenis === "item" && warnaHariSisi[sisiIndex].get(r)
+                                        ? getAppThemeColor("#eaf2fa").slice(1).toUpperCase()
+                                        : getAppThemeColor("#ffffff").slice(1).toUpperCase() }
                 },
                 alignment: { vertical: "center", horizontal: c % 7 === 2 ? "center" : c % 7 >= 3 ? "right" : "left" }
             };
@@ -12524,8 +12533,11 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
             styles: { fillColor: getAppThemeRGB([244, 229, 234]), fontStyle: "bold", halign: "center" } }]);
         tinggiSisi[indeksSisi]++;
         let subtotal = 0;
+        let indeksWarnaHari = 0;
         kelompokTanggalExportPenjualan(grup.items).forEach(hari => {
-            const fillHari = getAppThemeRGB([255, 255, 255]);
+            const fillHari = indeksWarnaHari % 2 === 1
+                ? getAppThemeRGB([234, 242, 250])
+                : getAppThemeRGB([255, 255, 255]);
             hari.items.forEach((item, index) => {
                 const row = {
                     1: { content: item.nama, styles: { fillColor: fillHari } },
@@ -12543,6 +12555,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 tinggiSisi[indeksSisi]++;
                 subtotal += item.total;
             });
+            indeksWarnaHari++;
         });
         body.push([{ content: "TOTAL " + grup.brand, colSpan: 5,
             styles: { halign: "right", fillColor: getAppThemeRGB([250, 242, 245]), fontStyle: "bold" } },
@@ -12562,6 +12575,7 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
     const tinggiMaksimum = Math.max(...tinggiSisi);
     const tinggiBaris = Math.max(1, Math.min(3.2, 200 / (tinggiMaksimum + 1)));
     const ukuranFont = Math.max(1.5, Math.min(5, tinggiBaris * 1.35));
+    const posisiAkhirTabel = [];
     sisi.forEach((body, index) => {
         pdf.autoTable({
             startY: 5,
@@ -12583,8 +12597,9 @@ async function exportPenjualanPDF(sudahDisetujui = false) {
                 5: { cellWidth: 28, halign: "right" }
             }
         });
+        posisiAkhirTabel.push(pdf.lastAutoTable?.finalY || 5);
     });
-    const posisiTotal = Math.max(pdf.lastAutoTable?.finalY || 5, 5) + 3;
+    const posisiTotal = Math.max(...posisiAkhirTabel, 5) + 3;
     pdf.setFontSize(6);
     pdf.setFont(undefined, "bold");
     pdf.text("TOTAL SEMUA: " + rupiah(totalSemua), 292, posisiTotal, { align: "right" });
